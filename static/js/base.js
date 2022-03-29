@@ -1,3 +1,4 @@
+let overlay = document.getElementById('laydoOverlay');
 function redirect(evt) {
     var y = document.getElementsByClassName('active');
     for (var i = 0; i < y.length; i++) {
@@ -12,13 +13,16 @@ function redirect(evt) {
 }
 
 
-function openOverlay() {
-    document.getElementById('laydoOverlay').style.display = "flex";
-    document.getElementById('laydoNavIcon').style.display = "none";
-}
-function closeOverlay() {
-    document.getElementById('laydoOverlay').style.display = "none";
-    document.getElementById('laydoNavIcon').style.display = "inherit";
+function toggleOverlay() {
+    let menu = document.getElementById('laydoNavIcon');
+    menu.classList.toggle('change');
+    if (menu.classList.contains('change')) {
+        document.body.style.overflow = 'hidden';
+        overlay.style.display = "flex";
+    } else {
+        document.body.style.overflow = 'auto';
+        overlay.style.display = "none";
+    }
 }
 
 async function getSomething() {
