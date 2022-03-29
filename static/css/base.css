@@ -47,7 +47,6 @@ body {
   cursor: pointer;
 }
 
-
 .laydo-background {
   position: fixed;
   top: 0;
@@ -59,12 +58,12 @@ body {
   background-repeat: no-repeat;
 }
 #laydoBackgroundHome {
-    display: inherit;
-    background-image: url('/static/img/home.jpg');
+  display: inherit;
+  background-image: url("/static/img/home.jpg");
 }
 #laydoHomeOne,
 #laydoHomeTwo {
-    min-height: 100vh;
+  min-height: 100vh;
 }
 
 .laydo-title,
@@ -109,6 +108,7 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: transparent;
+  height: 3.125rem;
   /* border: 0.125rem solid red; */
 }
 .laydo-nav-menu {
@@ -201,7 +201,6 @@ body {
   justify-content: center;
   align-items: center;
 }
-
 
 @media only screen and (max-width: 48rem) {
   .laydo-nav-title {
