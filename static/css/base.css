@@ -2,6 +2,7 @@ html,
 body {
   height: 100%;
   margin: 0;
+  font-family: 'Montserrat', sans-serif;
 }
 .laydo-flex-home {
   display: flex;
@@ -15,11 +16,11 @@ body {
   height: 100%;
   width: 100%;
   position: fixed;
-  z-index: 999;
+  z-index: 998;
   right: 0;
   top: 0;
   background-color: rgb(0, 0, 0);
-  overflow-x: hidden;
+  overflow: hidden;
   transition: 0.5s;
   text-align: center;
   flex-direction: column;
@@ -38,13 +39,32 @@ body {
 .laydo-overlay .nav-link:hover {
   color: #efd09f;
 }
-.laydo-overlay .laydo-close-btn {
-  position: absolute;
-  top: 0;
-  right: 2rem;
-  font-size: 2rem;
-  color: white;
-  cursor: pointer;
+
+.bar1,
+.bar2,
+.bar3 {
+  width: 26px;
+  height: 3px;
+  background-color: #fff;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+.change .bar1 {
+  -webkit-transform: rotate(-45deg) translate(-6px, 6px);
+  transform: rotate(-45deg) translate(-6px, 6px);
+}
+
+.change .bar2 {
+  opacity: 0;
+}
+
+.change .bar3 {
+  -webkit-transform: rotate(45deg) translate(-6px, -8px);
+  transform: rotate(45deg) translate(-6px, -8px);
+}
+#laydoNavIcon {
+  padding: 1rem;
+  z-index: 999;
 }
 
 .laydo-background {
@@ -56,10 +76,6 @@ body {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-}
-#laydoBackgroundHome {
-  display: inherit;
-  background-image: url("/static/img/home.jpg");
 }
 #laydoHomeOne,
 #laydoHomeTwo {
@@ -108,7 +124,7 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: transparent;
-  height: 3.125rem;
+  height: 10%;  /* 3.125rem; */
   /* border: 0.125rem solid red; */
 }
 .laydo-nav-menu {
@@ -118,17 +134,15 @@ body {
   margin-right: 1rem;
   cursor: pointer;
   overflow: hidden;
-  /* color: #fefee3; */
+  color: white;
 }
 .laydo-nav-title {
-  font-weight: 400;
-  letter-spacing: 0.25rem;
   margin-left: 1rem;
-  padding-left: 2rem;
   cursor: pointer;
+  width: 15%;
 }
 .laydo-nav-title:hover {
-  color: #efd09f;
+  stroke: #efd09f;
 }
 
 .laydo-button {
@@ -204,8 +218,8 @@ body {
 
 @media only screen and (max-width: 48rem) {
   .laydo-nav-title {
-    padding-left: 0;
     flex-wrap: nowrap;
+    width: 50%;
   }
   .title-name {
     font-size: 3rem;
