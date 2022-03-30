@@ -31,7 +31,7 @@ body {
   padding: 1rem;
   text-decoration: none;
   font-size: 1.5rem;
-  color: #ffe2b8;
+  color: #fff8ed;
   display: block;
   cursor: pointer;
   letter-spacing: 0.0625rem;
@@ -45,7 +45,7 @@ body {
 .bar3 {
   width: 26px;
   height: 3px;
-  background-color: #ffe2b8;
+  background-color: #fff8ed;
   margin: 6px 0;
   transition: 0.4s;
 }
@@ -111,7 +111,7 @@ body {
   margin-bottom: 5rem;
 }
 .title-dark {
-  color: #ffe2b8;
+  color: #fff8ed;
 }
 .laydo-mobile-nav {
   position: absolute;
@@ -135,15 +135,13 @@ body {
   margin-right: 1rem;
   cursor: pointer;
   overflow: hidden;
-  color: #ffe2b8;
+  color: #fff8ed;
 }
 .laydo-nav-title {
   margin-left: 1rem;
   cursor: pointer;
   width: 15%;
-}
-.laydo-nav-title:hover {
-  stroke: #efd09f;
+  stroke: #fff8ed;
 }
 
 .laydo-button {
@@ -161,7 +159,7 @@ body {
 #laydoArrowDown {
   position: absolute;
   bottom: 5%;
-  color: #ffe2b8;
+  color: #fff8ed;
   font-size: 3rem;
   font-weight: 400;
 }
@@ -198,7 +196,7 @@ body {
 }
 .top-back-button {
   border-radius: 50%;
-  background-color: #ffe2b8;
+  background-color: #fff8ed;
   height: 3rem;
   width: 3rem;
   position: absolute;
