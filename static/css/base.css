@@ -2,7 +2,7 @@ html,
 body {
   height: 100%;
   margin: 0;
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
 }
 .laydo-flex-home {
   display: flex;
@@ -31,7 +31,7 @@ body {
   padding: 1rem;
   text-decoration: none;
   font-size: 1.5rem;
-  color: white;
+  color: #ffe2b8;
   display: block;
   cursor: pointer;
   letter-spacing: 0.0625rem;
@@ -45,7 +45,7 @@ body {
 .bar3 {
   width: 26px;
   height: 3px;
-  background-color: #fff;
+  background-color: #ffe2b8;
   margin: 6px 0;
   transition: 0.4s;
 }
@@ -63,7 +63,8 @@ body {
   transform: rotate(45deg) translate(-6px, -8px);
 }
 #laydoNavIcon {
-  padding: 1rem;
+  cursor: pointer;
+  padding: 3rem;
   z-index: 999;
 }
 
@@ -110,7 +111,7 @@ body {
   margin-bottom: 5rem;
 }
 .title-dark {
-  color: white;
+  color: #ffe2b8;
 }
 .laydo-mobile-nav {
   position: absolute;
@@ -124,7 +125,7 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: transparent;
-  height: 10%;  /* 3.125rem; */
+  height: 10%; /* 3.125rem; */
   /* border: 0.125rem solid red; */
 }
 .laydo-nav-menu {
@@ -134,7 +135,7 @@ body {
   margin-right: 1rem;
   cursor: pointer;
   overflow: hidden;
-  color: white;
+  color: #ffe2b8;
 }
 .laydo-nav-title {
   margin-left: 1rem;
@@ -160,7 +161,7 @@ body {
 #laydoArrowDown {
   position: absolute;
   bottom: 5%;
-  color: white;
+  color: #ffe2b8;
   font-size: 3rem;
   font-weight: 400;
 }
@@ -197,7 +198,7 @@ body {
 }
 .top-back-button {
   border-radius: 50%;
-  background-color: white;
+  background-color: #ffe2b8;
   height: 3rem;
   width: 3rem;
   position: absolute;
@@ -215,6 +216,13 @@ body {
   justify-content: center;
   align-items: center;
 }
+.laydo-row-wrap {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
 
 @media only screen and (max-width: 48rem) {
   .laydo-nav-title {
@@ -223,5 +231,8 @@ body {
   }
   .title-name {
     font-size: 3rem;
+  }
+  #laydoNavIcon {
+    padding: 2rem;
   }
 }

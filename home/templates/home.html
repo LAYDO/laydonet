@@ -1,15 +1,31 @@
-{% extends "base.html" %} {% load static %}
-{% block page_head %}
+{% extends "base.html" %} {% load static %} {% block page_head %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-{% endblock %}
-{% block page_backgrounds %}
+{% endblock %} {% block page_backgrounds %}
 <div class="laydo-background" id="laydoBackgroundHome"></div>
 {% endblock %} {% block laydo_home_title %}
-<div class="title-dark">Modern</div>
+<div class="title-dark">Crafting</div>
 <div class="title-name title-dark">Digital<br />Experiences</div>
-{% endblock %} {% block laydo_content %}
-<div class="hexagon"></div>
-{% endblock %}
-{% block page_scripts %}
+<!-- https://codepen.io/osama-belal/pen/NZYrvM -->
+<section class="container">
+  <div>
+    <div>
+      <span class="one h6"></span>
+      <span class="two h3"></span>
+    </div>
+  </div>
+  <div>
+    <div>
+      <span class="one h1"></span>
+      <span class="two h4"></span>
+    </div>
+  </div>
+  <div>
+    <div>
+      <span class="one h5"></span>
+      <span class="two h2"></span>
+    </div>
+  </div>
+</section>
+{% endblock %} {% block laydo_content %} {% endblock %} {% block page_scripts %}
 <script type="text/javascript" src="{% static 'js/home.js' %}"></script>
 {% endblock %}
