@@ -4,6 +4,18 @@ body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
 }
+.theme-light {
+  --color-primary: #fff8ed;
+  --color-secondary: #c0aa92;
+  --color-accent: #80716c;
+  --font-color: #000020;
+}
+.theme-dark {
+  --color-primary: #000020;
+  --color-secondary: #80716c;
+  --color-accent: #ffe2b8;
+  --font-color: #fff8ed;
+}
 .laydo-flex-home {
   display: flex;
   flex-direction: column;
@@ -19,7 +31,7 @@ body {
   z-index: 998;
   right: 0;
   top: 0;
-  background-color: rgb(0, 0, 0);
+  background-color: var(--color-primary);
   overflow: hidden;
   transition: 0.5s;
   text-align: center;
@@ -31,13 +43,13 @@ body {
   padding: 1rem;
   text-decoration: none;
   font-size: 1.5rem;
-  color: #fff8ed;
+  color: var(--font-color);
   display: block;
   cursor: pointer;
   letter-spacing: 0.0625rem;
 }
 .laydo-overlay .nav-link:hover {
-  color: #efd09f;
+  color: var(--color-accent);
 }
 
 .bar1,
@@ -45,7 +57,7 @@ body {
 .bar3 {
   width: 26px;
   height: 3px;
-  background-color: #fff8ed;
+  background-color: var(--font-color);
   margin: 6px 0;
   transition: 0.4s;
 }
@@ -53,11 +65,9 @@ body {
   -webkit-transform: rotate(-45deg) translate(-6px, 6px);
   transform: rotate(-45deg) translate(-6px, 6px);
 }
-
 .change .bar2 {
   opacity: 0;
 }
-
 .change .bar3 {
   -webkit-transform: rotate(45deg) translate(-6px, -8px);
   transform: rotate(45deg) translate(-6px, -8px);
@@ -111,7 +121,7 @@ body {
   margin-bottom: 5rem;
 }
 .title-dark {
-  color: #fff8ed;
+  color: var(--font-color);
 }
 .laydo-mobile-nav {
   position: absolute;
@@ -135,18 +145,18 @@ body {
   margin-right: 1rem;
   cursor: pointer;
   overflow: hidden;
-  color: #fff8ed;
+  color: var(--font-color);
 }
 .laydo-nav-title {
   margin-left: 1rem;
   cursor: pointer;
   width: 15%;
-  stroke: #fff8ed;
+  stroke: var(--font-color);
 }
 
 .laydo-button {
-  background-color: #939a7e;
-  color: white;
+  background-color: var(--color-secondary);
+  color: var(--font-color);
   padding: 0.5rem 2rem;
   margin: 1rem auto;
   width: 90%;
@@ -159,7 +169,7 @@ body {
 #laydoArrowDown {
   position: absolute;
   bottom: 5%;
-  color: #fff8ed;
+  color: var(--font-color);
   font-size: 3rem;
   font-weight: 400;
 }
@@ -190,23 +200,36 @@ body {
 }
 .laydo-footer {
   position: relative;
-  background-color: #d1d1d1;
+  background-color: var(--color-primary);
   padding: 3rem 0;
   width: 100%;
+  color: var(--font-color);
+  border-top: 0.25rem solid var(--font-color);
 }
+/* .hexagon {
+  position: relative;
+  height: 110px;
+  width: 100px;
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(0.25rem);
+  margin: 1px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transition: 2s;
+} */
 .top-back-button {
-  border-radius: 50%;
-  background-color: #fff8ed;
-  height: 3rem;
-  width: 3rem;
+  background-color: var(--font-color);
+  height: 3.4375rem;
+  width: 3.125rem;
   position: absolute;
   top: -1.5rem;
   left: 50vw;
   margin-left: -1.5rem;
+  color: var(--color-primary);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 .top-back-button a {
   text-decoration: none;
-  color: black;
+  color: var(--color-primary);
 }
 .laydo-flex-row {
   display: flex;
@@ -220,6 +243,12 @@ body {
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+}
+#themeIcon {
+  font-size: 1.5rem;
+  padding-top: 1rem;
+  cursor: pointer;
+  color: var(--font-color);
 }
 
 @media only screen and (max-width: 48rem) {

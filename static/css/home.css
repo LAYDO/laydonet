@@ -1,16 +1,6 @@
 #laydoBackgroundHome {
   display: inherit;
-  background-color: #000020;
-}
-.hexagon {
-  position: relative;
-  height: 110px;
-  width: 100px;
-  background-color: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(0.25rem);
-  margin: 1px;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  transition: 2s;
+  background-color: var(--color-primary);
 }
 .container {
   display: flex;
@@ -41,7 +31,7 @@
   position: absolute;
   width: 4px;
   height: 0%;
-  background: #fff8ed;
+  background: var(--font-color);
   z-index: 999999;
 }
 
