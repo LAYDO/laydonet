@@ -1,4 +1,12 @@
 let overlay = document.getElementById('laydoOverlay');
+
+// Sets theme
+if (localStorage.getItem('theme') === 'theme-dark') {
+    setTheme('theme-dark');
+} else {
+    setTheme('theme-light');
+}
+
 function redirect(evt) {
     var y = document.getElementsByClassName('active');
     for (var i = 0; i < y.length; i++) {
@@ -42,27 +50,18 @@ async function getSomething() {
     })
 }
 
-// Mobile Enhancements - these are more for a side navigation menu but possibly useful for something else
+// DARK/LIGHT THEME credit to 
+// https://medium.com/@haxzie/dark-and-light-theme-switcher-using-css-variables-and-pure-javascript-zocada-dd0059d72fa2
 
-// document.addEventListener("click", function (e) {
-//     if (!document.getElementById("laydoNavIcon").contains(e.target) && (!document.getElementById("laydoOverlay").contains(e.target))) {
-//         closeNav();
-//     }
-// });
+function toggleTheme() {
+    if (localStorage.getItem('theme') === 'theme-dark') {
+        setTheme('theme-light');
+    } else {
+        setTheme('theme-dark');
+    }
+}
 
-// function handleGesture() { // props to Damjan Pavlica
-//     if ((touchendX < touchstartX) && (touchstartX - touchendX > 100)) {
-//         openNav();
-//     }
-//     if ((touchendX > touchstartX) && (touchendX - touchstartX > 100)) {
-//         closeNav();
-//     }
-// }
-
-// document.addEventListener('touchstart', e => {
-//     touchstartX = e.changedTouches[0].screenX;
-// });
-// document.addEventListener('touchend', e => {
-//     touchendX = e.changedTouches[0].screenX;
-//     handleGesture();
-// })
+function setTheme(themeName) {
+    localStorage.setItem('theme', themeName);
+    document.documentElement.className = themeName;
+}
