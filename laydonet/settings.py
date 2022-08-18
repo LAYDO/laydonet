@@ -17,14 +17,15 @@ import sys
 import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
+# BASE_DIR = Path(__file__).resolve().parent.parent
+print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY") # 'django-insecure-)f!c-)t!0$53a*mnm8*@xx9kem-eu-&l8kek7)um12lax&8^n9'
+SECRET_KEY = 'django-insecure-)f!c-)t!0$53a*mnm8*@xx9kem-eu-&l8kek7)um12lax&8^n9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # os.getenv("DEBUG", "False") == "True"
@@ -86,8 +87,14 @@ DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 if DEVELOPMENT_MODE is True:
     DATABASES = {
         'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            # 'ENGINE': 'django.db.backends.sqlite3',
+            # 'NAME': BASE_DIR / 'db.sqlite3',
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+	    'NAME': 'laydonetdb',
+            'USER': 'laydo',
+	    'PASSWORD': 'drew758Met340^',
+	    'HOST': '',
+            'PORT': '5432'
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
@@ -130,10 +137,13 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-import os
-STATIC_URL = os.environ.get('DJANGO_STATIC_URL', '/static/')
-STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT', '/static/')
-STATICFILES_DIRS = (str(BASE_DIR.joinpath('static')),)
+# STATIC_URL = os.environ.get('DJANGO_STATIC_URL', os.path.join(BASE_DIR, "/static/"))
+STATIC_URL = BASE_DIR + "/static/"
+print(STATIC_URL)
+# STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT', os.path.join(BASE_DIR, "/static/"))
+STATIC_ROOT = BASE_DIR + "/static/"
+print(STATIC_ROOT)
+# STATICFILES_DIRS = os.path.join(BASE_DIR,"static")
 STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
 # Default primary key field type
