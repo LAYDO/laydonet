@@ -19,7 +19,7 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
 # BASE_DIR = Path(__file__).resolve().parent.parent
-print(BASE_DIR)
+# print(BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'home',
+    'wedding',
 ]
 
 MIDDLEWARE = [
@@ -137,13 +138,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-# STATIC_URL = os.environ.get('DJANGO_STATIC_URL', os.path.join(BASE_DIR, "/static/"))
-STATIC_URL = BASE_DIR + "/static/"
-print(STATIC_URL)
-# STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT', os.path.join(BASE_DIR, "/static/"))
-STATIC_ROOT = BASE_DIR + "/static/"
-print(STATIC_ROOT)
+STATIC_URL = os.environ.get('DJANGO_STATIC_URL', os.path.join(BASE_DIR, "/static/"))
+# STATIC_URL = BASE_DIR + "/static/"
+# print(STATIC_URL)
+STATIC_ROOT = os.environ.get('DJANGO_STATIC_ROOT', os.path.join(BASE_DIR, "/static/"))
+# STATIC_ROOT = BASE_DIR + "/static/"
+# print(STATIC_ROOT)
 # STATICFILES_DIRS = os.path.join(BASE_DIR,"static")
+STATICFILES_DIRS = BASE_DIR + "/static/",
 STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
 # Default primary key field type

@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Wedding website for Aieleen and Landen. Developed by LaydoNet." />
+  <head>
+    <title>Aie Promised Land</title>
+    <link rel="stylesheet" href="{% static 'css/wedding.css' %}" />
+    <link rel="icon" href="{% static 'favicon.ico' %}" />
+    <link rel="stylesheet" href="https://d1nkt0x8bzz6gz.cloudfront.net/api/css?family=Beloved%20Gray:Regular" />
+    <link rel="stylesheet" href="https://d1nkt0x8bzz6gz.cloudfront.net/api/css?family=Bembo:Regular,Italic" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=MonteCarlo&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    {% block page_head %}{% endblock %}
+  </head>
+  <body>
+    <div class="apl-overlay" id="aplOverlay">
+      <!-- Close overlay button -->
+      <!-- <div class="apl-close-btn" onclick="closeNav()">&times;</div> -->
+      <!-- Overlay content -->
+      <div class="apl-overlay-content">
+        <a class="nav-link" onclick="redirect(event)" id="wedding">Wedding</a>
+        <a class="nav-link" onclick="redirect(event)" id="wedding/ourstory">Our Story</a>
+      </div>
+    </div>
+    <!-- Desktop Navigation Bar -->
+    <div class="apl-navbar" id="aplNavbar">
+      <div>
+        <div class="apl-nav-title" id="aplNavTitle" onclick="redirect(event)">Aieleen + Landen</div>
+      </div>
+      <div>
+        <a class="nav-link" onclick="redirect(event)" id="wedding/ourstory">Our Story</a>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Bar -->
+    <div class="apl-mobile-nav" id="aplMNavbar">
+      <div class="apl-nav-title" id="aplNavTitle" onclick="redirect(event)">Aieleen + Landen</div>
+      <div id="aplNavIcon" class="apl-nav-menu fas fa-bars" onclick="toggleNav()"></div>
+    </div>
+    {% block page_backgrounds %}{% endblock %}
+    <div class="apl-flex-home">
+      <div class="apl-flex-home" id="aplHomeOne">
+        <div class="apl-title">{% block apl_homeone_title%}{% endblock %}</div>
+        <div class="apl-bottom">
+          <div class="material-icons" id="aplArrowDown">keyboard_arrow_down</div>
+        </div>
+      </div>
+      <div class="apl-flex-home">
+        <div class="apl-img-container">{% block apl_sepone_content %}{% endblock %}</div>
+      </div>
+      <div class="apl-flex-home">
+        {% block apl_content%}{% endblock %}
+        {% if user.is_authenticated %} 
+        {% block apl_auth_content%}
+        {% endblock %} 
+        {% else %} 
+        {% block apl_not_auth_content%}
+        {% endblock %} 
+        {% endif %}
+      </div>
+      <div class="apl-flex-home">
+        {% block apl_gallery %}{% endblock %} 
+      </div>
+      <div class="apl-flex-home">
+        <div class="apl-footer">
+          <div class="top-back-button" id="btt"><a href="#"><span class="fas fa-chevron-up"></span><br>TOP</a></div>
+          <div class="laydo-net-footer">Site development by <a href="https://www.laydo.net" target="_blank">LaydoNet</a></div>
+        </div>
+      </div>
+    </div>
+    <iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+    <script type="text/javascript" src="{% static 'js/wedding_base.js' %}"></script>
+    {% block page_scripts %}{% endblock %}
+  </body>
+</html>

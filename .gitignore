@@ -127,3 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Static callout for admin that should be dealt with in server init
+/static/admin/
+/static/staticfiles.json

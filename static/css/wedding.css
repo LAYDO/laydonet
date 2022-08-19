@@ -1,0 +1,578 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Bembo Regular";
+}
+.apl-flex-home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  z-index: 10;
+  text-align: center;
+}
+.apl-overlay {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 999;
+  right: 0;
+  top: 0;
+  background-color: rgb(0, 0, 0);
+  overflow-x: hidden;
+  transition: 0.5s;
+  text-align: center;
+}
+.apl-overlay a {
+  padding: 1rem;
+  text-decoration: none;
+  font-size: 1.5rem;
+  color: white;
+  display: block;
+  cursor: pointer;
+  letter-spacing: 0.0625rem;
+}
+.apl-overlay .nav-link:hover {
+  color: #efd09f;
+}
+.apl-overlay .apl-close-btn {
+  position: absolute;
+  top: 0;
+  right: 2rem;
+  font-size: 2rem;
+  color: white;
+}
+.code-overlay {
+  display: none;
+  height: 100%;
+  width: 100%;
+  position: fixed;
+  z-index: 999;
+  right: 0;
+  top: 0;
+  background-color: rgb(0, 0, 0);
+  overflow-x: hidden;
+  transition: 0.5s;
+  text-align: center;
+  color: white;
+  justify-content: center;
+  align-items: center;
+}
+.code-overlay .apl-close-btn {
+  position: absolute;
+  top: 0;
+  right: 2rem;
+  font-size: 2rem;
+  color: white;
+  z-index: 1000;
+  cursor: pointer;
+}
+.apl-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+#aplBackground1 {
+  display: inherit;
+  background-image: url("/static/img/Aieleen-Landen-Engagement-19.jpg");
+}
+#aplBackground2 {
+  display: inherit;
+  transform: translateY(100vh);
+  background-image: url("/static/img/Aieleen-Landen-Engagement-13.jpg");
+  height: 200vh;
+}
+#aplBackground3 {
+  display: inherit;
+  background-image: url("/static/img/apl_s1.jpg");
+}
+#aplBackground4 {
+  display: inherit;
+  transform: translateY(100vh);
+  background-image: url("/static/img/fun_8.jpg");
+}
+#aplBackground5 {
+  display: inherit;
+  background-image: url("/static/img/Aieleen-Landen-Engagement-20.jpg");
+}
+#aplBackground6 {
+  display: inherit;
+  background-image: url("/static/img/Aieleen-Landen-Engagement-65.jpg");
+  background-size: cover;
+  height: 175vh;
+}
+#aplBackground7 {
+  display: inherit;
+  transform: translateY(100vh);
+  background-image: url("/static/img/fun_7.jpg");
+  height: 280vh;
+}
+#aplBackground8 {
+  display: inherit;
+  transform: translateY(100vh);
+  background-image: url("/static/img/Aieleen-Landen-Engagement-75.jpg");
+}
+#aplHomeOne,
+#aplHomeTwo,
+#aplHomeZero,
+#aplHomeFour {
+  min-height: 100vh;
+}
+#aplHomeThree,
+#aplStoryOne,
+#aplHomeFive {
+  background-color: white;
+}
+#aplHomeZero,
+#aplHomeTwo,
+#aplHomeFour {
+  justify-content: center;
+}
+#aplMNavbar,
+#aplHomeOne {
+  transition: margin-right 0.5s;
+}
+
+#aplHomeThree h2 {
+  padding: 3rem;
+}
+
+.apl-flex-home h1 {
+  margin-bottom: 0.5rem;
+}
+.apl-flex-home h3 {
+  margin-bottom: 0;
+}
+.apl-flex-home p {
+  margin-top: 0.125rem;
+}
+.apl-title,
+.apl-bottom {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: absolute;
+}
+.apl-title {
+  /* border: 0.125rem solid green; */
+  justify-content: center;
+  align-items: center;
+  height: 75%;
+}
+.apl-bottom {
+  /* border: 0.125rem solid blue; */
+  align-items: center;
+  justify-content: flex-end;
+  bottom: 0;
+  height: 25%;
+}
+.title-name {
+  line-height: 1;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 7rem;
+  margin-bottom: 5rem;
+}
+.title-dark {
+  color: white;
+}
+.apl-navbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  font-size: 1.5rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 998;
+  width: 100%;
+}
+.apl-navbar a {
+  color: black;
+  text-align: center;
+  padding: 1rem 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: transparent;
+  font-family: "Bembo Regular";
+  text-transform: uppercase;
+  letter-spacing: 0.125rem;
+  font-size: 1rem;
+}
+.apl-navbar a:hover {
+  color: #efd09f;
+}
+.apl-navbar a.active {
+  color: #efd09f;
+}
+.apl-mobile-nav {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 999;
+  width: 100%;
+  display: none;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  background-color: transparent;
+  /* border: 0.125rem solid red; */
+}
+.apl-nav-menu {
+  padding: 0.5rem;
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-right: 1rem;
+  cursor: pointer;
+  overflow: hidden;
+  /* color: #fefee3; */
+}
+.apl-nav-title {
+  font-weight: 400;
+  letter-spacing: 0.25rem;
+  margin-left: 1rem;
+  padding-left: 2rem;
+  cursor: pointer;
+}
+.apl-nav-title:hover {
+  color: #efd09f;
+}
+.apl-frame {
+  display: block;
+  width: 100%;
+  height: 56rem;
+  box-sizing: border-box;
+  border: 0.5rem solid white;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+  margin: 1rem auto;
+}
+.nav-fixed {
+  position: fixed;
+  left: 0rem;
+  top: 0rem;
+  right: 0rem;
+  z-index: 999;
+  background-color: #939a7e;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+}
+.nav-fixed a {
+  color: white;
+}
+.apl-story {
+  text-align: center;
+  background-color: white;
+  box-sizing: border-box;
+  font-size: 1.5rem;
+  padding: 0 5%;
+}
+.apl-story h1 {
+  font-weight: 400;
+}
+.apl-story-frame {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 0;
+}
+.apl-story-title {
+  font-weight: 400;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 1rem 0;
+  background-color: white;
+  width: 100%;
+  font-size: 2rem;
+}
+.apl-story-title::before,
+.apl-story-title::after {
+  content: "";
+  display: block;
+  height: 0.09rem;
+  min-width: 30vw;
+}
+.apl-story-title::before {
+  background: linear-gradient(to right, rgba(240, 240, 240, 0), #000);
+  margin-right: 1vh;
+}
+.apl-story-title::after {
+  background: linear-gradient(to left, rgba(240, 240, 240, 0), #000);
+  margin-left: 1vh;
+}
+.apl-separator,
+.apl-separator-dark {
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: nowrap;
+  padding: 1rem 0;
+}
+.apl-separator::before,
+.apl-separator::after,
+.apl-separator-dark::before,
+.apl-separator-dark::after {
+  content: "";
+  display: block;
+  height: 0.09rem;
+  min-width: 30vw;
+}
+.apl-separator::before {
+  background: linear-gradient(to right, rgba(240, 240, 240, 0), #000);
+  margin-right: 1vh;
+}
+.apl-separator::after {
+  background: linear-gradient(to left, rgba(240, 240, 240, 0), #000);
+  margin-left: 1vh;
+}
+.apl-separator-dark::before {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff);
+  margin-right: 1vh;
+}
+.apl-separator-dark::after {
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), #fff);
+  margin-left: 1vh;
+}
+.apl-head-text {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.apl-unlock {
+  position: relative;
+  bottom: 5%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.apl-unlock-input {
+  line-height: 2rem;
+  margin: 1rem auto;
+  width: 80%;
+  border: 0;
+}
+.apl-unlock-input:focus {
+  border: 0;
+}
+.code-input {
+  padding: 0.5rem 0;
+  line-height: 2rem;
+  margin: 1rem auto;
+  width: 90%;
+  /* border: 0.0625rem inset #ccc; */
+}
+
+.hide-password,
+.show-password {
+  line-height: 2rem;
+  padding: 0 0.25rem;
+}
+.hide-password {
+  color: #b4b4b4;
+}
+.show-password {
+  color: #000;
+}
+.apl-unlock-button {
+  background-color: #939a7e;
+  color: white;
+  padding: 0.5rem 2rem;
+  margin: 1rem auto;
+  width: 90%;
+  cursor: pointer;
+}
+.apl-unlock-button a {
+  text-decoration: none;
+  color: inherit;
+}
+#aplArrowDown {
+  position: absolute;
+  bottom: 5%;
+  color: white;
+  font-size: 3rem;
+  font-weight: 400;
+}
+.apl-img-container {
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.apl-home-img {
+  width: 100%;
+  padding: 1rem;
+}
+.apl-home-img img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+#ringHug {
+  filter: grayscale(100%);
+}
+.apl-wedding-colors {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 3rem 0;
+  width: 100%;
+}
+.apl-wed-color {
+  border-radius: 50%;
+  height: 2rem;
+  width: 2rem;
+  border: 0.25rem solid white;
+}
+#wedGreen {
+  background-color: #939a7e;
+}
+#wedWhite {
+  background-color: #fefee3;
+}
+#wedPink {
+  background-color: #fad6cb;
+}
+#wedPeach {
+  background-color: #ebab7f;
+}
+#wedChamp {
+  background-color: #efd09f;
+}
+#wedTerra {
+  background-color: #c0871d;
+}
+.apl-color-desc {
+  display: none;
+}
+.apl-gallery {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.apl-gallery-credit {
+  background-color: white;
+  width: 100%;
+  padding: 3rem 0;
+}
+.apl-pic {
+  max-width: 45%;
+  padding: 1rem 0;
+}
+.apl-footer {
+  position: relative;
+  background-color: #d1d1d1;
+  padding: 3rem 0;
+  width: 100%;
+}
+.top-back-button {
+  border-radius: 50%;
+  background-color: white;
+  height: 3rem;
+  width: 3rem;
+  position: absolute;
+  top: -1.5rem;
+  left: 50vw;
+  margin-left: -1.5rem;
+}
+.top-back-button a {
+  text-decoration: none;
+  color: black;
+}
+.apl-flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.apl-rsvp-guests {
+  font-size: 2rem;
+}
+#plusForm {
+  display: none;
+}
+.apl-guest-row {
+  display: flex;
+  flex-direction: row;
+}
+.apl-list-item {
+  padding: 0 1rem;
+  font-size: 1.5rem;
+}
+.apl-input-radio {
+  margin: 0 3rem;
+  font-size: 2rem;
+}
+/* potential color palette: https://coolors.co/939a7e-fefee3-fad6cb-ebab7f-efd09f-c0871d */
+/* https://rebekah-israel-gblb.squarespace.com/wedding#perfect-love */
+
+@media only screen and (max-width: 48rem) {
+  .apl-nav-title {
+    padding-left: 0;
+    flex-wrap: nowrap;
+  }
+  .apl-head-text {
+    padding: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+  .title-name {
+    font-size: 3rem;
+  }
+  .title-and {
+    font-size: 1rem;
+    margin-top: 3rem;
+    margin-left: 1rem;
+  }
+  .apl-navbar {
+    display: none;
+  }
+  .apl-mobile-nav {
+    display: flex;
+  }
+  .nav-fixed {
+    position: fixed;
+    left: 0rem;
+    top: 0rem;
+    right: 0rem;
+    z-index: 999;
+    background-color: #939a7e;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px;
+    color: white;
+    padding: 0.5rem 0;
+  }
+  #aplBackground6,
+  #aplBackground7,
+  #aplBackground8 {
+    height: inherit;
+  }
+  .apl-story {
+    font-size: inherit;
+  }
+  .apl-story-title {
+    font-size: 1.5rem;
+  }
+}
