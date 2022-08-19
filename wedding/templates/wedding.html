@@ -1,0 +1,108 @@
+{% extends "wedding_base.html" %} {% load static %}{% block page_backgrounds %}
+<div class="apl-background" id="aplBackground1"></div>
+<div class="apl-background" id="aplBackground2"></div>
+{% endblock %}
+{% block apl_homeone_title%}
+<div class="title-name">07.30.2022</div>
+{% endblock %}
+{% block apl_sepone_content %}
+<div class="apl-home-img">
+  <img id="ringHug" src="/static/img/apl_3.jpg" />
+</div>
+{% endblock %}
+{% block apl_auth_content %}
+  <div class="apl-flex-home" id="aplHomeTwo">
+    <div class="apl-wedding-colors">
+      <div class="apl-flex-home">
+        <div class="apl-wed-color" id="wedGreen" onclick="showColor(event)"></div>
+        <div class="apl-color-desc title-dark" id="greenDesc">Artichoke<br>#939A7E</div>
+      </div>
+      <div class="apl-flex-home">
+        <div class="apl-wed-color" id="wedWhite" onclick="showColor(event)"></div>
+        <div class="apl-color-desc title-dark" id="whiteDesc">Light Yellow<br>#FEFEE3</div>
+      </div>
+      <div class="apl-flex-home">
+        <div class="apl-wed-color" id="wedPink" onclick="showColor(event)"></div>
+        <div class="apl-color-desc title-dark" id="pinkDesc">Silk<br>#FAD6CB</div>
+      </div>
+      <div class="apl-flex-home">
+        <div class="apl-wed-color" id="wedPeach" onclick="showColor(event)"></div>
+        <div class="apl-color-desc title-dark" id="peachDesc">Peach<br>#EBAB7F</div>
+      </div>
+      <div class="apl-flex-home">
+        <div class="apl-wed-color" id="wedChamp" onclick="showColor(event)"></div>
+        <div class="apl-color-desc title-dark" id="champDesc">Champagne<br>#EFD09F</div>
+      </div>
+      <div class="apl-flex-home">
+        <div class="apl-wed-color" id="wedTerra" onclick="showColor(event)"></div>
+        <div class="apl-color-desc title-dark" id="terraDesc">Gold<br>#C0871D</div>
+      </div>
+    </div>
+    <div class="apl-flex-home title-dark">
+      <h1>EVENTS</h1>
+      <div class="apl-separator-dark"><h2>July 30th, 2022</h2></div>
+      <span class="fas fa-car-side"></span>
+      <h3>4:00 PM ARRIVAL</h3>
+      <p>The Edgewater Hotel<br>&#9829; Valet available &#9829;</p>
+      <br><br>
+      <span class="fas fa-bell"></span>
+      <h3>4:30 PM WEDDING CEREMONY</h3>
+      <p>The Edgewater Hotel - Forest Room</p>
+      <br><br>
+      <span class="fas fa-cocktail"></span>
+      <h3>5:00 - 6:00 PM COCKTAIL HOUR</h3>
+      <p>The Edgewater Lounge<br>&#9829; Drinks & Hors d'oeuvres &#9829;</p>
+      <br><br>
+      <span class="fas fa-utensils"></span>
+      <h3>6:00 - 9:30 PM RECEPTION</h3>
+      <p>The Edgewater Hotel - Forest Room<br>&#9829; Dinner, speeches, first dances, etc. &#9829;</p>
+      <br><br>
+      <span class="fas fa-glass-cheers"></span>
+      <h3>10:00+ PM OUT ON THE TOWN</h3>
+      <p>&#9829; Celebrate the newlyweds out in Belltown! &#9829;</p>
+    </div>
+  </div>
+  <div class="apl-flex-home" id="aplHomeThree">
+    <h1>TRAVEL</h1>
+    <h3>EDGEWATER HOTEL</h3>
+    <p>This is where our ceremony and reception will be held, within the Forest Room
+      <br>Rooms are filling up so book fast. Use code 'EVENTS' for a 15% discount!</p>
+    <br>
+    <p>2411 Alaskan Way, Seattle, WA 98121</p>
+    <a href="https://www.edgewaterhotel.com" target="__blank">VISIT WEBSITE</a>
+    <br>
+    <div class="apl-separator"><span class="fas fa-concierge-bell"></span></div>
+    <h3>SEATTLE MARRIOTT</h3>
+    <p>Located about a quarter mile north of the venue is a cheaper option and only 
+      a 5 minute walk to The Edgewater. Ask about our group rate here too!</p>
+    <br>
+    <p>2100 Alaskan Way, Seattle, WA 98121</p>
+    <a href="https://www.marriott.com/hotels/travel/seawf-seattle-marriott-waterfront/" target="__blank">VISIT WEBSITE</a>
+    <br>
+    <div class="apl-separator"><span class="fas fa-concierge-bell"></span></div>
+    <h3>CITY GUIDE</h3>
+    <p>Check out some fun stuff to do while you're in-town!</p>
+    <a href="https://visitseattle.org" target="__blank">VISIT WEBSITE</a>
+  </div>
+{% endblock %}
+{% block apl_not_auth_content %}
+<div class="apl-flex-home" id="aplHomeZero">
+  <div class="title-name title-dark">THANK YOU</div>
+</div>
+<div class="apl-flex-home" id="aplHomeThree">
+  <h2>
+    <i>
+      Thank you to all those who've joined and supported us as we learned to grow and love one another.<br>
+      Thank you for being part of all the memories we made and for all the memories we will create.<br>
+      We look forward to having you by our side as we continue our story with our new beginning.
+    </i> 
+  </h2>
+</div>
+{% endblock %}
+{% block apl_gallery %}
+  <div class="apl-gallery" id="engagementGallery"></div>
+  <div class="apl-gallery-credit">Photos by <a href="https://www.camilledocena.com" target="_blank">Camille Docena</a></div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static 'js/wedding_home.js' %}"></script>
+{% endblock %}
