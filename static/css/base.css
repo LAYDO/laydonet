@@ -4,18 +4,21 @@ body {
   margin: 0;
   font-family: "Montserrat", sans-serif;
 }
+
 .theme-light {
   --color-primary: #fff8ed;
   --color-secondary: #c0aa92;
   --color-accent: #80716c;
   --font-color: #000020;
 }
+
 .theme-dark {
   --color-primary: #000020;
   --color-secondary: #80716c;
   --color-accent: #ffe2b8;
   --font-color: #fff8ed;
 }
+
 .laydo-flex-home {
   display: flex;
   flex-direction: column;
@@ -24,6 +27,7 @@ body {
   z-index: 10;
   text-align: center;
 }
+
 .laydo-overlay {
   height: 100%;
   width: 100%;
@@ -39,6 +43,7 @@ body {
   justify-content: center;
   display: none;
 }
+
 .laydo-overlay a {
   padding: 1rem;
   text-decoration: none;
@@ -48,6 +53,7 @@ body {
   cursor: pointer;
   letter-spacing: 0.0625rem;
 }
+
 .laydo-overlay .nav-link:hover {
   color: var(--color-accent);
 }
@@ -61,20 +67,24 @@ body {
   margin: 6px 0;
   transition: 0.4s;
 }
+
 .change .bar1 {
   -webkit-transform: rotate(-45deg) translate(-6px, 6px);
   transform: rotate(-45deg) translate(-6px, 6px);
 }
+
 .change .bar2 {
   opacity: 0;
 }
+
 .change .bar3 {
   -webkit-transform: rotate(45deg) translate(-6px, -8px);
   transform: rotate(45deg) translate(-6px, -8px);
 }
+
 #laydoNavIcon {
   cursor: pointer;
-  padding: 3rem;
+  padding: 2rem 3rem;
   z-index: 999;
 }
 
@@ -88,6 +98,7 @@ body {
   background-position: center;
   background-repeat: no-repeat;
 }
+
 #laydoHomeOne,
 #laydoHomeTwo {
   min-height: 100vh;
@@ -100,12 +111,14 @@ body {
   width: 100%;
   position: absolute;
 }
+
 .laydo-title {
   /* border: 0.125rem solid green; */
   justify-content: center;
   align-items: center;
   height: 75%;
 }
+
 .laydo-bottom {
   /* border: 0.125rem solid blue; */
   align-items: center;
@@ -113,6 +126,7 @@ body {
   bottom: 0;
   height: 25%;
 }
+
 .title-name {
   line-height: 1;
   font-weight: 400;
@@ -120,11 +134,13 @@ body {
   font-size: 7rem;
   margin-bottom: 5rem;
 }
+
 .title-dark {
   color: var(--font-color);
 }
+
 .laydo-mobile-nav {
-  position: absolute;
+  position: relative;
   top: 0;
   right: 0;
   z-index: 999;
@@ -135,9 +151,8 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: transparent;
-  height: 10%; /* 3.125rem; */
-  /* border: 0.125rem solid red; */
 }
+
 .laydo-nav-menu {
   padding: 0.5rem;
   font-weight: 400;
@@ -147,6 +162,7 @@ body {
   overflow: hidden;
   color: var(--font-color);
 }
+
 .laydo-nav-title {
   margin-left: 1rem;
   cursor: pointer;
@@ -162,10 +178,12 @@ body {
   width: 90%;
   cursor: pointer;
 }
+
 .laydo-button a {
   text-decoration: none;
   color: inherit;
 }
+
 #laydoArrowDown {
   position: absolute;
   bottom: 5%;
@@ -173,6 +191,7 @@ body {
   font-size: 3rem;
   font-weight: 400;
 }
+
 .laydo-img-container {
   height: 100%;
   width: 100%;
@@ -181,6 +200,7 @@ body {
   flex-direction: row;
   justify-content: center;
 }
+
 .laydo-gallery {
   background-color: white;
   display: flex;
@@ -189,15 +209,18 @@ body {
   justify-content: space-evenly;
   align-items: center;
 }
+
 .laydo-gallery-credit {
   background-color: white;
   width: 100%;
   padding: 3rem 0;
 }
+
 .laydo-pic {
   max-width: 45%;
   padding: 1rem 0;
 }
+
 .laydo-footer {
   position: relative;
   background-color: var(--color-primary);
@@ -206,6 +229,7 @@ body {
   color: var(--font-color);
   border-top: 0.25rem solid var(--font-color);
 }
+
 /* .hexagon {
   position: relative;
   height: 110px;
@@ -227,16 +251,19 @@ body {
   color: var(--color-primary);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
+
 .top-back-button a {
   text-decoration: none;
   color: var(--color-primary);
 }
+
 .laydo-flex-row {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
 }
+
 .laydo-row-wrap {
   display: flex;
   flex-direction: row;
@@ -244,6 +271,7 @@ body {
   align-items: center;
   flex-wrap: wrap;
 }
+
 #themeIcon {
   font-size: 1.5rem;
   padding-top: 1rem;
@@ -256,9 +284,11 @@ body {
     flex-wrap: nowrap;
     width: 50%;
   }
+
   .title-name {
     font-size: 3rem;
   }
+
   #laydoNavIcon {
     padding: 2rem;
   }

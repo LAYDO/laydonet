@@ -6,3 +6,8 @@ psycopg2-binary==2.9.3
 sqlparse==0.4.2
 tzdata==2022.1
 whitenoise==6.0.0
+beautifulsoup4>=4.11.1
+geopy>=2.2.0
+requests==2.27.1
+soupsieve==2.3.2.post1
+sqlparse==0.4.2
