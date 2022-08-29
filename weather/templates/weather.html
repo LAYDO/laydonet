@@ -1,0 +1,65 @@
+{% extends "app.html" %} {% load static %} {% block page_head %}
+<link rel="stylesheet" href="{% static 'css/weather.css' %}" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
+{% endblock %} {% block laydo_content_1 %}
+<div id="Weather" class="laydo-app">
+  <div class="city-search">
+    <input type="text" id="citySearch" name="citySearch" placeholder="Enter a city" />
+    <button id="weatherSearch" onclick="getCurrentWeather()"><span id="searchIcon" class="fas fa-search"></span></button><br />
+  </div>
+  <div id="loader" class="loader"></div>
+  <div id="currentWeather">
+    <h2>Current Weather</h2>
+    <div class="current-weather">
+      <div class="current-left">
+        <div id="atmosphere">
+          <div id="atmosTitle" class="mini-title">Clouds</div>
+          <div id="cloudsData" class="mini-data"></div>
+          <div id="pressureData" class="mini-data"></div>
+        </div>
+        <div id="aqi">
+          <div id="airTitle" class="mini-title">AQI</div>
+          <div id="aqiData" class="mini-data"></div>
+          <div id="pmData" class="mini-data"></div>
+        </div>
+      </div>
+      <div class="current-middle">
+        <div id="temp" class="temp-circle">
+          <div id="tempTitle" class="mini-title"></div>
+          <div id="current-temp"></div>
+          <div id="current-temp-c"></div>
+          <span id="current-icon"></span>
+        </div>
+      </div>
+      <div class="current-right">
+        <div id="precip">
+          <div id="wetTitle" class="mini-title">Humidity</div>
+          <div id="humidData" class="mini-data"></div>
+          <div id="precipData" class="mini-data"></div>
+        </div>
+        <div id="wind">
+          <div id="windTitle" class="mini-title">Wind</div>
+          <div id="windData" class="mini-data"></div>
+          <div id="gustData" class="mini-data"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="map">
+    <h2>Weather Map</h2>
+    <div id="weatherMap"></div>
+  </div>
+  <div id="dailyForecast">
+    <h2>Daily Forecast</h2>
+    <div id="forecast" class="weather-forecast"></div>
+  </div>
+  <div id="hourly" class="weather-hourly"></div>
+  <div id="celestialTop">
+    <h2>Celestial</h2>
+    <div id="celestial" class="celestial-section" dir="ltr"></div>
+  </div>
+</div>
+{% endblock %} {% block page_scripts %}
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<script type="text/javascript" src="{% static 'js/weather.js' %}"></script>
+{% endblock %}
