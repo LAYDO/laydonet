@@ -10,6 +10,7 @@ body {
   --color-secondary: #c0aa92;
   --color-accent: #80716c;
   --font-color: #000020;
+  --border: 0.125rem solid #c0aa92;
 }
 
 .theme-dark {
@@ -17,15 +18,18 @@ body {
   --color-secondary: #80716c;
   --color-accent: #ffe2b8;
   --font-color: #fff8ed;
+  --border: none;
 }
 
 .laydo-flex-home {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   width: 100%;
   z-index: 10;
   text-align: center;
+  background-color: var(--color-primary);
+  color: var(--font-color);
 }
 
 .laydo-overlay {
@@ -84,7 +88,7 @@ body {
 
 #laydoNavIcon {
   cursor: pointer;
-  padding: 2rem 3rem;
+  padding: 1rem 3rem;
   z-index: 999;
 }
 
@@ -292,4 +296,8 @@ body {
   #laydoNavIcon {
     padding: 2rem;
   }
+}
+
+#laydoMNavbar {
+  background-color: var(--color-primary);
 }
