@@ -118,18 +118,21 @@ function init() {
     hourly.style.display = 'none';
     this.loading = false;
 
-    document.getElementById('forecast').addEventListener('touchend', () => {
-        event.stopPropagation();
-    });
-    document.getElementById('weatherMap').addEventListener('touchend', () => {
-        event.stopPropagation();
-    });
-    document.getElementById('celestial').addEventListener('touchend', () => {
-        event.stopPropagation();
-    });
-    document.getElementById('hourly').addEventListener('touchend', () => {
-        event.stopPropagation();
-    });
+    // document.getElementById('forecast').addEventListener('touchend', () => {
+    //     event.stopPropagation();
+    // });
+    // elForecast.addEventListener('touchend', () => {
+    //     event.stopPropagation();
+    // });
+    // document.getElementById('weatherMap').addEventListener('touchend', () => {
+    //     event.stopPropagation();
+    // });
+    // document.getElementById('celestial').addEventListener('touchend', () => {
+    //     event.stopPropagation();
+    // });
+    // document.getElementById('hourly').addEventListener('touchend', () => {
+    //     event.stopPropagation();
+    // });
     document.addEventListener('keyup', (event) => {
         event.preventDefault();
         if (event.keyCode === 13) {

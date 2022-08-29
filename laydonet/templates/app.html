@@ -18,8 +18,8 @@
     <div class="laydo-overlay" id="laydoOverlay">
       <!-- Overlay content -->
       <div class="laydo-overlay-content">
-        {% block page_menu %}
         <a class="nav-link" onclick="redirect(event)" id="">LaydoNet</a>
+        {% block page_menu %}
         {% endblock %}
         <span class="nav-link fas fa-adjust" id="themeIcon" onclick="toggleTheme()"></span>
       </div>
@@ -28,7 +28,7 @@
     <!-- Flexible Navigation Bar -->
     <div class="laydo-mobile-nav" id="laydoMNavbar">
       <div class="laydo-nav-title" id="laydoNavTitle" onclick="redirect(event)">
-        <svg viewBox="0 0 100 50">
+        <svg viewBox="0 14 100 24">
           <!-- LA -->
           <path d="M5 20 C 5 30 5 30 15 30 C20 17 20 17 25 30 M19 26 L21 26" stroke-width="1" fill="none" />
           <!-- Y -->
@@ -52,11 +52,11 @@
         {% block laydo_content_1 %}
         {% endblock %}
         <!-- <div class="laydo-title">{% block laydo_home_title %}{% endblock %}</div> -->
-        <div class="laydo-bottom">
-          <!-- <div class="material-icons" id="laydoArrowDown">keyboard_arrow_down</div> -->
-        </div>
+        <!-- <div class="laydo-bottom">
+          <div class="material-icons" id="laydoArrowDown">keyboard_arrow_down</div>
+        </div> -->
       </div>
-      <div class="laydo-flex-home" id="laydoHomeTwo">{% block laydo_content_2 %}{% endblock %}</div>
+      <!-- <div class="laydo-flex-home" id="laydoHomeTwo">{% block laydo_content_2 %}{% endblock %}</div> -->
       <div class="laydo-flex-home">
         <div class="laydo-footer">
           <div class="laydo-net-footer">Site development by Landen Robinson</div>
