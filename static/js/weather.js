@@ -8,8 +8,11 @@ let celestialT = document.getElementById('celestialTop');
 let celestial = document.getElementById('celestial');
 let hourly = document.getElementById('hourly');
 let currentTemp = document.getElementById('current-temp');
-let currentTempC = document.getElementById('current-temp-c');
+// let currentTempC = document.getElementById('current-temp-c');
 let currentIcon = document.getElementById('current-icon');
+let currentHigh = document.getElementById('current-high');
+let currentLow = document.getElementById('current-low');
+let currentDesc = document.getElementById('tempTitle');
 let currentCloud = document.getElementById('cloudsData');
 let currentPressure = document.getElementById('pressureData');
 let currentWind = document.getElementById('windData');
@@ -18,6 +21,8 @@ let currentHumid = document.getElementById('humidData');
 let currentAqi = document.getElementById('aqiData');
 let currentPM = document.getElementById('pmData');
 let currentRain = document.getElementById('precipData');
+let searches = document.getElementById('citySection');
+let cityName = document.getElementById('cityName');
 let now = new Date();
 let colorSunrise = '#FFE600';
 let colorSunset = '#FF8700';
@@ -118,21 +123,6 @@ function init() {
     hourly.style.display = 'none';
     this.loading = false;
 
-    // document.getElementById('forecast').addEventListener('touchend', () => {
-    //     event.stopPropagation();
-    // });
-    // elForecast.addEventListener('touchend', () => {
-    //     event.stopPropagation();
-    // });
-    // document.getElementById('weatherMap').addEventListener('touchend', () => {
-    //     event.stopPropagation();
-    // });
-    // document.getElementById('celestial').addEventListener('touchend', () => {
-    //     event.stopPropagation();
-    // });
-    // document.getElementById('hourly').addEventListener('touchend', () => {
-    //     event.stopPropagation();
-    // });
     document.addEventListener('keyup', (event) => {
         event.preventDefault();
         if (event.keyCode === 13) {
@@ -140,21 +130,21 @@ function init() {
         }
     });
 
-    datas.forEach(d => {
-        document.getElementById(d.object).addEventListener('click', () => {
-            let titleStr = Object.keys(d)[1];
-            let title = document.getElementById(titleStr);
-            if (document.getElementById(d.elements[0]).style.display != 'none') {
-                title.innerText = d[titleStr][1];
-                document.getElementById(d.elements[0]).style.display = 'none';
-                document.getElementById(d.elements[1]).style.display = 'inherit';
-            } else {
-                title.innerText = d[titleStr][0];
-                document.getElementById(d.elements[0]).style.display = 'inherit';
-                document.getElementById(d.elements[1]).style.display = 'none';
-            }
-        })
-    });
+    // datas.forEach(d => {
+    //     document.getElementById(d.object).addEventListener('click', () => {
+    //         let titleStr = Object.keys(d)[1];
+    //         let title = document.getElementById(titleStr);
+    //         if (document.getElementById(d.elements[0]).style.display != 'none') {
+    //             title.innerText = d[titleStr][1];
+    //             document.getElementById(d.elements[0]).style.display = 'none';
+    //             document.getElementById(d.elements[1]).style.display = 'inherit';
+    //         } else {
+    //             title.innerText = d[titleStr][0];
+    //             document.getElementById(d.elements[0]).style.display = 'inherit';
+    //             document.getElementById(d.elements[1]).style.display = 'none';
+    //         }
+    //     })
+    // });
 
     if (navigator.geolocation) {
         document.getElementById('citySearch').value = '';
@@ -166,12 +156,12 @@ function init() {
 
 async function getCurrentWeather(position) {
     load();
-    let city = document.getElementById('citySearch').value.trim();
+    let q = document.getElementById('citySearch').value.trim();
     let url = `${window.location.href}f/?`;
     if (position) {
         url += `lat=${position.coords.latitude}&lon=${position.coords.longitude}`
-    } else if (city) {
-        url += `city=${city}`;
+    } else if (q) {
+        url += `q=${q}`;
     }
     fetch(url).then(response => {
         load();
@@ -199,6 +189,8 @@ function load() {
         currElement.style.display = 'inherit';
         elForecast.style.display = 'inherit';
         celestialT.style.display = 'inherit';
+        cityName.style.display = 'inherit';
+        hourly.style.display = 'flex';
     } else {
         currElement.style.display = 'none';
         elForecast.style.display = 'none';
@@ -213,13 +205,18 @@ function load() {
         loader.style.display = 'inline-block';
     }
     this.loading = !this.loading;
+    searches.style.display = 'none';
 }
 
 function buildCurrent(data) {
+    cityName.innerText = `${data.name}`;
     currentIcon.className = icons[data.weatherIcon];
     currentTemp.innerText = `${Math.round(data.temp)}\xB0 F`;
-    currentTempC.innerText = `${Math.round(data.tempC)}\xB0 C`;
+    // currentTempC.innerText = `${Math.round(data.tempC)}\xB0 C`;
     currentCloud.innerText = `${Math.round(data.clouds)} \u0025`;
+    currentHigh.innerText = `H: ${Math.round(data.high)}\xB0`;
+    currentLow.innerText = `L: ${Math.round(data.low)}\xB0`;
+    currentDesc.innerText = `${data.weatherDesc}`;
     currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
     currentWind.innerText = `${Math.round(data.windSpeed)} ${windDirection(data.windDeg)}`;
     currentGust.innerText = `${Math.round(data.windGust)} mph`;
@@ -329,7 +326,6 @@ function buildForecasts(data) {
         foreTemps.append(foreHigh);
         foreTemps.append(foreLow);
         foreContainer.append(foreTemps);
-        foreContainer.addEventListener('click', () => { hourly.style.display == 'none' ? hourly.style.display = 'flex' : hourly.style.display = 'none' });
         forecast.append(foreContainer);
     });
 
@@ -350,26 +346,21 @@ function buildHourly(data) {
         hourTitle.className = 'hourly-title';
         let hourIcon = document.createElement('span');
         hourIcon.className = 'hourly-icon';
-        let hourDesc = document.createElement('div');
-        hourDesc.className = 'hourly-desc';
         let hourTemps = document.createElement('div');
         hourTemps.className = 'hourly-temps';
 
         hourContainer.id = `${d.dt}Container`;
         hourTitle.id = `${d.dt}Title`;
         hourIcon.id = `${d.dt}Icon`;
-        hourDesc.id = `${d.dt}Desc`;
         hourTemps.id = `${d.dt}Temps`;
 
         let theHour = new Date(d.dt * 1000);
         hourTitle.innerText = hourlyText(theHour.getHours());
         hourIcon.className += icons[d.weather[0].icon];
-        hourDesc.innerText = d.weather[0].main;
         hourTemps.innerText = `${Math.round(d.temp)}\xB0`;
 
         hourContainer.append(hourTitle);
         hourContainer.append(hourIcon);
-        hourContainer.append(hourDesc);
         hourContainer.append(hourTemps);
         hourly.append(hourContainer);
     });
@@ -786,8 +777,6 @@ function plugDiff(diff, div, text) {
     div.innerText = `${hours}h ${mins}m ${secs}s\n until ${text}`;
 }
 
-
-
 function hourlyText(h) {
     if (h > 12) {
         return `${h - 12} PM`;
@@ -798,4 +787,15 @@ function hourlyText(h) {
     } else {
         return `${h} AM`;
     }
+}
+
+function toggleCitySearch() {
+    if (cityName.style.display != 'none') {
+        cityName.style.display = 'none';
+        searches.style.display = 'inherit';
+    } else {
+        cityName.style.display = 'inherit';
+        searches.style.display = 'none';
+    }
+    toggleOverlay();
 }
