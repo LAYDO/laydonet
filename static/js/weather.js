@@ -7,6 +7,7 @@ let wMap = document.getElementById('weatherMap');
 let celestialT = document.getElementById('celestialTop');
 let celestial = document.getElementById('celestial');
 let hourly = document.getElementById('hourly');
+let hfc = document.getElementById('hfc');
 let currentTemp = document.getElementById('current-temp');
 // let currentTempC = document.getElementById('current-temp-c');
 let currentIcon = document.getElementById('current-icon');
@@ -59,7 +60,7 @@ const datas = [
 const options = {
     // month: "numeric",
     // day: "numeric"
-    weekday: "long"
+    weekday: "short"
 };
 const celeOptions = {
     hour: "2-digit",
@@ -120,7 +121,7 @@ function init() {
     loader.style.display = 'none';
     map.style.display = 'none';
     celestialT.style.display = 'none';
-    hourly.style.display = 'none';
+    hfc.style.display = 'none';
     this.loading = false;
 
     document.addEventListener('keyup', (event) => {
@@ -190,13 +191,13 @@ function load() {
         elForecast.style.display = 'inherit';
         celestialT.style.display = 'inherit';
         cityName.style.display = 'inherit';
-        hourly.style.display = 'flex';
+        hfc.style.display = 'flex';
     } else {
         currElement.style.display = 'none';
         elForecast.style.display = 'none';
         map.style.display = 'none';
         celestialT.style.display = 'none';
-        hourly.style.display = 'none';
+        hfc.style.display = 'none';
 
         forecast.innerHTML = '';
         celestial.innerHTML = '';
@@ -301,8 +302,6 @@ function buildForecasts(data) {
         foreTitle.className = 'forecast-title';
         let foreIcon = document.createElement('span');
         foreIcon.className = 'forecast-icon';
-        let foreDesc = document.createElement('div');
-        foreDesc.className = 'forecast-desc';
         let foreTemps = document.createElement('div');
         foreTemps.className = 'forecast-temps';
         let foreHigh = document.createElement('div');
@@ -312,17 +311,14 @@ function buildForecasts(data) {
         foreContainer.id = `${titleContent[idx]}Container`;
         foreTitle.id = `${titleContent[idx]}Title`;
         foreIcon.id = `${titleContent[idx]}Icon`;
-        foreDesc.id = `${titleContent[idx]}Desc`;
         foreTemps.id = `${titleContent[idx]}Temps`;
         foreHigh.id = `${titleContent[idx]}High`;
         foreLow.id = `${titleContent[idx]}Low`;
         foreIcon.className += icons[d.weather[0].icon];
-        foreDesc.innerText = d.weather[0].main;
         foreHigh.innerText = `${Math.round(d.temp.max)}\xB0`;
         foreLow.innerText = `${Math.round(d.temp.min)}\xB0`;
         foreContainer.append(foreTitle);
         foreContainer.append(foreIcon);
-        foreContainer.append(foreDesc);
         foreTemps.append(foreHigh);
         foreTemps.append(foreLow);
         foreContainer.append(foreTemps);
@@ -331,10 +327,9 @@ function buildForecasts(data) {
 
     for (i = 0; i < 10; i++) {
         let day = new Date();
-        let skip = i + 1;
-        day.setDate(now.getDate() + skip);
+        day.setDate(now.getDate() + i);
         var dayDate = day.toLocaleDateString("en-US", options);
-        document.getElementById(titles[i]).innerText = `${i == 0 ? 'Tomorrow' : dayDate}`;
+        document.getElementById(titles[i]).innerText = `${i == 0 ? 'Today' : dayDate}`;
     }
 };
 
@@ -783,7 +778,7 @@ function hourlyText(h) {
     } else if (h == 12) {
         return "Noon";
     } else if (h == 0) {
-        return "Midnight";
+        return "MidNi";
     } else {
         return `${h} AM`;
     }

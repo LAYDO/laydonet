@@ -2,6 +2,7 @@
   width: 50%;
   height: 2rem;
 }
+
 .current-weather {
   width: 96%;
   height: 33%;
@@ -11,27 +12,31 @@
   background-color: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(5px); */
   margin: auto;
-  border: var(--border);
   justify-content: center;
 }
+
 .weather-map {
   width: 100%;
   height: 33%;
 }
+
 .mini-title {
   margin: 0.5rem;
 }
+
 .mini-data {
   margin: 0.5rem;
   font-size: 1.5rem;
   font-weight: 700;
 }
+
 .current-left {
   height: 100%;
   width: 25%;
   display: flex;
   flex-direction: column;
 }
+
 .current-middle {
   height: 100%;
   width: 50%;
@@ -39,16 +44,19 @@
   flex-direction: column;
   justify-content: center;
 }
+
 #current-temp {
   font-size: 3rem;
   cursor: pointer;
 }
+
 .current-right {
   height: 100%;
   width: 25%;
   display: flex;
   flex-direction: column;
 }
+
 #precip,
 #wind,
 #uv,
@@ -57,27 +65,36 @@
   margin: auto;
   padding: auto;
 }
+
+.map-container {
+  padding: 0.5rem;
+}
+
 #mapid {
   height: 20rem;
 }
+
 .loader {
   justify-content: center;
   border: 1rem solid transparent;
-  border-top: 1rem solid white;
+  border-top: 1rem solid var(--font-color);
   border-radius: 50%;
   width: 7.5rem;
   height: 7.5rem;
   animation: spin 1s linear infinite;
   display: none;
 }
+
 @keyframes spin {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
+
 #weatherSearch {
   height: 2.375rem;
   width: 2.375rem;
@@ -87,18 +104,21 @@
   background: none;
   cursor: pointer;
 }
+
 #pmData,
 #precipData,
 #gustData,
 #pressureData {
   display: none;
 }
+
 #aqi,
 #precip,
 #wind,
 #atmosphere {
   cursor: pointer;
 }
+
 .gps-icon {
   width: 0.5rem;
   height: 0.5rem;
@@ -108,45 +128,47 @@
   box-shadow: 0 0 0.5rem 0.05rem azure;
   animation: glow 1.5s linear infinite alternate;
 }
+
 @keyframes glow {
   to {
     box-shadow: 0 0 1rem 0.05rem azure;
   }
 }
+
 .weather-forecast {
   padding: 0.5rem 0;
-  height: 33%;
+  /* height: 15%; */
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   overflow: auto;
   overflow-y: hidden;
   /* justify-content: safe center;  save for future*/
 }
+
 .forecast-container {
-  margin-left: 0.25rem;
-  min-width: 8rem;
-  height: 10rem;
-  border-radius: 1rem;
+  /* margin-left: 0.25rem; */
+  /* min-width: 8rem; */
+  /* height: 10rem; */
+  /* border-radius: 1rem;
   background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
-  border: var(--border);
+  backdrop-filter: blur(5px); */
+  border-top: 0.125rem solid rgba(255, 255, 255, 0.171);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
 }
+
 .forecast-title {
-  height: 10%;
-  padding: 0.25rem;
+  padding: 0.5rem;
   /* border: 2px solid red; */
 }
+
 .forecast-icon {
-  height: 40%;
   font-size: 2.5rem;
-  padding-top: 1rem;
+  padding: 1rem;
   /* border: 2px solid blue; */
 }
-.forecast-desc {
-  width: 100%;
-  height: 10%;
-  /* border: 2px solid green; */
-}
+
 .forecast-temps {
   width: 100%;
   height: 40%;
@@ -154,61 +176,72 @@
   flex-direction: row;
   /* border: 2px solid yellow; */
 }
+
 .forecast-high,
 .forecast-low {
   width: 50%;
   height: 100%;
   font-size: 2rem;
 }
+
 .fa-sun {
   color: yellow;
 }
+
 .fa-bolt {
   color: yellow;
 }
+
 .fa-cloud-rain {
   background: linear-gradient(gray 55%, rgb(33, 165, 218) 55%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .fa-cloud-showers-heavy {
   background: linear-gradient(gray 60%, rgb(33, 165, 218) 60%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .fa-smog {
   color: lightgray;
 }
+
 .fa-cloud {
   color: gray;
 }
+
 .fa-cloud-sun {
   background: linear-gradient(to bottom right, yellow 45%, lightgray 45%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .fa-cloud-moon {
-  background: linear-gradient(
-    to bottom left,
-    rgb(255, 255, 159) 47%,
-    lightgray 47%
-  );
+  background: linear-gradient(to bottom left,
+      rgb(255, 255, 159) 47%,
+      lightgray 47%);
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
+
 .fa-snowflake {
   color: whitesmoke;
 }
+
 .fa-moon {
   color: rgb(255, 255, 159);
 }
+
 #current-icon {
   font-size: 4rem;
 }
+
 .celestial-section {
   display: flex;
   flex-direction: row;
@@ -217,14 +250,17 @@
   min-height: 13rem;
   scroll-snap-type: x mandatory;
 }
+
 .celestial-graphic {
   width: 50%;
   min-width: 12rem;
 }
+
 .celestial-info {
   width: 50%;
   padding: 1rem 0;
 }
+
 #sun,
 #moon {
   display: flex;
@@ -235,12 +271,15 @@
   flex: 0 0 100%;
   border: var(--border);
 }
+
 .celestial-stat {
   font-size: 2rem;
 }
+
 .cele-remaining {
   padding: 2rem;
 }
+
 /* 
 --color-aqi-green: #00e400;
 --color-aqi-yellow: #ffff00;
@@ -249,38 +288,60 @@
 --color-aqi-purple: #99004c;
 --color-aqi-maroon: #7e0023;
  */
+.container-forecast {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(5px);
+  border-radius: 1rem;
+  width: 96%;
+  margin-left: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.container-title {
+  text-align: left;
+  padding-left: 2rem;
+  padding-top: 0.5rem;
+}
 
 .weather-hourly {
   display: flex;
   flex-direction: row;
+  /* justify-content: safe center;  save for future*/
   overflow: auto;
   overflow-y: hidden;
-  /* justify-content: safe center;  save for future*/
 }
+
 .hourly-container {
   margin-left: 0.25rem;
-  /* border-radius: 1rem; */
-  background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
   min-width: 3.5rem;
-  border: var(--border);
+  min-height: 8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
+
 .hourly-title {
   padding: 0.25rem 0;
   white-space: nowrap;
   width: 100%;
 }
+
 .hourly-icon {
   font-size: 2.5rem;
 }
+
 .hourly-temps {
   width: 100%;
 }
+
 h2 {
   margin: auto;
   padding: 0.25rem;
   margin-top: 0.25rem;
 }
+
 #currentWeather,
 #dailyForecast,
 #map,
