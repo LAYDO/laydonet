@@ -227,11 +227,24 @@ body {
 
 .laydo-footer {
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   background-color: var(--color-primary);
-  padding: 3rem 0;
+  padding: 0.5rem 0;
   width: 100%;
   color: var(--font-color);
-  border-top: 0.25rem solid var(--font-color);
+}
+
+.laydo-net-footer {
+  display: flex;
+  flex-direction: row;
+}
+
+.socicon {
+  cursor: pointer;
+  margin: 1rem;
+  font-size: 1.5rem;
 }
 
 /* .hexagon {
@@ -267,6 +280,13 @@ body {
   justify-content: center;
   align-items: center;
 }
+.laydo-row-space {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+}
 
 .laydo-row-wrap {
   display: flex;
@@ -294,7 +314,7 @@ body {
   }
 
   #laydoNavIcon {
-    padding: 2rem;
+    padding: 1rem 2rem;
   }
 }
 

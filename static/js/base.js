@@ -65,3 +65,14 @@ function setTheme(themeName) {
     localStorage.setItem('theme', themeName);
     document.documentElement.className = themeName;
 }
+
+function openSocial(evt) {
+    let social = evt.currentTarget.id.replace("Icon", "").toLowerCase();
+    if (social === "twitter") {
+        window.open("https://www.twitter.com/laydo1213");
+    } else if (social === "linked") {
+        window.open("https://www.linkedin.com/in/landen-robinson-97683620/");
+    } else if (social === "github") {
+        window.open("https://github.com/LAYDO");
+    }
+}

@@ -1,14 +1,15 @@
 import time
 from django.http.response import JsonResponse
 from django.shortcuts import render
-from geopy.geocoders import Nominatim
+# from geopy.geocoders import Nominatim
 import requests
 
 APIKEY = '1e38a5a8f324c0f755a48e3d5bb75708'
 STLNKEY = '9de243494c0b295cca9337e1e96b00e2'
 baseURL = 'https://api.openweathermap.org/data/2.5/'
+geoURL = 'https://api.openweathermap.org/geo/1.0/direct?'
 seaCoords = (47.602270, -122.320390)
-geolocater = Nominatim(user_agent="laydo")
+# geolocater = Nominatim(user_agent="laydo")
 
 
 # Create your views here.
@@ -24,33 +25,40 @@ def getWeatherF(request):
     currURL = baseURL + 'onecall?'
     aqiURL = baseURL + 'air_pollution?'
     foreURL = baseURL + 'forecast/daily?'
+    revGeoURL = 'https://api.openweathermap.org/geo/1.0/reverse?'
     for parm in request.GET:
-        if (parm == 'city'):
+        if (parm == 'q'):
             city = str(request.GET[parm])
             foreURL += 'q=' + city + '&'
-            location = geolocater.geocode(city)
-            if location.latitude:
-                currURL += 'lat=' + str(location.latitude) + '&'
-                aqiURL += 'lat=' + str(location.latitude) + '&'
-            if location.longitude:
-                currURL += 'lon=' + str(location.longitude) + '&'
-                aqiURL += 'lon=' + str(location.longitude) + '&'
+            location = requests.get(geoURL + 'q=' + city + '&limit=1&appid=' + APIKEY).json() # geolocater.geocode(city)
+            if location[0]['lat']:
+                currURL += 'lat=' + str(location[0]['lat']) + '&'
+                aqiURL += 'lat=' + str(location[0]['lat']) + '&'
+                revGeoURL += 'lat=' + str(location[0]['lat']) + '&'
+            if location[0]['lon']:
+                currURL += 'lon=' + str(location[0]['lon']) + '&'
+                aqiURL += 'lon=' + str(location[0]['lon']) + '&'
+                revGeoURL += 'lon=' + str(location[0]['lon']) + '&'
         elif (parm == 'lat'):
             currURL += 'lat=' + str(request.GET[parm]) + '&'
             aqiURL += 'lat=' + str(request.GET[parm]) + '&'
             foreURL += 'lat=' + str(request.GET[parm]) + '&'
+            revGeoURL += 'lat=' + str(request.GET[parm]) + '&'
         elif (parm == 'lon'):
             currURL += 'lon=' + str(request.GET[parm]) + '&'
             aqiURL += 'lon=' + str(request.GET[parm]) + '&'
             foreURL += 'lon=' + str(request.GET[parm]) + '&'
+            revGeoURL += 'lon=' + str(request.GET[parm]) + '&'
     metricURL = currURL + 'exclude=minutely,alerts&units=metric&appid=' + APIKEY
     currURL += 'exclude=minutely,alerts&units=imperial&appid=' + APIKEY
     aqiURL += 'appid=' + APIKEY
     foreURL += 'cnt=10&units=imperial&appid=' + STLNKEY
+    revGeoURL += 'limit=1&appid=' + APIKEY
     m = requests.get(metricURL).json()
     c = requests.get(currURL).json()
     a = requests.get(aqiURL).json()
     f = requests.get(foreURL).json()
+    l = requests.get(revGeoURL).json()
     now = int(time.time())
     todayMR = c['daily'][0]['moonrise']
     todayMS = c['daily'][0]['moonset']
@@ -79,6 +87,7 @@ def getWeatherF(request):
     sunset = todaySS
 
     current.update({
+        'name': l[0]['name'],
         'latitude': c['lat'],
         'longitude': c['lon'],
         'tzOffset': c['timezone_offset'],
@@ -89,7 +98,7 @@ def getWeatherF(request):
         'windSpeed': c['current']['wind_speed'],
         'windDeg': c['current']['wind_deg'],
         'windGust': c['current']['wind_gust'] if 'wind_gust' in c['current'] else 0,
-        'weatherDesc': c['current']['weather'][0]['description'],
+        'weatherDesc': c['current']['weather'][0]['main'],
         'weatherIcon': c['current']['weather'][0]['icon'],
         'humidity': c['current']['humidity'],
         'aqi': a['list'][0]['main']['aqi'],
@@ -99,6 +108,8 @@ def getWeatherF(request):
         'rain': c['hourly'][0]['pop'],
         'tomorrow': c['daily'][1],
         'todaily': c['daily'][0],
+        'high': c['daily'][0]['temp']['max'],
+        'low': c['daily'][0]['temp']['min'],
         'hourly': c['hourly'],
         'moon_phase': c['daily'][0]['moon_phase'],
         'moonrise': moonrise,
