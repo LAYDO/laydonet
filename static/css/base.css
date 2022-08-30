@@ -10,7 +10,6 @@ body {
   --color-secondary: #c0aa92;
   --color-accent: #80716c;
   --font-color: #000020;
-  --border: 0.125rem solid #c0aa92;
 }
 
 .theme-dark {
@@ -18,7 +17,6 @@ body {
   --color-secondary: #80716c;
   --color-accent: #ffe2b8;
   --font-color: #fff8ed;
-  --border: none;
 }
 
 .laydo-flex-home {
@@ -280,6 +278,7 @@ body {
   justify-content: center;
   align-items: center;
 }
+
 .laydo-row-space {
   display: flex;
   flex-direction: row;
