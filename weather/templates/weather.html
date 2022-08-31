@@ -15,18 +15,6 @@
   <h2 id="cityName"></h2>
   <div id="currentWeather">
     <div class="current-weather">
-      <div class="current-left" style="display: none;">
-        <div id="atmosphere">
-          <div id="atmosTitle" class="mini-title">Clouds</div>
-          <div id="cloudsData" class="mini-data"></div>
-          <div id="pressureData" class="mini-data"></div>
-        </div>
-        <div id="aqi">
-          <div id="airTitle" class="mini-title">AQI</div>
-          <div id="aqiData" class="mini-data"></div>
-          <div id="pmData" class="mini-data"></div>
-        </div>
-      </div>
       <div class="current-middle">
         <div id="current-temp"></div>
         <span id="current-icon"></span>
@@ -34,18 +22,6 @@
           <div id="current-high"></div>
           <div id="current-low"></div>
           <div id="tempTitle" class="mini-title"></div>
-        </div>
-      </div>
-      <div class="current-right" style="display: none;">
-        <div id="precip">
-          <div id="wetTitle" class="mini-title">Humidity</div>
-          <div id="humidData" class="mini-data"></div>
-          <div id="precipData" class="mini-data"></div>
-        </div>
-        <div id="wind">
-          <div id="windTitle" class="mini-title">Wind</div>
-          <div id="windData" class="mini-data"></div>
-          <div id="gustData" class="mini-data"></div>
         </div>
       </div>
     </div>
@@ -62,10 +38,63 @@
     <div class="container-title">Weather Map</div>
     <div id="weatherMap" class="map-container"></div>
   </div>
-  <div id="celestialTop">
-    <h2>Celestial</h2>
+  <div id="elementTiles" class="elements-column">
+    <div class="elements-row">
+      <div id="aqi" class="element-tile">
+        <div id="airTitle" class="container-title">AQI</div>
+        <div id="aqiData" class="mini-data"></div>
+        <div class="elements-row">
+          <div class="elements-column">
+            <div id="coData" class="sub-data"></div>
+            <div id="noData" class="sub-data"></div>
+            <div id="no2Data" class="sub-data"></div>
+            <div id="o3Data" class="sub-data"></div>
+          </div>
+          <div class="elements-column">
+            <div id="so2Data" class="sub-data"></div>
+            <div id="pm25Data" class="sub-data"></div>
+            <div id="pm10Data" class="sub-data"></div>
+            <div id="nh3Data" class="sub-data"></div>
+          </div>
+        </div>
+      </div>
+      <div id="atmosphere" class="element-tile">
+        <div id="atmosTitle" class="container-title">Clouds</div>
+        <div id="cloudsData" class="mini-data"></div>
+        <div id="uviData" class="sub-data"></div>
+        <div id="visibilityData" class="sub-data"></div>
+      </div>
+    </div>
+    <div class="elements-row">
+      <div id="precip" class="element-tile">
+        <div id="wetTitle" class="container-title">Precipitation</div>
+        <div id="precipPast" class="sub-data">Next hour:</div>
+        <div id="precipData" class="mini-data"></div>
+        <div id="precipToday" class="sub-data"></div>
+      </div>
+      <div id="wind" class="element-tile">
+        <div id="windTitle" class="container-title">Wind</div>
+        <div id="windData" class="mini-data"></div>
+        <div id="gustData" class="sub-data"></div>
+      </div>
+    </div>
+    <div class="elements-row">
+      <div id="humid" class="element-tile">
+        <div id="wetTitle" class="container-title">Humidity</div>
+        <div id="humidData" class="mini-data"></div>
+        <div id="dewData" class="sub-data"></div>
+      </div>
+      <div id="pressure" class="element-tile">
+        <div id="pressureTitle" class="container-title">Pressure</div>
+        <div id="pressureData" class="mini-data"></div>
+      </div>
+    </div>
+  </div>
+  <div id="celestialTop" class="container-forecast">
+    <div class="container-title">Celestial</div>
     <div id="celestial" class="celestial-section" dir="ltr"></div>
   </div>
+  <div id="credits" class="sub-data">Weather data provided by <a href="https://openweathermap.org">OpenWeather</a></div>
 </div>
 {% endblock %} {% block page_scripts %}
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>

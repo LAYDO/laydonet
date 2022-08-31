@@ -17,6 +17,7 @@ body {
   --color-secondary: #80716c;
   --color-accent: #ffe2b8;
   --font-color: #fff8ed;
+  --font-faded: #fff8ed90;
 }
 
 .laydo-flex-home {
