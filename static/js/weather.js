@@ -1,29 +1,55 @@
-let currElement = document.getElementById('currentWeather');
 let loader = document.getElementById('loader');
-let elForecast = document.getElementById('dailyForecast');
-let forecast = document.getElementById('forecast');
-let map = document.getElementById('map');
-let wMap = document.getElementById('weatherMap');
-let celestialT = document.getElementById('celestialTop');
-let celestial = document.getElementById('celestial');
-let hourly = document.getElementById('hourly');
-let hfc = document.getElementById('hfc');
+let searches = document.getElementById('citySection');
+let cityName = document.getElementById('cityName');
+
+let currElement = document.getElementById('currentWeather');
 let currentTemp = document.getElementById('current-temp');
-// let currentTempC = document.getElementById('current-temp-c');
 let currentIcon = document.getElementById('current-icon');
 let currentHigh = document.getElementById('current-high');
 let currentLow = document.getElementById('current-low');
 let currentDesc = document.getElementById('tempTitle');
+
+let hourly = document.getElementById('hourly');
+let hfc = document.getElementById('hfc');
+
+let forecast = document.getElementById('forecast');
+let elForecast = document.getElementById('dailyForecast');
+
+let map = document.getElementById('map');
+let wMap = document.getElementById('weatherMap');
+
+let elementTiles = document.getElementById('elementTiles');
+
 let currentCloud = document.getElementById('cloudsData');
-let currentPressure = document.getElementById('pressureData');
+let currentUVI = document.getElementById('uviData');
+let currentVisibility = document.getElementById('visibilityData');
+
 let currentWind = document.getElementById('windData');
 let currentGust = document.getElementById('gustData');
+
 let currentHumid = document.getElementById('humidData');
+let currentPressure = document.getElementById('pressureData');
+let currentDew = document.getElementById('dewData');
+
 let currentAqi = document.getElementById('aqiData');
-let currentPM = document.getElementById('pmData');
+let currentCO = document.getElementById('coData');
+let currentNO = document.getElementById('noData');
+let currentNO2 = document.getElementById('no2Data');
+let currentO3 = document.getElementById('o3Data');
+let currentSO2 = document.getElementById('so2Data');
+let currentNH3 = document.getElementById('nh3Data');
+let currentPM10 = document.getElementById('pm10Data');
+let currentPM25 = document.getElementById('pm25Data');
+
 let currentRain = document.getElementById('precipData');
-let searches = document.getElementById('citySection');
-let cityName = document.getElementById('cityName');
+let currentRainToday = document.getElementById('precipToday');
+// let currentRainPast = document.getElementById('precipPast');
+
+let celestialT = document.getElementById('celestialTop');
+let celestial = document.getElementById('celestial');
+
+let credits = document.getElementById('credits');
+
 let now = new Date();
 let colorSunrise = '#FFE600';
 let colorSunset = '#FF8700';
@@ -122,6 +148,8 @@ function init() {
     map.style.display = 'none';
     celestialT.style.display = 'none';
     hfc.style.display = 'none';
+    elementTiles.style.display = 'none';
+    credits.style.display = 'none';
     this.loading = false;
 
     document.addEventListener('keyup', (event) => {
@@ -191,13 +219,17 @@ function load() {
         elForecast.style.display = 'inherit';
         celestialT.style.display = 'inherit';
         cityName.style.display = 'inherit';
+        credits.style.display = 'inherit';
         hfc.style.display = 'flex';
+        elementTiles.style.display = 'flex';
     } else {
         currElement.style.display = 'none';
         elForecast.style.display = 'none';
         map.style.display = 'none';
         celestialT.style.display = 'none';
         hfc.style.display = 'none';
+        elementTiles.style.display = 'none';
+        credits.style.display = 'none';
 
         forecast.innerHTML = '';
         celestial.innerHTML = '';
@@ -211,20 +243,37 @@ function load() {
 
 function buildCurrent(data) {
     cityName.innerText = `${data.name}`;
-    currentIcon.className = icons[data.weatherIcon];
+
     currentTemp.innerText = `${Math.round(data.temp)}\xB0 F`;
-    // currentTempC.innerText = `${Math.round(data.tempC)}\xB0 C`;
-    currentCloud.innerText = `${Math.round(data.clouds)} \u0025`;
+    currentIcon.className = icons[data.weatherIcon];
     currentHigh.innerText = `H: ${Math.round(data.high)}\xB0`;
     currentLow.innerText = `L: ${Math.round(data.low)}\xB0`;
     currentDesc.innerText = `${data.weatherDesc}`;
-    currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
+
+    currentCloud.innerText = `${Math.round(data.clouds)} \u0025`;
+    currentUVI.innerText = `UV Index: ${Math.round(data.uvi)}`;
+    currentVisibility.innerText = `Visibility: ${Math.round(data.visibility * 0.0006213712)} miles`;
+
     currentWind.innerText = `${Math.round(data.windSpeed)} ${windDirection(data.windDeg)}`;
-    currentGust.innerText = `${Math.round(data.windGust)} mph`;
+    currentGust.innerText = `Gusts: ${Math.round(data.windGust)} mph`;
+
+    currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
     currentHumid.innerText = `${data.humidity}\u0025`;
-    currentAqi.innerText = `${data.aqi}`;
-    currentPM.innerText = `${data.pm25}`;
-    currentRain.innerText = `${Math.round(data.rain * 100)}\u0025`;
+    currentDew.innerText = `Dew Point: ${data.dew_point}\xB0`;
+
+    currentAqi.innerText = `${data.aqi.main.aqi}`;
+    currentCO.innerText = `CO: ${data.aqi.components.co}`;
+    currentNO.innerText = `NO: ${data.aqi.components.no}`;
+    currentNO2.innerText = `NO2: ${data.aqi.components.no2}`;
+    currentO3.innerText = `O3: ${data.aqi.components.o3}`;
+    currentSO2.innerText = `SO2: ${data.aqi.components.so2}`;
+    currentPM10.innerText = `PM10: ${data.aqi.components.pm10}`;
+    currentPM25.innerText = `PM2.5: ${data.aqi.components.pm2_5}`;
+    currentNH3.innerText = `NH3: ${data.aqi.components.nh3}`;
+
+    currentRain.innerText = `${Math.round(data.rain_next * 100)}\u0025`;
+    currentRainToday.innerText = `24 hour chance: ${Math.round(data.rain_today * 100)}\u0025`;
+    // currentRainPast.innerText = `${Math.round(data.rain_past)}" in the past 24 hours`;
 };
 
 function windDirection(deg) {
