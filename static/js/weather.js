@@ -454,26 +454,26 @@ function buildCelestial(data, tomorrow) {
         celestial.append(c);
     });
 
-    celestialElements.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
+    // celestialElements.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
     animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
-    // animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
+    animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
 
 }
 
-function celestialTriggers(data, place, moonPos) {
-    let sunDiv = document.getElementById('sunTile');
-    let sunTrigger = sunDiv.getBoundingClientRect();
-    let moonDiv = document.getElementById('moonTile');
-    let moonTrigger = moonDiv.getBoundingClientRect();
+// function celestialTriggers(data, place, moonPos) {
+//     let sunDiv = document.getElementById('sunTile');
+//     let sunTrigger = sunDiv.getBoundingClientRect();
+//     let moonDiv = document.getElementById('moonTile');
+//     let moonTrigger = moonDiv.getBoundingClientRect();
 
-    if (sunTrigger.bottom >= 0) {
-        animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
-    }
+//     if (sunTrigger.top >= 0) {
+//         animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
+//     }
 
-    if (moonTrigger.bottom <= 0) {
-        animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
-    }
-}
+//     if (moonTrigger.top <= 0) {
+//         animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
+//     }
+// }
 
 function generateSun(data, place) {
     let riseUnix = data.sunrise;
