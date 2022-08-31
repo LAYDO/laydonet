@@ -246,6 +246,7 @@ function buildCurrent(data) {
     currentDew.innerText = `Dew Point: ${data.dew_point}\xB0`;
 
     currentAqi.innerText = `${data.aqi.main.aqi}`;
+    document.getElementById('airTitle').style.color = getAQIColor(data.aqi.main.aqi);
     currentCO.innerText = `CO: ${data.aqi.components.co}`;
     currentNO.innerText = `NO: ${data.aqi.components.no}`;
     currentNO2.innerText = `NO2: ${data.aqi.components.no2}`;
@@ -535,8 +536,8 @@ function generateSun(data, place) {
     ctx.font = 'bold 1rem Times New Roman';
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
     ctx.textAlign = 'center';
-    drawTextAlongArc(ctx, 'MIDNIGHT', radius * 0.85, 0.3 * Math.PI);
-    drawTextAlongArc(ctx, 'NOON', -radius * 0.95, 0.25 * Math.PI);
+    drawTextAlongArc(ctx, 'M', radius * 0.85, 0.3 * Math.PI);
+    drawTextAlongArc(ctx, 'N', -radius * 0.95, 0.25 * Math.PI);
 
     // Draw sunrise & sunset
     drawMini(ctx, rSunset, radius * 0.8, colorSunset);
@@ -757,29 +758,24 @@ function celestialRemaining(data) {
         moonset = new Date(data['moonset'] * 1000);
     }
 
-    let sunRemain = document.getElementById('sunRemaining');
-    let moonRemain = document.getElementById('moonRemaining');
-
     if (sunrise > sunset) {
         if (n < sunset) {
             let diff = Math.abs(sunset - n);
-            // plugDiff(diff, sunRemain, 'Sunset');
-            document.getElementById('sunTitle').innerText = 'Sunset';
+            document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunset`;
+            document.getElementById('sunTitle').style.color = colorSunset;
             document.getElementById('sunData').innerText = sunset.toLocaleTimeString('en-US', celeOptions);
             let s = document.getElementById('sunRemain');
             plugDiff(diff, s, 'Sunset');
         } else {
             let diff = Math.abs(sunrise - n);
-            plugDiff(diff, sunRemain, 'Sunrise');
-            document.getElementById('sunTitle').innerText = 'Sunrise';
+            document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
             document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
             let s = document.getElementById('sunRemain');
             plugDiff(diff, s, 'Sunrise');
         }
     } else {
         let diff = Math.abs(sunrise - n);
-        plugDiff(diff, sunRemain, 'Sunrise');
-        document.getElementById('sunTitle').innerText = 'Sunrise';
+        document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
         document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
         let s = document.getElementById('sunRemain');
         plugDiff(diff, s, 'Sunrise');
@@ -789,15 +785,13 @@ function celestialRemaining(data) {
     if (moonset < moonrise) {
         if (n < moonset) {
             let diff = Math.abs(moonset - n);
-            // plugDiff(diff, moonRemain, 'Moonset');
-            document.getElementById('moonTitle').innerText = 'Moonset';
+            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
             document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
             let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonset');
         } else {
             let diff = Math.abs(moonrise - n);
-            // plugDiff(diff, moonRemain, 'Moonrise');
-            document.getElementById('moonTitle').innerText = 'Moonrise';
+            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
             document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
             let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonrise');
@@ -806,15 +800,13 @@ function celestialRemaining(data) {
     } else {
         if (n < moonrise) {
             let diff = Math.abs(moonrise - n);
-            // plugDiff(diff, moonRemain, 'Moonrise');
-            document.getElementById('moonTitle').innerText = 'Moonrise';
+            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
             document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
             let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonrise');
         } else {
             let diff = Math.abs(moonset - n);
-            // plugDiff(diff, moonRemain, 'Moonset');
-            document.getElementById('moonTitle').innerText = 'Moonset';
+            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
             document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
             let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonset');
@@ -858,4 +850,23 @@ function toggleCitySearch() {
         searches.style.display = 'none';
     }
     toggleOverlay();
+}
+
+function getAQIColor(aqi) {
+    switch(aqi) {
+        case 1:
+            return '#00e400';
+        case 2:
+            return '#ffff00';
+        case 3:
+            return '#ff7e00';
+        case 4:
+            return '#ff0000';
+        case 5:
+            return '#99004c';
+        case 6:
+            return '#7e0023';
+        default:
+            return 'var(--font-faded)';
+    }
 }

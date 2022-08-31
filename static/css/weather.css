@@ -277,7 +277,7 @@
 
 .container-title {
   text-align: left;
-  padding-left: 2rem;
+  padding-left: 1rem;
   padding-top: 0.5rem;
   color: var(--font-faded);
 }
@@ -349,4 +349,8 @@ h2 {
   min-width: 11rem;
   min-height: 11rem;
   margin-bottom: 1rem;
+}
+.pad-right {
+  margin-right: 0.25rem;
+  color: var(--font-faded);
 }
