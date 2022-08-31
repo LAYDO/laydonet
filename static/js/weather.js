@@ -1,3 +1,4 @@
+let svgns = 'http://www.w3.org/2000/svg';
 let loader = document.getElementById('loader');
 let searches = document.getElementById('citySection');
 let cityName = document.getElementById('cityName');
@@ -240,14 +241,16 @@ function buildCurrent(data) {
     currentUVI.innerText = `UV Index: ${Math.round(data.uvi)}`;
     currentVisibility.innerText = `Visibility: ${Math.round(data.visibility * 0.0006213712)} miles`;
 
-    currentWind.innerText = `${Math.round(data.windSpeed)} ${windDirection(data.windDeg)}`;
-    currentGust.innerText = `Gusts: ${Math.round(data.windGust)} mph`;
+    // currentWind.innerText = `${Math.round(data.windSpeed)} ${windDirection(data.windDeg)}`;
+    // currentGust.innerText = `Gusts: ${Math.round(data.windGust)} mph`;
+    window.requestAnimationFrame(generateWindDial.bind(null, data));
 
     currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
     currentHumid.innerText = `${data.humidity}\u0025`;
     currentDew.innerText = `Dew Point: ${data.dew_point}\xB0`;
 
     currentAqi.innerText = `${data.aqi.main.aqi}`;
+    currentAqi.style.color = getAQIColor(data.aqi.main.aqi);
     document.getElementById('airTitle').style.color = getAQIColor(data.aqi.main.aqi);
     currentCO.innerText = `CO: ${data.aqi.components.co}`;
     currentNO.innerText = `NO: ${data.aqi.components.no}`;
@@ -868,4 +871,47 @@ function getAQIColor(aqi) {
         default:
             return 'var(--font-faded)';
     }
+}
+
+function generateWindDial(data) {
+    let velocity = data.windSpeed;
+    let gust = data.windGust;
+    let degree = data.windDeg;
+
+    let windElement = document.getElementById('wind');
+
+    let dial = document.createElementNS(svgns, 'svg');
+    dial.setAttribute('width', windElement.clientWidth * 0.7);
+    dial.setAttribute('height', windElement.clientHeight * 0.7);
+
+    let radius = (windElement.clientWidth * 0.6) / 2;
+
+    let circle = document.createElementNS(svgns, 'circle');
+    circle.setAttribute('cx', (windElement.clientWidth * 0.7) / 2);
+    circle.setAttribute('cy', (windElement.clientHeight * 0.7) / 2);
+    circle.setAttribute('r', radius);
+    circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.75)'); // #fff8ed
+    circle.setAttribute('fill', 'none');
+    circle.setAttribute('stroke-width', 2);
+    
+    let vel = document.createElementNS(svgns, 'text');
+    vel.setAttribute('x', '50%');
+    vel.setAttribute('y', '50%');
+    vel.setAttribute('text-anchor', 'middle');
+    vel.setAttribute('fill', '#fff8ed');
+    vel.setAttribute('font-size', '1rem');
+    vel.textContent = `${velocity.toFixed(0)} MPH`;
+
+    let gusts = document.createElementNS(svgns, 'text');
+    gusts.setAttribute('x', '50%');
+    gusts.setAttribute('y', '60%');
+    gusts.setAttribute('text-anchor', 'middle');
+    gusts.setAttribute('fill', '#fff8ed');
+    gusts.setAttribute('font-size', '0.5rem');
+    gusts.textContent = `Gusts: ${gust.toFixed(0)} MPH`;
+    
+    dial.append(circle);
+    dial.append(vel);
+    dial.append(gusts);
+    currentWind.append(dial);
 }
