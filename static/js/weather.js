@@ -56,6 +56,8 @@ let colorSunset = '#FF8700';
 let animID, place = 0;
 let animMoonID, moonPos;
 
+this.trigger = false;
+
 const datas = [
     {
         'object': 'atmosphere',
@@ -455,26 +457,23 @@ function buildCelestial(data, tomorrow) {
         celestial.append(c);
     });
 
-    // celestialElements.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
+    document.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
     animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
     animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
 
 }
 
-// function celestialTriggers(data, place, moonPos) {
-//     let sunDiv = document.getElementById('sunTile');
-//     let sunTrigger = sunDiv.getBoundingClientRect();
-//     let moonDiv = document.getElementById('moonTile');
-//     let moonTrigger = moonDiv.getBoundingClientRect();
+function celestialTriggers(data, place, moonPos) {
 
-//     if (sunTrigger.top >= 0) {
-//         animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
-//     }
 
-//     if (moonTrigger.top <= 0) {
-//         animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
-//     }
-// }
+    if ((celestialElements.getBoundingClientRect().top + (celestialElements.getBoundingClientRect().height * 0.75)) <= window.innerHeight && !this.trigger) {
+        this.trigger = true;
+        animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
+        animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
+    } else if (celestialElements.getBoundingClientRect().top > window.innerHeight && this.trigger) {
+        this.trigger = false;
+    }
+}
 
 function generateSun(data, place) {
     let riseUnix = data.sunrise;
