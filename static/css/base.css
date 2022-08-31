@@ -10,6 +10,7 @@ body {
   --color-secondary: #c0aa92;
   --color-accent: #80716c;
   --font-color: #000020;
+  --font-faded: #00002090;
 }
 
 .theme-dark {
