@@ -1,3 +1,11 @@
+.theme-light {
+  --glass-backdrop: rgba(0, 0, 0, 0.15);;
+}
+
+.theme-dark {
+  --glass-backdrop: rgba(255, 255, 255, 0.15);;
+}
+
 #citySearch {
   width: 50%;
   height: 2rem;
@@ -8,9 +16,6 @@
   height: 33%;
   display: flex;
   flex-direction: row;
-  /* border-radius: 1rem;
-  background-color: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px); */
   margin: auto;
   justify-content: center;
 }
@@ -119,7 +124,6 @@
 
 .weather-forecast {
   padding: 0.5rem 0;
-  /* height: 15%; */
   display: flex;
   flex-direction: column;
   overflow: auto;
@@ -263,7 +267,7 @@
 .container-forecast {
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--glass-backdrop);
   backdrop-filter: blur(5px);
   border-radius: 1rem;
   width: 96%;
@@ -339,7 +343,7 @@ h2 {
 .element-tile {
   display: flex;
   flex-direction: column;
-  background-color: rgba(255, 255, 255, 0.15);
+  background-color: var(--glass-backdrop);
   backdrop-filter: blur(5px);
   border-radius: 1rem;
   min-width: 11rem;
