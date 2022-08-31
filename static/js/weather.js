@@ -43,10 +43,10 @@ let currentPM25 = document.getElementById('pm25Data');
 
 let currentRain = document.getElementById('precipData');
 let currentRainToday = document.getElementById('precipToday');
-// let currentRainPast = document.getElementById('precipPast');
 
 let celestialT = document.getElementById('celestialTop');
 let celestial = document.getElementById('celestial');
+let celestialElements = document.getElementById('celestialElements');
 
 let credits = document.getElementById('credits');
 
@@ -159,22 +159,6 @@ function init() {
         }
     });
 
-    // datas.forEach(d => {
-    //     document.getElementById(d.object).addEventListener('click', () => {
-    //         let titleStr = Object.keys(d)[1];
-    //         let title = document.getElementById(titleStr);
-    //         if (document.getElementById(d.elements[0]).style.display != 'none') {
-    //             title.innerText = d[titleStr][1];
-    //             document.getElementById(d.elements[0]).style.display = 'none';
-    //             document.getElementById(d.elements[1]).style.display = 'inherit';
-    //         } else {
-    //             title.innerText = d[titleStr][0];
-    //             document.getElementById(d.elements[0]).style.display = 'inherit';
-    //             document.getElementById(d.elements[1]).style.display = 'none';
-    //         }
-    //     })
-    // });
-
     if (navigator.geolocation) {
         document.getElementById('citySearch').value = '';
         navigator.geolocation.getCurrentPosition(getCurrentWeather);
@@ -214,10 +198,10 @@ async function getCurrentWeather(position) {
 function load() {
     if (this.loading) {
         loader.style.display = 'none';
+        celestialT.style.display = 'none';
         map.style.display = 'inherit';
         currElement.style.display = 'inherit';
         elForecast.style.display = 'inherit';
-        celestialT.style.display = 'inherit';
         cityName.style.display = 'inherit';
         credits.style.display = 'inherit';
         hfc.style.display = 'flex';
@@ -273,7 +257,6 @@ function buildCurrent(data) {
 
     currentRain.innerText = `${Math.round(data.rain_next * 100)}\u0025`;
     currentRainToday.innerText = `24 hour chance: ${Math.round(data.rain_today * 100)}\u0025`;
-    // currentRainPast.innerText = `${Math.round(data.rain_past)}" in the past 24 hours`;
 };
 
 function windDirection(deg) {
@@ -471,23 +454,23 @@ function buildCelestial(data, tomorrow) {
         celestial.append(c);
     });
 
-    celestial.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
+    celestialElements.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
     animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
     // animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
 
 }
 
 function celestialTriggers(data, place, moonPos) {
-    let sunDiv = document.getElementById('sun');
+    let sunDiv = document.getElementById('sunTile');
     let sunTrigger = sunDiv.getBoundingClientRect();
-    let moonDiv = document.getElementById('moon');
+    let moonDiv = document.getElementById('moonTile');
     let moonTrigger = moonDiv.getBoundingClientRect();
 
-    if (sunTrigger.left >= 0) {
+    if (sunTrigger.bottom >= 0) {
         animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
     }
 
-    if (moonTrigger.left <= 0) {
+    if (moonTrigger.bottom <= 0) {
         animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
     }
 }
@@ -510,7 +493,7 @@ function generateSun(data, place) {
     let sunset = convertToAdjustedRadians(setUnix);
     let rSunrise = convertToRadians(riseUnix);
     let rSunset = convertToRadians(setUnix);
-    let sunElement = document.getElementById('sunGraphic');
+    let sunElement = document.getElementById('sunGraphic2');
     let c = document.createElement('canvas');
     let ctx = c.getContext('2d');
     ctx.canvas.width = sunElement.clientWidth;
@@ -576,7 +559,7 @@ function generateSun(data, place) {
 function generateMoonPhase(phase, moonPos) {
     // Great reference https://i.ytimg.com/vi/RPvL7yeWBQM/maxresdefault.jpg
     let text = '';
-    let element = document.getElementById('moonGraphic');
+    let element = document.getElementById('moonGraphic2');
     let canv = document.createElement('canvas');
     let ctx = canv.getContext('2d');
     ctx.canvas.width = element.clientWidth;
@@ -780,33 +763,61 @@ function celestialRemaining(data) {
     if (sunrise > sunset) {
         if (n < sunset) {
             let diff = Math.abs(sunset - n);
-            plugDiff(diff, sunRemain, 'Sunset');
+            // plugDiff(diff, sunRemain, 'Sunset');
+            document.getElementById('sunTitle').innerText = 'Sunset';
+            document.getElementById('sunData').innerText = sunset.toLocaleTimeString('en-US', celeOptions);
+            let s = document.getElementById('sunRemain');
+            plugDiff(diff, s, 'Sunset');
         } else {
             let diff = Math.abs(sunrise - n);
             plugDiff(diff, sunRemain, 'Sunrise');
+            document.getElementById('sunTitle').innerText = 'Sunrise';
+            document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
+            let s = document.getElementById('sunRemain');
+            plugDiff(diff, s, 'Sunrise');
         }
     } else {
         let diff = Math.abs(sunrise - n);
         plugDiff(diff, sunRemain, 'Sunrise');
+        document.getElementById('sunTitle').innerText = 'Sunrise';
+        document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
+        let s = document.getElementById('sunRemain');
+        plugDiff(diff, s, 'Sunrise');
     }
-
-
+    
+    
     if (moonset < moonrise) {
         if (n < moonset) {
             let diff = Math.abs(moonset - n);
-            plugDiff(diff, moonRemain, 'Moonset');
+            // plugDiff(diff, moonRemain, 'Moonset');
+            document.getElementById('moonTitle').innerText = 'Moonset';
+            document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
+            let m = document.getElementById('moonRemain');
+            plugDiff(diff, m, 'Moonset');
         } else {
             let diff = Math.abs(moonrise - n);
-            plugDiff(diff, moonRemain, 'Moonrise');
-
+            // plugDiff(diff, moonRemain, 'Moonrise');
+            document.getElementById('moonTitle').innerText = 'Moonrise';
+            document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
+            let m = document.getElementById('moonRemain');
+            plugDiff(diff, m, 'Moonrise');
+            
         }
     } else {
         if (n < moonrise) {
             let diff = Math.abs(moonrise - n);
-            plugDiff(diff, moonRemain, 'Moonrise');
+            // plugDiff(diff, moonRemain, 'Moonrise');
+            document.getElementById('moonTitle').innerText = 'Moonrise';
+            document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
+            let m = document.getElementById('moonRemain');
+            plugDiff(diff, m, 'Moonrise');
         } else {
             let diff = Math.abs(moonset - n);
-            plugDiff(diff, moonRemain, 'Moonset');
+            // plugDiff(diff, moonRemain, 'Moonset');
+            document.getElementById('moonTitle').innerText = 'Moonset';
+            document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
+            let m = document.getElementById('moonRemain');
+            plugDiff(diff, m, 'Moonset');
 
         }
 
@@ -823,7 +834,7 @@ function plugDiff(diff, div, text) {
     diff = Math.floor(diff / 60);
     let hours = diff % 24;
     hours = ('0' + hours).slice(-2);
-    div.innerText = `${hours}h ${mins}m ${secs}s\n until ${text}`;
+    div.innerText = `${hours}h ${mins}m ${secs}s until ${text}`;
 }
 
 function hourlyText(h) {
@@ -832,7 +843,7 @@ function hourlyText(h) {
     } else if (h == 12) {
         return "Noon";
     } else if (h == 0) {
-        return "MidNi";
+        return "Midnight";
     } else {
         return `${h} AM`;
     }
