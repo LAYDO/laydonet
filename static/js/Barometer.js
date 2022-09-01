@@ -30,9 +30,30 @@ class Barometer {
         pressure.setAttribute('fill', 'var(--font-color)');
         pressure.setAttribute('font-size', '0.75rem');
         pressure.textContent = `${inhg.toFixed(2)} inHg`;
+        let line = document.createElementNS(svgns, 'line');
+        line.setAttribute('x1', (this.baseW / 2).toFixed(0));
+        line.setAttribute('y1', '25%');
+        line.setAttribute('x2', (this.baseW / 2).toFixed(0));
+        line.setAttribute('y2', '20');
+        line.setAttribute('style', 'stroke:var(--font-color); stroke-width:1;');
+        let rotation = (inhg - 29.00) * 2;
+        if (rotation > 1.05) {
+            rotation = rotation - 1.05;
+        }
+        else if (rotation < 1.05) {
+            rotation = (1.05 - rotation);
+            rotation = -rotation;
+        }
+        else {
+            rotation = 0;
+        }
+        rotation *= 100;
+        line.setAttribute('transform', `rotate(${rotation.toFixed(0)}, ${this.baseW / 2}, ${this.baseH / 2});`);
         barometer.append(circle);
+        barometer.append(line);
         barometer.append(pressure);
         if (currentPressure) {
+            currentPressure.innerHTML = '';
             currentPressure.append(barometer);
         }
     }

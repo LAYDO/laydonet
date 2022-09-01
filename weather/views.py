@@ -90,7 +90,7 @@ def getWeatherF(request):
         aqi = a['list'][0]
     else:
         aqi = {}
-
+    # print(a)
     current.update({
         'name': l[0]['name'],
         'latitude': c['lat'],
