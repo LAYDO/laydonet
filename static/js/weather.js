@@ -29,8 +29,10 @@ let currentWind = document.getElementById('windData');
 let currentGust = document.getElementById('gustData');
 
 let currentHumid = document.getElementById('humidData');
-let currentPressure = document.getElementById('pressureData');
 let currentDew = document.getElementById('dewData');
+
+let currentPressure = document.getElementById('pressureData');
+let currentInhg = document.getElementById('inhgData');
 
 let currentAqi = document.getElementById('aqiData');
 let currentCO = document.getElementById('coData');
@@ -193,8 +195,8 @@ async function getCurrentWeather(position) {
         buildMap(data.latitude, data.longitude);
         buildForecasts(data.forecast);
         buildHourly(data.hourly);
-        buildCelestial(data.todaily, data.tomorrow);
         setInterval(celestialRemaining.bind(null, data), 1000);
+        buildCelestial(data.todaily, data.tomorrow);
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
@@ -249,9 +251,11 @@ function buildCurrent(data) {
     // currentGust.innerText = `Gusts: ${Math.round(data.windGust)} mph`;
     window.requestAnimationFrame(generateWindDial.bind(null, data));
 
-    currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
     currentHumid.innerText = `${data.humidity}\u0025`;
     currentDew.innerText = `Dew Point: ${data.dew_point}\xB0`;
+
+    let currentBaro = new Barometer(data.pressure);
+    // currentBaro.pressure = data.pressure;
 
     if (data.aqi.main != undefined && data.aqi.components != undefined) {
         currentAqi.innerText = `${data.aqi.main.aqi}`;
@@ -475,11 +479,11 @@ function buildCelestial(data, tomorrow) {
 function celestialTriggers(data, place, moonPos) {
 
 
-    if ((celestialElements.getBoundingClientRect().top + (celestialElements.getBoundingClientRect().height * 0.75)) <= window.innerHeight && !this.trigger) {
+    if (celestialElements.getBoundingClientRect().bottom > 0 && !this.trigger) {
         this.trigger = true;
         animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
         animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
-    } else if (celestialElements.getBoundingClientRect().top > window.innerHeight && this.trigger) {
+    } else if (celestialElements.getBoundingClientRect().bottom <= 0 && this.trigger) {
         this.trigger = false;
     }
 }
@@ -898,7 +902,7 @@ function generateWindDial(data) {
     circle.setAttribute('cx', baseW / 2);
     circle.setAttribute('cy', baseH / 2);
     circle.setAttribute('r', radius);
-    circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)'); // #fff8ed
+    circle.setAttribute('stroke', 'var(--font-faded)'); // #fff8ed
     circle.setAttribute('fill', 'none');
     circle.setAttribute('stroke-width', 2);
 
@@ -915,7 +919,7 @@ function generateWindDial(data) {
         dir.setAttribute('x', '50%');
         dir.setAttribute('y', 8);
         dir.setAttribute('text-anchor', 'middle');
-        dir.setAttribute('fill', '#fff8ed');
+        dir.setAttribute('fill', 'var(--font-color)');
         dir.setAttribute('font-size', '0.5rem');
         switch (i) {
             case 0:
@@ -982,7 +986,7 @@ function generateWindDial(data) {
     vel.setAttribute('x', '50%');
     vel.setAttribute('y', '50%');
     vel.setAttribute('text-anchor', 'middle');
-    vel.setAttribute('fill', '#fff8ed');
+    vel.setAttribute('fill', 'var(--font-color)');
     vel.setAttribute('font-size', '1rem');
     vel.textContent = `${velocity.toFixed(0)} MPH`;
 
@@ -990,7 +994,7 @@ function generateWindDial(data) {
     gusts.setAttribute('x', '50%');
     gusts.setAttribute('y', '60%');
     gusts.setAttribute('text-anchor', 'middle');
-    gusts.setAttribute('fill', '#fff8ed');
+    gusts.setAttribute('fill', 'var(--font-color)');
     gusts.setAttribute('font-size', '0.5rem');
     gusts.textContent = `Gusts: ${gust.toFixed(0)} MPH`;
 
@@ -998,4 +1002,46 @@ function generateWindDial(data) {
     dial.append(vel);
     dial.append(gusts);
     currentWind.append(dial);
+}
+
+class Barometer {
+    constructor(h) {
+        this.pressure = h;
+        this.drawBarometer();
+    }
+
+    drawBarometer() {
+
+        let pressureElement = document.getElementById('pressure');
+        let baseW = pressureElement.clientWidth * 0.7;
+        let baseH = pressureElement.clientHeight * 0.7;
+
+        let barometer = document.createElementNS(svgns, 'svg');
+        barometer.setAttribute('width', baseW);
+        barometer.setAttribute('height', baseH);
+
+        let radius = pressureElement.clientWidth / 2;
+        let circle = document.createElementNS(svgns, 'path');
+        circle.setAttribute('stroke', 'var(--font-faded');
+        circle.setAttribute('stroke-width', 2);
+        circle.setAttribute('fill', 'transparent');
+        circle.setAttribute('d', `M ${baseW * 0.1} ${radius} C 0 0, ${baseW} 0, ${baseW * 0.9} ${radius}`);
+
+        // currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
+        // currentInhg.innerText = `${(data.pressure * 0.02953).toFixed(2)} inHg`;
+        let hpa = this.pressure;
+        let inhg = hpa * 0.02953;
+        let pressure = document.createElementNS(svgns, 'text');
+        pressure.setAttribute('x', '50%');
+        pressure.setAttribute('y', '50%');
+        pressure.setAttribute('text-anchor', 'middle');
+        pressure.setAttribute('fill', 'var(--font-color)');
+        pressure.setAttribute('font-size', '0.75rem');
+        pressure.textContent = `${inhg.toFixed(2)} inHg`;
+
+        barometer.append(circle);
+        barometer.append(pressure);
+
+        currentPressure.append(barometer);
+    }
 }
