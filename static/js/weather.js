@@ -59,6 +59,7 @@ let colorSunrise = '#FFE600';
 let colorSunset = '#FF8700';
 let animID, place = 0;
 let animMoonID, moonPos;
+let remainInterval;
 
 this.trigger = false;
 
@@ -175,6 +176,7 @@ function init() {
 }
 
 async function getCurrentWeather(position) {
+    clearInterval(remainInterval);
     load();
     let q = document.getElementById('citySearch').value.trim();
     let url = `${window.location.href}f/?`;
@@ -195,7 +197,7 @@ async function getCurrentWeather(position) {
         buildMap(data.latitude, data.longitude);
         buildForecasts(data.forecast);
         buildHourly(data.hourly);
-        setInterval(celestialRemaining.bind(null, data), 1000);
+        remainInterval = setInterval(celestialRemaining.bind(null, data), 1000);
         buildCelestial(data.todaily, data.tomorrow);
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
@@ -269,6 +271,8 @@ function buildCurrent(data) {
         currentPM10.innerText = `PM10: ${data.aqi.components.pm10}`;
         currentPM25.innerText = `PM2.5: ${data.aqi.components.pm2_5}`;
         currentNH3.innerText = `NH3: ${data.aqi.components.nh3}`;
+    } else {
+        currentAqi.innerText = '--';
     }
 
     currentRain.innerText = `${Math.round(data.rain_next * 100)}\u0025`;
@@ -458,6 +462,8 @@ function celestialTriggers(data, place, moonPos) {
         animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
         animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
     } else if (celestialElements.getBoundingClientRect().bottom <= 0 && this.trigger) {
+        window.cancelAnimationFrame(animID);
+        window.cancelAnimationFrame(animMoonID);
         this.trigger = false;
     }
 }
@@ -755,6 +761,7 @@ function celestialRemaining(data) {
         } else {
             let diff = Math.abs(sunrise - n);
             document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
+            document.getElementById('sunTitle').style.color = colorSunrise;
             document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
             let s = document.getElementById('sunRemain');
             plugDiff(diff, s, 'Sunrise');
@@ -762,6 +769,7 @@ function celestialRemaining(data) {
     } else {
         let diff = Math.abs(sunrise - n);
         document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
+        document.getElementById('sunTitle').style.color = colorSunrise;
         document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
         let s = document.getElementById('sunRemain');
         plugDiff(diff, s, 'Sunrise');
@@ -861,6 +869,7 @@ function generateWindDial(data) {
     let velocity = data.windSpeed;
     let gust = data.windGust;
     let degree = data.windDeg;
+    console.log(degree);
 
     let windElement = document.getElementById('wind');
     let baseW = windElement.clientWidth * 0.7;
@@ -916,7 +925,7 @@ function generateWindDial(data) {
         dial.append(dir);
     }
 
-    for (let y = 0; y < 360; y++) {
+    for (let y = 1; y <= 360; y++) {
         if (y == degree) {
             let g = document.createElementNS(svgns, 'g');
             let arrowLine = document.createElementNS(svgns, 'line');
@@ -975,5 +984,7 @@ function generateWindDial(data) {
     dial.append(circle);
     dial.append(vel);
     dial.append(gusts);
+
+    currentWind.innerHTML = '';
     currentWind.append(dial);
 }
