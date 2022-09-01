@@ -86,6 +86,11 @@ def getWeatherF(request):
         sunrise = todaySR
     sunset = todaySS
 
+    if (len(a['list']) > 0):
+        aqi = a['list'][0]
+    else:
+        aqi = {}
+
     current.update({
         'name': l[0]['name'],
         'latitude': c['lat'],
@@ -102,7 +107,7 @@ def getWeatherF(request):
         'pressure': c['current']['pressure'],
         'humidity': c['current']['humidity'],
         'dew_point': c['current']['dew_point'],
-        'aqi': a['list'][0],
+        'aqi': aqi,
         'forecast': f['list'],
         'clouds': c['current']['clouds'],
         'uvi': c['current']['uvi'],
