@@ -30,6 +30,22 @@
     <div class="container-title"><span class="fas fa-clock pad-right"></span>Hourly Forecast</div>
     <div id="hourly" class="weather-hourly"></div>
   </div>
+  <div id="celestialSection" class="elements-column">
+    <div id="celestialElements" class="elements-row">
+        <div id="sunTile" class="element-tile">
+          <div id="sunTitle" class="container-title">Sun</div>
+          <div id="sunData" class="mini-data"></div>
+          <div id="sunGraphic2" class="mini-data"></div>
+          <div id="sunRemain" class="sub-data"></div>
+        </div>
+        <div id="moonTile" class="element-tile">
+          <div id="moonTitle" class="container-title">Moon</div>
+          <div id="moonData" class="mini-data"></div>
+          <div id="moonGraphic2" class="mini-data"></div>
+          <div id="moonRemain" class="sub-data"></div>
+        </div>
+      </div>
+  </div>
   <div id="dailyForecast" class="container-forecast">
     <div class="container-title"><span class="fas fa-calendar-alt pad-right"></span>10-day Forecast</div>
     <div id="forecast" class="weather-forecast"></div>
@@ -89,7 +105,7 @@
         <div id="pressureData" class="mini-data"></div>
       </div>
     </div>
-    <div id="celestialElements" class="elements-row">
+    <!-- <div id="celestialElements" class="elements-row">
       <div id="sunTile" class="element-tile">
         <div id="sunTitle" class="container-title">Sun</div>
         <div id="sunData" class="mini-data"></div>
@@ -102,7 +118,7 @@
         <div id="moonGraphic2" class="mini-data"></div>
         <div id="moonRemain" class="sub-data"></div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div id="celestialTop" class="container-forecast" style="display: none;">
     <div id="celestialTitle" class="container-title">Celestial</div>

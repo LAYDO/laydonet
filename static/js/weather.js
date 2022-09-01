@@ -45,6 +45,7 @@ let currentPM25 = document.getElementById('pm25Data');
 let currentRain = document.getElementById('precipData');
 let currentRainToday = document.getElementById('precipToday');
 
+let celestialSection = document.getElementById('celestialSection');
 let celestialT = document.getElementById('celestialTop');
 let celestial = document.getElementById('celestial');
 let celestialElements = document.getElementById('celestialElements');
@@ -152,6 +153,7 @@ function init() {
     celestialT.style.display = 'none';
     hfc.style.display = 'none';
     elementTiles.style.display = 'none';
+    celestialSection.style.display = 'none';
     credits.style.display = 'none';
     this.loading = false;
 
@@ -207,6 +209,7 @@ function load() {
         elForecast.style.display = 'inherit';
         cityName.style.display = 'inherit';
         credits.style.display = 'inherit';
+        celestialSection.style.display = 'inherit';
         hfc.style.display = 'flex';
         elementTiles.style.display = 'flex';
     } else {
@@ -217,6 +220,7 @@ function load() {
         hfc.style.display = 'none';
         elementTiles.style.display = 'none';
         credits.style.display = 'none';
+        celestialSection.style.display = 'none';
 
         forecast.innerHTML = '';
         celestial.innerHTML = '';
@@ -249,17 +253,19 @@ function buildCurrent(data) {
     currentHumid.innerText = `${data.humidity}\u0025`;
     currentDew.innerText = `Dew Point: ${data.dew_point}\xB0`;
 
-    currentAqi.innerText = `${data.aqi.main.aqi}`;
-    currentAqi.style.color = getAQIColor(data.aqi.main.aqi);
-    document.getElementById('airTitle').style.color = getAQIColor(data.aqi.main.aqi);
-    currentCO.innerText = `CO: ${data.aqi.components.co}`;
-    currentNO.innerText = `NO: ${data.aqi.components.no}`;
-    currentNO2.innerText = `NO2: ${data.aqi.components.no2}`;
-    currentO3.innerText = `O3: ${data.aqi.components.o3}`;
-    currentSO2.innerText = `SO2: ${data.aqi.components.so2}`;
-    currentPM10.innerText = `PM10: ${data.aqi.components.pm10}`;
-    currentPM25.innerText = `PM2.5: ${data.aqi.components.pm2_5}`;
-    currentNH3.innerText = `NH3: ${data.aqi.components.nh3}`;
+    if (data.aqi.main != undefined && data.aqi.components != undefined) {
+        currentAqi.innerText = `${data.aqi.main.aqi}`;
+        currentAqi.style.color = getAQIColor(data.aqi.main.aqi);
+        document.getElementById('airTitle').style.color = getAQIColor(data.aqi.main.aqi);
+        currentCO.innerText = `CO: ${data.aqi.components.co}`;
+        currentNO.innerText = `NO: ${data.aqi.components.no}`;
+        currentNO2.innerText = `NO2: ${data.aqi.components.no2}`;
+        currentO3.innerText = `O3: ${data.aqi.components.o3}`;
+        currentSO2.innerText = `SO2: ${data.aqi.components.so2}`;
+        currentPM10.innerText = `PM10: ${data.aqi.components.pm10}`;
+        currentPM25.innerText = `PM2.5: ${data.aqi.components.pm2_5}`;
+        currentNH3.innerText = `NH3: ${data.aqi.components.nh3}`;
+    }
 
     currentRain.innerText = `${Math.round(data.rain_next * 100)}\u0025`;
     currentRainToday.innerText = `24 hour chance: ${Math.round(data.rain_today * 100)}\u0025`;
@@ -782,8 +788,8 @@ function celestialRemaining(data) {
         let s = document.getElementById('sunRemain');
         plugDiff(diff, s, 'Sunrise');
     }
-    
-    
+
+
     if (moonset < moonrise) {
         if (n < moonset) {
             let diff = Math.abs(moonset - n);
@@ -797,7 +803,7 @@ function celestialRemaining(data) {
             document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
             let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonrise');
-            
+
         }
     } else {
         if (n < moonrise) {
@@ -855,7 +861,7 @@ function toggleCitySearch() {
 }
 
 function getAQIColor(aqi) {
-    switch(aqi) {
+    switch (aqi) {
         case 1:
             return '#00e400';
         case 2:
@@ -879,21 +885,99 @@ function generateWindDial(data) {
     let degree = data.windDeg;
 
     let windElement = document.getElementById('wind');
+    let baseW = windElement.clientWidth * 0.7;
+    let baseH = windElement.clientHeight * 0.7;
 
     let dial = document.createElementNS(svgns, 'svg');
-    dial.setAttribute('width', windElement.clientWidth * 0.7);
-    dial.setAttribute('height', windElement.clientHeight * 0.7);
+    dial.setAttribute('width', baseW);
+    dial.setAttribute('height', baseH);
 
-    let radius = (windElement.clientWidth * 0.6) / 2;
+    let radius = (windElement.clientWidth * 0.5) / 2;
 
     let circle = document.createElementNS(svgns, 'circle');
-    circle.setAttribute('cx', (windElement.clientWidth * 0.7) / 2);
-    circle.setAttribute('cy', (windElement.clientHeight * 0.7) / 2);
+    circle.setAttribute('cx', baseW / 2);
+    circle.setAttribute('cy', baseH / 2);
     circle.setAttribute('r', radius);
-    circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.75)'); // #fff8ed
+    circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.5)'); // #fff8ed
     circle.setAttribute('fill', 'none');
     circle.setAttribute('stroke-width', 2);
-    
+
+    for (let i = 0; i < 4; i++) {
+        let line = document.createElementNS(svgns, 'line');
+        line.setAttribute('x1', baseW / 2);
+        line.setAttribute('y1', 10);
+        line.setAttribute('x2', baseW / 2);
+        line.setAttribute('y2', 20);
+        line.setAttribute('style', 'stroke:var(--font-color); stroke-width:0.5;');
+
+
+        let dir = document.createElementNS(svgns, 'text');
+        dir.setAttribute('x', '50%');
+        dir.setAttribute('y', 8);
+        dir.setAttribute('text-anchor', 'middle');
+        dir.setAttribute('fill', '#fff8ed');
+        dir.setAttribute('font-size', '0.5rem');
+        switch (i) {
+            case 0:
+                dir.textContent = 'N';
+                break;
+            case 1:
+                dir.textContent = 'E';
+                break;
+            case 2:
+                dir.textContent = 'S';
+                break;
+            case 3:
+                dir.textContent = 'W';
+                break;
+        }
+        line.setAttribute('transform', `rotate(${i * 90}, ${baseW / 2}, ${baseW / 2})`);
+        dir.setAttribute('transform', `rotate(${i * 90}, ${baseW / 2}, ${baseW / 2})`);
+
+        dial.append(line);
+        dial.append(dir);
+    }
+
+    for (let y = 0; y < 360; y++) {
+        if (y == degree) {
+            let g = document.createElementNS(svgns, 'g');
+            let arrowLine = document.createElementNS(svgns, 'line');
+            arrowLine.setAttribute('x1', baseW / 2);
+            arrowLine.setAttribute('y1', radius / 2);
+            arrowLine.setAttribute('x2', baseW / 2);
+            arrowLine.setAttribute('y2', radius);
+            arrowLine.setAttribute('style', 'stroke:var(--font-faded); stroke-width:2;');
+
+            let arrow = document.createElementNS(svgns, 'polygon');
+            arrow.setAttribute('style', 'stroke:var(--font-faded); stroke-width:1; fill:var(--font-color);');
+            arrow.setAttribute('points', `${baseW / 2},16 ${(baseW / 2) - 4},20 ${(baseW / 2) + 4},20`);
+
+            let arrowButt = document.createElementNS(svgns, 'line');
+            arrowButt.setAttribute('x1', baseW / 2);
+            arrowButt.setAttribute('y1', 2.25 * radius);
+            arrowButt.setAttribute('x2', baseW / 2);
+            arrowButt.setAttribute('y2', radius);
+            arrowButt.setAttribute('style', 'stroke:var(--font-faded); stroke-width:2;');
+
+            let butt = document.createElementNS(svgns, 'circle');
+            butt.setAttribute('cx', baseW / 2);
+            butt.setAttribute('cy', 2.3 * radius);
+            butt.setAttribute('r', 0.05 * radius);
+            butt.setAttribute('stroke', 'var(--font-faded)'); // #fff8ed
+            butt.setAttribute('fill', 'none');
+            butt.setAttribute('stroke-width', 2);
+
+            g.append(arrowLine);
+            g.append(arrow);
+            g.append(arrowButt);
+            g.append(butt);
+
+            g.setAttribute('transform', `rotate(${y}, ${baseW / 2}, ${baseW / 2})`);
+
+            dial.append(g);
+        }
+    }
+
     let vel = document.createElementNS(svgns, 'text');
     vel.setAttribute('x', '50%');
     vel.setAttribute('y', '50%');
@@ -909,7 +993,7 @@ function generateWindDial(data) {
     gusts.setAttribute('fill', '#fff8ed');
     gusts.setAttribute('font-size', '0.5rem');
     gusts.textContent = `Gusts: ${gust.toFixed(0)} MPH`;
-    
+
     dial.append(circle);
     dial.append(vel);
     dial.append(gusts);
