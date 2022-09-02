@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'home',
     'wedding',
     'weather',
+    'schedule',
 ]
 
 MIDDLEWARE = [

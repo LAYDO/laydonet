@@ -2,6 +2,9 @@
 class Barometer {
     constructor(h) {
         this.pressure = h;
+        this.baseW = 0;
+        this.baseH = 0;
+        this.radius = 0;
         this.drawBarometer();
     }
     drawBarometer() {
