@@ -5,8 +5,11 @@ class Barometer {
     private baseH: number;
     private radius: number;
 
-    constructor(h) {
+    constructor(h: number) {
         this.pressure = h;
+        this.baseW = 0;
+        this.baseH = 0;
+        this.radius = 0;
         this.drawBarometer();
     }
 
