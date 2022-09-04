@@ -4,12 +4,14 @@
 {% block laydo_content_1 %}
 <body>
     <div id="Schedule" class="laydo-app">
-        <div id="space">
-            <div id="time">
-                <canvas id="clock" ></canvas>
-            </div>
+        <div class="laydo-container">
+            <div>TEST</div>
+            <div id="newClock">CLOCK</div>
         </div>
+        <canvas id="clock" ></canvas>
     </div>
     <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/Schedule.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/Clock.js' %}"></script>
 </body>
 {% endblock %}

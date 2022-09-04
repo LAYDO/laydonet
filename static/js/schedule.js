@@ -25,7 +25,7 @@ function setSchedule() {
     }).then(data => {
         // console.log(data);
         schedule = data;
-        console.log(schedule);
+        let s = new Schedule(data);
         drawClock();
         setInterval(drawClock, 1000);
         setInterval(flipInfo, 7000);
@@ -41,7 +41,7 @@ function drawDate() {
         day: "numeric"
     };
     var longDate = now.toLocaleDateString("en-US", options);
-    longDate = longDate.replaceAll("/",".");
+    longDate = longDate.replaceAll("/", ".");
     ctx.font = "bold 2rem Times New Roman";
     ctx.fillText(`${longDate}`, 0, -(ctx.canvas.height / 4));
     ctx.fillText(`${dayOfWeek[now.getDay()]}`, 0, -(ctx.canvas.height / 4) + 32);
@@ -54,9 +54,9 @@ function drawPeriod() {
     } else if (schedule.weekend) {
         ctx.fillText(`It Begins Again...`, 0, -(ctx.canvas.height / 4));
     } else if ((time > new Date(schedule.periods[schedule.periods.length - 2].end) && time <= new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59)) ||
-    time < new Date(schedule.todayStart) && time >= new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0)) {
+        time < new Date(schedule.todayStart) && time >= new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0)) {
         ctx.fillText(`Calm`, 0, -(ctx.canvas.height / 4));
-    }else {
+    } else {
         schedule.periods.forEach((period, index) => {
             let periodStart = new Date(period.start);
             let periodEnd = new Date(period.end);
@@ -88,7 +88,7 @@ function flipInfo() {
 
 function drawClock() {
     drawFace(ctx, radius);
-    drawNumbers(ctx,radius);
+    drawNumbers(ctx, radius);
     drawTime();
     if (flip === 0) {
         drawDate();
@@ -119,7 +119,7 @@ function drawNumbers(ctx, radius) {
     ctx.font = radius * 0.15 + "px arial";
     ctx.textBaseline = "middle";
     ctx.textAlign = "center";
-    for(num = 1; num < 13; num++) {
+    for (num = 1; num < 13; num++) {
         ang = num * Math.PI / 6;
         ctx.rotate(ang);
         ctx.translate(0, -radius * 0.85);
@@ -138,11 +138,11 @@ function drawTime() {
     var minute = time.getMinutes();
     var second = time.getSeconds();
     // hour
-    hour = hour%12;
+    hour = hour % 12;
     hour = (hour * Math.PI / 6) + (minute * Math.PI / (6 * 60)) + (second * Math.PI / (360 * 60));
     drawHand(ctx, hour, radius * 0.5, radius * 0.05);
     // minute
-    minute = (minute * Math.PI / 30) + (second * Math.PI / (30*60));
+    minute = (minute * Math.PI / 30) + (second * Math.PI / (30 * 60));
     drawHand(ctx, minute, radius * 0.8, radius * 0.03);
     // second
     second = (second * Math.PI / 30);
@@ -201,11 +201,11 @@ function drawRemaining() {
                     constructRemaining(1, periodEnd);
                     if (index == 6) {
                         drawStatus(1);
-                    }else {
+                    } else {
                         drawStatus(0);
                     }
                 } else {
-                    
+
                 }
             }
         });
@@ -217,7 +217,7 @@ function drawRemaining() {
 function drawStatus(s) {
     document.fonts.load('900 32px "Font Awesome 5 Free"').then((_) => {
         ctx.font = '900 32px "Font Awesome 5 Free"';
-        switch(s) {
+        switch (s) {
             case 0:
                 ctx.fillText('\uf4b3', (ctx.canvas.width / 4), 0);
                 break;
@@ -237,7 +237,7 @@ function constructRemaining(s, l) {
     remainingHours = Math.floor((l - time) / 3600000) - (remainingDays * 24);
     remainingMins = Math.floor((l - time) / 60000) - (remainingDays * 1440) - (remainingHours * 60);
     remainingSecs = Math.floor((l - time) % 60000 / 1000);
-    switch(s) {
+    switch (s) {
         case 0:
             timeRemaining = `+${remainingDays}:${('0' + remainingHours).slice(-2)}:${('0' + remainingMins).slice(-2)}:${remainingSecs == 60 ? '00' : ('0' + remainingSecs).slice(-2)}`;
             break;
