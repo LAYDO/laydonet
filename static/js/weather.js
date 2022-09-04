@@ -1,4 +1,3 @@
-let svgns = 'http://www.w3.org/2000/svg';
 let loader = document.getElementById('loader');
 let searches = document.getElementById('citySection');
 let cityName = document.getElementById('cityName');
@@ -875,13 +874,13 @@ function generateWindDial(data) {
     let baseW = windElement.clientWidth * 0.7;
     let baseH = windElement.clientHeight * 0.7;
 
-    let dial = document.createElementNS(svgns, 'svg');
+    let dial = document.createElementNS(Utils.svgns, 'svg');
     dial.setAttribute('width', baseW);
     dial.setAttribute('height', baseH);
 
     let radius = (windElement.clientWidth * 0.5) / 2;
 
-    let circle = document.createElementNS(svgns, 'circle');
+    let circle = document.createElementNS(Utils.svgns, 'circle');
     circle.setAttribute('cx', baseW / 2);
     circle.setAttribute('cy', baseH / 2);
     circle.setAttribute('r', radius);
@@ -890,7 +889,7 @@ function generateWindDial(data) {
     circle.setAttribute('stroke-width', 2);
 
     for (let i = 0; i < 4; i++) {
-        let line = document.createElementNS(svgns, 'line');
+        let line = document.createElementNS(Utils.svgns, 'line');
         line.setAttribute('x1', baseW / 2);
         line.setAttribute('y1', 10);
         line.setAttribute('x2', baseW / 2);
@@ -898,7 +897,7 @@ function generateWindDial(data) {
         line.setAttribute('style', 'stroke:var(--font-color); stroke-width:0.5;');
 
 
-        let dir = document.createElementNS(svgns, 'text');
+        let dir = document.createElementNS(Utils.svgns, 'text');
         dir.setAttribute('x', '50%');
         dir.setAttribute('y', 8);
         dir.setAttribute('text-anchor', 'middle');
@@ -927,26 +926,26 @@ function generateWindDial(data) {
 
     for (let y = 1; y <= 360; y++) {
         if (y == degree) {
-            let g = document.createElementNS(svgns, 'g');
-            let arrowLine = document.createElementNS(svgns, 'line');
+            let g = document.createElementNS(Utils.svgns, 'g');
+            let arrowLine = document.createElementNS(Utils.svgns, 'line');
             arrowLine.setAttribute('x1', baseW / 2);
             arrowLine.setAttribute('y1', radius / 2);
             arrowLine.setAttribute('x2', baseW / 2);
             arrowLine.setAttribute('y2', radius);
             arrowLine.setAttribute('style', 'stroke:var(--font-faded); stroke-width:2;');
 
-            let arrow = document.createElementNS(svgns, 'polygon');
+            let arrow = document.createElementNS(Utils.svgns, 'polygon');
             arrow.setAttribute('style', 'stroke:var(--font-faded); stroke-width:1; fill:var(--font-color);');
             arrow.setAttribute('points', `${baseW / 2},16 ${(baseW / 2) - 4},20 ${(baseW / 2) + 4},20`);
 
-            let arrowButt = document.createElementNS(svgns, 'line');
+            let arrowButt = document.createElementNS(Utils.svgns, 'line');
             arrowButt.setAttribute('x1', baseW / 2);
             arrowButt.setAttribute('y1', 2.25 * radius);
             arrowButt.setAttribute('x2', baseW / 2);
             arrowButt.setAttribute('y2', radius);
             arrowButt.setAttribute('style', 'stroke:var(--font-faded); stroke-width:2;');
 
-            let butt = document.createElementNS(svgns, 'circle');
+            let butt = document.createElementNS(Utils.svgns, 'circle');
             butt.setAttribute('cx', baseW / 2);
             butt.setAttribute('cy', 2.3 * radius);
             butt.setAttribute('r', 0.05 * radius);
@@ -965,7 +964,7 @@ function generateWindDial(data) {
         }
     }
 
-    let vel = document.createElementNS(svgns, 'text');
+    let vel = document.createElementNS(Utils.svgns, 'text');
     vel.setAttribute('x', '50%');
     vel.setAttribute('y', '50%');
     vel.setAttribute('text-anchor', 'middle');
@@ -973,7 +972,7 @@ function generateWindDial(data) {
     vel.setAttribute('font-size', '1rem');
     vel.textContent = `${velocity.toFixed(0)} MPH`;
 
-    let gusts = document.createElementNS(svgns, 'text');
+    let gusts = document.createElementNS(Utils.svgns, 'text');
     gusts.setAttribute('x', '50%');
     gusts.setAttribute('y', '60%');
     gusts.setAttribute('text-anchor', 'middle');
