@@ -1,7 +1,6 @@
 "use strict";
 class Schedule {
     constructor(data) {
-        this.schedule = {};
         this.url = window.location.href;
         this.dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
         this.flip = false;
@@ -10,5 +9,10 @@ class Schedule {
         console.log(this.schedule);
         this.clock = new Clock(this.clockElement);
         this.periodsElement = document.getElementById('periods');
+        if (this.schedule.periods.length > 0) {
+            this.schedule.periods.forEach((period) => {
+                let p = new Period(period, this.periodsElement);
+            });
+        }
     }
 }

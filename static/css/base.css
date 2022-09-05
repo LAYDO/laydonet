@@ -270,6 +270,7 @@ body {
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   transition: 2s;
 } */
+
 .top-back-button {
   background-color: var(--font-color);
   height: 3.4375rem;
@@ -299,7 +300,13 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
 
+.laydo-row-even {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
 }
 
 .laydo-row-wrap {
