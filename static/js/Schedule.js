@@ -9,6 +9,6 @@ class Schedule {
         this.schedule = data;
         console.log(this.schedule);
         this.clock = new Clock(this.clockElement);
-        // this.clockElement.append(JSON.stringify(this.schedule));
+        this.periodsElement = document.getElementById('periods');
     }
 }

@@ -22,11 +22,11 @@ class Barometer {
             this.radius = pressureElement.clientWidth / 2;
         }
 
-        let barometer = document.createElementNS(svgns, 'svg');
+        let barometer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         barometer.setAttribute('width', this.baseW.toFixed(0));
         barometer.setAttribute('height', this.baseH.toFixed(0));
 
-        let circle = document.createElementNS(svgns, 'path');
+        let circle = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         circle.setAttribute('stroke', 'var(--font-faded');
         circle.setAttribute('stroke-width', '2');
         circle.setAttribute('fill', 'transparent');
@@ -36,7 +36,7 @@ class Barometer {
         // currentInhg.innerText = `${(data.pressure * 0.02953).toFixed(2)} inHg`;
         let hpa = this.pressure;
         let inhg = hpa * 0.02953;
-        let pressure = document.createElementNS(svgns, 'text');
+        let pressure = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         pressure.setAttribute('x', '50%');
         pressure.setAttribute('y', '50%');
         pressure.setAttribute('text-anchor', 'middle');
@@ -44,7 +44,7 @@ class Barometer {
         pressure.setAttribute('font-size', '0.75rem');
         pressure.textContent = `${inhg.toFixed(2)} inHg`;
 
-        let line = document.createElementNS(svgns, 'line');
+        let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', (this.baseW / 2).toFixed(0));
         line.setAttribute('y1', '25%');
         line.setAttribute('x2', (this.baseW / 2).toFixed(0));
