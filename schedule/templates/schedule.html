@@ -2,16 +2,15 @@
 {% block page_head %}
 {% endblock %}
 {% block laydo_content_1 %}
-<body>
-    <div id="Schedule" class="laydo-app">
-        <div class="laydo-container">
-            <div>TEST</div>
-            <div id="newClock">CLOCK</div>
-        </div>
-        <canvas id="clock" ></canvas>
+<div id="Schedule" class="laydo-app">
+    <div class="laydo-container">
+        <div id="newClock" style="min-height: 21rem;">CLOCK</div>
+        <div id="periods"></div>
     </div>
-    <script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/Schedule.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/Clock.js' %}"></script>
-</body>
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static 'js/schedule.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/Schedule.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/Clock.js' %}"></script>
 {% endblock %}
