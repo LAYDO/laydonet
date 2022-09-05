@@ -18,7 +18,7 @@ class Clock {
         for (let i = 0; i < this.numbers.length; i++) {
             let hour = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             hour.setAttribute('x', '50%');
-            hour.setAttribute('y', '30');
+            hour.setAttribute('y', (this.baseW / 6.5).toFixed(0));
             hour.setAttribute('text-anchor', 'middle');
             hour.setAttribute('fill', 'var(--font-color)');
             hour.setAttribute('font-size', '1rem');
