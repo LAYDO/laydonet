@@ -11,6 +11,7 @@ body {
   --color-accent: #80716c;
   --font-color: #000020;
   --font-faded: #00002090;
+  --glass-backdrop: rgba(0, 0, 0, 0.15);
 }
 
 .theme-dark {
@@ -19,6 +20,7 @@ body {
   --color-accent: #ffe2b8;
   --font-color: #fff8ed;
   --font-faded: #fff8ed90;
+  --glass-backdrop: rgba(255, 255, 255, 0.15);
 }
 
 .laydo-flex-home {
@@ -30,6 +32,17 @@ body {
   text-align: center;
   background-color: var(--color-primary);
   color: var(--font-color);
+}
+
+.laydo-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--glass-backdrop);
+  backdrop-filter: blur(5px);
+  border-radius: 1rem;
+  width: 96%;
+  margin-left: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .laydo-overlay {
@@ -257,6 +270,7 @@ body {
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   transition: 2s;
 } */
+
 .top-back-button {
   background-color: var(--font-color);
   height: 3.4375rem;
@@ -286,7 +300,14 @@ body {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
 
+.laydo-row-even {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 1rem 0;
 }
 
 .laydo-row-wrap {
@@ -321,4 +342,9 @@ body {
 
 #laydoMNavbar {
   background-color: var(--color-primary);
+}
+
+.period-active {
+  /* box-shadow: 0 20px 20px -17px rgba(255, 255, 255, 0.53); */
+  border: 0.125rem solid var(--font-color);
 }

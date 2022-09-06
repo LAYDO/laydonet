@@ -1,11 +1,3 @@
-.theme-light {
-  --glass-backdrop: rgba(0, 0, 0, 0.15);;
-}
-
-.theme-dark {
-  --glass-backdrop: rgba(255, 255, 255, 0.15);;
-}
-
 #citySearch {
   width: 50%;
   height: 2rem;
@@ -34,6 +26,7 @@
   font-size: 1.5rem;
   font-weight: 700;
 }
+
 .sub-data {
   margin: 0.25rem;
   font-size: 0.75rem;
@@ -334,12 +327,14 @@ h2 {
   width: 96%;
   margin-left: 0.5rem;
 }
+
 .elements-row {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
+
 .element-tile {
   display: flex;
   flex-direction: column;
@@ -350,6 +345,7 @@ h2 {
   min-height: 11rem;
   margin-bottom: 1rem;
 }
+
 .pad-right {
   margin-right: 0.25rem;
   color: var(--font-faded);

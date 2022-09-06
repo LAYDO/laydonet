@@ -1,6 +1,7 @@
 class Utils {
-    constructor() {
+    static svgns: "http://www.w3.org/2000/svg";
 
+    constructor() {
     }
 
     windDirection(deg: number) {
