@@ -29,20 +29,6 @@ class Clock {
         this.clock.append(this.circle);
         element.innerHTML = '';
         element.append(this.clock);
-        setInterval(this.updateTime.bind(this), 1000);
-    }
-    updateTime() {
-        let time = new Date();
-        let hour = time.getHours();
-        let minute = time.getMinutes();
-        let second = time.getSeconds();
-        hour = hour % 12;
-        hour = (hour * 30) + (minute / 2) + (second / 10);
-        this.drawHand(hour, 'hourHand', '4', this.baseW / 4);
-        minute = (minute * 6) + (second / 10);
-        this.drawHand(minute, 'minuteHand', '3', this.baseW / 6);
-        second = (second * 6);
-        this.drawHand(second, 'secondHand', '2', this.baseW / 9);
     }
     drawHand(pos, id, width, y2) {
         let existing = document.getElementById(id);
