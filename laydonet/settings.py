@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'wedding',
     'weather',
     'schedule',
+    'allergies',
 ]
 
 MIDDLEWARE = [
@@ -92,12 +93,12 @@ if DEVELOPMENT_MODE is True:
         'default': {
             # 'ENGINE': 'django.db.backends.sqlite3',
             # 'NAME': BASE_DIR / 'db.sqlite3',
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
 	    'NAME': 'laydonetdb',
-            'USER': 'laydo',
-	    'PASSWORD': 'drew758Met340^',
-	    'HOST': '',
-            'PORT': '5432'
+        'USER': 'laydonetdb',
+	    'PASSWORD': os.environ.get("DB_PASSWORD"),
+	    'HOST': 'app-29d13bde-6d4d-4934-b21f-6c9dfa708572-do-user-12113309-0.b.db.ondigitalocean.com',
+        'PORT': '25060'
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':

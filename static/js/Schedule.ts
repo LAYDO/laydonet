@@ -13,6 +13,7 @@ class Schedule {
         this.clockElement = document.getElementById('newClock')!;
         this.periodsElement = document.getElementById('periods')!;
 
+        this.time = new Date();
         this.schedule = data;
         console.log(this.schedule);
         this.clock = new Clock(this.clockElement);
