@@ -2,9 +2,11 @@ getAllergies();
 
 async function getAllergies() {
     let url = `${window.location.href}get`;
-    document.getElementById('allergiesCheck').style.visibility = 'visible';
+    document.getElementById('allergiesToggle').style.display = 'none';
+    document.getElementById('allergiesCheck').style.display = 'inherit';
     await fetch(url).then(response => {
-        document.getElementById('allergiesCheck').style.visibility = 'hidden';
+        document.getElementById('allergiesCheck').style.display = 'none';
+        document.getElementById('allergiesToggle').style.display = 'inherit';
         return response.json();
     }).then(data => {
         window.sessionStorage.setItem('allergies', JSON.stringify(data));
@@ -32,11 +34,11 @@ function getLevelColor(int) {
 function showAllergies() {
     let table = document.getElementById('allergyTable');
     let icon = document.getElementById('allergiesToggle');
-    if (table.style.visibility === 'hidden') {
-        table.style.visibility = 'visible';
+    if (table.style.display === 'none') {
+        table.style.display = 'flex';
         icon.classList.replace('fa-plus', 'fa-minus');
     } else {
-        table.style.visibility = 'hidden';
+        table.style.display = 'none';
         icon.classList.replace('fa-minus', 'fa-plus');
     }
 }
@@ -113,17 +115,19 @@ function percentGoodBoy(array, ingredCount) {
     document.getElementById('recipeTable').prepend(`${count > 0 ? ((percent / count) * 100).toFixed(1) : 0}% on ${((array.length / ingredCount) * 100).toFixed(1)}% ingredients found.`);
 }
 
-async function getLevelAllergies() {
-    let url = `${window.location.href}get?level=0`;
-    document.getElementById('allergiesCheck').style.visibility = 'visible';
+async function getLevelAllergies(level) {
+    let url = `${window.location.href}get?level=${level}`;
+    document.getElementById('allergiesToggle').style.display = 'none';
+    document.getElementById('allergiesCheck').style.display = 'inherit';
     await fetch(url).then(response => {
-        document.getElementById('allergiesCheck').style.visibility = 'hidden';
+        document.getElementById('allergiesCheck').style.display = 'none';
+        document.getElementById('allergiesToggle').style.display = 'inherit';
         return response.json();
     }).then(data => {
-        window.sessionStorage.setItem('allergies0', JSON.stringify(data));
+        window.sessionStorage.setItem(`allergies${level}`, JSON.stringify(data));
         // let retrieve = JSON.parse(window.sessionStorage.getItem('allergies'));
         // console.log(retrieve);
-        buildTable(JSON.parse(window.sessionStorage.getItem('allergies0')).sort(compare), 'allergyTable');
+        buildTable(JSON.parse(window.sessionStorage.getItem(`allergies${level}`)).sort(compare), 'allergyTable');
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
