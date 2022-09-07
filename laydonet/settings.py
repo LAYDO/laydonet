@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allergies',
     'trackiss',
     'jwst',
+    'mtg',
 ]
 
 MIDDLEWARE = [
