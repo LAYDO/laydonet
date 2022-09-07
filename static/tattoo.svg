@@ -1,0 +1,121 @@
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="400" width="200" viewBox="100 150 200 300">
+    <!-- Fingers -->
+    <path d="M 100 270 C100,240 170,240 170,280" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 140 250 L 140 170" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 140 170 C140,130 180,130 180,170" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 180 270 L 180 150" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 180 150 C180,110 220,110 220,150" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 220 270 L 220 150" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 220 170 C220,130 260,130 260,170" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 260 250 L 260 170" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 300 270 C300,240 230,240 230,280" stroke="white" stroke-width="3" fill="none" />
+    <!-- Palm -->
+    <path d="M 100 270 Q 115 275 120 320" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 120 320 Q 120 420 200 420" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 300 270 Q 285 275 280 320" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 280 320 Q 280 420 200 420" stroke="white" stroke-width="3" fill="none" />
+    <!-- Above Eye -->
+    <path d="M 165 336 Q 150 310, 180 290 T 200 230" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 235 336 Q 250 310, 220 290 T 200 230" stroke="white" stroke-width="3" fill="none" />
+    <!-- Bottom Palm -->
+    <path d="M 164 366 
+    C140,366 130,356 130,340
+    C130,320 150,320 150,340
+    C150,350 140,350 140,340
+    " stroke="white" stroke-width="3" fill="none" />
+    <path d="M 236 366 
+    C260,366 270,356 270,340
+    C270,320 250,320 250,340
+    C250,350 260,350 260,340
+    " stroke="white" stroke-width="3" fill="none" />
+    <path d="M190 420
+    C190,400 190,380 170,375
+    C155,375 155,400 170,400
+    C180,400 180,385 170,385
+    " stroke="white" stroke-width="3" fill="none" />
+    <path d="M210 420
+    C210,400 210,380 230,375
+    C245,375 245,400 230,400
+    C220,400 220,385 230,385
+    " stroke="white" stroke-width="3" fill="none" />
+    <!-- Iris -->
+    <circle cx="200" cy="350" r="10" fill="white" />
+    <path d="M 180 335 
+    A -25 -25, 0, 1, 0, 220 335" stroke="white" stroke-width="3" fill="none" />
+    <path d="M200 333 L200 338" stroke="white" stroke-width="2" fill="none" />
+    <path d="M207 339 L209 335" stroke="white" stroke-width="2" fill="none" />
+    <path d="M211 345 L215 341" stroke="white" stroke-width="2" fill="none" />
+    <path d="M213 350 L218 350" stroke="white" stroke-width="2" fill="none" />
+    <path d="M211 355 L215 359" stroke="white" stroke-width="2" fill="none" />
+    <path d="M207 361 L209 365" stroke="white" stroke-width="2" fill="none" />
+    <path d="M200 363 L200 368" stroke="white" stroke-width="2" fill="none" />
+    <path d="M193 360 L191 365" stroke="white" stroke-width="2" fill="none" />
+    <path d="M189 356 L185 359" stroke="white" stroke-width="2" fill="none" />
+    <path d="M187 350 L182 350" stroke="white" stroke-width="2" fill="none" />
+    <path d="M189 344 L185 341" stroke="white" stroke-width="2" fill="none" />
+    <path d="M193 340 L191 335" stroke="white" stroke-width="2" fill="none" />
+    <!-- Eyelids/Outline -->
+    <path d="M 150 350 Q 200 290 250 350" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 155 357 Q 200 303 245 357" stroke="white" stroke-width="3" fill="none" />
+    <path d="M 150 350 Q 200 420 250 350" stroke="white" stroke-width="3" fill="none" />
+    <!-- Bottom circles -->
+    <circle cx="200" cy="440" r="6" fill="white" />
+    <circle cx="200" cy="460" r="4" fill="white" />
+    <circle cx="200" cy="480" r="3" fill="white" />
+    <!-- Swirls/vines -->
+    <!-- Middle finger -->
+    <path d="M 200 140 
+    C200,150 190,150 190,140
+    C190,130 210,130 210,150
+    Q210 160, 200 180 T 190 220
+    C190,235 210,235 210,220
+    C210,210, 200,210, 200,220
+    " stroke="white" stroke-width="3" fill="none" />
+    <!-- Left index -->
+    <path d="M140 180
+    C140,200 170,200 170,180
+    C170,160 150,160 150,180
+    C150,190 162,190 162,180
+    " stroke="white" stroke-width="3" fill="none" />
+    <path d="M160 195
+    C170,210 170,225 160,225
+    C150,225 150,210 160,215
+    " stroke="white" stroke-width="3" fill="none" />
+    <!-- Right index -->
+    <path d="M260 180
+    C260,200 230,200 230,180
+    C230,160 250,160 250,180
+    C250,190 240,190 240,180
+    " stroke="white" stroke-width="3" fill="none" />
+    <path d="M240 195
+    C230,195 230,225 240,225
+    C250,225 250,210 240,215
+    " stroke="white" stroke-width="3" fill="none" />
+    <!-- Left finger -->
+    <path d="M110 280 
+    C110,260 150,260 160,280
+    C180,320 130,340 130,300
+    C130,280 150,290 150,300
+    " stroke="white" stroke-width="3" fill="none" />
+    <!-- Right finger -->
+    <path d="M290 280 
+    C290,260 250,260 240,280
+    C220,320 270,340 270,300
+    C270,280 250,290 250,300
+    " stroke="white" stroke-width="3" fill="none" />
+    <!-- Little Bumps -->
+    <path d="M170 300 
+    A 3 5 0 0 1 190 280" stroke="white" stroke-width="3" fill="none" />
+    <path d="M230 300 
+    A 3 5 0 0 0 210 280" stroke="white" stroke-width="3" fill="none" />
+    <!-- Heart -->
+    <path d="M200 320
+    C190,305 185,305 185,300
+    C185,290 200,290 200,300" stroke="white" stroke-width="3" fill="none" />
+    <path d="M200 320
+    C210,305 215,305 215,300
+    C215,290 200,290 200,300" stroke="white" stroke-width="3" fill="none" />
+    <animate attributeType="CSS" attributeName="opacity" values="0.3;1;0.3" dur="5s" repeatCount="indefinite" />
+    <!-- Send Home -->
+    <rect x="100" y="120" width="200" height="362" style="fill:transparent;" onclick="sendHome()" />
+</svg>

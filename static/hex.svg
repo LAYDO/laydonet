@@ -1,0 +1,4 @@
+ <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="320" width="320" viewBox="0 0 320 320">
+  <polygon points="10,160 80,10 240,10 310,160 240,310 80,310" style="fill:transparent; stroke:#fff8ed; stroke-width:16" />
+  <animate attributeType="CSS" attributeName="opacity" values="0.3;1;0.3" dur="5s" repeatCount="indefinite" />
+</svg> 
