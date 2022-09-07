@@ -26,4 +26,5 @@ urlpatterns = [
     path('schedule/', include('schedule.urls')),
     path('allergies/', include('allergies.urls')),
     path('trackiss/', include('trackiss.urls')),
+    path('mtg/', include('mtg.urls')),
 ]
