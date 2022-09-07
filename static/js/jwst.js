@@ -282,17 +282,21 @@ class JWSTTelescope {
             tth.classList.remove('scrollToItem');
             tth.style.background = 'var(--glass-backdrop)';
             tth.style.fontWeight = 'normal';
+            tth.style.color = 'var(--font-color)';
             if (data[i] == target) {
+                targetHit = true;
                 if (!tth.classList.contains('scrollToItem')) {
                     tth.classList.add('scrollToItem');
                 }
+                tth.style.color = 'var(--font-color)';
+                tth.style.fontWeight = 'bold';
+                tth.style.border = '0.125rem solid var(--font-faded)';
                 if (now > tStart && now < this.calculateEndTime(data[i])) {
                     tth.style.background = 'gold';
+                    tth.style.color = 'var(--color-primary)';
+                    tth.style.border = 'none';
                 }
-                tth.style.fontWeight = 'bold';
-                targetHit = true;
             }
-            tth.style.color = targetHit ? 'black' : 'var(--font-color)';
         }
     }
 }

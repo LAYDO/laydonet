@@ -17,8 +17,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* border: 0.125rem solid green; */
-    height: 90%;
 }
 
 .jwst-col-info {
@@ -82,11 +80,12 @@
 
 .info-sec {
     text-align: center;
-    font-size: 1rem;
+    font-size: 0.75rem;
 }
 
 #jwstDisplay {
-    height: 100%;
+    padding: 1rem 0;
+    height: 50vh;
 }
 
 #jwstCurrent {
@@ -94,7 +93,7 @@
 }
 
 #jwstCurrent h3 {
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 .iteration {
@@ -103,16 +102,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    height: 50vh;
+    margin-top: 1rem;
 }
 
 .item {
-    border: 0.125rem solid black;
+    /* border: 0.125rem solid black; */
     width: 96%;
     padding: 0.125rem;
     display: flex;
     flex-direction: row;
     margin-top: 0.25rem;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
 }
 
 .times {
