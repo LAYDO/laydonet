@@ -1,0 +1,207 @@
+.arena {
+    margin: auto;
+    text-align: center;
+    overflow: hidden;
+  }
+  #cardName {
+    width: 50%;
+    height: 2rem;
+  }
+  #cardName:focus {
+    border-color: #9ecaed;
+    box-shadow: 0 0 1rem #9ecaed;
+  }
+  #mtgSearch {
+    height: 2.375rem;
+    width: 2.375rem;
+    font-size: 1.125rem;
+    color: white;
+    border: none;
+    background: none;
+    cursor: pointer;
+  }
+  .active {
+    text-shadow: 0 0 0.25rem #9ecaed;
+    -webkit-transform: scale(1.5);
+    transform: scale(1.5);
+  }
+  .card {
+    background-color: transparent;
+    width: 16.6rem;
+    height: 23.2rem;
+    perspective: 62.5rem;
+    margin: 0.5rem;
+    padding: 0.75rem;
+  }
+  .card:hover {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
+  .card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+  }
+  .card.clicked .card-inner {
+    transform: rotateY(180deg);
+  }
+  .card-front,
+  .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+  .card-front {
+    min-width: 16.6rem;
+    max-width: 16.6rem;
+    min-height: 23.2rem;
+    max-height: 23.2rem;
+    text-align: center;
+    box-shadow: 0 0.25rem 0.5rem 0 rgba(0, 0, 0, 0.4);
+    border-radius: 0.8rem;
+  }
+  .card-back {
+    text-align: start;
+    transform: rotateY(180deg);
+  }
+  .card-back h4 {
+    margin: 0 0.25rem;
+  }
+  .card-back ul {
+    padding: 0 1rem;
+    margin: 0.4rem 0;
+  }
+  #results {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+  }
+  
+  .color-background {
+    height: 93%;
+    border-radius: 0.4rem;
+    padding: 0.5rem 0;
+    overflow: auto;
+  }
+  
+  .title-bar {
+    display: flex;
+    margin: auto;
+    height: 1.2rem;
+    width: 96%;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: -0.125rem 0.125rem 0.5rem 0.125rem rgba(0, 0, 0, 0.9);
+    border-radius: 2rem / 5rem;
+  }
+  .title {
+    display: flex;
+    flex-direction: row;
+    color: black;
+    font-weight: bold;
+    padding-left: 0.75rem;
+    width: 90%;
+    font-size: 0.9rem;
+  }
+  .mana-cost {
+    display: flex;
+    flex-direction: row-reverse;
+    color: black;
+    font-weight: bold;
+    padding-right: 0.5rem;
+    vertical-align: middle;
+    font-size: 1.1rem;
+    width: 25%;
+  }
+  
+  .loader {
+    text-align: center;
+    border: 1rem solid transparent;
+    border-top: 1rem solid white;
+    border-radius: 50%;
+    width: 7.5rem;
+    height: 7.5rem;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  #colors {
+    white-space: nowrap;
+    overflow: auto;
+  }
+  .plains {
+    width: 116px;
+    height: 116px;
+    display: inline-block;
+    background: url("../img/mtg_wheel.png") 258px -10px;
+    scale: 0.5;
+  }
+  .forest {
+    width: 116px;
+    height: 116px;
+    display: inline-block;
+    background: url("../img/mtg_wheel.png") -2px -116px;
+    scale: 0.5;
+  }
+  .island {
+    width: 116px;
+    height: 116px;
+    display: inline-block;
+    background: url("../img/mtg_wheel.png") 120px -116px;
+    scale: 0.5;
+  }
+  .mountain {
+    width: 116px;
+    height: 116px;
+    display: inline-block;
+    background: url("../img/mtg_wheel.png") -54px -270px;
+    scale: 0.5;
+  }
+  .swamp {
+    width: 116px;
+    height: 116px;
+    display: inline-block;
+    background: url("../img/mtg_wheel.png") -228px -270px;
+    scale: 0.5;
+  }
+  .swamp:hover,
+  .mountain:hover,
+  .island:hover,
+  .forest:hover,
+  .plains:hover {
+    scale: 0.6;
+  }
+  #sets {
+    font-size: 3rem;
+    white-space: nowrap;
+    overflow: auto;
+  }
+  #sets::-webkit-scrollbar {
+    width: 0;
+  }
+  #sets {
+    overflow: -moz-scrollbar-none;
+    -ms-overflow-style: none;
+  }
+  .ss {
+    margin: 0.25rem;
+  }
+  .ss:hover {
+    scale: 1.1;
+  }
+  #filters {
+    display: none;
+  }
+  
