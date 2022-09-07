@@ -41,7 +41,7 @@ body {
   backdrop-filter: blur(5px);
   border-radius: 1rem;
   width: 96%;
-  margin-left: 0.5rem;
+  margin: 0 0.5rem;
   margin-bottom: 1rem;
 }
 

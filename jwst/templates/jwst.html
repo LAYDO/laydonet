@@ -1,0 +1,49 @@
+{% extends "app.html" %} {% load static %} 
+{% block page_head %}
+<title>JWST</title>
+<link rel="icon" href="{% static 'img/jwst.svg' %}" type="image/svg+xml"/>
+<link rel="stylesheet" href="{% static 'css/jwst.css' %}" />
+{% endblock %} 
+{% block page_header %}
+<div class="jwst-header" id="jwstHeader">
+    <div class="jwst-name">
+      <h1 class="title-name">James Webb Space Telescope</h1>
+    </div>
+</div>
+{% endblock %} {% block laydo_content_1 %}
+<div class="jwst-section laydo-container">
+  <div class="container-title">James Webb Space Telescope</div>
+  <div class="jwst-col-info laydo-container" id="jwstDisplay">
+    <div class="jwst-wrapper" id="jwstIcon">
+      <svg id="jwstSVG" width="100" height="100" viewBox="0 0 225 225" ></svg>
+    </div>
+    <div class="jwst-row-info" id="jwstCurrent">
+      <div class="jwst-side-info">
+        <div class="jwst-col-info">
+          <h3 id="targetTitle">TARGET NAME</h3>
+          <div class="info-sec" id="targetName">--</div>
+        </div>
+        <div class="jwst-col-info">
+          <h3>CATEGORIES</h3>
+          <div class="info-sec" id="categoryKeywords">--</div>
+        </div>
+      </div>
+      <div class="jwst-side-info">
+        <div class="jwst-col-info">
+          <h3>INSTRUMENTS</h3>
+          <div class="info-sec" id="instruments">--</div>
+        </div>
+        <div class="jwst-col-info">
+          <h3 id="timeTitles">SCHEDULE</h3>
+          <div class="info-sec" id="startTimeTimes">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="iteration" id="iterateTarget">
+  </div>
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static 'js/jwst.js' %}"></script>
+{% endblock %}

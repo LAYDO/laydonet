@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'schedule',
     'allergies',
     'trackiss',
+    'jwst',
     'mtg',
 ]
 

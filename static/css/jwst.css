@@ -1,0 +1,145 @@
+.jwst-header {
+    color: black;
+    text-align: center;
+    margin: 0 auto;
+}
+
+.title-name {
+    line-height: 1;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 2rem;
+}
+
+
+.jwst-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.jwst-col-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.jwst-side-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 100%;
+}
+
+.jwst-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+}
+
+.jwst-row-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    height: 100%;
+    width: 100%;
+}
+
+#jwstInfo {
+    display: none;
+    font-size: 0.75rem;
+    overflow-y: auto;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.25;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.current {
+    animation-name: blink;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    -webkit-animation-name: blink;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+}
+
+.info-sec {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+#jwstDisplay {
+    padding: 1rem 0;
+    height: 50vh;
+}
+
+#jwstCurrent {
+    visibility: hidden;
+}
+
+#jwstCurrent h3 {
+    font-size: 1rem;
+}
+
+.iteration {
+    width: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 50vh;
+    margin-top: 1rem;
+}
+
+.item {
+    /* border: 0.125rem solid black; */
+    width: 96%;
+    padding: 0.125rem;
+    display: flex;
+    flex-direction: row;
+    margin-top: 0.25rem;
+    border-radius: 0.5rem;
+}
+
+.times {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    /* border: 0.125rem solid red; */
+    width: 35%;
+    height: 100%;
+}
+
+.target {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    /* border: 0.125rem solid blue; */
+    width: 65%;
+    height: 100%;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+
+    .times,
+    .target {
+        font-size: 0.75rem;
+    }
+}
