@@ -92,7 +92,7 @@
     visibility: hidden;
 }
 
-#jwstCurrent h3 {
+.jwst-side-info h3 {
     font-size: 1rem;
 }
 
@@ -114,26 +114,23 @@
     flex-direction: row;
     margin-top: 0.25rem;
     border-radius: 0.5rem;
+    min-height: 7rem;
 }
 
-.times {
+.times, .target {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    height: 100%;
+}
+.times {
     /* border: 0.125rem solid red; */
     width: 35%;
-    height: 100%;
 }
-
 .target {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
     /* border: 0.125rem solid blue; */
     width: 65%;
-    height: 100%;
 }
 
 @media only screen and (min-device-width: 320px) and (max-device-width: 480px) {

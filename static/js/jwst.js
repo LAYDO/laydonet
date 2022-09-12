@@ -8,7 +8,7 @@ class JWSTTelescope {
 
         this.jwstInfo = document.getElementById('jwstInfo');
         this.jwstDisplay = document.getElementById('jwstDisplay');
-        this.jwstCurrent = document.getElementById('jwstCurrent');
+        this.jwstCurrent = document.getElementsByClassName('jwst-side-info');
         this.jwstLoad = document.getElementById('jwstLoad');
         this.targetTitle = document.getElementById('targetTitle');
         this.timeTitles = document.getElementById('timeTitles');
@@ -122,7 +122,10 @@ class JWSTTelescope {
     toggleLoad(load) {
         let jwst;
         if (load) {
-            this.jwstCurrent.style.visibility = 'hidden';
+            for (let i = 0; i < this.jwstCurrent.length; i++) {
+                this.jwstCurrent[i].style.visibility = 'hidden';
+            }
+
             jwst = setInterval(function () {
                 let i = Math.floor(Math.random() * 20);
                 let tile = document.getElementById(`tile${i}`);
@@ -132,7 +135,9 @@ class JWSTTelescope {
             }, 250);
             setTimeout(function () { clearInterval(jwst); }, 6000);
         } else {
-            this.jwstCurrent.style.visibility = 'visible';
+            for (let i = 0; i < this.jwstCurrent.length; i++) {
+                this.jwstCurrent[i].style.visibility = 'visible';
+            }
             for (let x = 0; x < 20; x++) {
                 let tile = document.getElementById(`tile${x}`);
                 if (tile) {

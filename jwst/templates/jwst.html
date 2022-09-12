@@ -13,11 +13,9 @@
 {% endblock %} {% block laydo_content_1 %}
 <div class="jwst-section laydo-container">
   <div class="container-title">James Webb Space Telescope</div>
-  <div class="jwst-col-info laydo-container" id="jwstDisplay">
-    <div class="jwst-wrapper" id="jwstIcon">
-      <svg id="jwstSVG" width="100" height="100" viewBox="0 0 225 225" ></svg>
-    </div>
-    <div class="jwst-row-info" id="jwstCurrent">
+  <div class="jwst-row-info laydo-container" id="jwstDisplay">
+    
+    <!-- <div class="jwst-row-info"> -->
       <div class="jwst-side-info">
         <div class="jwst-col-info">
           <h3 id="targetTitle">TARGET NAME</h3>
@@ -27,6 +25,9 @@
           <h3>CATEGORIES</h3>
           <div class="info-sec" id="categoryKeywords">--</div>
         </div>
+      </div>
+      <div class="jwst-wrapper" id="jwstIcon">
+        <svg id="jwstSVG" width="100" height="100" viewBox="0 0 225 225" ></svg>
       </div>
       <div class="jwst-side-info">
         <div class="jwst-col-info">
@@ -38,7 +39,7 @@
           <div class="info-sec" id="startTimeTimes">--</div>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
   </div>
   <div class="iteration" id="iterateTarget">
   </div>
