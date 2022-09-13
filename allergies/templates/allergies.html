@@ -1,8 +1,7 @@
 {% extends "app.html" %} {% load static %} 
 {% block page_head %}
 <title>Apollo Allergies</title>
-<link rel="stylesheet" href="{% static 'css/allergies.css' %}" />
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.2.0/css/all.css" />
+<link rel="stylesheet" href="{% static 'allergies/css/allergies.css' %}" />
 {% endblock %} 
 {% block page_header %}
 <div class="allergies-header" id="issHeader">
@@ -37,5 +36,5 @@
 </div>
 {% endblock %}
 {% block page_scripts %}
-<script type="text/javascript" src="{% static 'js/allergies.js' %}"></script>
+<script type="text/javascript" src="{% static 'allergies/js/allergies.js' %}"></script>
 {% endblock %}
