@@ -116,6 +116,10 @@ class JWSTTelescope {
             poly.style.stroke = 'black';
             poly.style.strokeWidth = 3;
             svg.append(poly);
+            if (window.matchMedia('(min-device-width: 600px)').matches) {
+                svg.setAttribute('width', '250');
+                svg.setAttribute('height', '250');
+            }
 
         }
         document.getElementById('jwstIcon').addEventListener('click', this.scrolls);
