@@ -23,12 +23,13 @@ class JWSTTelescope {
         this.halfA = this.a / 2;
         this.scrollTarget;
         this.targetNode;
+
+        this.buildJWST();
     }
 
 
     init() {
         let url = `${window.location.href}fetch`;
-        this.buildJWST();
         this.fetchData(url);
     }
 
@@ -40,9 +41,10 @@ class JWSTTelescope {
             }
             return response.json();
         }).then(data => {
+            data = data.slice(-100);
             // console.log(data);
             this.buildTable(data);
-            setInterval(this.determineTarget.bind(this, data), 1000);
+            setInterval(this.determineTarget.bind(this, data), 500);
             this.toggleLoad(0);
         }).catch(error => {
             console.error('There has been a problem with your fetch operation: ', error);
@@ -195,9 +197,14 @@ class JWSTTelescope {
             times.classList = 'times';
             let timesDuration = document.createElement('div');
             timesDuration.innerText = d['DURATION'];
-            let timesStart = document.createElement('div');
             let tStart = new Date(d['SCHEDULED START TIME']);
-            timesStart.innerText = tStart.toLocaleString("en-US", { timeZone: "America/Los_Angeles" });
+            let dateStart = document.createElement('div');
+            dateStart.innerText = tStart.toLocaleDateString("en-US", { timeZone: "America/Los_Angeles", month: 'short', day: 'numeric' });
+            dateStart.className = 'date-start';
+            let timesStart = document.createElement('div');
+            timesStart.innerText = tStart.toLocaleTimeString("en-US", { timeZone: "America/Los_Angeles", hour12: false });
+            timesStart.className = 'times-start';
+            times.append(dateStart);
             times.append(timesStart);
             times.append(timesDuration);
             item.append(times);
@@ -243,7 +250,8 @@ class JWSTTelescope {
             }
 
             let noCategories = (target['CATEGORY'] == 'null' && target['KEYWORDS'] == 'null');
-            this.startTimeTimes.innerText = `${current ? "STARTED:" : "START:"} ${d.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })} \n - ${current ? elapsed : countdown} \n + ${current ? remaining : target['DURATION']}`;
+            this.timeTitles.innerText = `${current ? "END:" : "START:"}`;
+            this.startTimeTimes.innerText = `${current ? endTime.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }) : d.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })} \n - ${current ? elapsed : countdown} \n + ${current ? remaining : target['DURATION']}`;
             this.targetName.innerText = target['TARGET NAME'];
             this.categoryKeywords.innerText = !noCategories ? `${target["CATEGORY"]} \n ${target["KEYWORDS"]}` : "None provided";
             this.instruments.innerText = `${target["SCIENCE INSTRUMENT AND MODE"]}`;
@@ -282,7 +290,11 @@ class JWSTTelescope {
         now = new Date(now);
         let targetHit = false;
         for (let i = 0; i < data.length; i++) {
+            let divTop = document.getElementById('iterateTarget').getBoundingClientRect().top;
             let tth = document.getElementById(`target${("00" + i).slice(-3)}`);
+            if (tth.getBoundingClientRect().top < divTop && tth.getBoundingClientRect().bottom > divTop) {
+                document.getElementById('scrollDate').innerText = tth.getElementsByClassName('date-start')[0].innerText;
+            }
             let tStart = new Date(data[i]['SCHEDULED START TIME']);
             tth.classList.remove('scrollToItem');
             tth.style.background = 'var(--glass-backdrop)';
