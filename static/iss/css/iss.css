@@ -38,7 +38,7 @@
   .iss-icon {
     width: 1.25rem !important;
     height: 1.25rem !important;
-    background-image: url('/static/img/iss.png');
+    background-image: url('/static/iss/img/iss.png');
     background-position: center;
     background-size: cover;
     border-color: none;
