@@ -70,8 +70,8 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            'laydonet/templates',
-            'laydonet/static'
+            'laydonet/templates/',
+            'laydonet/static/'
         ],
         'APP_DIRS': True,
         'OPTIONS': {

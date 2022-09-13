@@ -85,38 +85,38 @@ body {
 #aplBackground2 {
   display: inherit;
   transform: translateY(100vh);
-  background-image: url("/static/img/Aieleen-Landen-Engagement-13.jpg");
+  background-image: url("/static/wedding/img/Aieleen-Landen-Engagement-13.jpg");
   height: 200vh;
 }
 #aplBackground3 {
   display: inherit;
-  background-image: url("/static/img/apl_s1.jpg");
+  background-image: url("/static/wedding/img/apl_s1.jpg");
 }
 #aplBackground4 {
   display: inherit;
   transform: translateY(100vh);
-  background-image: url("/static/img/fun_8.jpg");
+  background-image: url("/static/wedding/img/fun_8.jpg");
 }
 #aplBackground5 {
   display: inherit;
-  background-image: url("/static/img/Aieleen-Landen-Engagement-20.jpg");
+  background-image: url("/static/wedding/img/Aieleen-Landen-Engagement-20.jpg");
 }
 #aplBackground6 {
   display: inherit;
-  background-image: url("/static/img/Aieleen-Landen-Engagement-65.jpg");
+  background-image: url("/static/wedding/img/Aieleen-Landen-Engagement-65.jpg");
   background-size: cover;
   height: 175vh;
 }
 #aplBackground7 {
   display: inherit;
   transform: translateY(100vh);
-  background-image: url("/static/img/fun_7.jpg");
+  background-image: url("/static/wedding/img/fun_7.jpg");
   height: 280vh;
 }
 #aplBackground8 {
   display: inherit;
   transform: translateY(100vh);
-  background-image: url("/static/img/Aieleen-Landen-Engagement-75.jpg");
+  background-image: url("/static/wedding/img/Aieleen-Landen-Engagement-75.jpg");
 }
 #aplHomeOne,
 #aplHomeTwo,
