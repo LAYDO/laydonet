@@ -32,6 +32,11 @@
     justify-content: space-around;
     align-items: center;
     height: 100%;
+    padding: 0 0.125rem;
+}
+
+.jwst-side-info h3 {
+    font-size: 1rem;
 }
 
 .jwst-wrapper {
@@ -85,14 +90,11 @@
 
 #jwstDisplay {
     height: 45vh;
+    width: 96%;
 }
 
 #jwstCurrent {
     visibility: hidden;
-}
-
-.jwst-side-info h3 {
-    font-size: 1rem;
 }
 
 .iteration {
@@ -135,7 +137,16 @@
 }
 
 .times-start {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.duration {
+    height: 20%;
+    /* color: var(--font-faded); */
 }
 
 .date-start {

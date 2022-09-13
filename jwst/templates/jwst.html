@@ -1,8 +1,8 @@
 {% extends "app.html" %} {% load static %} 
 {% block page_head %}
 <title>JWST</title>
-<link rel="icon" href="{% static 'img/jwst.svg' %}" type="image/svg+xml"/>
-<link rel="stylesheet" href="{% static 'css/jwst.css' %}" />
+<link rel="icon" href="{% static 'jwst/img/jwst.svg' %}" type="image/svg+xml"/>
+<link rel="stylesheet" href="{% static 'jwst/css/jwst.css' %}" />
 {% endblock %} 
 {% block page_header %}
 <div class="jwst-header" id="jwstHeader">
@@ -47,5 +47,5 @@
 </div>
 {% endblock %}
 {% block page_scripts %}
-<script type="text/javascript" src="{% static 'js/jwst.js' %}"></script>
+<script type="text/javascript" src="{% static 'jwst/js/jwst.js' %}"></script>
 {% endblock %}

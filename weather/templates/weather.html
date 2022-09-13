@@ -1,5 +1,5 @@
 {% extends "app.html" %} {% load static %} {% block page_head %}
-<link rel="stylesheet" href="{% static 'css/weather.css' %}" />
+<link rel="stylesheet" href="{% static 'weather/css/weather.css' %}" />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
 {% endblock %} 
 {% block page_menu %}
@@ -128,6 +128,6 @@
 </div>
 {% endblock %} {% block page_scripts %}
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-<script type="text/javascript" src="{% static 'js/weather.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/Barometer.js' %}"></script>
+<script type="text/javascript" src="{% static 'weather/js/weather.js' %}"></script>
+<script type="text/javascript" src="{% static 'weather/js/Barometer.js' %}"></script>
 {% endblock %}

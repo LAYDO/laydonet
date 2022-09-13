@@ -196,7 +196,8 @@ class JWSTTelescope {
             let times = document.createElement('div');
             times.classList = 'times';
             let timesDuration = document.createElement('div');
-            timesDuration.innerText = d['DURATION'];
+            timesDuration.className = 'duration';
+            timesDuration.innerText = this.generateDurationString(d['DURATION']);
             let tStart = new Date(d['SCHEDULED START TIME']);
             let dateStart = document.createElement('div');
             dateStart.innerText = tStart.toLocaleDateString("en-US", { timeZone: "America/Los_Angeles", month: 'short', day: 'numeric' });
@@ -292,7 +293,7 @@ class JWSTTelescope {
         for (let i = 0; i < data.length; i++) {
             let divTop = document.getElementById('iterateTarget').getBoundingClientRect().top;
             let tth = document.getElementById(`target${("00" + i).slice(-3)}`);
-            if (tth.getBoundingClientRect().top < divTop && tth.getBoundingClientRect().bottom > divTop) {
+            if (tth.getBoundingClientRect().top < divTop + 5 && tth.getBoundingClientRect().bottom > divTop) {
                 document.getElementById('scrollDate').innerText = tth.getElementsByClassName('date-start')[0].innerText;
             }
             let tStart = new Date(data[i]['SCHEDULED START TIME']);
@@ -306,7 +307,7 @@ class JWSTTelescope {
                     tth.classList.add('scrollToItem');
                 }
                 tth.style.color = 'var(--font-color)';
-                tth.style.fontWeight = 'bold';
+                // tth.style.fontWeight = 'bold';
                 tth.style.border = '0.125rem solid var(--font-faded)';
                 if (now > tStart && now < this.calculateEndTime(data[i])) {
                     tth.style.background = 'gold';
@@ -315,5 +316,15 @@ class JWSTTelescope {
                 }
             }
         }
+    }
+
+    generateDurationString(string) {
+        let split = string.split("/");
+        let days = split[0];
+        let hours = split[1].split(":")[0];
+        let minutes = split[1].split(":")[1];
+        let seconds = split[1].split(":")[2];
+
+        return `${('00'+ days).slice(-2)}d ${('00'+ hours).slice(-2)}h ${('00'+ minutes).slice(-2)}m ${('00'+ seconds).slice(-2)}s`;
     }
 }
