@@ -8,7 +8,7 @@ document.getElementById("cardName").addEventListener("keyup", (event) => {
     if (event.code === 'Enter') {
         getCard();
     } else {
-        document.getElementById("searchIcon").className = document.getElementById("searchIcon").className.replace("fa-sliders-h","fa-search"); 
+        document.getElementById("searchIcon").className = document.getElementById("searchIcon").className.replace("fa-sliders-h", "fa-search");
     }
 });
 
@@ -29,14 +29,17 @@ async function getCard() {
     }
     let name = document.getElementById('cardName').value.trim();
     let url = window.location.href;
-    url += `card/${name}/?`;
+    url += `cards/?`;
+    if (name != undefined) {
+        url += `name=${name}&`;
+    }
     if (colorsFilter.length > 0) {
         let temp = '';
         colorsFilter.forEach((color) => {
             temp += `${color}|`;
         });
         temp = temp.slice(0, temp.length - 1);
-        url += `color=${temp}&`;
+        url += `colors=${temp}&`;
     }
     if (setsFilter.length > 0) {
         let temp = '';
@@ -49,7 +52,6 @@ async function getCard() {
     fetch(url.slice(0, url.length - 1))
         .then(response => {
             results.className = "";
-            // results.className = results.className.replace(" loader","");
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -61,16 +63,16 @@ async function getCard() {
             data.forEach(card => {
                 setCard(card);
             });
-            document.getElementById("searchIcon").className = document.getElementById("searchIcon").className.replace("fa-search","fa-sliders-h"); 
+            document.getElementById("searchIcon").className = document.getElementById("searchIcon").className.replace("fa-search", "fa-sliders-h");
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
-        });    
+        });
 }
 
 function setCard(card) {
-    console.log(card);
     var cardResult = new MTGCard(card);
+    // console.log(cardResult);
     var cardDiv = document.createElement("div");
     cardDiv.className = "card";
     cardDiv.addEventListener('click', () => {
@@ -99,15 +101,16 @@ function setCard(card) {
 
 function formatBack(data, backDiv) {
     // Main background - black
-    backDiv.style.backgroundColor = "black";
+    backDiv.style.backgroundColor = 'var(--glass-backdrop)';
+    backDiv.style.borderRadius = '0.5rem';
     // Card background color
     var colorBackground = document.createElement("div");
     colorBackground.className = "color-background";
-    colorBackground.style.backgroundColor = data.colorId;
+    // colorBackground.style.backgroundColor = `${data.colorId}`;
     // Title bar
     var titleBar = document.createElement("div");
     titleBar.className = "title-bar";
-    titleBar.style.border = `0.125rem solid ${data.colorId}`;
+    titleBar.style.border = `0.25rem solid ${data.colorId}`;
     // Create title & append
     var title = document.createElement("div");
     title.className = "title";
@@ -152,7 +155,7 @@ function setSets(data) {
     data.forEach(card => {
         let cardSet = card.set.slice(card.set.length - 3, card.set.length);
         const found = sets.some(set => set.code === cardSet);
-        if (!found) sets.push({"code": cardSet, "name": card.setName});
+        if (!found) sets.push({ "code": cardSet, "name": card.setName });
     });
     console.log(sets);
     sets.forEach(set => {
@@ -173,7 +176,7 @@ function flipFilters() {
         document.getElementById("mtgSearch").className += " active";
     } else {
         filters.style.display = 'none';
-        document.getElementById("mtgSearch").className = document.getElementById("mtgSearch").className.replace(" active","");
+        document.getElementById("mtgSearch").className = document.getElementById("mtgSearch").className.replace(" active", "");
     }
 }
 
@@ -254,7 +257,7 @@ class MTGCard {
     constructor(_card) {
         this.id = _card.id;
         this.name = _card.name;
-        this.imgUrl = _card.imgUrl;
+        this.imgUrl = _card.imageUrl;
         this.colorId = _card.colors;
         this.setCode = _card.set;
         this.setName = _card.setName;
