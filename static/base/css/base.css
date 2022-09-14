@@ -118,7 +118,7 @@ body {
 
 #laydoHomeOne,
 #laydoHomeTwo {
-  min-height: 80vh;
+  min-height: 87vh;
 }
 
 .laydo-title,
@@ -247,6 +247,7 @@ body {
   padding: 0.5rem 0;
   width: 100%;
   color: var(--font-color);
+  min-height: 5vh;
 }
 
 .laydo-net-footer {
@@ -342,6 +343,7 @@ body {
 
 #laydoMNavbar {
   background-color: var(--color-primary);
+  min-height: 5vh;
 }
 
 .period-active {

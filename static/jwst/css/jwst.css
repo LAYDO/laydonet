@@ -53,12 +53,6 @@
     height: 100%;
 }
 
-#jwstInfo {
-    display: none;
-    font-size: 0.75rem;
-    overflow-y: auto;
-}
-
 @keyframes blink {
     0% {
         opacity: 1;
@@ -163,13 +157,16 @@
         flex-direction: row;
         justify-content: space-evenly;
     }
+
     .jwst-col-info {
         width: 100%;
     }
+
     #jwstDisplay,
     .iteration {
-        height: 80vh;
+        min-height: 83vh;
     }
+
     #jwstSVG {
         height: 250;
         width: 250;

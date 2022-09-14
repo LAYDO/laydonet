@@ -6,7 +6,6 @@ window.onload = () => {
 class JWSTTelescope {
     constructor() {
 
-        this.jwstInfo = document.getElementById('jwstInfo');
         this.jwstDisplay = document.getElementById('jwstDisplay');
         this.jwstCurrent = document.getElementsByClassName('jwst-side-info');
         this.jwstLoad = document.getElementById('jwstLoad');
@@ -41,8 +40,10 @@ class JWSTTelescope {
             }
             return response.json();
         }).then(data => {
+            data.forEach(d => {
+                console.log(`CAT:   ${d.CATEGORY}   KEY:    ${d.KEYWORDS}`);
+            });
             data = data.slice(-100);
-            // console.log(data);
             this.buildTable(data);
             setInterval(this.determineTarget.bind(this, data), 500);
             this.toggleLoad(0);
@@ -329,6 +330,6 @@ class JWSTTelescope {
         let minutes = split[1].split(":")[1];
         let seconds = split[1].split(":")[2];
 
-        return `${('00'+ days).slice(-2)}d ${('00'+ hours).slice(-2)}h ${('00'+ minutes).slice(-2)}m ${('00'+ seconds).slice(-2)}s`;
+        return `${('00' + days).slice(-2)}d ${('00' + hours).slice(-2)}h ${('00' + minutes).slice(-2)}m ${('00' + seconds).slice(-2)}s`;
     }
 }
