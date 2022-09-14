@@ -30,13 +30,13 @@
 .jwst-col-info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
 .jwst-side-info {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
     height: 100%;
     padding: 0 0.125rem;
@@ -48,15 +48,9 @@
 
 .jwst-wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-evenly;
     height: 100%;
-}
-
-#jwstInfo {
-    display: none;
-    font-size: 0.75rem;
-    overflow-y: auto;
 }
 
 @keyframes blink {
@@ -94,6 +88,10 @@
 
 #jwstCurrent {
     visibility: hidden;
+}
+
+#jwstSVG {
+    padding-top: 0.5rem;
 }
 
 .iteration {
@@ -153,6 +151,28 @@
     display: none;
 }
 
+.target-name {
+    height: 40%;
+    font-size: 1.125rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.target-category {
+    height: 20%;
+    font-size: 1rem;
+}
+
+.target-instrument,
+.target-keywords {
+    height: 20%;
+    font-size: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+}
+
 .jwst-flipper {
     display: flex;
     flex-direction: column;
@@ -163,13 +183,16 @@
         flex-direction: row;
         justify-content: space-evenly;
     }
+
     .jwst-col-info {
         width: 100%;
     }
+
     #jwstDisplay,
     .iteration {
-        height: 80vh;
+        min-height: 83vh;
     }
+
     #jwstSVG {
         height: 250;
         width: 250;

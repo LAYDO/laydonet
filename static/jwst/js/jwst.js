@@ -6,7 +6,6 @@ window.onload = () => {
 class JWSTTelescope {
     constructor() {
 
-        this.jwstInfo = document.getElementById('jwstInfo');
         this.jwstDisplay = document.getElementById('jwstDisplay');
         this.jwstCurrent = document.getElementsByClassName('jwst-side-info');
         this.jwstLoad = document.getElementById('jwstLoad');
@@ -42,7 +41,6 @@ class JWSTTelescope {
             return response.json();
         }).then(data => {
             data = data.slice(-100);
-            // console.log(data);
             this.buildTable(data);
             setInterval(this.determineTarget.bind(this, data), 500);
             this.toggleLoad(0);
@@ -204,10 +202,10 @@ class JWSTTelescope {
             timesDuration.innerText = this.generateDurationString(d['DURATION']);
             let tStart = new Date(d['SCHEDULED START TIME']);
             let dateStart = document.createElement('div');
-            dateStart.innerText = tStart.toLocaleDateString("en-US", { timeZone: "America/Los_Angeles", month: 'short', day: 'numeric' });
+            dateStart.innerText = tStart.toLocaleDateString("en-US", { month: 'short', day: 'numeric' });
             dateStart.className = 'date-start';
             let timesStart = document.createElement('div');
-            timesStart.innerText = tStart.toLocaleTimeString("en-US", { timeZone: "America/Los_Angeles", hour12: false });
+            timesStart.innerText = tStart.toLocaleTimeString("en-US", { hour12: false });
             timesStart.className = 'times-start';
             times.append(dateStart);
             times.append(timesStart);
@@ -217,9 +215,19 @@ class JWSTTelescope {
             targetDiv.classList = 'target';
             let targetName = document.createElement('div');
             targetName.innerText = d['TARGET NAME'];
+            targetName.className = 'target-name';
+            let targetCategory = document.createElement('div');
+            targetCategory.innerText = `${d['CATEGORY']}`;
+            targetCategory.className = 'target-category';
+            let targetKeywords = document.createElement('div');
+            targetKeywords.innerText = d['KEYWORDS'];
+            targetKeywords.className = 'target-keywords';
             let targetInstuments = document.createElement('div');
             targetInstuments.innerText = d['SCIENCE INSTRUMENT AND MODE'];
+            targetInstuments.className = 'target-instrument';
             targetDiv.append(targetName);
+            targetDiv.append(targetCategory);
+            targetDiv.append(targetKeywords);
             targetDiv.append(targetInstuments);
             item.append(targetDiv);
             item.id = `target${("00" + idx).slice(-3)}`;
@@ -255,8 +263,8 @@ class JWSTTelescope {
             }
 
             let noCategories = (target['CATEGORY'] == 'null' && target['KEYWORDS'] == 'null');
-            this.timeTitles.innerText = `${current ? "END:" : "START:"}`;
-            this.startTimeTimes.innerText = `${current ? endTime.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }) : d.toLocaleString("en-US", { timeZone: "America/Los_Angeles" })} \n - ${current ? elapsed : countdown} \n + ${current ? remaining : target['DURATION']}`;
+            this.timeTitles.innerText = `${current ? "ENDS:" : "STARTS:"}`;
+            this.startTimeTimes.innerText = `${current ? endTime.toLocaleString("en-US", { }) : d.toLocaleString("en-US", { })} \n - ${current ? elapsed : countdown} \n + ${current ? remaining : this.generateDurationString(target['DURATION'])}`;
             this.targetName.innerText = target['TARGET NAME'];
             this.categoryKeywords.innerText = !noCategories ? `${target["CATEGORY"]} \n ${target["KEYWORDS"]}` : "None provided";
             this.instruments.innerText = `${target["SCIENCE INSTRUMENT AND MODE"]}`;
@@ -329,6 +337,6 @@ class JWSTTelescope {
         let minutes = split[1].split(":")[1];
         let seconds = split[1].split(":")[2];
 
-        return `${('00'+ days).slice(-2)}d ${('00'+ hours).slice(-2)}h ${('00'+ minutes).slice(-2)}m ${('00'+ seconds).slice(-2)}s`;
+        return `${('00' + days).slice(-2)}d ${('00' + hours).slice(-2)}h ${('00' + minutes).slice(-2)}m ${('00' + seconds).slice(-2)}s`;
     }
 }
