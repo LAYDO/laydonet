@@ -30,13 +30,13 @@
 .jwst-col-info {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
 }
 
 .jwst-side-info {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-around;
     height: 100%;
     padding: 0 0.125rem;
@@ -48,8 +48,8 @@
 
 .jwst-wrapper {
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-evenly;
     height: 100%;
 }
 
@@ -88,6 +88,10 @@
 
 #jwstCurrent {
     visibility: hidden;
+}
+
+#jwstSVG {
+    padding-top: 0.5rem;
 }
 
 .iteration {
@@ -145,6 +149,28 @@
 
 .date-start {
     display: none;
+}
+
+.target-name {
+    height: 40%;
+    font-size: 1.125rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.target-category {
+    height: 20%;
+    font-size: 1rem;
+}
+
+.target-instrument,
+.target-keywords {
+    height: 20%;
+    font-size: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
 }
 
 .jwst-flipper {

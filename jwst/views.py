@@ -27,7 +27,7 @@ def getSchedules(request):
     response = requests.get(f'{baseURL}{schedURL}')
     page = BeautifulSoup(response.content, "html.parser")
     # https://stackoverflow.com/questions/69823218/how-to-extract-link-from-href-using-beautifulsoup
-    results = page.find(id="tab_8b4634e7-3776-4d67-b685-d266991a2149_0_section")
+    results = page.find(class_="sttemplate")
     links = results.find_all('a', href=True)
     for link in links:
         comp = link['href']
