@@ -110,7 +110,7 @@ function formatBack(data, backDiv) {
     // Title bar
     var titleBar = document.createElement("div");
     titleBar.className = "title-bar";
-    titleBar.style.border = `0.25rem solid ${data.colorId}`;
+    titleBar.style.border = `0.25rem solid ${data.colorId}`;  // LANDEN - MAKE THIS GRADIENT based on card colors
     // Create title & append
     var title = document.createElement("div");
     title.className = "title";
