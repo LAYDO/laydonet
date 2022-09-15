@@ -32,4 +32,5 @@ def getCards(request):
         for card in response:
             if (card['id']):
                 cardSet.append(card)
+    # print(cardSet)
     return JsonResponse(cardSet, safe=False)

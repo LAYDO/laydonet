@@ -108,9 +108,20 @@ function formatBack(data, backDiv) {
     colorBackground.className = "color-background";
     // colorBackground.style.backgroundColor = `${data.colorId}`;
     // Title bar
+    let colorString = '';
+    if (data.colorId.length > 1) {
+        colorString = 'linear-gradient(to bottom right';
+        data.colorId.forEach(color => {colorString += ', ' + color.toLowerCase()});
+        colorString += ')';
+    } else {
+        colorString = data.colorId[0].toLowerCase();
+    }
+    var titleBorder = document.createElement("div");
+    titleBorder.style.background = `${colorString}`;
+    titleBorder.className = "title-border";
+
     var titleBar = document.createElement("div");
     titleBar.className = "title-bar";
-    titleBar.style.border = `0.25rem solid ${data.colorId}`;
     // Create title & append
     var title = document.createElement("div");
     title.className = "title";
@@ -145,7 +156,8 @@ function formatBack(data, backDiv) {
         colorBackground.style.color = 'black';
         titleBar.style.color = 'black';
     }
-    colorBackground.append(titleBar);
+    titleBorder.append(titleBar);
+    colorBackground.append(titleBorder);
     colorBackground.append(rulingDiv);
     backDiv.append(colorBackground);
 }
