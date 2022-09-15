@@ -118,7 +118,7 @@ body {
 
 #laydoHomeOne,
 #laydoHomeTwo {
-  min-height: 87vh;
+  min-height: 90vh;
 }
 
 .laydo-title,
@@ -347,6 +347,5 @@ body {
 }
 
 .period-active {
-  /* box-shadow: 0 20px 20px -17px rgba(255, 255, 255, 0.53); */
   border: 0.125rem solid var(--font-color);
 }
