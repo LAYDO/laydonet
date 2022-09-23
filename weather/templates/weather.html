@@ -12,8 +12,8 @@
     <input type="text" id="citySearch" name="citySearch" placeholder="Enter a city" />
     <button id="weatherSearch" onclick="getCurrentWeather()"><span id="searchIcon" class="fas fa-search"></span></button><br />
   </div>
-  <h2 id="cityName"></h2>
   <div id="currentWeather">
+    <!-- <h2 id="cityName"></h2>
     <div class="current-weather">
       <div class="current-middle">
         <div id="current-temp"></div>
@@ -24,7 +24,7 @@
           <div id="tempTitle" class="mini-title"></div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div id="hfc" class="container-forecast">
     <div class="container-title"><span class="fas fa-clock pad-right"></span>Hourly Forecast</div>
@@ -130,4 +130,5 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 <script type="text/javascript" src="{% static 'weather/js/weather.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/Barometer.js' %}"></script>
+<script type="text/javascript" src="{% static 'weather/js/Current.js' %}"></script>
 {% endblock %}

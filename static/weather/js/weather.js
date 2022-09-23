@@ -192,7 +192,8 @@ async function getCurrentWeather(position) {
         return response.json();
     }).then(data => {
         console.log(data);
-        buildCurrent(data);
+        // buildCurrent(data);
+        let current = new Current();
         buildMap(data.latitude, data.longitude);
         buildForecasts(data.forecast);
         buildHourly(data.hourly);
