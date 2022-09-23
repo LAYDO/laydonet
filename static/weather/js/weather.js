@@ -1,19 +1,5 @@
 let loader = document.getElementById('loader');
 let searches = document.getElementById('citySection');
-let cityName = document.getElementById('cityName');
-
-let currElement = document.getElementById('currentWeather');
-let currentTemp = document.getElementById('current-temp');
-let currentIcon = document.getElementById('current-icon');
-let currentHigh = document.getElementById('current-high');
-let currentLow = document.getElementById('current-low');
-let currentDesc = document.getElementById('tempTitle');
-
-let hourly = document.getElementById('hourly');
-let hfc = document.getElementById('hfc');
-
-let forecast = document.getElementById('forecast');
-let elForecast = document.getElementById('dailyForecast');
 
 let map = document.getElementById('map');
 let wMap = document.getElementById('weatherMap');
@@ -47,13 +33,11 @@ let currentRain = document.getElementById('precipData');
 let currentRainToday = document.getElementById('precipToday');
 
 let celestialSection = document.getElementById('celestialSection');
-let celestialT = document.getElementById('celestialTop');
 let celestial = document.getElementById('celestial');
 let celestialElements = document.getElementById('celestialElements');
 
 let credits = document.getElementById('credits');
 
-let now = new Date();
 let colorSunrise = '#FFE600';
 let colorSunset = '#FF8700';
 let animID, place = 0;
@@ -119,45 +103,21 @@ const icons = {
     '50d': ' fas fa-smog',
     '50n': ' fas fa-smog',
 };
-const titles = [
-    'todayTitle',
-    'tomorrowTitle',
-    'dayAfterTitle',
-    'twoDayAfterTitle',
-    'threeDayAfterTitle',
-    'fourDayAfterTitle',
-    'fiveDayAfterTitle',
-    'sixDayAfterTitle',
-    'sevenDayAfterTitle',
-    'eightDayAfterTitle',
-]
-const titleContent = [
-    'today',
-    'tomorrow',
-    'dayAfter',
-    'twoDayAfter',
-    'threeDayAfter',
-    'fourDayAfter',
-    'fiveDayAfter',
-    'sixDayAfter',
-    'sevenDayAfter',
-    'eightDayAfter',
-]
 
 init();
 
 function init() {
 
-    currElement.style.display = 'none';
-    elForecast.style.display = 'none';
     loader.style.display = 'none';
     map.style.display = 'none';
-    celestialT.style.display = 'none';
-    hfc.style.display = 'none';
     elementTiles.style.display = 'none';
     celestialSection.style.display = 'none';
     credits.style.display = 'none';
+
     this.loading = false;
+    this.current = new Current();
+    this.hourly = new Hourly();
+    this.daily = new Daily();
 
     document.addEventListener('keyup', (event) => {
         event.preventDefault();
@@ -193,12 +153,16 @@ async function getCurrentWeather(position) {
     }).then(data => {
         console.log(data);
         // buildCurrent(data);
-        let current = new Current();
-        buildMap(data.latitude, data.longitude);
-        buildForecasts(data.forecast);
-        buildHourly(data.hourly);
+
+        this.current.populate(data, icons);
+        this.hourly.populate(data.hourly, icons);
+        this.daily.populate(data.forecast, icons);
+        this.currentBaro = new Barometer(data.pressure);
+
         remainInterval = setInterval(celestialRemaining.bind(null, data), 1000);
         buildCelestial(data.todaily, data.tomorrow);
+
+        buildMap(data.latitude, data.longitude);
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
@@ -206,57 +170,37 @@ async function getCurrentWeather(position) {
 
 function load() {
     if (this.loading) {
-        loader.style.display = 'none';
-        celestialT.style.display = 'none';
         map.style.display = 'inherit';
-        currElement.style.display = 'inherit';
-        elForecast.style.display = 'inherit';
-        cityName.style.display = 'inherit';
-        credits.style.display = 'inherit';
         celestialSection.style.display = 'inherit';
-        hfc.style.display = 'flex';
         elementTiles.style.display = 'flex';
     } else {
-        currElement.style.display = 'none';
-        elForecast.style.display = 'none';
         map.style.display = 'none';
-        celestialT.style.display = 'none';
-        hfc.style.display = 'none';
         elementTiles.style.display = 'none';
-        credits.style.display = 'none';
         celestialSection.style.display = 'none';
-
-        forecast.innerHTML = '';
-        celestial.innerHTML = '';
-        hourly.innerHTML = '';
-
-        loader.style.display = 'inline-block';
     }
+
+    this.current.toggle(this.loading);
+    this.hourly.toggle(this.loading);
+    this.daily.toggle(this.loading);
+    credits.style.display = this.loading ? 'inherit' : 'none';
+    loader.style.display = this.loading ? 'none' : 'inline-block';
+
     this.loading = !this.loading;
     searches.style.display = 'none';
 }
 
 function buildCurrent(data) {
-    cityName.innerText = `${data.name}`;
-
-    currentTemp.innerText = `${Math.round(data.temp)}\xB0 F`;
-    currentIcon.className = icons[data.weatherIcon];
-    currentHigh.innerText = `H: ${Math.round(data.high)}\xB0`;
-    currentLow.innerText = `L: ${Math.round(data.low)}\xB0`;
-    currentDesc.innerText = `${data.weatherDesc}`;
 
     currentCloud.innerText = `${Math.round(data.clouds)} \u0025`;
     currentUVI.innerText = `UV Index: ${Math.round(data.uvi)}`;
     currentVisibility.innerText = `Visibility: ${Math.round(data.visibility * 0.0006213712)} miles`;
 
-    // currentWind.innerText = `${Math.round(data.windSpeed)} ${windDirection(data.windDeg)}`;
-    // currentGust.innerText = `Gusts: ${Math.round(data.windGust)} mph`;
+
     window.requestAnimationFrame(generateWindDial.bind(null, data));
 
     currentHumid.innerText = `${data.humidity}\u0025`;
     currentDew.innerText = `Dew Point: ${data.dew_point}\xB0`;
 
-    let currentBaro = new Barometer(data.pressure);
     // currentBaro.pressure = data.pressure;
 
     if (data.aqi.main != undefined && data.aqi.components != undefined) {
@@ -325,72 +269,6 @@ function buildMap(lat, lon) {
     L.marker([lat, lon], { icon: gpsIcon }).addTo(weatherMap);
 };
 
-function buildForecasts(data) {
-    data.forEach((d, idx) => {
-        let foreContainer = document.createElement('div');
-        foreContainer.className = 'forecast-container';
-        let foreTitle = document.createElement('div');
-        foreTitle.className = 'forecast-title';
-        let foreIcon = document.createElement('span');
-        foreIcon.className = 'forecast-icon';
-        let foreTemps = document.createElement('div');
-        foreTemps.className = 'forecast-temps';
-        let foreHigh = document.createElement('div');
-        foreHigh.className = 'forecast-high';
-        let foreLow = document.createElement('div');
-        foreLow.className = 'forecast-low';
-        foreContainer.id = `${titleContent[idx]}Container`;
-        foreTitle.id = `${titleContent[idx]}Title`;
-        foreIcon.id = `${titleContent[idx]}Icon`;
-        foreTemps.id = `${titleContent[idx]}Temps`;
-        foreHigh.id = `${titleContent[idx]}High`;
-        foreLow.id = `${titleContent[idx]}Low`;
-        foreIcon.className += icons[d.weather[0].icon];
-        foreHigh.innerText = `${Math.round(d.temp.max)}\xB0`;
-        foreLow.innerText = `${Math.round(d.temp.min)}\xB0`;
-        foreContainer.append(foreTitle);
-        foreContainer.append(foreIcon);
-        foreTemps.append(foreHigh);
-        foreTemps.append(foreLow);
-        foreContainer.append(foreTemps);
-        forecast.append(foreContainer);
-    });
-
-    for (i = 0; i < 10; i++) {
-        let day = new Date();
-        day.setDate(now.getDate() + i);
-        var dayDate = day.toLocaleDateString("en-US", options);
-        document.getElementById(titles[i]).innerText = `${i == 0 ? 'Today' : dayDate}`;
-    }
-};
-
-function buildHourly(data) {
-    data.forEach((d) => {
-        let hourContainer = document.createElement('div');
-        hourContainer.className = 'hourly-container';
-        let hourTitle = document.createElement('div');
-        hourTitle.className = 'hourly-title';
-        let hourIcon = document.createElement('span');
-        hourIcon.className = 'hourly-icon';
-        let hourTemps = document.createElement('div');
-        hourTemps.className = 'hourly-temps';
-
-        hourContainer.id = `${d.dt}Container`;
-        hourTitle.id = `${d.dt}Title`;
-        hourIcon.id = `${d.dt}Icon`;
-        hourTemps.id = `${d.dt}Temps`;
-
-        let theHour = new Date(d.dt * 1000);
-        hourTitle.innerText = hourlyText(theHour.getHours());
-        hourIcon.className += icons[d.weather[0].icon];
-        hourTemps.innerText = `${Math.round(d.temp)}\xB0`;
-
-        hourContainer.append(hourTitle);
-        hourContainer.append(hourIcon);
-        hourContainer.append(hourTemps);
-        hourly.append(hourContainer);
-    });
-}
 
 function buildCelestial(data, tomorrow) {
     let sun = document.createElement('div');
@@ -445,7 +323,7 @@ function buildCelestial(data, tomorrow) {
         c.append(celeGraphic);
         c.append(celeInfo);
 
-        celestial.append(c);
+        // celestial.append(c);
     });
 
     document.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
@@ -823,24 +701,12 @@ function plugDiff(diff, div, text) {
     div.innerText = `${hours}h ${mins}m ${secs}s until ${text}`;
 }
 
-function hourlyText(h) {
-    if (h > 12) {
-        return `${h - 12} PM`;
-    } else if (h == 12) {
-        return "Noon";
-    } else if (h == 0) {
-        return "Midnight";
-    } else {
-        return `${h} AM`;
-    }
-}
-
 function toggleCitySearch() {
-    if (cityName.style.display != 'none') {
-        cityName.style.display = 'none';
+    if (this.current.cityName.style.display != 'none') {
+        this.current.cityName.style.display = 'none';
         searches.style.display = 'inherit';
     } else {
-        cityName.style.display = 'inherit';
+        this.current.cityName.style.display = 'inherit';
         searches.style.display = 'none';
     }
     toggleOverlay();

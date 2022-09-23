@@ -313,9 +313,9 @@ h2 {
 }
 
 #currentWeather,
+#hfc,
 #dailyForecast,
 #map,
-#cityName,
 #celestialTop,
 #elementTiles {
   display: none;

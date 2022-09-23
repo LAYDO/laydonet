@@ -52,5 +52,24 @@ class Current {
         this.currentElement.append(cw);
     }
 
+    toggle(loaded: Boolean) {
+        if (loaded) {
+            this.currentElement.style.display = 'inherit';
+        } else {
+            this.currentElement.style.display = 'none';
+        }
+    }
+
+    populate(data: any, icons: any) {
+        if (data) {
+            this.cityName.innerText = `${data.name}`;
+            this.currentTemp.innerText = `${Math.round(data.temp)}\xB0 F`;
+            this.currentIcon.className = icons[data.weatherIcon];
+            this.currentHigh.innerText = `H: ${Math.round(data.high)}\xB0`;
+            this.currentLow.innerText = `L: ${Math.round(data.low)}\xB0`;
+            this.currentDesc.innerText = `${data.weatherDesc}`;
+        }
+    }
+
 
 }
