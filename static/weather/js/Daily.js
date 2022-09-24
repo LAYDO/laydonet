@@ -5,7 +5,7 @@ class Daily {
         this.dailyTitle = document.createElement('div');
         this.dailyTitle.className = 'container-title';
         let span = document.createElement('span');
-        span.className = 'fas fa-clock pad-right';
+        span.className = 'fas fa-calendar pad-right';
         this.dailyTitle.append(span);
         this.dailyTitle.append('10-day Forecast');
         this.daily = document.createElement('div');

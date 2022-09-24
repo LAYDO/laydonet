@@ -34,7 +34,7 @@ class Daily {
         this.dailyTitle = document.createElement('div');
         this.dailyTitle.className = 'container-title';
         let span = document.createElement('span');
-        span.className = 'fas fa-clock pad-right';
+        span.className = 'fas fa-calendar pad-right';
         this.dailyTitle.append(span);
         this.dailyTitle.append('10-day Forecast');
 
@@ -88,11 +88,11 @@ class Daily {
                 this.daily.append(foreContainer);
             });
         }
-    
+
         for (let i = 0; i < 10; i++) {
             let day = new Date();
             day.setDate(this.now.getDate() + i);
-            var dayDate = day.toLocaleDateString("en-US", { weekday: "short"});
+            var dayDate = day.toLocaleDateString("en-US", { weekday: "short" });
             document.getElementById(Daily.titles[i])!.innerText = `${i == 0 ? 'Today' : dayDate}`;
         }
     }

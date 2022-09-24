@@ -109,7 +109,7 @@ init();
 function init() {
 
     loader.style.display = 'none';
-    map.style.display = 'none';
+    // map.style.display = 'none';
     elementTiles.style.display = 'none';
     celestialSection.style.display = 'none';
     credits.style.display = 'none';
@@ -118,6 +118,7 @@ function init() {
     this.current = new Current();
     this.hourly = new Hourly();
     this.daily = new Daily();
+    this.map = new WMap();
 
     document.addEventListener('keyup', (event) => {
         event.preventDefault();
@@ -157,12 +158,13 @@ async function getCurrentWeather(position) {
         this.current.populate(data, icons);
         this.hourly.populate(data.hourly, icons);
         this.daily.populate(data.forecast, icons);
+        this.map.populate(data.latitude, data.longitude);
         this.currentBaro = new Barometer(data.pressure);
 
         remainInterval = setInterval(celestialRemaining.bind(null, data), 1000);
         buildCelestial(data.todaily, data.tomorrow);
 
-        buildMap(data.latitude, data.longitude);
+        // buildMap(data.latitude, data.longitude);
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
@@ -170,11 +172,11 @@ async function getCurrentWeather(position) {
 
 function load() {
     if (this.loading) {
-        map.style.display = 'inherit';
+        // map.style.display = 'inherit';
         celestialSection.style.display = 'inherit';
         elementTiles.style.display = 'flex';
     } else {
-        map.style.display = 'none';
+        // map.style.display = 'none';
         elementTiles.style.display = 'none';
         celestialSection.style.display = 'none';
     }
@@ -182,6 +184,7 @@ function load() {
     this.current.toggle(this.loading);
     this.hourly.toggle(this.loading);
     this.daily.toggle(this.loading);
+    this.map.toggle(this.loading);
     credits.style.display = this.loading ? 'inherit' : 'none';
     loader.style.display = this.loading ? 'none' : 'inline-block';
 
@@ -223,51 +226,51 @@ function buildCurrent(data) {
     currentRainToday.innerText = `24 hour chance: ${Math.round(data.rain_today * 100)}\u0025`;
 };
 
-function buildMap(lat, lon) {
-    wMap.innerHTML = '<div id="mapid"></div>'; // kudos to Artem Kovalov for this fix
-    var weatherMap = L.map('mapid', {
-        zoomControl: false,
-        zoomSnap: 0,
-        dragging: false,
-        doubleClickZoom: false,
-    }).setView([lat, lon], 7);
-    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://www.mapbox.com/">Mapbox</a>',
-        maxZoom: 18,
-        id: 'mapbox/dark-v10',
-        tileSize: 512,
-        zoomOffset: -1,
-        accessToken: 'pk.eyJ1IjoibGF5ZG8iLCJhIjoiY2t0bmcwZW5oMDJqNTJwbzJ1cm9uZHZjMiJ9.aP2xQEplUndXkrSgmkB9Sw'
-    }).addTo(weatherMap);
-    let precipMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
-        attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-        op: 'PR0',
-        opacity: 0.5,
-        accessToken: '9de243494c0b295cca9337e1e96b00e2',
-    }),
-        windMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
-            attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-            op: 'WND',
-            use_norm: true,
-            arrow_step: 16,
-            accessToken: '9de243494c0b295cca9337e1e96b00e2',
-        }),
-        cloudMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
-            attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-            op: 'CL',
-            opacity: 0.8,
-            accessToken: '9de243494c0b295cca9337e1e96b00e2',
-        });
-    let mapLayers = {
-        'Precip': precipMap,
-        'Wind': windMap,
-        'Clouds': cloudMap,
-    };
-    L.control.layers(mapLayers).addTo(weatherMap);
-    precipMap.addTo(weatherMap);
-    let gpsIcon = L.divIcon({ className: 'gps-icon' });
-    L.marker([lat, lon], { icon: gpsIcon }).addTo(weatherMap);
-};
+// function buildMap(lat, lon) {
+//     wMap.innerHTML = '<div id="mapid"></div>'; // kudos to Artem Kovalov for this fix
+//     var weatherMap = L.map('mapid', {
+//         zoomControl: false,
+//         zoomSnap: 0,
+//         dragging: false,
+//         doubleClickZoom: false,
+//     }).setView([lat, lon], 7);
+//     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+//         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://www.mapbox.com/">Mapbox</a>',
+//         maxZoom: 18,
+//         id: 'mapbox/dark-v10',
+//         tileSize: 512,
+//         zoomOffset: -1,
+//         accessToken: 'pk.eyJ1IjoibGF5ZG8iLCJhIjoiY2t0bmcwZW5oMDJqNTJwbzJ1cm9uZHZjMiJ9.aP2xQEplUndXkrSgmkB9Sw'
+//     }).addTo(weatherMap);
+//     let precipMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
+//         attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
+//         op: 'PR0',
+//         opacity: 0.5,
+//         accessToken: '9de243494c0b295cca9337e1e96b00e2',
+//     }),
+//         windMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
+//             attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
+//             op: 'WND',
+//             use_norm: true,
+//             arrow_step: 16,
+//             accessToken: '9de243494c0b295cca9337e1e96b00e2',
+//         }),
+//         cloudMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
+//             attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
+//             op: 'CL',
+//             opacity: 0.8,
+//             accessToken: '9de243494c0b295cca9337e1e96b00e2',
+//         });
+//     let mapLayers = {
+//         'Precip': precipMap,
+//         'Wind': windMap,
+//         'Clouds': cloudMap,
+//     };
+//     L.control.layers(mapLayers).addTo(weatherMap);
+//     precipMap.addTo(weatherMap);
+//     let gpsIcon = L.divIcon({ className: 'gps-icon' });
+//     L.marker([lat, lon], { icon: gpsIcon }).addTo(weatherMap);
+// };
 
 
 function buildCelestial(data, tomorrow) {
