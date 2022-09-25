@@ -109,8 +109,6 @@ init();
 function init() {
 
     loader.style.display = 'none';
-    // map.style.display = 'none';
-    elementTiles.style.display = 'none';
     celestialSection.style.display = 'none';
     credits.style.display = 'none';
 
@@ -119,6 +117,7 @@ function init() {
     this.hourly = new Hourly();
     this.daily = new Daily();
     this.map = new WMap();
+    this.elements = new Elements();
 
     document.addEventListener('keyup', (event) => {
         event.preventDefault();
@@ -172,12 +171,8 @@ async function getCurrentWeather(position) {
 
 function load() {
     if (this.loading) {
-        // map.style.display = 'inherit';
         celestialSection.style.display = 'inherit';
-        elementTiles.style.display = 'flex';
     } else {
-        // map.style.display = 'none';
-        elementTiles.style.display = 'none';
         celestialSection.style.display = 'none';
     }
 
@@ -185,6 +180,7 @@ function load() {
     this.hourly.toggle(this.loading);
     this.daily.toggle(this.loading);
     this.map.toggle(this.loading);
+    this.elements.toggle(this.loading);
     credits.style.display = this.loading ? 'inherit' : 'none';
     loader.style.display = this.loading ? 'none' : 'inline-block';
 
