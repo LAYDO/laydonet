@@ -14,10 +14,12 @@ class Elements {
         this.eTilesElement.append(this.elementRowOne);
         this.eTilesElement.append(this.elementRowTwo);
         this.eTilesElement.append(this.elementRowThree);
+        this.AQI = new AQI();
+        // this.elementRowOne.append(this.AQI);
     }
     toggle(loaded) {
         if (loaded) {
-            this.eTilesElement.style.display = 'inherit';
+            this.eTilesElement.style.display = 'flex';
         }
         else {
             this.eTilesElement.style.display = 'none';
