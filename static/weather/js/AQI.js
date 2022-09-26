@@ -5,6 +5,7 @@ class AQI {
         this.aqiElement.id = 'aqi';
         this.aqiElement.className = 'element-tile';
         this.airTitle = document.createElement('div');
+        this.airTitle.id = 'airTitle';
         this.airTitle.className = 'container-title';
         let span = document.createElement('span');
         span.className = 'fas fa-smog pad-right';
@@ -50,5 +51,49 @@ class AQI {
         this.aqiElement.append(aqiRow);
         this.aqiContainer = document.getElementById('elementRowOne');
         this.aqiContainer.append(this.aqiElement);
+    }
+    toggle(loaded) {
+        if (loaded) {
+            this.aqiElement.style.display = 'flex';
+        }
+        else {
+            this.aqiElement.style.display = 'none';
+        }
+    }
+    populate(data) {
+        if (data.main != undefined && data.components != undefined) {
+            this.aqiData.innerText = `${data.main.aqi}`;
+            this.aqiData.style.color = this.getAQIColor(data.main.aqi);
+            this.airTitle.style.color = this.getAQIColor(data.main.aqi);
+            this.coData.innerText = `CO: ${data.components.co}`;
+            this.noData.innerText = `NO: ${data.components.no}`;
+            this.no2Data.innerText = `NO2: ${data.components.no2}`;
+            this.o3Data.innerText = `O3: ${data.components.o3}`;
+            this.so2Data.innerText = `SO2: ${data.components.so2}`;
+            this.pm10Data.innerText = `PM10: ${data.components.pm10}`;
+            this.pm25Data.innerText = `PM2.5: ${data.components.pm2_5}`;
+            this.nh3Data.innerText = `NH3: ${data.components.nh3}`;
+        }
+        else {
+            this.aqiData.innerText = '--';
+        }
+    }
+    getAQIColor(aqi) {
+        switch (aqi) {
+            case 1:
+                return '#00e400';
+            case 2:
+                return '#ffff00';
+            case 3:
+                return '#ff7e00';
+            case 4:
+                return '#ff0000';
+            case 5:
+                return '#99004c';
+            case 6:
+                return '#7e0023';
+            default:
+                return 'var(--font-faded)';
+        }
     }
 }

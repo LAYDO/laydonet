@@ -1,25 +1,19 @@
-class Barometer {
+class Barometer extends ElementTile {
 
-    public pressure: number;
-    private baseW: number;
-    private baseH: number;
-    private radius: number;
+    private baseW: number = 0;
+    private baseH: number = 0;
+    private radius: number = 0;
 
-    constructor(h: number) {
-        this.pressure = h;
-        this.baseW = 0;
-        this.baseH = 0;
-        this.radius = 0;
-        this.drawBarometer();
+    constructor() {
+        super('Pressure', 'weight', 'pressure', 'elementRowThree');
     }
 
-    drawBarometer() {
+    drawBarometer(p: number) {
 
-        let pressureElement = document.getElementById('pressure');
-        if (pressureElement) {
-            this.baseW = pressureElement.clientWidth * 0.7;
-            this.baseH = pressureElement.clientHeight * 0.7;
-            this.radius = pressureElement.clientWidth / 2;
+        if (this.element) {
+            this.baseW = this.element.clientWidth * 0.7;
+            this.baseH = this.element.clientHeight * 0.7;
+            this.radius = this.element.clientWidth / 2;
         }
 
         let barometer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -34,7 +28,7 @@ class Barometer {
 
         // currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
         // currentInhg.innerText = `${(data.pressure * 0.02953).toFixed(2)} inHg`;
-        let hpa = this.pressure;
+        let hpa = p;
         let inhg = hpa * 0.02953;
         let pressure = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         pressure.setAttribute('x', '50%');
@@ -68,9 +62,9 @@ class Barometer {
         barometer.append(line);
         barometer.append(pressure);
 
-        if (currentPressure) {
-            currentPressure.innerHTML = '';
-            currentPressure.append(barometer);
+        if (this.miniData) {
+            this.miniData.innerHTML = '';
+            this.miniData.append(barometer);
         }
     }
 }

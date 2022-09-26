@@ -1,37 +1,6 @@
 let loader = document.getElementById('loader');
 let searches = document.getElementById('citySection');
 
-let map = document.getElementById('map');
-let wMap = document.getElementById('weatherMap');
-
-let elementTiles = document.getElementById('elementTiles');
-
-let currentCloud = document.getElementById('cloudsData');
-let currentUVI = document.getElementById('uviData');
-let currentVisibility = document.getElementById('visibilityData');
-
-let currentWind = document.getElementById('windData');
-let currentGust = document.getElementById('gustData');
-
-let currentHumid = document.getElementById('humidData');
-let currentDew = document.getElementById('dewData');
-
-let currentPressure = document.getElementById('pressureData');
-let currentInhg = document.getElementById('inhgData');
-
-let currentAqi = document.getElementById('aqiData');
-let currentCO = document.getElementById('coData');
-let currentNO = document.getElementById('noData');
-let currentNO2 = document.getElementById('no2Data');
-let currentO3 = document.getElementById('o3Data');
-let currentSO2 = document.getElementById('so2Data');
-let currentNH3 = document.getElementById('nh3Data');
-let currentPM10 = document.getElementById('pm10Data');
-let currentPM25 = document.getElementById('pm25Data');
-
-let currentRain = document.getElementById('precipData');
-let currentRainToday = document.getElementById('precipToday');
-
 let celestialSection = document.getElementById('celestialSection');
 let celestial = document.getElementById('celestial');
 let celestialElements = document.getElementById('celestialElements');
@@ -152,18 +121,16 @@ async function getCurrentWeather(position) {
         return response.json();
     }).then(data => {
         console.log(data);
-        // buildCurrent(data);
 
         this.current.populate(data, icons);
         this.hourly.populate(data.hourly, icons);
         this.daily.populate(data.forecast, icons);
         this.map.populate(data.latitude, data.longitude);
-        this.currentBaro = new Barometer(data.pressure);
+        this.elements.populate(data);
 
         remainInterval = setInterval(celestialRemaining.bind(null, data), 1000);
         buildCelestial(data.todaily, data.tomorrow);
 
-        // buildMap(data.latitude, data.longitude);
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
@@ -187,86 +154,6 @@ function load() {
     this.loading = !this.loading;
     searches.style.display = 'none';
 }
-
-function buildCurrent(data) {
-
-    currentCloud.innerText = `${Math.round(data.clouds)} \u0025`;
-    currentUVI.innerText = `UV Index: ${Math.round(data.uvi)}`;
-    currentVisibility.innerText = `Visibility: ${Math.round(data.visibility * 0.0006213712)} miles`;
-
-
-    window.requestAnimationFrame(generateWindDial.bind(null, data));
-
-    currentHumid.innerText = `${data.humidity}\u0025`;
-    currentDew.innerText = `Dew Point: ${data.dew_point}\xB0`;
-
-    // currentBaro.pressure = data.pressure;
-
-    if (data.aqi.main != undefined && data.aqi.components != undefined) {
-        currentAqi.innerText = `${data.aqi.main.aqi}`;
-        currentAqi.style.color = getAQIColor(data.aqi.main.aqi);
-        document.getElementById('airTitle').style.color = getAQIColor(data.aqi.main.aqi);
-        currentCO.innerText = `CO: ${data.aqi.components.co}`;
-        currentNO.innerText = `NO: ${data.aqi.components.no}`;
-        currentNO2.innerText = `NO2: ${data.aqi.components.no2}`;
-        currentO3.innerText = `O3: ${data.aqi.components.o3}`;
-        currentSO2.innerText = `SO2: ${data.aqi.components.so2}`;
-        currentPM10.innerText = `PM10: ${data.aqi.components.pm10}`;
-        currentPM25.innerText = `PM2.5: ${data.aqi.components.pm2_5}`;
-        currentNH3.innerText = `NH3: ${data.aqi.components.nh3}`;
-    } else {
-        currentAqi.innerText = '--';
-    }
-
-    currentRain.innerText = `${Math.round(data.rain_next * 100)}\u0025`;
-    currentRainToday.innerText = `24 hour chance: ${Math.round(data.rain_today * 100)}\u0025`;
-};
-
-// function buildMap(lat, lon) {
-//     wMap.innerHTML = '<div id="mapid"></div>'; // kudos to Artem Kovalov for this fix
-//     var weatherMap = L.map('mapid', {
-//         zoomControl: false,
-//         zoomSnap: 0,
-//         dragging: false,
-//         doubleClickZoom: false,
-//     }).setView([lat, lon], 7);
-//     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-//         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © <a href="https://www.mapbox.com/">Mapbox</a>',
-//         maxZoom: 18,
-//         id: 'mapbox/dark-v10',
-//         tileSize: 512,
-//         zoomOffset: -1,
-//         accessToken: 'pk.eyJ1IjoibGF5ZG8iLCJhIjoiY2t0bmcwZW5oMDJqNTJwbzJ1cm9uZHZjMiJ9.aP2xQEplUndXkrSgmkB9Sw'
-//     }).addTo(weatherMap);
-//     let precipMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
-//         attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-//         op: 'PR0',
-//         opacity: 0.5,
-//         accessToken: '9de243494c0b295cca9337e1e96b00e2',
-//     }),
-//         windMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
-//             attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-//             op: 'WND',
-//             use_norm: true,
-//             arrow_step: 16,
-//             accessToken: '9de243494c0b295cca9337e1e96b00e2',
-//         }),
-//         cloudMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
-//             attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-//             op: 'CL',
-//             opacity: 0.8,
-//             accessToken: '9de243494c0b295cca9337e1e96b00e2',
-//         });
-//     let mapLayers = {
-//         'Precip': precipMap,
-//         'Wind': windMap,
-//         'Clouds': cloudMap,
-//     };
-//     L.control.layers(mapLayers).addTo(weatherMap);
-//     precipMap.addTo(weatherMap);
-//     let gpsIcon = L.divIcon({ className: 'gps-icon' });
-//     L.marker([lat, lon], { icon: gpsIcon }).addTo(weatherMap);
-// };
 
 
 function buildCelestial(data, tomorrow) {
@@ -477,8 +364,6 @@ function generateMoonPhase(phase, moonPos) {
 
     element.append(canv);
 }
-
-
 
 function convertToAdjustedRadians(uTime) {
     let event = new Date(uTime * 1000);
@@ -709,147 +594,4 @@ function toggleCitySearch() {
         searches.style.display = 'none';
     }
     toggleOverlay();
-}
-
-function getAQIColor(aqi) {
-    switch (aqi) {
-        case 1:
-            return '#00e400';
-        case 2:
-            return '#ffff00';
-        case 3:
-            return '#ff7e00';
-        case 4:
-            return '#ff0000';
-        case 5:
-            return '#99004c';
-        case 6:
-            return '#7e0023';
-        default:
-            return 'var(--font-faded)';
-    }
-}
-
-function generateWindDial(data) {
-    let velocity = data.windSpeed;
-    let gust = data.windGust;
-    let degree = data.windDeg;
-    console.log(degree);
-
-    let windElement = document.getElementById('wind');
-    let baseW = windElement.clientWidth * 0.7;
-    let baseH = windElement.clientHeight * 0.7;
-
-    let dial = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    dial.setAttribute('width', baseW);
-    dial.setAttribute('height', baseH);
-
-    let radius = (windElement.clientWidth * 0.5) / 2;
-
-    let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circle.setAttribute('cx', baseW / 2);
-    circle.setAttribute('cy', baseH / 2);
-    circle.setAttribute('r', radius);
-    circle.setAttribute('stroke', 'var(--font-faded)'); // #fff8ed
-    circle.setAttribute('fill', 'none');
-    circle.setAttribute('stroke-width', 2);
-
-    for (let i = 0; i < 4; i++) {
-        let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', baseW / 2);
-        line.setAttribute('y1', 10);
-        line.setAttribute('x2', baseW / 2);
-        line.setAttribute('y2', 20);
-        line.setAttribute('style', 'stroke:var(--font-color); stroke-width:0.5;');
-
-
-        let dir = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        dir.setAttribute('x', '50%');
-        dir.setAttribute('y', 8);
-        dir.setAttribute('text-anchor', 'middle');
-        dir.setAttribute('fill', 'var(--font-color)');
-        dir.setAttribute('font-size', '0.5rem');
-        switch (i) {
-            case 0:
-                dir.textContent = 'N';
-                break;
-            case 1:
-                dir.textContent = 'E';
-                break;
-            case 2:
-                dir.textContent = 'S';
-                break;
-            case 3:
-                dir.textContent = 'W';
-                break;
-        }
-        line.setAttribute('transform', `rotate(${i * 90}, ${baseW / 2}, ${baseW / 2})`);
-        dir.setAttribute('transform', `rotate(${i * 90}, ${baseW / 2}, ${baseW / 2})`);
-
-        dial.append(line);
-        dial.append(dir);
-    }
-
-    for (let y = 1; y <= 360; y++) {
-        if (y == degree) {
-            let g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-            let arrowLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            arrowLine.setAttribute('x1', baseW / 2);
-            arrowLine.setAttribute('y1', radius / 2);
-            arrowLine.setAttribute('x2', baseW / 2);
-            arrowLine.setAttribute('y2', radius);
-            arrowLine.setAttribute('style', 'stroke:var(--font-faded); stroke-width:2;');
-
-            let arrow = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-            arrow.setAttribute('style', 'stroke:var(--font-faded); stroke-width:1; fill:var(--font-color);');
-            arrow.setAttribute('points', `${baseW / 2},16 ${(baseW / 2) - 4},20 ${(baseW / 2) + 4},20`);
-
-            let arrowButt = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-            arrowButt.setAttribute('x1', baseW / 2);
-            arrowButt.setAttribute('y1', 2.25 * radius);
-            arrowButt.setAttribute('x2', baseW / 2);
-            arrowButt.setAttribute('y2', radius);
-            arrowButt.setAttribute('style', 'stroke:var(--font-faded); stroke-width:2;');
-
-            let butt = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            butt.setAttribute('cx', baseW / 2);
-            butt.setAttribute('cy', 2.3 * radius);
-            butt.setAttribute('r', 0.05 * radius);
-            butt.setAttribute('stroke', 'var(--font-faded)'); // #fff8ed
-            butt.setAttribute('fill', 'none');
-            butt.setAttribute('stroke-width', 2);
-
-            g.append(arrowLine);
-            g.append(arrow);
-            g.append(arrowButt);
-            g.append(butt);
-
-            g.setAttribute('transform', `rotate(${y}, ${baseW / 2}, ${baseW / 2})`);
-
-            dial.append(g);
-        }
-    }
-
-    let vel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    vel.setAttribute('x', '50%');
-    vel.setAttribute('y', '50%');
-    vel.setAttribute('text-anchor', 'middle');
-    vel.setAttribute('fill', 'var(--font-color)');
-    vel.setAttribute('font-size', '1rem');
-    vel.textContent = `${velocity.toFixed(0)} MPH`;
-
-    let gusts = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    gusts.setAttribute('x', '50%');
-    gusts.setAttribute('y', '60%');
-    gusts.setAttribute('text-anchor', 'middle');
-    gusts.setAttribute('fill', 'var(--font-color)');
-    gusts.setAttribute('font-size', '0.5rem');
-    gusts.textContent = `Gusts: ${gust.toFixed(0)} MPH`;
-
-    dial.append(circle);
-    dial.append(vel);
-    dial.append(gusts);
-
-    currentWind.innerHTML = '';
-    currentWind.append(dial);
 }

@@ -15,7 +15,11 @@ class Elements {
         this.eTilesElement.append(this.elementRowTwo);
         this.eTilesElement.append(this.elementRowThree);
         this.AQI = new AQI();
-        // this.elementRowOne.append(this.AQI);
+        this.Clouds = new Clouds();
+        this.Precipitation = new Precipitation();
+        this.Wind = new Wind();
+        this.Humidity = new Humidity();
+        this.Barometer = new Barometer();
     }
     toggle(loaded) {
         if (loaded) {
@@ -24,5 +28,13 @@ class Elements {
         else {
             this.eTilesElement.style.display = 'none';
         }
+    }
+    populate(data) {
+        this.AQI.populate(data.aqi);
+        this.Clouds.populate(data.clouds, data.uvi, data.visibility);
+        this.Precipitation.populate(data.rain_next, data.rain_today);
+        this.Wind.generateWindDial(data.windSpeed, data.windGust, data.windDeg);
+        this.Humidity.populate(data.humidity, data.dew_point);
+        this.Barometer.drawBarometer(data.pressure);
     }
 }

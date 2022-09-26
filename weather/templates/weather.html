@@ -32,68 +32,22 @@
   </div>
   <div id="dailyForecast" class="container-forecast"></div>
   <div id="map" class="container-forecast"></div>
-  <div id="elementTiles" class="elements-column">
-    <div class="elements-row">
-      <div id="aqi" class="element-tile">
-        <div id="airTitle" class="container-title"><span class="fas fa-smog pad-right"></span>AQI</div>
-        <div id="aqiData" class="mini-data"></div>
-        <div class="elements-row">
-          <div class="elements-column">
-            <div id="coData" class="sub-data"></div>
-            <div id="noData" class="sub-data"></div>
-            <div id="no2Data" class="sub-data"></div>
-            <div id="o3Data" class="sub-data"></div>
-          </div>
-          <div class="elements-column">
-            <div id="so2Data" class="sub-data"></div>
-            <div id="pm25Data" class="sub-data"></div>
-            <div id="pm10Data" class="sub-data"></div>
-            <div id="nh3Data" class="sub-data"></div>
-          </div>
-        </div>
-      </div>
-      <div id="atmosphere" class="element-tile">
-        <div id="atmosTitle" class="container-title"><span class="fas fa-cloud pad-right"></span>Clouds</div>
-        <div id="cloudsData" class="mini-data"></div>
-        <div id="uviData" class="sub-data"></div>
-        <div id="visibilityData" class="sub-data"></div>
-      </div>
-    </div>
-    <div class="elements-row">
-      <div id="precip" class="element-tile">
-        <div id="wetTitle" class="container-title"><span class="fas fa-tint pad-right"></span>Precipitation</div>
-        <div id="precipPast" class="sub-data">Next hour:</div>
-        <div id="precipData" class="mini-data"></div>
-        <div id="precipToday" class="sub-data"></div>
-      </div>
-      <div id="wind" class="element-tile">
-        <div id="windTitle" class="container-title"><span class="fas fa-wind pad-right"></span>Wind</div>
-        <div id="windData" class="mini-data"></div>
-        <div id="gustData" class="sub-data"></div>
-      </div>
-    </div>
-    <div class="elements-row">
-      <div id="humid" class="element-tile">
-        <div id="wetTitle" class="container-title"><span class="fas fa-water pad-right"></span>Humidity</div>
-        <div id="humidData" class="mini-data"></div>
-        <div id="dewData" class="sub-data"></div>
-      </div>
-      <div id="pressure" class="element-tile">
-        <div id="pressureTitle" class="container-title"><span class="fas fa-weight pad-right"></span>Pressure</div>
-        <div id="pressureData" class="mini-data"></div>
-      </div>
-    </div>
-  </div>
+  <div id="elementTiles" class="elements-column"></div>
   <div id="credits" class="sub-data">Weather data provided by <a href="https://openweathermap.org">OpenWeather</a></div>
 </div>
 {% endblock %} {% block page_scripts %}
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<script type="text/javascript" src="{% static 'weather/js/ElementTile.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/Current.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/Hourly.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/Daily.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/WMap.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/Elements.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/AQI.js' %}"></script>
+<script type="text/javascript" src="{% static 'weather/js/Clouds.js' %}"></script>
+<script type="text/javascript" src="{% static 'weather/js/Precipitation.js' %}"></script>
+<script type="text/javascript" src="{% static 'weather/js/Wind.js' %}"></script>
+<script type="text/javascript" src="{% static 'weather/js/Humidity.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/Barometer.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/weather.js' %}"></script>
 {% endblock %}
