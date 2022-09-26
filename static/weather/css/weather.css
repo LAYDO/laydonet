@@ -234,12 +234,12 @@
   padding: 1rem 0;
 }
 
-#sun,
+/* #sun,
 #moon {
   display: flex;
   margin-left: 0.25rem;
   flex: 0 0 100%;
-}
+} */
 
 .celestial-stat {
   font-size: 2rem;

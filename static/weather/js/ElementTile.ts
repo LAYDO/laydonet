@@ -2,10 +2,8 @@ class ElementTile {
     public container: HTMLElement;
     public element: HTMLElement;
     public title: HTMLElement;
-    public miniData: HTMLElement;
-    public subData: HTMLElement;
 
-    constructor(element: string, icon: string, mini: string, container: string, sub?: string) {
+    constructor(element: string, icon: string, mini: Array<string>, container: string, sub?: Array<string>) {
         this.element = document.createElement('div');
         this.element.id = `${element.toLowerCase()}`;
         this.element.className = 'element-tile';
@@ -19,17 +17,21 @@ class ElementTile {
         this.title.append(`${element}`);
         this.element.append(this.title);
 
-        this.miniData = document.createElement('div');
-        this.miniData.id = `${mini.toLowerCase()}Data`;
-        this.miniData.className = 'mini-data';
-        this.element.append(this.miniData);
+        mini.forEach(m => {
+            let miniData = document.createElement('div');
+            miniData.id = `${m}`;
+            miniData.className = 'mini-data';
+            this.element.append(miniData);
+        })
 
-        this.subData = document.createElement('div');
-        this.subData.className = 'sub-data';
-        if (sub) {
-            this.subData.id = `${sub.toLowerCase()}Data`;
-        }
-        this.element.append(this.subData);
+        sub?.forEach(s => {
+            let subData = document.createElement('div');
+            subData.className = 'sub-data';
+            if (sub) {
+                subData.id = `${s}`;
+            }
+            this.element.append(subData);
+        })
 
         this.container = document.getElementById(`${container}`)!;
         this.container.append(this.element);

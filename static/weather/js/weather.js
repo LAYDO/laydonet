@@ -87,6 +87,7 @@ function init() {
     this.daily = new Daily();
     this.map = new WMap();
     this.elements = new Elements();
+    this.celestial = new Celestial();
 
     document.addEventListener('keyup', (event) => {
         event.preventDefault();
@@ -137,17 +138,13 @@ async function getCurrentWeather(position) {
 }
 
 function load() {
-    if (this.loading) {
-        celestialSection.style.display = 'inherit';
-    } else {
-        celestialSection.style.display = 'none';
-    }
 
     this.current.toggle(this.loading);
     this.hourly.toggle(this.loading);
     this.daily.toggle(this.loading);
     this.map.toggle(this.loading);
     this.elements.toggle(this.loading);
+    this.celestial.toggle(this.loading);
     credits.style.display = this.loading ? 'inherit' : 'none';
     loader.style.display = this.loading ? 'none' : 'inline-block';
 
@@ -512,20 +509,21 @@ function celestialRemaining(data) {
         moonset = new Date(data['moonset'] * 1000);
     }
 
+    let s = document.getElementById('sunRemain');
+    let m = document.getElementById('moonRemain');
+
     if (sunrise > sunset) {
         if (n < sunset) {
             let diff = Math.abs(sunset - n);
             document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunset`;
             document.getElementById('sunTitle').style.color = colorSunset;
             document.getElementById('sunData').innerText = sunset.toLocaleTimeString('en-US', celeOptions);
-            let s = document.getElementById('sunRemain');
             plugDiff(diff, s, 'Sunset');
         } else {
             let diff = Math.abs(sunrise - n);
             document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
             document.getElementById('sunTitle').style.color = colorSunrise;
             document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
-            let s = document.getElementById('sunRemain');
             plugDiff(diff, s, 'Sunrise');
         }
     } else {
@@ -533,7 +531,6 @@ function celestialRemaining(data) {
         document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
         document.getElementById('sunTitle').style.color = colorSunrise;
         document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
-        let s = document.getElementById('sunRemain');
         plugDiff(diff, s, 'Sunrise');
     }
 
@@ -543,13 +540,11 @@ function celestialRemaining(data) {
             let diff = Math.abs(moonset - n);
             document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
             document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
-            let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonset');
         } else {
             let diff = Math.abs(moonrise - n);
             document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
             document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
-            let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonrise');
 
         }
@@ -558,13 +553,11 @@ function celestialRemaining(data) {
             let diff = Math.abs(moonrise - n);
             document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
             document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
-            let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonrise');
         } else {
             let diff = Math.abs(moonset - n);
             document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
             document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
-            let m = document.getElementById('moonRemain');
             plugDiff(diff, m, 'Moonset');
 
         }

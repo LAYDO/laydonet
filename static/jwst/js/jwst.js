@@ -1,7 +1,7 @@
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
     let jwst = new JWSTTelescope();
     jwst.init();
-}
+});
 
 class JWSTTelescope {
     constructor() {

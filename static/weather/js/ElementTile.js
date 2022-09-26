@@ -12,16 +12,20 @@ class ElementTile {
         this.title.append(span);
         this.title.append(`${element}`);
         this.element.append(this.title);
-        this.miniData = document.createElement('div');
-        this.miniData.id = `${mini.toLowerCase()}Data`;
-        this.miniData.className = 'mini-data';
-        this.element.append(this.miniData);
-        this.subData = document.createElement('div');
-        this.subData.className = 'sub-data';
-        if (sub) {
-            this.subData.id = `${sub.toLowerCase()}Data`;
-        }
-        this.element.append(this.subData);
+        mini.forEach(m => {
+            let miniData = document.createElement('div');
+            miniData.id = `${m}`;
+            miniData.className = 'mini-data';
+            this.element.append(miniData);
+        });
+        sub === null || sub === void 0 ? void 0 : sub.forEach(s => {
+            let subData = document.createElement('div');
+            subData.className = 'sub-data';
+            if (sub) {
+                subData.id = `${s}`;
+            }
+            this.element.append(subData);
+        });
         this.container = document.getElementById(`${container}`);
         this.container.append(this.element);
     }

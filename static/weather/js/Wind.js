@@ -1,7 +1,7 @@
 "use strict";
 class Wind extends ElementTile {
     constructor() {
-        super('Wind', 'wind', 'wind', 'elementRowTwo', 'gust');
+        super('Wind', 'wind', ['windData'], 'elementRowTwo', ['gustData']);
     }
     generateWindDial(velocity, gust, degree) {
         console.log(degree);
@@ -100,7 +100,10 @@ class Wind extends ElementTile {
         dial.append(circle);
         dial.append(vel);
         dial.append(gusts);
-        this.miniData.innerHTML = '';
-        this.miniData.append(dial);
+        let miniData = document.getElementById('windData');
+        if (miniData) {
+            miniData.innerHTML = '';
+            miniData.append(dial);
+        }
     }
 }
