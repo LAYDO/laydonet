@@ -1,19 +1,10 @@
 let loader = document.getElementById('loader');
 let searches = document.getElementById('citySection');
 
-let celestialSection = document.getElementById('celestialSection');
-let celestial = document.getElementById('celestial');
-let celestialElements = document.getElementById('celestialElements');
-
 let credits = document.getElementById('credits');
 
-let colorSunrise = '#FFE600';
-let colorSunset = '#FF8700';
-let animID, place = 0;
-let animMoonID, moonPos;
-let remainInterval;
+let moonPos;
 
-this.trigger = false;
 
 const datas = [
     {
@@ -47,11 +38,6 @@ const options = {
     // day: "numeric"
     weekday: "short"
 };
-const celeOptions = {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-};
 const icons = {
     '01d': ' fas fa-sun',
     '01n': ' far fa-moon',
@@ -78,7 +64,6 @@ init();
 function init() {
 
     loader.style.display = 'none';
-    celestialSection.style.display = 'none';
     credits.style.display = 'none';
 
     this.loading = false;
@@ -105,7 +90,7 @@ function init() {
 }
 
 async function getCurrentWeather(position) {
-    clearInterval(remainInterval);
+    clearInterval(this.celestial.remainInterval);
     load();
     let q = document.getElementById('citySearch').value.trim();
     let url = `${window.location.href}f/?`;
@@ -128,9 +113,9 @@ async function getCurrentWeather(position) {
         this.daily.populate(data.forecast, icons);
         this.map.populate(data.latitude, data.longitude);
         this.elements.populate(data);
+        this.celestial.populate(data);
 
-        remainInterval = setInterval(celestialRemaining.bind(null, data), 1000);
-        buildCelestial(data.todaily, data.tomorrow);
+        // buildCelestial(data.todaily, data.tomorrow);
 
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
@@ -145,88 +130,12 @@ function load() {
     this.map.toggle(this.loading);
     this.elements.toggle(this.loading);
     this.celestial.toggle(this.loading);
+
     credits.style.display = this.loading ? 'inherit' : 'none';
     loader.style.display = this.loading ? 'none' : 'inline-block';
 
     this.loading = !this.loading;
     searches.style.display = 'none';
-}
-
-
-function buildCelestial(data, tomorrow) {
-    let sun = document.createElement('div');
-    sun.id = 'sun';
-    let moon = document.createElement('div');
-    moon.id = 'moon';
-
-    let celeArr = [];
-    celeArr.push(sun, moon);
-
-    celeArr.forEach(c => {
-        let celeGraphic = document.createElement('div');
-        celeGraphic.className = 'celestial-graphic';
-        celeGraphic.id = `${c.id}Graphic`;
-        let celeInfo = document.createElement('div');
-        celeInfo.className = 'celestial-info';
-
-        let riseLabel = document.createElement('label');
-        riseLabel.setAttribute('for', `${c.id}rise`);
-        riseLabel.innerText = `${c.id.charAt(0).toUpperCase() + c.id.slice(1)}rise:`;
-        riseLabel.style.color = c.id === 'sun' ? colorSunrise : 'inherit';
-        let rise = document.createElement('div');
-        rise.id = `${c.id}rise`;
-        rise.className = 'celestial-stat';
-        rise.innerText = new Date(data[`${c.id}rise`] * 1000).toLocaleTimeString('en-US', celeOptions);
-
-        let setLabel = document.createElement('label');
-        setLabel.setAttribute('for', `${c.id}set`);
-        setLabel.innerText = `${c.id.charAt(0).toUpperCase() + c.id.slice(1)}set:`;
-        setLabel.style.color = c.id === 'sun' ? colorSunset : 'inherit';
-        let set = document.createElement('div');
-        set.id = `${c.id}set`;
-        set.className = 'celestial-stat';
-        let todaySet = new Date(data[`${c.id}set`] * 1000);
-        let tomorrowSet = new Date(tomorrow[`${c.id}set`] * 1000);
-        if (data[`${c.id}set`] < data[`${c.id}rise`]) {
-            set.innerText = tomorrowSet.toLocaleTimeString('en-US', celeOptions);
-        } else {
-            set.innerText = todaySet.toLocaleTimeString('en-US', celeOptions);
-        }
-
-        let celeRemaining = document.createElement('div');
-        celeRemaining.id = `${c.id}Remaining`;
-        celeRemaining.className = 'cele-remaining';
-
-        celeInfo.append(riseLabel);
-        celeInfo.append(rise);
-        celeInfo.append(setLabel);
-        celeInfo.append(set);
-        celeInfo.append(celeRemaining);
-
-        c.append(celeGraphic);
-        c.append(celeInfo);
-
-        // celestial.append(c);
-    });
-
-    document.addEventListener('scroll', celestialTriggers.bind(null, data, place, moonPos));
-    animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
-    animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
-
-}
-
-function celestialTriggers(data, place, moonPos) {
-
-
-    if (celestialElements.getBoundingClientRect().bottom > 0 && !this.trigger) {
-        this.trigger = true;
-        animID = window.requestAnimationFrame(generateSun.bind(null, data, place));
-        animMoonID = window.requestAnimationFrame(generateMoonPhase.bind(null, data.moon_phase, moonPos));
-    } else if (celestialElements.getBoundingClientRect().bottom <= 0 && this.trigger) {
-        window.cancelAnimationFrame(animID);
-        window.cancelAnimationFrame(animMoonID);
-        this.trigger = false;
-    }
 }
 
 function generateSun(data, place) {
@@ -495,87 +404,6 @@ function animateMoon(ctx, radius, moonPos, phase) {
         window.cancelAnimationFrame(animMoonID);
         moonPos = undefined;
     }
-}
-
-function celestialRemaining(data) {
-    let n = new Date();
-    let sunrise = new Date(data['sunrise'] * 1000);
-    let sunset = new Date(data['sunset'] * 1000);
-    let moonrise = new Date(data['moonrise'] * 1000);
-    let moonset;
-    if (data['moonset'] == 0) {
-        moonset = 0;
-    } else {
-        moonset = new Date(data['moonset'] * 1000);
-    }
-
-    let s = document.getElementById('sunRemain');
-    let m = document.getElementById('moonRemain');
-
-    if (sunrise > sunset) {
-        if (n < sunset) {
-            let diff = Math.abs(sunset - n);
-            document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunset`;
-            document.getElementById('sunTitle').style.color = colorSunset;
-            document.getElementById('sunData').innerText = sunset.toLocaleTimeString('en-US', celeOptions);
-            plugDiff(diff, s, 'Sunset');
-        } else {
-            let diff = Math.abs(sunrise - n);
-            document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
-            document.getElementById('sunTitle').style.color = colorSunrise;
-            document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
-            plugDiff(diff, s, 'Sunrise');
-        }
-    } else {
-        let diff = Math.abs(sunrise - n);
-        document.getElementById('sunTitle').innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
-        document.getElementById('sunTitle').style.color = colorSunrise;
-        document.getElementById('sunData').innerText = sunrise.toLocaleTimeString('en-US', celeOptions);
-        plugDiff(diff, s, 'Sunrise');
-    }
-
-
-    if (moonset < moonrise) {
-        if (n < moonset) {
-            let diff = Math.abs(moonset - n);
-            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
-            document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
-            plugDiff(diff, m, 'Moonset');
-        } else {
-            let diff = Math.abs(moonrise - n);
-            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
-            document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
-            plugDiff(diff, m, 'Moonrise');
-
-        }
-    } else {
-        if (n < moonrise) {
-            let diff = Math.abs(moonrise - n);
-            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
-            document.getElementById('moonData').innerText = moonrise.toLocaleTimeString('en-US', celeOptions);
-            plugDiff(diff, m, 'Moonrise');
-        } else {
-            let diff = Math.abs(moonset - n);
-            document.getElementById('moonTitle').innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
-            document.getElementById('moonData').innerText = moonset.toLocaleTimeString('en-US', celeOptions);
-            plugDiff(diff, m, 'Moonset');
-
-        }
-
-    }
-}
-
-function plugDiff(diff, div, text) {
-    diff = Math.floor(diff / 1000);
-    let secs = diff % 60;
-    secs = ('0' + secs).slice(-2);
-    diff = Math.floor(diff / 60);
-    let mins = diff % 60;
-    mins = ('0' + mins).slice(-2);
-    diff = Math.floor(diff / 60);
-    let hours = diff % 24;
-    hours = ('0' + hours).slice(-2);
-    div.innerText = `${hours}h ${mins}m ${secs}s until ${text}`;
 }
 
 function toggleCitySearch() {
