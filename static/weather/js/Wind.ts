@@ -4,7 +4,7 @@ class Wind extends ElementTile {
     }
 
     generateWindDial(velocity: number, gust: number, degree: number) {
-        console.log(degree);
+        // console.log(degree);
 
         let baseW = this.element.clientWidth * 0.7;
         let baseH = this.element.clientHeight * 0.7;

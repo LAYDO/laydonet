@@ -5,34 +5,6 @@ let credits = document.getElementById('credits');
 
 let moonPos;
 
-
-const datas = [
-    {
-        'object': 'atmosphere',
-        'atmosTitle': ['Clouds', 'Pressure'],
-        'elements': ['cloudsData', 'pressureData'],
-    },
-    {
-        'object': 'aqi',
-        'airTitle': ['AQI', 'PM 2.5'],
-        'elements': ['aqiData', 'pmData'],
-    },
-    {
-        'object': 'temp',
-        'tempTitle': ['', ''],
-        'elements': ['current-temp', 'current-temp-c'],
-    },
-    {
-        'object': 'precip',
-        'wetTitle': ['Humidity', 'Precip'],
-        'elements': ['humidData', 'precipData'],
-    },
-    {
-        'object': 'wind',
-        'windTitle': ['Wind', 'Gusts'],
-        'elements': ['windData', 'gustData'],
-    },
-];
 const options = {
     // month: "numeric",
     // day: "numeric"
@@ -90,7 +62,7 @@ function init() {
 }
 
 async function getCurrentWeather(position) {
-    clearInterval(this.celestial.remainInterval);
+    // clearInterval(this.celestial.remainInterval);
     load();
     let q = document.getElementById('citySearch').value.trim();
     let url = `${window.location.href}f/?`;
@@ -115,8 +87,6 @@ async function getCurrentWeather(position) {
         this.elements.populate(data);
         this.celestial.populate(data);
 
-        // buildCelestial(data.todaily, data.tomorrow);
-
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
@@ -136,87 +106,6 @@ function load() {
 
     this.loading = !this.loading;
     searches.style.display = 'none';
-}
-
-function generateSun(data, place) {
-    let riseUnix = data.sunrise;
-    let setUnix = data.sunset;
-
-    let diff = setUnix - riseUnix;
-    diff = Math.floor(diff / 60);
-    let mins = diff % 60;
-    mins = ('0' + mins).slice(-2);
-    diff = Math.floor(diff / 60);
-    let hours = diff % 24;
-    hours = ('0' + hours).slice(-2);
-
-    let daylightText = 'DAYLIGHT';
-    let daylight = `${hours}:${mins} HRS`;
-    let sunrise = convertToAdjustedRadians(riseUnix);
-    let sunset = convertToAdjustedRadians(setUnix);
-    let rSunrise = convertToRadians(riseUnix);
-    let rSunset = convertToRadians(setUnix);
-    let sunElement = document.getElementById('sunGraphic2');
-    let c = document.createElement('canvas');
-    let ctx = c.getContext('2d');
-    ctx.canvas.width = sunElement.clientWidth;
-    ctx.canvas.height = sunElement.clientWidth;
-    let radius = sunElement.clientWidth / 2;
-    ctx.translate(radius, radius);
-    radius = radius * 0.9;
-
-    sunElement.innerHTML = '';
-
-    // Background
-    ctx.beginPath();
-    ctx.fillStyle = 'black'; //`rgba(255, 255, 255, 0.15)`;
-    ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-    ctx.fill();
-
-    // "Sun"
-    ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.8, 0, 2 * Math.PI);
-    ctx.fillStyle = `rgb(245, 238, 139)`;
-    ctx.fill();
-
-    // Night Fill
-    ctx.beginPath();
-    ctx.arc(0, 0, radius * 0.8, sunrise, sunset, true);
-    ctx.lineTo(0, 0)
-    ctx.fillStyle = `rgb(0, 0, 133)`;
-    ctx.fill();
-
-    // Midnight line
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
-    ctx.moveTo(0, 0);
-    ctx.lineTo(0, -radius * 0.8);
-    ctx.stroke();
-
-    // Midnight & Noon Text
-    ctx.beginPath();
-    ctx.font = 'bold 1rem Times New Roman';
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    ctx.textAlign = 'center';
-    drawTextAlongArc(ctx, 'M', radius * 0.85, 0.3 * Math.PI);
-    drawTextAlongArc(ctx, 'N', -radius * 0.95, 0.25 * Math.PI);
-
-    // Draw sunrise & sunset
-    drawMini(ctx, rSunset, radius * 0.8, colorSunset);
-    drawMini(ctx, rSunrise, radius * 0.8, colorSunrise);
-
-    // Current time
-    animateCurrentTime(ctx, radius, place, data);
-
-    // Daylight HRS
-    ctx.font = 'bold 1rem Times New Roman';
-    ctx.fillStyle = 'gray';
-    ctx.textAlign = 'center';
-    ctx.fillText(daylightText, 0, radius * 0.4);
-    ctx.fillText(daylight, 0, radius * 0.6);
-
-
-    sunElement.append(c);
 }
 
 function generateMoonPhase(phase, moonPos) {
@@ -271,22 +160,6 @@ function generateMoonPhase(phase, moonPos) {
     element.append(canv);
 }
 
-function convertToAdjustedRadians(uTime) {
-    let event = new Date(uTime * 1000);
-    let totalMinutes = (event.getHours() * 60) + event.getMinutes();
-    let degrees = totalMinutes / 4;
-    let radians = (degrees - 90) * (Math.PI / 180);
-    return radians;
-}
-
-function convertToRadians(uTime) {
-    let event = new Date(uTime * 1000);
-    let totalMinutes = (event.getHours() * 60) + event.getMinutes();
-    let degrees = totalMinutes / 4;
-    let radians = (degrees) * (Math.PI / 180);
-    return radians;
-}
-
 function drawHand(ctx, pos, length, width) {
     ctx.strokeStyle = 'rgba(255,255,255,0.5)';
     ctx.beginPath();
@@ -314,45 +187,6 @@ function drawOuterRim(ctx, radius, pos) {
     ctx.lineWidth = radius * 0.075;
     ctx.arc(0, 0, radius * 0.8, 1.5 * Math.PI, pos - 1.5);
     ctx.stroke();
-}
-
-function drawTextAlongArc(ctx, str, radius, angle) {
-    var len = str.length, s;
-    ctx.save();
-    ctx.rotate(-1 * angle / 2);
-    ctx.rotate(-1 * (angle / len) / 2);
-    for (var n = 0; n < len; n++) {
-        ctx.rotate(angle / len);
-        ctx.save();
-        ctx.translate(0, -1 * radius);
-        s = str[n];
-        ctx.fillText(s, 0, 0);
-        ctx.restore();
-        ;
-    }
-    ctx.restore();
-}
-
-function animateCurrentTime(ctx, radius, place, data) {
-    let time = new Date();
-    // minute
-    totalM = (time.getHours() * 60) + time.getMinutes();
-    totalMr = ((totalM / 4) - 90) * (Math.PI / 180);
-    totalM = (totalM / 4) * (Math.PI / 180);
-    let interval = (totalMr + 0.5) / 60;
-    ctx.save();
-    drawHand(ctx, place, radius * 0.8, radius * 0.03);
-    drawMini(ctx, place, radius * 0.8, 'white');
-    drawOuterRim(ctx, radius, place);
-
-    ctx.restore();
-    place += interval;
-
-    if (place <= totalM) {
-        window.requestAnimationFrame(generateSun.bind(null, data, place));
-    } else {
-        window.cancelAnimationFrame(animID);
-    }
 }
 
 function animateMoon(ctx, radius, moonPos, phase) {

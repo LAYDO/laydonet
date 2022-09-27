@@ -34,6 +34,7 @@ class Current {
     toggle(loaded) {
         if (loaded) {
             this.currentElement.style.display = 'inherit';
+            this.cityName.style.display = 'inherit';
         }
         else {
             this.currentElement.style.display = 'none';
