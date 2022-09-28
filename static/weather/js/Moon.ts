@@ -4,6 +4,8 @@ class Moon extends ElementTile {
     private baseW: number;
     private radius: number;
     private moonGraphic: HTMLElement;
+    private moon_phase: number;
+    private phaseText: string;
 
     constructor() {
         super('Moon', 'moon', ['moonData', 'moonGraphic2'], 'celestialRow', ['moonRemain']);
@@ -12,6 +14,8 @@ class Moon extends ElementTile {
         this.baseW = 0;
         this.radius = 0;
         this.moonGraphic = document.getElementById('moonGraphic2')!;
+        this.moon_phase = 0;
+        this.phaseText = '';
     }
 
     populate(data: any) {
@@ -21,6 +25,7 @@ class Moon extends ElementTile {
         this.baseW = this.moonGraphic?.clientWidth * 0.9;
         this.radius = this.baseW / 2;
 
+        this.moon_phase = data.moon_phase;
         this.moonGraphic.innerHTML = '';
 
         let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -36,34 +41,86 @@ class Moon extends ElementTile {
         background.setAttribute('stroke', 'none');
         background.setAttribute('fill', 'black');
 
+        // Phase text
         let phase = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         phase.setAttribute('x', (this.baseW / 2).toFixed(0));
-        phase.setAttribute('y', (this.radius * 1.5).toFixed(0));
+        phase.setAttribute('y', (this.radius * 1.7).toFixed(0));
         phase.setAttribute('text-anchor', 'middle');
         phase.setAttribute('fill', 'var(--font-color)');
-        phase.setAttribute('font-size', '1rem');
-        let moon_phase = data.moon_phase;
-        let phaseText = '';
-        if (moon_phase == 0 || moon_phase == 1) {
-            phaseText = 'New Moon';
-        } else if (moon_phase > 0 && moon_phase < 0.25) {
-            phaseText = 'Waxing Crescent';
-        } else if (moon_phase == 0.25) {
-            phaseText = 'First Quarter Moon';
-        } else if (moon_phase > 0.25 && moon_phase < 0.5) {
-            phaseText = 'Waxing Gibbous';
-        } else if (moon_phase == 0.5) {
-            phaseText = 'Full Moon';
-        } else if (moon_phase > 0.5 && moon_phase < 0.75) {
-            phaseText = 'Waning Gibbous';
-        } else if (moon_phase == 0.75) {
-            phaseText = 'Last Quarter Moon';
-        } else if (moon_phase > 0.75 && moon_phase < 1) {
-            phaseText = 'Waning Crescent';
-        }
-        phase.textContent = phaseText;
+        phase.setAttribute('font-size', '0.75rem');
 
+        // Moon Shadow Mask
+        let defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+        let mask = document.createElementNS('http://www.w3.org/2000/svg', 'mask');
+        mask.id = 'moonShadow';
+
+        let rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        rect.setAttribute('height', '100%');
+        rect.setAttribute('width', '100%');
+        rect.setAttribute('fill', 'white');
+
+        // this.moon_phase = 0; // For testing
+        let shadow;
+        if (this.moon_phase == 0.25 || this.moon_phase == 0.75) {
+            shadow = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            shadow.setAttribute('y', '0');
+            shadow.setAttribute('height', (this.baseW).toFixed(0));
+            shadow.setAttribute('width', (this.baseW / 2).toFixed(0));
+        } else {
+            shadow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            shadow.setAttribute('cy', (this.baseW / 2.5).toFixed(0));
+            shadow.setAttribute('r', (this.radius * 0.5).toFixed(0));
+        }
+        
+        // Moon
+        let moon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        moon.setAttribute('cx', (this.baseW / 2).toFixed(0));
+        moon.setAttribute('cy', (this.baseW / 2.5).toFixed(0));
+        moon.setAttribute('r', (this.radius * 0.5).toFixed(0));
+        moon.setAttribute('stroke', 'none');
+        if ((this.moon_phase > 0.25 && this.moon_phase < 0.5) || (this.moon_phase > 0.5 && this.moon_phase < 0.75)) {
+            moon.setAttribute('fill', '#191919');
+            shadow.setAttribute('fill', 'white');
+        } else {
+            moon.setAttribute('fill', 'white');
+            shadow.setAttribute('fill', '#191919');
+        }
+        moon.setAttribute('mask', 'url(#moonShadow)');
+
+        if (this.moon_phase == 0 || this.moon_phase == 1) {
+            shadow.setAttribute('cx', ((this.baseW / 2)).toFixed(0));
+            this.phaseText = 'New Moon';
+        } else if (this.moon_phase > 0 && this.moon_phase < 0.25) {
+            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * this.moon_phase)).toFixed(0));
+            this.phaseText = 'Waxing Crescent';
+        } else if (this.moon_phase == 0.25) {
+            shadow.setAttribute('x', '0');
+            this.phaseText = 'First Quarter Moon';
+        } else if (this.moon_phase > 0.25 && this.moon_phase < 0.5) {
+            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * (0.5 - this.moon_phase))).toFixed(0));
+            this.phaseText = 'Waxing Gibbous';
+        } else if (this.moon_phase == 0.5) {
+            this.phaseText = 'Full Moon';
+        } else if (this.moon_phase > 0.5 && this.moon_phase < 0.75) {
+            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * (this.moon_phase - 0.5))).toFixed(0));
+            this.phaseText = 'Waning Gibbous';
+        } else if (this.moon_phase == 0.75) {
+            shadow.setAttribute('x', (this.baseW / 2).toFixed(0));
+            this.phaseText = 'Last Quarter Moon';
+        } else if (this.moon_phase > 0.75 && this.moon_phase < 1) {
+            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * (1 - this.moon_phase))).toFixed(0));
+            this.phaseText = 'Waning Crescent';
+        }
+
+        phase.textContent = this.phaseText;
+
+        mask.append(rect);
+        mask.append(shadow);
+        defs.append(mask);
+
+        svg.append(defs);
         svg.append(background);
+        svg.append(moon);
         svg.append(phase);
 
         this.moonGraphic.append(svg);

@@ -3,8 +3,6 @@ let searches = document.getElementById('citySection');
 
 let credits = document.getElementById('credits');
 
-let moonPos;
-
 const options = {
     // month: "numeric",
     // day: "numeric"
@@ -106,109 +104,6 @@ function load() {
 
     this.loading = !this.loading;
     searches.style.display = 'none';
-}
-
-function generateMoonPhase(phase, moonPos) {
-    // Great reference https://i.ytimg.com/vi/RPvL7yeWBQM/maxresdefault.jpg
-    let text = '';
-    let element = document.getElementById('moonGraphic2');
-    let canv = document.createElement('canvas');
-    let ctx = canv.getContext('2d');
-    ctx.canvas.width = element.clientWidth;
-    ctx.canvas.height = element.clientWidth;
-    let radius = element.clientWidth / 2;
-    ctx.translate(radius, radius);
-    radius = radius * 0.9;
-    if (moonPos == undefined) {
-        moonPos = -(ctx.canvas.height / 4);
-    }
-
-    element.innerHTML = '';
-
-    // Background
-    ctx.beginPath();
-    ctx.arc(0, 0, radius, 0, 2 * Math.PI);
-    ctx.fillStyle = 'black';
-    ctx.fill();
-
-    if (phase == 0 || phase == 1) {
-        text = 'New Moon';
-    } else if (phase > 0 && phase < 0.25) {
-        text = 'Waxing Crescent';
-    } else if (phase == 0.25) {
-        text = 'First Quarter Moon';
-    } else if (phase > 0.25 && phase < 0.5) {
-        text = 'Waxing Gibbous';
-    } else if (phase == 0.5) {
-        text = 'Full Moon';
-    } else if (phase > 0.5 && phase < 0.75) {
-        text = 'Waning Gibbous';
-    } else if (phase == 0.75) {
-        text = 'Last Quarter Moon';
-    } else if (phase > 0.75 && phase < 1) {
-        text = 'Waning Crescent';
-    }
-
-    ctx.font = 'bold 1.25rem Times New Roman';
-    ctx.fillStyle = 'white';
-    ctx.textAlign = 'center';
-    ctx.fillText(text, 0, (ctx.canvas.height / 4));
-
-    // Moon animation
-    animateMoon(ctx, radius, moonPos, phase);
-
-    element.append(canv);
-}
-
-function animateMoon(ctx, radius, moonPos, phase) {
-    let moonPosEnd = -ctx.canvas.height / 6;
-    let moonPosStart = -(ctx.canvas.height / 4);
-    let moonInterval = (moonPosStart - moonPosEnd) / 30;
-
-    // Moon
-    ctx.beginPath();
-    ctx.arc(0, moonPos, radius * 0.4, 0, 2 * Math.PI);
-    if ((phase > 0.25 && phase < 0.5) || (phase > 0.5 && phase < 0.75)) {
-        ctx.fillStyle = 'gray';
-    } else {
-        ctx.fillStyle = 'white';
-    }
-    ctx.fill();
-
-    // Moon shadow
-    let basePhase = phase * 2;
-    ctx.beginPath();
-    let something = (phase == 0 || phase == 0.25 || phase == 0.5 || phase == 0.75 || phase == 1);
-    if (something) {
-        ctx.arc(0, moonPos, radius * 0.4, (basePhase * Math.PI), ((2 - basePhase) * Math.PI));
-        ctx.fillStyle = 'gray';
-    } else {
-        ctx.globalCompositeOperation = 'multiply';
-        if (phase < 0.25) {
-            ctx.arc(radius * -phase, moonPos, radius * 0.4, 0, (2 * Math.PI));
-            ctx.fillStyle = 'gray';
-        } else if (phase > 0.75) {
-            ctx.arc(radius * (1 - phase), moonPos, radius * 0.4, 0, (2 * Math.PI));
-            ctx.fillStyle = 'gray';
-        } else if (phase > 0.25 && phase < 0.5) {
-            ctx.globalCompositeOperation = 'overlay';
-            ctx.arc(radius * (0.5 - phase), moonPos, radius * 0.4, 0, (2 * Math.PI));
-            ctx.fillStyle = 'white';
-        } else if (phase > 0.5 && phase < 0.75) {
-            ctx.globalCompositeOperation = 'overlay';
-            ctx.arc(radius * -(phase - 0.5), moonPos, radius * 0.4, 0, (2 * Math.PI));
-            ctx.fillStyle = 'white';
-        }
-    }
-    ctx.fill();
-    moonPos -= moonInterval;
-
-    if (moonPos <= moonPosEnd) {
-        window.requestAnimationFrame(generateMoonPhase.bind(null, phase, moonPos));
-    } else {
-        window.cancelAnimationFrame(animMoonID);
-        moonPos = undefined;
-    }
 }
 
 function toggleCitySearch() {
