@@ -1,18 +1,16 @@
 "use strict";
-class Barometer {
-    constructor(h) {
-        this.pressure = h;
+class Barometer extends ElementTile {
+    constructor() {
+        super('Pressure', 'weight', ['pressureData'], 'elementRowThree');
         this.baseW = 0;
         this.baseH = 0;
         this.radius = 0;
-        this.drawBarometer();
     }
-    drawBarometer() {
-        let pressureElement = document.getElementById('pressure');
-        if (pressureElement) {
-            this.baseW = pressureElement.clientWidth * 0.7;
-            this.baseH = pressureElement.clientHeight * 0.7;
-            this.radius = pressureElement.clientWidth / 2;
+    drawBarometer(p) {
+        if (this.element) {
+            this.baseW = this.element.clientWidth * 0.7;
+            this.baseH = this.element.clientHeight * 0.7;
+            this.radius = this.element.clientWidth / 2;
         }
         let barometer = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         barometer.setAttribute('width', this.baseW.toFixed(0));
@@ -22,9 +20,7 @@ class Barometer {
         circle.setAttribute('stroke-width', '2');
         circle.setAttribute('fill', 'transparent');
         circle.setAttribute('d', `M ${this.baseW * 0.1} ${this.radius} C 0 0, ${this.baseW} 0, ${this.baseW * 0.9} ${this.radius}`);
-        // currentPressure.innerText = `${Math.round(data.pressure)} hPa`;
-        // currentInhg.innerText = `${(data.pressure * 0.02953).toFixed(2)} inHg`;
-        let hpa = this.pressure;
+        let hpa = p;
         let inhg = hpa * 0.02953;
         let pressure = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         pressure.setAttribute('x', '50%');
@@ -33,31 +29,33 @@ class Barometer {
         pressure.setAttribute('fill', 'var(--font-color)');
         pressure.setAttribute('font-size', '0.75rem');
         pressure.textContent = `${inhg.toFixed(2)} inHg`;
-        let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        line.setAttribute('x1', (this.baseW / 2).toFixed(0));
-        line.setAttribute('y1', '25%');
-        line.setAttribute('x2', (this.baseW / 2).toFixed(0));
-        line.setAttribute('y2', '20');
+        let pascals = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        pascals.setAttribute('x', '50%');
+        pascals.setAttribute('y', '60%');
+        pascals.setAttribute('text-anchor', 'middle');
+        pascals.setAttribute('fill', 'var(--font-color)');
+        pascals.setAttribute('font-size', '0.75rem');
+        pascals.textContent = `${hpa.toFixed(0)} hPa`;
+        let line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        line.setAttribute('d', `M${(this.baseW / 2).toFixed(0)} ${this.baseH / 4} L${(this.baseW / 2).toFixed(0)} 20`);
         line.setAttribute('style', 'stroke:var(--font-color); stroke-width:1;');
-        let rotation = (inhg - 29.00) * 2;
-        if (rotation > 1.05) {
-            rotation = rotation - 1.05;
-        }
-        else if (rotation < 1.05) {
-            rotation = (1.05 - rotation);
-            rotation = -rotation;
-        }
-        else {
+        let rotation = 0;
+        if (inhg == 0.00) {
             rotation = 0;
         }
-        rotation *= 100;
-        line.setAttribute('transform', `rotate(${rotation.toFixed(0)}, ${this.baseW / 2}, ${this.baseH / 2});`);
+        else if (inhg < 30.00) {
+            rotation = (inhg - 30.00) * 4;
+        }
+        rotation *= 10;
+        line.setAttribute('transform', `rotate(${rotation.toFixed(1)}, ${(this.baseW / 2).toFixed(0)}, ${(this.baseH / 1.75).toFixed(0)})`);
         barometer.append(circle);
         barometer.append(line);
         barometer.append(pressure);
-        if (currentPressure) {
-            currentPressure.innerHTML = '';
-            currentPressure.append(barometer);
+        barometer.append(pascals);
+        let miniData = document.getElementById('pressureData');
+        if (miniData) {
+            miniData.innerHTML = '';
+            miniData.append(barometer);
         }
     }
 }
