@@ -30,13 +30,13 @@ class Celestial {
         this.Sun.populate(this.Sun, data.todaily, data, this.place);
         document.addEventListener('scroll', this.celestialTriggers.bind(this, data));
         this.Sun.animSunId = window.requestAnimationFrame(this.Sun.populate.bind(this.Sun, data.todaily, data, this.place));
-        this.animMoonId = window.requestAnimationFrame(this.Moon.populate.bind(this.Moon, data.moon_phase));
+        this.animMoonId = window.requestAnimationFrame(this.Moon.populate.bind(this.Moon, data));
     }
     celestialTriggers(data) {
         if (this.celestialRow.getBoundingClientRect().bottom > 0 && !this.trigger) {
             this.trigger = true;
             this.Sun.animSunId = window.requestAnimationFrame(this.Sun.populate.bind(this.Sun, data.todaily, data, this.place));
-            this.animMoonId = window.requestAnimationFrame(this.Moon.populate.bind(this.Moon, data.moon_phase));
+            this.animMoonId = window.requestAnimationFrame(this.Moon.populate.bind(this.Moon, data));
         }
         else if (this.celestialRow.getBoundingClientRect().bottom <= 0 && this.trigger) {
             window.cancelAnimationFrame(this.Sun.animSunId);

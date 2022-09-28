@@ -160,35 +160,6 @@ function generateMoonPhase(phase, moonPos) {
     element.append(canv);
 }
 
-function drawHand(ctx, pos, length, width) {
-    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-    ctx.beginPath();
-    ctx.lineWidth = width;
-    ctx.lineCap = "round";
-    ctx.moveTo(0, 0);
-    ctx.rotate(pos);
-    ctx.lineTo(0, -length);
-    ctx.stroke();
-    ctx.rotate(-pos);
-}
-
-function drawMini(ctx, pos, length, color) {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.rotate(pos);
-    ctx.arc(0, -length, length * 0.1, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.rotate(-pos);
-}
-
-function drawOuterRim(ctx, radius, pos) {
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-    ctx.lineWidth = radius * 0.075;
-    ctx.arc(0, 0, radius * 0.8, 1.5 * Math.PI, pos - 1.5);
-    ctx.stroke();
-}
-
 function animateMoon(ctx, radius, moonPos, phase) {
     let moonPosEnd = -ctx.canvas.height / 6;
     let moonPosStart = -(ctx.canvas.height / 4);

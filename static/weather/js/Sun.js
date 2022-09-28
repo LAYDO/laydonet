@@ -15,7 +15,7 @@ class Sun extends ElementTile {
     populate(todaily, data, place) {
         var _a;
         clearInterval(this.remainInterval);
-        this.remainInterval = setInterval(this.sunRemaining.bind(this, data), 1000);
+        this.remainInterval = setInterval(this.sunRemaining.bind(this, data));
         this.riseUnix = todaily.sunrise;
         this.setUnix = todaily.sunset;
         let diff = this.setUnix - this.riseUnix;
@@ -28,7 +28,6 @@ class Sun extends ElementTile {
         let daylightText = `${hours}hrs ${mins}mins`;
         let sunrise = this.convertToAdjustedRadians(this.riseUnix);
         let sunset = this.convertToAdjustedRadians(this.setUnix);
-        // let sunGraphic = document.getElementById('sunGraphic2')!;
         this.baseW = ((_a = this.sunGraphic) === null || _a === void 0 ? void 0 : _a.clientWidth) * 0.9;
         this.radius = this.baseW / 2;
         this.sunGraphic.innerHTML = '';
@@ -132,8 +131,7 @@ class Sun extends ElementTile {
         totalM = (totalM / 4) * (Math.PI / 180);
         let interval = (totalMr + 0.5) / 60;
         this.drawHand(place);
-        // drawMini(ctx, place, this.radius * 0.8, 'white');
-        // drawOuterRim(ctx, this.radius, place);
+        this.drawMini(place);
         place += interval;
         if (place <= totalM) {
             window.requestAnimationFrame(this.populate.bind(this, todaily, data, place));
@@ -205,9 +203,24 @@ class Sun extends ElementTile {
         line.setAttribute('x1', (this.baseW / 2).toFixed(0));
         line.setAttribute('y1', this.radius.toFixed(0));
         line.setAttribute('x2', (this.baseW / 2).toFixed(0));
-        line.setAttribute('y2', '20');
+        line.setAttribute('y2', (this.radius * 0.15).toFixed(0));
         line.setAttribute('style', 'stroke:var(--font-color); stroke-width: 2;');
         line.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.baseW / 2}, ${this.baseW / 2})`);
         document.getElementById('sunSVG').append(line);
+    }
+    drawMini(place) {
+        let m = document.getElementById('mini');
+        if (m) {
+            m.innerHTML = '';
+        }
+        let mini = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        mini.id = 'mini';
+        mini.setAttribute('cx', (this.baseW / 2).toFixed(0));
+        mini.setAttribute('cy', (this.radius * 0.15).toFixed(0));
+        mini.setAttribute('r', ((this.radius * 0.8) * 0.1).toFixed(0));
+        mini.setAttribute('stroke', 'none');
+        mini.setAttribute('fill', 'white');
+        mini.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.baseW / 2}, ${this.baseW / 2})`);
+        document.getElementById('sunSVG').append(mini);
     }
 }

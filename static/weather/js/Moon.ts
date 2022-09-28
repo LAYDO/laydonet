@@ -1,10 +1,72 @@
 class Moon extends ElementTile {
+    private remainInterval: number;
+    public animMoonId: number;
+    private baseW: number;
+    private radius: number;
+    private moonGraphic: HTMLElement;
+
     constructor() {
         super('Moon', 'moon', ['moonData', 'moonGraphic2'], 'celestialRow', ['moonRemain']);
+        this.remainInterval = 0;
+        this.animMoonId = 0;
+        this.baseW = 0;
+        this.radius = 0;
+        this.moonGraphic = document.getElementById('moonGraphic2')!;
     }
 
     populate(data: any) {
+        clearInterval(this.remainInterval);
+        this.remainInterval = setInterval(this.moonRemaining.bind(this, data));
 
+        this.baseW = this.moonGraphic?.clientWidth * 0.9;
+        this.radius = this.baseW / 2;
+
+        this.moonGraphic.innerHTML = '';
+
+        let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        svg.setAttribute('width', this.baseW.toFixed(0));
+        svg.setAttribute('height', this.baseW.toFixed(0));
+        svg.id = 'moonSVG';
+
+        // Black background
+        let background = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        background.setAttribute('cx', (this.baseW / 2).toFixed(0));
+        background.setAttribute('cy', (this.baseW / 2).toFixed(0));
+        background.setAttribute('r', this.radius.toFixed(0));
+        background.setAttribute('stroke', 'none');
+        background.setAttribute('fill', 'black');
+
+        let phase = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        phase.setAttribute('x', (this.baseW / 2).toFixed(0));
+        phase.setAttribute('y', (this.radius * 1.5).toFixed(0));
+        phase.setAttribute('text-anchor', 'middle');
+        phase.setAttribute('fill', 'var(--font-color)');
+        phase.setAttribute('font-size', '1rem');
+        let moon_phase = data.moon_phase;
+        let phaseText = '';
+        if (moon_phase == 0 || moon_phase == 1) {
+            phaseText = 'New Moon';
+        } else if (moon_phase > 0 && moon_phase < 0.25) {
+            phaseText = 'Waxing Crescent';
+        } else if (moon_phase == 0.25) {
+            phaseText = 'First Quarter Moon';
+        } else if (moon_phase > 0.25 && moon_phase < 0.5) {
+            phaseText = 'Waxing Gibbous';
+        } else if (moon_phase == 0.5) {
+            phaseText = 'Full Moon';
+        } else if (moon_phase > 0.5 && moon_phase < 0.75) {
+            phaseText = 'Waning Gibbous';
+        } else if (moon_phase == 0.75) {
+            phaseText = 'Last Quarter Moon';
+        } else if (moon_phase > 0.75 && moon_phase < 1) {
+            phaseText = 'Waning Crescent';
+        }
+        phase.textContent = phaseText;
+
+        svg.append(background);
+        svg.append(phase);
+
+        this.moonGraphic.append(svg);
     }
 
     moonRemaining(data: any) {
