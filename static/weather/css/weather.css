@@ -234,13 +234,6 @@
   padding: 1rem 0;
 }
 
-/* #sun,
-#moon {
-  display: flex;
-  margin-left: 0.25rem;
-  flex: 0 0 100%;
-} */
-
 .celestial-stat {
   font-size: 2rem;
 }
@@ -312,6 +305,10 @@ h2 {
   margin-top: 0.25rem;
 }
 
+#currentWeather {
+  flex-direction: column;
+}
+
 #currentWeather,
 #hfc,
 #dailyForecast,
@@ -349,4 +346,46 @@ h2 {
 .pad-right {
   margin-right: 0.25rem;
   color: var(--font-faded);
+}
+
+@media only screen and (min-width: 37.5rem) {
+  #Weather {
+    display: flex;
+    flex-direction: row;
+    min-height: 88vh;
+  }
+
+  .laydo-column {
+    display: flex;
+    flex-direction: column;
+    width: 32%;
+    justify-content: space-between;
+  }
+
+  #currentWeather {
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .elements-row {
+    justify-content: space-around;
+  }
+
+  #elementTiles {
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  #mapid {
+    height: 26rem;
+  }
+
+  #credits {
+    justify-content: center;
+  }
+
+  .element-tile {
+    min-width: 20rem;
+    min-height: 20rem;
+  }
 }

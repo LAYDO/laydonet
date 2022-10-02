@@ -33,7 +33,7 @@ class Current {
     }
     toggle(loaded) {
         if (loaded) {
-            this.currentElement.style.display = 'inherit';
+            this.currentElement.style.display = 'flex';
             this.cityName.style.display = 'inherit';
         }
         else {

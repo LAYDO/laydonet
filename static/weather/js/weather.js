@@ -99,7 +99,7 @@ function load() {
     this.elements.toggle(this.loading);
     this.celestial.toggle(this.loading);
 
-    credits.style.display = this.loading ? 'inherit' : 'none';
+    credits.style.display = this.loading ? 'flex' : 'none';
     loader.style.display = this.loading ? 'none' : 'inline-block';
 
     this.loading = !this.loading;
