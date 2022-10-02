@@ -54,7 +54,7 @@ class Current {
 
     toggle(loaded: Boolean) {
         if (loaded) {
-            this.currentElement.style.display = 'inherit';
+            this.currentElement.style.display = 'flex';
             this.cityName.style.display = 'inherit';
         } else {
             this.currentElement.style.display = 'none';

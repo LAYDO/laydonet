@@ -8,17 +8,23 @@
 {% block laydo_content_1 %}
 <div id="Weather" class="laydo-app">
   <div id="loader" class="loader"></div>
-  <div id="citySection" class="city-search">
-    <input type="text" id="citySearch" name="citySearch" placeholder="Enter a city" />
-    <button id="weatherSearch" onclick="getCurrentWeather()"><span id="searchIcon" class="fas fa-search"></span></button><br />
+  <div class="laydo-column">
+    <div id="citySection" class="city-search">
+      <input type="text" id="citySearch" name="citySearch" placeholder="Enter a city" />
+      <button id="weatherSearch" onclick="getCurrentWeather()"><span id="searchIcon" class="fas fa-search"></span></button><br />
+    </div>
+    <div id="currentWeather"></div>
+    <div id="celestialSection" class="elements-column"></div>
+    <div id="map" class="container-forecast"></div>
   </div>
-  <div id="currentWeather"></div>
-  <div id="hfc" class="container-forecast"></div>
-  <div id="celestialSection" class="elements-column"></div>
-  <div id="dailyForecast" class="container-forecast"></div>
-  <div id="map" class="container-forecast"></div>
-  <div id="elementTiles" class="elements-column"></div>
-  <div id="credits" class="sub-data">Weather data provided by <a href="https://openweathermap.org">OpenWeather</a></div>
+  <div class="laydo-column">
+    <div id="hfc" class="container-forecast"></div>
+    <div id="dailyForecast" class="container-forecast"></div>
+  </div>
+  <div class="laydo-column">
+    <div id="elementTiles" class="elements-column"></div>
+    <div id="credits" class="sub-data">Weather data provided by <a href="https://openweathermap.org">OpenWeather</a></div>
+  </div>
 </div>
 {% endblock %} {% block page_scripts %}
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
