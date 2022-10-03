@@ -44,7 +44,7 @@ class Moon extends ElementTile {
         rect.setAttribute('height', '100%');
         rect.setAttribute('width', '100%');
         rect.setAttribute('fill', 'white');
-        // this.moon_phase = 0; // For testing
+        // this.moon_phase = 0.95; // For testing
         let shadow;
         if (this.moon_phase == 0.25 || this.moon_phase == 0.75) {
             shadow = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -55,7 +55,7 @@ class Moon extends ElementTile {
         else {
             shadow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             shadow.setAttribute('cy', (this.baseW / 2.5).toFixed(0));
-            shadow.setAttribute('r', (this.radius * 0.5).toFixed(0));
+            shadow.setAttribute('r', (this.radius * 0.51).toFixed(0));
         }
         // Moon
         let moon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -64,7 +64,8 @@ class Moon extends ElementTile {
         moon.setAttribute('r', (this.radius * 0.5).toFixed(0));
         moon.setAttribute('stroke', 'none');
         if ((this.moon_phase > 0.25 && this.moon_phase < 0.5) || (this.moon_phase > 0.5 && this.moon_phase < 0.75)) {
-            moon.setAttribute('fill', '#191919');
+            rect.setAttribute('fill', '#191919');
+            moon.setAttribute('fill', 'white');
             shadow.setAttribute('fill', 'white');
         }
         else {
@@ -85,7 +86,7 @@ class Moon extends ElementTile {
             this.phaseText = 'First Quarter Moon';
         }
         else if (this.moon_phase > 0.25 && this.moon_phase < 0.5) {
-            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * (0.5 - this.moon_phase))).toFixed(0));
+            shadow.setAttribute('cx', ((this.baseW / 2) + (this.radius * (0.5 - this.moon_phase))).toFixed(0));
             this.phaseText = 'Waxing Gibbous';
         }
         else if (this.moon_phase == 0.5) {
@@ -100,7 +101,7 @@ class Moon extends ElementTile {
             this.phaseText = 'Last Quarter Moon';
         }
         else if (this.moon_phase > 0.75 && this.moon_phase < 1) {
-            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * (1 - this.moon_phase))).toFixed(0));
+            shadow.setAttribute('cx', ((this.baseW / 2) + (this.radius * (1 - this.moon_phase))).toFixed(0));
             this.phaseText = 'Waning Crescent';
         }
         phase.textContent = this.phaseText;
