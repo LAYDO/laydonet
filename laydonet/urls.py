@@ -28,4 +28,5 @@ urlpatterns = [
     path('trackiss/', include('trackiss.urls')),
     path('jwst/', include('jwst.urls')),
     path('mtg/', include('mtg.urls')),
+    path('webapps/', include('webapps.urls')),
 ]
