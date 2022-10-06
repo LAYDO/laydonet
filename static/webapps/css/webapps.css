@@ -17,8 +17,8 @@
 }
 
 .app-button {
-    height: 10rem;
-    width: 10rem;
+    height: 5rem;
+    width: 5rem;
     background-color: transparent;
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.0625rem 0.25rem;
     border-radius: 25%;
@@ -46,7 +46,7 @@
 }
 
 .app-title {
-    font-size: 2rem;
+    font-size: 1rem;
 }
 
 #trackiss {
@@ -55,4 +55,15 @@
 
 #jwst {
     background-image: url('/static/jwst/img/jwst.svg');
+}
+
+@media only screen and (min-width: 37.5rem) {
+    .app-button {
+        height: 10rem;
+        width: 10rem;
+    }
+
+    .app-title {
+        font-size: 2rem;
+    }
 }
