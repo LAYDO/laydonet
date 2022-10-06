@@ -23,7 +23,7 @@
     box-shadow: rgba(0, 0, 0, 0.25) 0 0.0625rem 0.25rem;
     border-radius: 25%;
     cursor: pointer;
-    background-position: center;
+    background-position: inherit;
     background-size: cover;
     background-repeat: no-repeat;
 }
@@ -57,10 +57,22 @@
     background-image: url('/static/jwst/img/jwst.svg');
 }
 
+#weather {
+    background-image: url('/static/weather/img/weatherIcon.svg');
+}
+
+#allergies {
+    background-image: url('/static/allergies/img/paw-print.jpg');
+}
+
+#mtg {
+    background-image: url('/static/mtg/img/mtgIcon.svg');
+}
+
 @media only screen and (min-width: 37.5rem) {
     .app-button {
-        height: 10rem;
-        width: 10rem;
+        min-height: 10rem;
+        min-width: 10rem;
     }
 
     .app-title {
