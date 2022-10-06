@@ -1,0 +1,23 @@
+<svg height="100" width="100" viewbox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<defs>
+    <linearGradient id="mtgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" style="stop-color:#800000;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#ff0000;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+	<path d="
+        M10 50
+        L12 20
+        Q22 85 30 10
+        Q42 95 50 1
+        Q62 95 70 10
+        Q82 85 88 20
+        L90 50
+        Q50 60 10 50
+        
+        M50 100
+        Q 45 55 10 50 
+        Q 50 30 90 50
+        Q 55 55 50 100
+        " stroke="none" fill="url(#mtgGrad)" />
+</svg>

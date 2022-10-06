@@ -1,0 +1,32 @@
+{% extends "app.html" %} {% load static %} {% block page_head %}
+<link rel="stylesheet" href="{% static 'webapps/css/webapps.css' %}" />
+{% endblock %} 
+{% block laydo_content_1 %}
+<div class="apps-space">
+    <div class="app-claim">
+        <button class="app-button" id="trackiss" onclick="redirect(event)"></button>
+        <h3 class="app-title">Track ISS</h3>
+    </div>
+    <div class="app-claim">
+        <button class="app-button" id="jwst" onclick="redirect(event)"></button>
+        <h3 class="app-title">JWST</h3>
+    </div>
+    <div class="app-claim">
+        <button class="app-button" id="weather" onclick="redirect(event)"></button>
+        <h3 class="app-title">Weather</h3>
+    </div>
+    <div class="app-claim">
+        <button class="app-button" id="schedule" onclick="redirect(event)"></button>
+        <h3 class="app-title">Schedule</h3>
+    </div>
+    <div class="app-claim">
+        <button class="app-button" id="allergies" onclick="redirect(event)"></button>
+        <h3 class="app-title">Allergies</h3>
+    </div>
+    <div class="app-claim">
+        <button class="app-button" id="mtg" onclick="redirect(event)"></button>
+        <h3 class="app-title">MTG</h3>
+    </div>
+</div>
+{% endblock %} {% block page_scripts %}
+{% endblock %}
