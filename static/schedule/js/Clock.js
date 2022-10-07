@@ -15,16 +15,18 @@ class Clock {
         this.circle.setAttribute('stroke', 'var(--font-color)');
         this.circle.setAttribute('fill', 'transparent');
         this.circle.setAttribute('stroke-width', '3');
-        for (let i = 0; i < this.numbers.length; i++) {
-            let hour = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-            hour.setAttribute('x', '50%');
-            hour.setAttribute('y', (this.baseW / 6.5).toFixed(0));
-            hour.setAttribute('text-anchor', 'middle');
-            hour.setAttribute('fill', 'var(--font-color)');
-            hour.setAttribute('font-size', '1rem');
-            hour.textContent = this.numbers[i].toFixed(0);
-            hour.setAttribute('transform', `rotate(${(i + 1) * 30}, ${this.baseW / 2}, ${this.baseW / 2})`);
-            this.clock.append(hour);
+        if (this.baseW > 300) {
+            for (let i = 0; i < this.numbers.length; i++) {
+                let hour = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                hour.setAttribute('x', '50%');
+                hour.setAttribute('y', (this.baseW / 6.5).toFixed(0));
+                hour.setAttribute('text-anchor', 'middle');
+                hour.setAttribute('fill', 'var(--font-color)');
+                hour.setAttribute('font-size', '1rem');
+                hour.textContent = this.numbers[i].toFixed(0);
+                hour.setAttribute('transform', `rotate(${(i + 1) * 30}, ${this.baseW / 2}, ${this.baseW / 2})`);
+                this.clock.append(hour);
+            }
         }
         this.clock.append(this.circle);
         element.innerHTML = '';
