@@ -3,7 +3,7 @@ let overlay = document.getElementById('laydoOverlay');
 let prevScrollPos = window.scrollY;
 window.onscroll = () => {
     let currentScrollPos = window.scrollY;
-    if (prevScrollPos > currentScrollPos) {
+    if (prevScrollPos > currentScrollPos && (Math.abs(prevScrollPos - currentScrollPos) > 50)) {
         document.getElementById('laydoMNavbar').style.top = "0px";
     } else {
         document.getElementById('laydoMNavbar').style.top = "-50px";
