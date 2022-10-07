@@ -3,12 +3,12 @@ let overlay = document.getElementById('laydoOverlay');
 let prevScrollPos = window.scrollY;
 window.onscroll = () => {
     let currentScrollPos = window.scrollY;
-    if (prevScrollPos > currentScrollPos && (Math.abs(prevScrollPos - currentScrollPos) > 50)) {
+    if (prevScrollPos > currentScrollPos) {
         document.getElementById('laydoMNavbar').style.top = "0px";
     } else {
         document.getElementById('laydoMNavbar').style.top = "-50px";
     }
-    prevScrollPos = currentScrollPos;
+    prevScrollPos = currentScrollPos + 1;
 }
 
 // Sets theme
