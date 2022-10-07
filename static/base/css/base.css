@@ -119,6 +119,7 @@ body {
 #laydoHomeOne,
 #laydoHomeTwo {
   min-height: 90vh;
+  margin-top: 4rem;
 }
 
 .laydo-title,
@@ -157,7 +158,7 @@ body {
 }
 
 .laydo-mobile-nav {
-  position: relative;
+  position: fixed;
   top: 0;
   right: 0;
   z-index: 999;
@@ -168,6 +169,11 @@ body {
   justify-content: space-between;
   align-items: center;
   background-color: transparent;
+}
+
+#laydoMNavbar {
+  background-color: var(--color-primary);
+  transition: top 0.3s;
 }
 
 .laydo-nav-menu {
@@ -339,11 +345,6 @@ body {
   #laydoNavIcon {
     padding: 1rem 2rem;
   }
-}
-
-#laydoMNavbar {
-  background-color: var(--color-primary);
-  min-height: 5vh;
 }
 
 .period-active {

@@ -29,4 +29,5 @@ urlpatterns = [
     path('jwst/', include('jwst.urls')),
     path('mtg/', include('mtg.urls')),
     path('webapps/', include('webapps.urls')),
+    path('websites/', include('websites.urls')),
 ]

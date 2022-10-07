@@ -1,5 +1,16 @@
 let overlay = document.getElementById('laydoOverlay');
 
+let prevScrollPos = window.scrollY;
+window.onscroll = () => {
+    let currentScrollPos = window.scrollY;
+    if (prevScrollPos > currentScrollPos) {
+        document.getElementById('laydoMNavbar').style.top = "0px";
+    } else {
+        document.getElementById('laydoMNavbar').style.top = "-50px";
+    }
+    prevScrollPos = currentScrollPos;
+}
+
 // Sets theme
 if (localStorage.getItem('theme') === 'theme-dark') {
     setTheme('theme-dark');

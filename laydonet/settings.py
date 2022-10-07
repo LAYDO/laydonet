@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'jwst',
     'mtg',
     'webapps',
+    'websites',
 ]
 
 MIDDLEWARE = [
