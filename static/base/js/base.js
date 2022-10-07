@@ -5,7 +5,7 @@ window.onscroll = () => {
     let currentScrollPos = window.scrollY;
     if (prevScrollPos > currentScrollPos) {
         document.getElementById('laydoMNavbar').style.top = "0px";
-    } else if (document.getElementById('laydoHomeOne').getBoundingClientRect().top == 0) {
+    } else if (document.getElementById('laydoHomeOne').getBoundingClientRect().top >= 0) {
         document.getElementById('laydoMNavbar').style.top = "0px";
     } else {
         document.getElementById('laydoMNavbar').style.top = "-50px";
