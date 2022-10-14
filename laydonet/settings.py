@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'mtg',
     'webapps',
     'websites',
+    'blog',
 ]
 
 MIDDLEWARE = [
