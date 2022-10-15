@@ -30,5 +30,5 @@ urlpatterns = [
     path('mtg/', include('mtg.urls')),
     path('webapps/', include('webapps.urls')),
     path('websites/', include('websites.urls')),
-    path('blog/', include('websites.urls')),
+    path('blog/', include('blog.urls')),
 ]
