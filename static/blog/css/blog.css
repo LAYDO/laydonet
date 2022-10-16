@@ -1,0 +1,9 @@
+.blog-space {
+    display: flex;
+    flex-direction: column;
+    border: 0.125rem solid var(--font-color);
+    border-radius: 3%;
+    width: 96%;
+    min-height: 90vh;
+    margin: 0 2%;
+}
