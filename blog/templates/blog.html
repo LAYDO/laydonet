@@ -3,8 +3,10 @@
 {% endblock %} 
 {% block laydo_content_1 %}
 <div class="blog-space">
-    {% for post in post_list %}
-    {% endfor %}
+    <div class="blog-container">
+        {% for post in post_list %}
+        {% endfor %}
+    </div>
 </div>
 {% endblock %} {% block page_scripts %}
 <script type="text/javascript" src="{% static 'blog/js/blog.js' %}"></script>

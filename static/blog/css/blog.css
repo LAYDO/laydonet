@@ -5,5 +5,12 @@
     border-radius: 3%;
     width: 96%;
     min-height: 90vh;
-    margin: 0 2%;
+    margin: 0 1%;
+}
+
+.blog-container {
+    background-image: radial-gradient(var(--font-faded) 1px, transparent 0);
+    background-size: 1.5rem 1.5rem;
+    min-height: 90vh;
+    margin: 1rem;
 }
