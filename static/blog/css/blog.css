@@ -1,16 +1,52 @@
 .blog-space {
     display: flex;
     flex-direction: column;
-    border: 0.125rem solid var(--font-color);
-    border-radius: 3%;
-    width: 96%;
     min-height: 90vh;
-    margin: 0 1%;
 }
 
-.blog-container {
-    background-image: radial-gradient(var(--font-faded) 1px, transparent 0);
-    background-size: 1.5rem 1.5rem;
-    min-height: 90vh;
+.post-container {
+    width: 96%;
+    border: 0.125rem solid var(--font-color);
+    border-radius: 1rem;
     margin: 1rem;
+    background-image: radial-gradient(var(--font-faded50) 1px, transparent 0);
+    background-size: 1.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: baseline;
+}
+
+.post-container h1,
+.post-container p {
+    margin-top: 1.5rem;
+    margin-bottom: 0.25rem;
+    margin-left: 1rem;
+    color: var(--font-color);
+    text-align: left;
+}
+
+.post-creds {
+    color: var(--font-faded);
+    margin: 0 1rem;
+}
+
+.post-slice {
+    text-align: start;
+    background: -webkit-linear-gradient(var(--font-color), rgba(255, 255, 255, 0.1));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.post-read {
+    text-decoration: none;
+    padding: 1rem;
+    color: var(--color-primary);
+    background-color: var(--font-color);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    margin-top: 1.5rem;
+    /* margin-bottom: 0.25rem; */
+    margin-left: 1rem;
+
 }
