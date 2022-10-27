@@ -6,9 +6,24 @@
     <div class="post-container">
         <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
         <p class="post-creds">{{ post.author }} | {{ post.created_on }}</p>
-        <p class="post-content">{{ object.content | linebreaks }}</p>
+        <p class="post-content">{{ object.content1 | linebreaks }}</p>
+        {% if object.tweetHref %}
+        <div id="tweetOne" class="post-tweet">
+            <blockquote class="twitter-tweet" data-dnt="true" data-theme="dark">
+                <p lang="en" dir="ltr">{{ post.tweetContent}}</p>
+                &mdash; {{ post.tweetUser }} <a href="{{ object.tweetHref }}">{{ post.tweetDate }}</a>
+            </blockquote>
+        </div>
+        {% endif %}
+        {% if object.href1 %}
+        <a class="post-link" href="{{ object.href1 }}">{{ object.href1 }}</a>
+        {% endif %}
+        <p class="post-content">{{ object.content2 | linebreaks }}</p>
+        <a class="post-link" href="{{ object.href2 }}">{{ object.href2 }}</a>
+        <p class="post-content">{{ object.content3 | linebreaks }}</p>
     </div>
 </div>
 {% endblock %} {% block page_scripts %}
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> 
 <script type="text/javascript" src="{% static 'blog/js/blog.js' %}"></script>
 {% endblock %}

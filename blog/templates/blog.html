@@ -8,7 +8,7 @@
         <div class="post-container">
             <h1>{{ post.title }}</h1>
             <p class="post-creds">{{ post.author }} | {{ post.created_on }}</p>
-            <p class="post-slice">{{ post.content|slice:":300" }}</p>
+            <p class="post-slice">{{ post.content1|slice:":300" }}</p>
             <a class="post-read" href="{% url 'post_detail' post.slug %}">Read More &rarr;</a>
         </div>
         {% endfor %}
