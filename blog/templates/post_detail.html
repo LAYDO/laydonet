@@ -16,10 +16,12 @@
         </div>
         {% endif %}
         {% if object.href1 %}
-        <a class="post-link" href="{{ object.href1 }}">{{ object.href1 }}</a>
+        <a class="post-link" target="_blank" href="{{ object.href1 }}">{{ object.hrefName1 }}</a>
         {% endif %}
         <p class="post-content">{{ object.content2 | linebreaks }}</p>
-        <a class="post-link" href="{{ object.href2 }}">{{ object.href2 }}</a>
+        {% if object.href2 %}
+        <a class="post-link" target="_blank" href="{{ object.href2 }}">{{ object.hrefName2 }}</a>
+        {% endif %}
         <p class="post-content">{{ object.content3 | linebreaks }}</p>
     </div>
 </div>
