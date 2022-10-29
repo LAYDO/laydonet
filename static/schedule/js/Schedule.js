@@ -8,7 +8,7 @@ class Schedule {
         this.periodsElement = document.getElementById('periods');
         this.time = new Date();
         this.schedule = data;
-        console.log(this.schedule);
+        // console.log(this.schedule);
         this.clock = new Clock(this.clockElement);
         setInterval(this.updateTime.bind(this));
     }

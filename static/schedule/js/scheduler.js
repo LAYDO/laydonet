@@ -14,7 +14,7 @@ function setSchedule() {
         return response.json();
     }).then(data => {
         let s = new Schedule(data);
-        console.log(s);
+        // console.log(s);
         // setInterval(flipInfo, 7000);
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);

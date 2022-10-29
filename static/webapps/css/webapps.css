@@ -26,6 +26,7 @@
     background-position: inherit;
     background-size: cover;
     background-repeat: no-repeat;
+    padding: 0;
 }
 
 @keyframes appOpen {

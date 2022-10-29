@@ -15,7 +15,7 @@ class Schedule {
 
         this.time = new Date();
         this.schedule = data;
-        console.log(this.schedule);
+        // console.log(this.schedule);
         this.clock = new Clock(this.clockElement);
         setInterval(this.updateTime.bind(this));
 
