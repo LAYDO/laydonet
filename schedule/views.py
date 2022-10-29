@@ -42,7 +42,7 @@ def getSchedule(self):
                     str(data.text))
             else:
                 mClasses.append(str(data.text)) if mT else fClasses.append(
-                    str(data.text))
+                    str(data.text.replace('\n','').replace('\xa0','')))
     if (today.weekday() >= 0 and today.weekday() < 4):
         print('========MONTHURS==========')
         # print(mTimes, mClasses)
@@ -110,7 +110,7 @@ class Schedule:
         # print(data)
         if (data and len(data['times']) == len(data['periods'])):
             for idx, period in enumerate(data['periods']):
-                if ('period' in period.lower().replace(' ', '')):
+                if ('period' in period.lower().replace(' ', '') or 'home' in period.lower().replace(' ', '')):
                     x = Period(period, data['times'][idx])
                     constructPeriods(x)
                 elif (period.startswith(aieLunch) and 'lunch' in period.lower().replace(' ', '')):
