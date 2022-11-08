@@ -23,10 +23,13 @@
   </div>
   <div class="laydo-column">
     <div id="elementTiles" class="elements-column"></div>
-    <div id="credits" class="sub-data">Weather data provided by <a href="https://openweathermap.org">OpenWeather</a></div>
   </div>
 </div>
-{% endblock %} {% block page_scripts %}
+{% endblock %}
+{% block laydo_footer %}
+<div id="credits" class="sub-data">Weather data provided by <a href="https://openweathermap.org">OpenWeather</a></div>
+{% endblock %}
+{% block page_scripts %}
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 <script type="text/javascript" src="{% static 'weather/js/ElementTile.js' %}"></script>
 <script type="text/javascript" src="{% static 'weather/js/Current.js' %}"></script>

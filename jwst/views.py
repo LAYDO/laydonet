@@ -36,7 +36,7 @@ def getSchedules(request):
             header=1,
             sep='\s{2,}',
             skipinitialspace=True,
-            error_bad_lines=False,
+            # error_bad_lines=False,
             engine='python',
         )
         # print(df)

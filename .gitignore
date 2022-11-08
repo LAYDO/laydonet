@@ -132,3 +132,5 @@ dmypy.json
 /static/admin/
 /static/staticfiles.json
 /staticfiles
+
+.DS_Store
