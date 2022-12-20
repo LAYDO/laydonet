@@ -4,7 +4,7 @@ window.onscroll = () => {
 
 for (var i = 0; i < 8; i++) {
     let img = document.createElement('img');
-    img.src = `/static/img/proposal/landenfinals-lauriejeanphotography-${i}.jpg`;
+    img.src = `/static/wedding/img/proposal/landenfinals-lauriejeanphotography-${i}.jpg`;
     img.className = 'apl-pic';
     document.getElementById('proposalGallery').append(img);
 }

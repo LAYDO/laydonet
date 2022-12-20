@@ -38,7 +38,7 @@ for (var i = 0; i < y.length; i++) {
 }
 for (var i = 0; i < 10; i++) {
     let img = document.createElement('img');
-    img.src = `/static/img/engagement/Aieleen-Landen-Engagement-${i}.jpg`;
+    img.src = `/static/wedding/img/engagement/Aieleen-Landen-Engagement-${i}.jpg`;
     img.className = 'apl-pic';
     document.getElementById('engagementGallery').append(img);
 }
