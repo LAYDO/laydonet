@@ -1,0 +1,25 @@
+{% extends "app.html" %} {% load static %}
+{% block page_head %}
+<title>Tic Tac Toe</title>
+<link rel="stylesheet" href="{% static 'tictactoe/css/ttt.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div class="laydo-container laydo-app">
+    <div class="container-title">Tic Tac Toe</div>
+    <div class="ttt-board" id="tttBoard"></div>
+    <div class="ttt-player-zone ttt-row">
+        <div class="ttt-board">
+            <div class="ttt-player">Player 1</div>
+            <svg id="evenSection" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+        <div class="ttt-board">
+            <div class="ttt-player">Player 2</div>
+            <svg id="oddSection" xmlns="http://www.w3.org/2000/svg"></svg>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static 'tictactoe/js/ttt.js' %}"></script>
+<script type="text/javascript" src="{% static 'tictactoe/js/game.js' %}"></script>
+{% endblock %}

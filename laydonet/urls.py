@@ -31,4 +31,5 @@ urlpatterns = [
     path('webapps/', include('webapps.urls')),
     path('websites/', include('websites.urls')),
     path('blog/', include('blog.urls')),
+    path('tictactoe/', include('tictactoe.urls')),
 ]
