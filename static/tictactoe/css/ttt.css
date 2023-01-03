@@ -1,11 +1,17 @@
+#tttBoard {
+    height: 37.5rem;
+}
 .ttt-board {
     width: 100%;
     height: 100%;
     padding: 1rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .ttt-square {
-    width: 7rem;
-    height: 7rem;
+    width: 8.5625rem;
+    height: 8.5625rem;
     background-color: transparent;
 }
 .ttt-player {
@@ -16,4 +22,31 @@
 .ttt-number {
     font: bold 3rem serif;
     fill: var(--font-color);
+    width: 2.5rem;
+    height: 3rem;
+    cursor: pointer;
+}
+.ttt-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.ttt-row-numbers {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.ttt-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.ttt-border-right {
+    border-right: 0.25rem solid var(--font-color);
+}
+.ttt-border-bottom {
+    border-bottom: 0.25rem solid var(--font-color);
+}
+.selected {
+    background-color: var(--color-primary);
 }
