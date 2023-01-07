@@ -54,6 +54,15 @@ class TicTacToe {
                 let s = document.createElement('div');
                 s.classList.add('ttt-square');
                 s.id = `square${localCount}`;
+                s.addEventListener('click', () => {
+                    if (this.selectedElement != null || this.selectedElement != "") {
+                        console.log(`${this.selectedElement}`);
+                        let t = document.getElementById(`text${this.selectedElement}`);
+                        if (t) {
+                            s.append(t);
+                        }
+                    }
+                })
                 switch (i) {
                     case 0:
                     case 1:
@@ -84,6 +93,7 @@ class TicTacToe {
             let text = document.createElement('div');
             text.classList.add('ttt-number');
             text.textContent = number.toFixed(0);
+            text.id = `text${i}`;
             text.addEventListener('click', () => {
                 if (document.querySelectorAll('.selected').length == 0) {
                     text.classList.add('selected');
