@@ -6,23 +6,7 @@
     <div class="post-container">
         <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
         <p class="post-creds">{{ post.author }} | {{ post.created_on }}</p>
-        <p class="post-content">{{ object.content1 | linebreaks }}</p>
-        {% if object.tweetHref %}
-        <div id="tweetOne" class="post-tweet">
-            <blockquote class="twitter-tweet" data-dnt="true" data-theme="dark">
-                <p lang="en" dir="ltr">{{ post.tweetContent}}</p>
-                &mdash; {{ post.tweetUser }} <a href="{{ object.tweetHref }}">{{ post.tweetDate }}</a>
-            </blockquote>
-        </div>
-        {% endif %}
-        {% if object.href1 %}
-        <a class="post-link" target="_blank" href="{{ object.href1 }}">{{ object.hrefName1 }}</a>
-        {% endif %}
-        <p class="post-content">{{ object.content2 | linebreaks }}</p>
-        {% if object.href2 %}
-        <a class="post-link" target="_blank" href="{{ object.href2 }}">{{ object.hrefName2 }}</a>
-        {% endif %}
-        <p class="post-content">{{ object.content3 | linebreaks }}</p>
+        <p class="post-content">{{ object.content | safe }}</p>
     </div>
 </div>
 {% endblock %} {% block page_scripts %}
