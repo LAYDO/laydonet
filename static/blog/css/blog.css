@@ -26,6 +26,10 @@
     text-align: left;
 }
 
+.post-container img {
+    width: 95%;
+}
+
 .post-creds {
     color: var(--font-faded);
     margin: 0 1rem;
