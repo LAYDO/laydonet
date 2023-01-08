@@ -33,8 +33,4 @@ urlpatterns = [
     path('webapps/', include('webapps.urls')),
     path('websites/', include('websites.urls')),
     path('blog/', include('blog.urls')),
-    path('summernote/', include('django_summernote.urls')),
 ]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
