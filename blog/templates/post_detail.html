@@ -6,7 +6,7 @@
     <div class="post-container">
         <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
         <p class="post-creds">{{ post.author }} | {{ post.created_on }}</p>
-        <p class="post-content">{{ object.content | safe }}</p>
+        <p class="post-content">{{ post.content.html | safe }}</p>
     </div>
 </div>
 {% endblock %} {% block page_scripts %}
