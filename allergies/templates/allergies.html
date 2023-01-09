@@ -3,14 +3,8 @@
 <title>Apollo Allergies</title>
 <link rel="stylesheet" href="{% static 'allergies/css/allergies.css' %}" />
 {% endblock %} 
-{% block page_header %}
-<div class="allergies-header" id="issHeader">
-    <div class="allergies-name">
-      <h1 class="title-name">Apollo's Allergies</h1>
-    </div>
-</div>
-{% endblock %} {% block laydo_content_1 %}
-<div class="allergies-section laydo-container">
+{% block laydo_content_1 %}
+<div class="allergies-section laydo-container laydo-app">
   <div class="allergies-app allergies-start" id="controlPanel">
     <span id="allergiesToggle" class="allergies-control fas fa-minus" onclick="showAllergies()"></span>
     <span id="allergiesCheck" class="allergies-control fas fa-spinner"></span>
