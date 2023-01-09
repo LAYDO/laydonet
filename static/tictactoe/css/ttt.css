@@ -13,6 +13,10 @@
     width: 8.5625rem;
     height: 8.5625rem;
     background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .ttt-player {
     font: bold 1.5rem serif;
@@ -48,5 +52,7 @@
     border-bottom: 0.25rem solid var(--font-color);
 }
 .selected {
-    background-color: var(--color-primary);
+    border: 0.25rem solid var(--font-color);
+    border-radius: 0.75rem;
+    /* background-color: var(--color-primary); */
 }
