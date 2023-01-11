@@ -1,12 +1,9 @@
 "use strict";
 class TicTacToe {
     constructor(board) {
-        this.lastRender = 0;
         this.round = 0;
         this.player1Turn = true;
         this.player2Turn = false;
-        this.odds = [1, 3, 5, 7, 9];
-        this.evens = [2, 4, 6, 8];
         this.board = board;
         this.plays = [];
         this.isMobile = window.matchMedia("only screen and (max-width: 48rem)").matches;
@@ -17,7 +14,7 @@ class TicTacToe {
         this.squares = document.createElement('div');
         this.squares.classList.add('ttt-col');
         this.playerNumbers = document.createElement('div');
-        this.playerNumbers.classList.add('ttt-row');
+        this.playerNumbers.classList.add('ttt-row-b');
         this.numbersOdd = document.createElement('div');
         this.numbersOdd.classList.add('ttt-row-numbers');
         this.numbersEven = document.createElement('div');
@@ -87,11 +84,68 @@ class TicTacToe {
             else {
                 this.numbersOdd.append(text);
             }
+            for (let n of this.numbersEven.children) {
+                n.classList.add('disabled');
+            }
         }
+        // Titles
+        this.titleOdd = document.createElement('div');
+        this.titleOdd.classList.add('ttt-player');
+        this.titleOdd.textContent = 'Player 1';
+        this.titleEven = document.createElement('div');
+        this.titleEven.classList.add('ttt-player');
+        this.titleEven.textContent = 'Player 2';
+        // Player Containers
+        this.playerOdd = document.createElement('div');
+        this.playerOdd.classList.add('ttt-col-top');
+        this.playerOdd.append(this.titleOdd);
+        this.playerOdd.append(this.numbersOdd);
+        this.playerEven = document.createElement('div');
+        this.playerEven.classList.add('ttt-col-top');
+        this.playerEven.append(this.titleEven);
+        this.playerEven.append(this.numbersEven);
         // Append squares and numbers
-        this.playerNumbers.append(this.numbersOdd);
-        this.playerNumbers.append(this.numbersEven);
         this.board.append(this.squares);
         this.board.append(this.playerNumbers);
+        this.playerNumbers.append(this.playerOdd);
+        this.playerNumbers.append(this.playerEven);
+        this.winningArrays = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+        this.restartButton = document.createElement('div');
+        this.restartButton.classList.add('ttt-restart');
+        this.restartButton.textContent = 'Restart';
+        this.playerNumbers.append(this.restartButton);
+    }
+    drawEnd(n) {
+        this.numbersOdd.innerHTML = '';
+        this.numbersEven.innerHTML = '';
+        switch (n) {
+            case 1:
+                this.playerNumbers.innerHTML = '';
+                this.playerNumbers.textContent = 'TIE';
+                break;
+            case 2:
+                if (!this.player1Turn) {
+                    this.playerEven.innerHTML = '';
+                    this.numbersOdd.innerHTML = 'WINS';
+                }
+                else {
+                    this.playerOdd.innerHTML = '';
+                    this.numbersEven.innerHTML = 'WINS';
+                }
+                // this.playerNumbers.textContent = `${!this.player1Turn ? 'Player 1' : 'Player 2'} WINS`;
+                break;
+            default:
+                break;
+        }
+        this.restartButton.setAttribute('style', 'display:inherit;');
     }
 }
