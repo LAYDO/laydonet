@@ -163,7 +163,8 @@ class TicTacToe {
         this.numbersEven.innerHTML = '';
         switch (n) {
             case 1:
-                this.playerNumbers.innerHTML = '';
+                this.playerOdd.innerHTML = '';
+                this.playerEven.innerHTML = '';
                 this.playerNumbers.textContent = 'TIE';
                 break;
             case 2:
@@ -174,7 +175,6 @@ class TicTacToe {
                     this.playerOdd.innerHTML = '';
                     this.numbersEven.innerHTML = 'WINS';
                 }
-                // this.playerNumbers.textContent = `${!this.player1Turn ? 'Player 1' : 'Player 2'} WINS`;
                 break;
             default:
                 break;
