@@ -75,8 +75,8 @@
     width: 10rem;
     height: 2rem;
     border: 0.125rem solid var(--font-color);
-    display: none;
-    color: var(--font-color);
+    display: inherit;
+    tcolor: var(--font-color);
     margin: 0 2rem;
     justify-content: center;
     align-items: center;
