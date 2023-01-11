@@ -161,11 +161,12 @@ class TicTacToe {
     drawEnd(n: number) {
         this.numbersOdd.innerHTML = '';
         this.numbersEven.innerHTML = '';
+        this.restartButton.setAttribute('style', 'display:inherit;');
         switch (n) {
             case 1:
                 this.playerOdd.innerHTML = '';
                 this.playerEven.innerHTML = '';
-                this.playerNumbers.textContent = 'TIE';
+                this.playerOdd.textContent = 'TIE';
                 break;
             case 2:
                 if (!this.player1Turn) {
@@ -179,6 +180,5 @@ class TicTacToe {
             default:
                 break;
         }
-        this.restartButton.setAttribute('style', 'display:inherit;');
     }
 }
