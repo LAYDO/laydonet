@@ -40,11 +40,6 @@ function update(progress: number) {
     }
 }
 
-function draw(state: number) {
-    // Draw the state of the game
-    game.drawEnd(state);
-}
-
 function loop(timestamp: number) {
     // let timestamp = new Date();
     let progress = timestamp - lastRender;
