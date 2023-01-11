@@ -38,10 +38,6 @@ function update(progress) {
         });
     }
 }
-function draw(state) {
-    // Draw the state of the game
-    game.drawEnd(state);
-}
 function loop(timestamp) {
     // let timestamp = new Date();
     let progress = timestamp - lastRender;
