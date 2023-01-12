@@ -13,6 +13,9 @@ class TicTacToe {
         }
         this.squares = document.createElement('div');
         this.squares.classList.add('ttt-col');
+        this.playerArea = document.createElement('div');
+        this.playerArea.classList.add('ttt-col-b');
+        // this.playerArea.setAttribute('style', 'height: 20rem;');
         this.playerNumbers = document.createElement('div');
         this.playerNumbers.classList.add('ttt-row-b');
         this.numbersOdd = document.createElement('div');
@@ -104,11 +107,12 @@ class TicTacToe {
         this.playerEven.classList.add('ttt-col-top');
         this.playerEven.append(this.titleEven);
         this.playerEven.append(this.numbersEven);
-        // Append squares and numbers
-        this.board.append(this.squares);
-        this.board.append(this.playerNumbers);
         this.playerNumbers.append(this.playerOdd);
         this.playerNumbers.append(this.playerEven);
+        this.playerArea.append(this.playerNumbers);
+        // Append squares and numbers
+        this.board.append(this.squares);
+        this.board.append(this.playerArea);
         this.winningArrays = [
             [0, 1, 2],
             [3, 4, 5],
@@ -119,10 +123,13 @@ class TicTacToe {
             [0, 4, 8],
             [2, 4, 6]
         ];
+        let row = document.createElement('div');
+        row.classList.add('ttt-row');
         this.restartButton = document.createElement('div');
         this.restartButton.classList.add('ttt-restart');
         this.restartButton.textContent = 'Restart';
-        this.board.append(this.restartButton);
+        row.append(this.restartButton);
+        this.playerArea.append(row);
     }
     drawEnd(n) {
         this.numbersOdd.innerHTML = '';

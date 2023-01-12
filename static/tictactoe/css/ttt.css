@@ -55,6 +55,12 @@
     flex-direction: column;
     justify-content: top;
 }
+.ttt-col-b {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 20rem;
+}
 .ttt-border-right {
     border-right: 0.25rem solid var(--font-color);
 }
