@@ -81,8 +81,8 @@
     height: 2rem;
     border: 0.125rem solid var(--font-color);
     display: inherit;
-    tcolor: var(--font-color);
-    margin: 0 2rem;
+    color: var(--font-color);
+    margin: 4rem;
     justify-content: center;
     align-items: center;
     opacity: 0.5;
