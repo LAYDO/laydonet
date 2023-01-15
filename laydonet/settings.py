@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'websites',
     'blog',
     'tictactoe',
+    'fifteen_toes',
 ]
 
 MIDDLEWARE = [
