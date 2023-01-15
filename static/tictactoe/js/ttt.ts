@@ -41,7 +41,6 @@ class TicTacToe {
 
         this.playerArea = document.createElement('div');
         this.playerArea.classList.add('ttt-col-b');
-        // this.playerArea.setAttribute('style', 'height: 20rem;');
 
         this.playerNumbers = document.createElement('div');
         this.playerNumbers.classList.add('ttt-row-b');
