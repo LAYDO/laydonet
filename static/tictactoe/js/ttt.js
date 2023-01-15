@@ -15,7 +15,6 @@ class TicTacToe {
         this.squares.classList.add('ttt-col');
         this.playerArea = document.createElement('div');
         this.playerArea.classList.add('ttt-col-b');
-        // this.playerArea.setAttribute('style', 'height: 20rem;');
         this.playerNumbers = document.createElement('div');
         this.playerNumbers.classList.add('ttt-row-b');
         this.numbersOdd = document.createElement('div');
@@ -134,7 +133,6 @@ class TicTacToe {
     drawEnd(n) {
         this.numbersOdd.innerHTML = '';
         this.numbersEven.innerHTML = '';
-        // this.restartButton.setAttribute('style', 'display:inherit;');
         switch (n) {
             case 1:
                 this.playerOdd.innerHTML = '';
