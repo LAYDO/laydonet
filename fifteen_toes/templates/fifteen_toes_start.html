@@ -1,0 +1,14 @@
+{% extends "app.html" %} {% load static %}
+{% block page_head %}
+<title>15 Toes</title>
+<link rel="stylesheet" href="{% static '15toes/css/15t.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div class="laydo-container laydo-app">
+    <div class="container-title">15 Toes</div>
+    <div></div>
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static '15toes/js/15t.js' %}"></script>
+{% endblock %}

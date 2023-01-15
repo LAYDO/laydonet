@@ -166,7 +166,7 @@ class TicTacToe {
         this.restartButton = document.createElement('div');
         this.restartButton.classList.add('ttt-restart');
         this.restartButton.textContent = 'Restart';
-        
+
         row.append(this.restartButton);
         this.playerArea.append(row);
     }
@@ -175,7 +175,6 @@ class TicTacToe {
         this.numbersOdd.innerHTML = '';
         this.numbersEven.innerHTML = '';
 
-// this.restartButton.setAttribute('style', 'display:inherit;');
         switch (n) {
             case 1:
                 this.playerOdd.innerHTML = '';
