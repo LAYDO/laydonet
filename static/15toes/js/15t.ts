@@ -41,4 +41,19 @@ function tictactoe() {
     window.location.pathname = 'tictactoe';
 }
 
+function checkForMatch() {
+    let url = `${window.location.href}check/`;
+    fetch(url).then(response => {
+        // Need a loading function / animation
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then(data => {
+        console.log(data);
+    }).catch(error => {
+        console.error('There has been a problem with your fetch operation: ', error);
+    })
+}
+
 init();
