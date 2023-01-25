@@ -1,5 +1,5 @@
 "use strict";
-function init() {
+function ft_init() {
     let logo = document.getElementById('toesLogo');
     if (logo) {
         drawLogo(logo);
@@ -49,8 +49,68 @@ function checkForMatch() {
         return response.json();
     }).then(data => {
         console.log(data);
+        if (data > 0) {
+            window.location.pathname = 'fifteentoes/lobby';
+        }
+        else {
+            window.location.pathname = 'fifteentoes/start';
+        }
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     });
 }
-init();
+class FifteenCard {
+    constructor(title, radio1, radio2, button, _element) {
+        this.parentElement = _element;
+        this.cardContainer = document.createElement('div');
+        this.cardContainer.classList.add('laydo-container');
+        this.title = document.createElement('div');
+        this.title.classList.add('container-title');
+        this.title.textContent = title;
+        this.cardForm = document.createElement('form');
+        this.radio1 = document.createElement('input');
+        this.radio1.setAttribute('type', 'radio');
+        this.radio1.id = radio1.toLowerCase();
+        this.radio1.setAttribute('name', button.toLowerCase());
+        this.radio1.setAttribute('value', radio1);
+        let r1 = document.createElement('label');
+        r1.setAttribute('for', radio1.toLowerCase());
+        r1.textContent = radio1;
+        let break1 = document.createElement('br');
+        this.radio2 = document.createElement('input');
+        this.radio2.setAttribute('type', 'radio');
+        this.radio2.id = radio2.toLowerCase();
+        this.radio2.setAttribute('name', button.toLowerCase());
+        this.radio2.setAttribute('value', radio2);
+        let r2 = document.createElement('label');
+        r2.setAttribute('for', radio2.toLowerCase());
+        r2.textContent = radio2;
+        this.textOption = document.createElement('input');
+        this.textOption.setAttribute('type', 'text');
+        this.textOption.id = button.toLowerCase() == 'create' ? 'lobbyPassword' : 'lobbyNumber';
+        this.textOption.setAttribute('placeholder', button.toLowerCase() == 'create' ? 'Password' : 'Lobby Number');
+        this.button = document.createElement('input');
+        this.button.setAttribute('type', 'submit');
+        this.button.setAttribute('value', button);
+        this.cardForm.append(this.radio1);
+        this.cardForm.append(r1);
+        this.cardForm.append(break1);
+        this.cardForm.append(this.radio2);
+        this.cardForm.append(r2);
+        this.cardForm.append(break1);
+        this.cardForm.append(this.textOption);
+        this.cardForm.append(break1);
+        this.cardForm.append(break1);
+        this.cardForm.append(this.button);
+        this.cardContainer.append(this.title);
+        this.cardContainer.append(this.cardForm);
+        this.parentElement.append(this.cardContainer);
+    }
+    show() {
+        this.parentElement.setAttribute('style', 'display:block;');
+    }
+    hide() {
+        this.parentElement.setAttribute('style', 'display:none;');
+    }
+}
+ft_init();

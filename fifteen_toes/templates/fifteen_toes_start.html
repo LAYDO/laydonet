@@ -4,18 +4,21 @@
 <link rel="stylesheet" href="{% static '15toes/css/15t.css' %}" />
 {% endblock %}
 {% block laydo_content_1 %}
+<div id="createModal" class="ft-modal"></div>
+<div id="joinModal" class="ft-modal"></div>
 <div class="laydo-container laydo-app">
     <div class="ft-col">
         <div class="ft-row ft-title">START MATCH</div>
         <div class="ft-row">
-            <div class="ft-button" onclick="">CREATE</div>
+            <div class="ft-button" onclick="showCreate()">CREATE</div>
         </div>
         <div class="ft-row">
-            <div class="ft-button">JOIN</div>
+            <div class="ft-button" onclick="showJoin()">JOIN</div>
         </div>
     </div>
 </div>
 {% endblock %}
 {% block page_scripts %}
 <script type="text/javascript" src="{% static '15toes/js/15t.js' %}"></script>
+<script type="text/javascript" src="{% static '15toes/js/15t_start.js' %}"></script>
 {% endblock %}
