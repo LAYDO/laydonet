@@ -14,11 +14,9 @@ function startInit() {
     window.onclick = (e: MouseEvent) => {
         if (e.target == createModal) {
             create.hide();
-            // createModal?.setAttribute('style', 'display: none;');
         }
         if (e.target == joinModal) {
             join.hide();
-            // joinModal?.setAttribute('style', 'display: none;');
         }
     }
 }
