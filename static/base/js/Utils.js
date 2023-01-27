@@ -37,3 +37,33 @@ class Utils {
         return dir;
     }
 }
+function getFetch(url) {
+    fetch(url).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then(data => {
+        return data;
+    }).catch(error => {
+        console.error('There has been a problem with your fetch operation: ', error);
+    });
+}
+function postFetch(url, _body) {
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(_body),
+    }).then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }).then(data => {
+        return data;
+    }).catch(error => {
+        console.error('There has been a problem with your fetch operation: ', error);
+    });
+}

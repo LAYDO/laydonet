@@ -7,4 +7,5 @@ urlpatterns = [
     path('check/', views.check_for_match, name='check_for_match'),
     path('start/', views.start, name='start'),
     path('lobby/', views.lobby, name='lobby'),
+    path('clicked/', views.user_click, name='user_click'),
 ]

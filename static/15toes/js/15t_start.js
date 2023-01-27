@@ -20,6 +20,11 @@ function startInit() {
     };
 }
 function showCreate() {
+    let clicked = {
+        'clicked': 'create',
+    };
+    let url = `${window.location.href.replace('start', 'clicked')}`;
+    postFetch(url, clicked);
     create.show();
 }
 function showJoin() {

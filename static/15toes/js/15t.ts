@@ -50,14 +50,7 @@ function checkForMatch() {
         }
         return response.json();
     }).then(data => {
-        console.log(data);
-        if (data > 0) {
-            // If player has a match, send them to lobby
-            window.location.pathname = 'fifteentoes/lobby'
-        } else {
-            // Else, load up the start screen to create or join a lobby
-            window.location.pathname = 'fifteentoes/start';
-        }
+        window.location.pathname = data.pathname;
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
