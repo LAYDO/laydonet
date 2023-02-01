@@ -52,29 +52,36 @@ def user_click(request):
 @user_passes_test(lambda user: user.is_superuser)
 def create_lobby(request):
     if request.method == 'POST':
-        current_user = request.user
-        lobbies = list(Lobby.objects.filter(player_one=current_user.id).all().values())
-        lobbies.extend(list(Lobby.objects.filter(player_two=current_user.id).all().values()))
-        txt = 'User in {} lobbies'
-        print(txt.format(len(lobbies)))
-        if (len(lobbies) > 0):
+        if (check_for_lobbies(request)):
             return
         else:
             form = CreateLobbyForm(request.POST)
-            print(form.is_valid())
-            # if form.is_valid():
+            # print(form)
+            # print(form.is_valid())
+            if form.is_valid():
             # return HttpResponseRedirect('/fifteentoes/lobby/')
-            return render(request, 'fifteen_toes_lobby.html', {'form': form.fields['privacy']})
+                return render(request, 'fifteen_toes_lobby.html', {'form': form.cleaned_data})
         
+@csrf_exempt
 @user_passes_test(lambda user: user.is_superuser)
 def join_lobby(request):
     if request.method == 'POST':
-        current_user = request.user
-        lobbies = list(Lobby.objects.filter(player_one=current_user.id).all().values())
-        lobbies.extend(list(Lobby.objects.filter(player_two=current_user.id).all().values()))
-        if (len(lobbies) > 0):
+        if (check_for_lobbies(request)):
             return
         else:
             form = JoinLobbyForm(request.POST)
-            # if form.is_valid():
-            return HttpResponseRedirect('/fifteentoes/lobby/')
+            if form.is_valid():
+            # return HttpResponseRedirect('/fifteentoes/lobby/')
+                return render(request, 'fifteen_toes_lobby.html', {'form': form.cleaned_data})
+        
+@user_passes_test(lambda user: user.is_superuser)
+def check_for_lobbies(request):
+    current_user = request.user
+    lobbies = list(Lobby.objects.filter(player_one=current_user.id).all().values())
+    lobbies.extend(list(Lobby.objects.filter(player_two=current_user.id).all().values()))
+    txt = 'User in {} lobbies'
+    print(txt.format(len(lobbies)))
+    if (len(lobbies) > 0):
+        return True
+    else:
+        return False
