@@ -49,7 +49,11 @@ function getFetch(url) {
         console.error('There has been a problem with your fetch operation: ', error);
     });
 }
-function postFetch(url, _body) {
+function metricPost(url, action, target) {
+    let _body = {
+        action: action,
+        target: target,
+    };
     fetch(url, {
         method: 'POST',
         headers: {

@@ -44,7 +44,11 @@ function getFetch(url: string) {
     })
 }
 
-function postFetch(url: string, _body: Object) {
+function metricPost(url: string, action: string, target: string) {
+    let _body = {
+        action: action,
+        target: target,
+    }
     fetch(url, {
         method: 'POST',
         headers: {

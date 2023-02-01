@@ -7,6 +7,10 @@
 <div class="laydo-container laydo-app">
     <div class="ft-col">
         <div class="ft-row ft-title">LOBBY #12345</div>
+        <div class="ft-row ft-title">
+            {% csrf_token %}
+            {{ form }}
+        </div>
         <div class="ft-row">
             <div class="ft-button">READY</div>
         </div>

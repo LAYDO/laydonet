@@ -80,6 +80,8 @@ class FifteenCard {
         // Form
         this.cardForm = document.createElement('form');
         this.cardForm.classList.add('ft-col');
+        this.cardForm.setAttribute('action', button.toLowerCase());
+        this.cardForm.setAttribute('method', 'post');
 
         // Radio row
         let radRow = document.createElement('div');

@@ -20,11 +20,8 @@ function startInit() {
     };
 }
 function showCreate() {
-    let clicked = {
-        'clicked': 'create',
-    };
     let url = `${window.location.href.replace('start', 'clicked')}`;
-    postFetch(url, clicked);
+    metricPost(url, 'clicked', 'create');
     create.show();
 }
 function showJoin() {
