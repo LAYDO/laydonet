@@ -12,11 +12,11 @@ from django.contrib.auth.models import User
 # Create your views here.
 
 # Default view, auth only superusers
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def fifteen_toes(request):
     return render(request, 'fifteen_toes_home.html',)
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def check_for_match(request):
     current_user = request.user
     matches = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
@@ -33,11 +33,11 @@ def check_for_match(request):
     })
     return JsonResponse(match, safe=False)
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def start(request):
     return render(request, 'fifteen_toes_start.html',)
 
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def lobby(request):
     current_user = request.user
     lobby = {}
@@ -77,7 +77,7 @@ def user_click(request):
         return JsonResponse(click, safe=False)
     
 @csrf_exempt
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def create_lobby(request):
     if request.method == 'POST':
         if (check_for_lobbies(request)):
@@ -105,7 +105,7 @@ def create_lobby(request):
                 return HttpResponseRedirect('/fifteentoes/lobby')
         
 @csrf_exempt
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def join_lobby(request):
     if request.method == 'POST':
         if (check_for_lobbies(request)):
@@ -126,7 +126,7 @@ def join_lobby(request):
                     game.save()
                 return HttpResponseRedirect('/fifteentoes/lobby')
         
-@user_passes_test(lambda user: user.is_superuser)
+@user_passes_test(lambda user: user.is_staff)
 def check_for_lobbies(request):
     current_user = request.user
     lobbies = list(Game.objects.filter(player_one=current_user.id).all().values())
