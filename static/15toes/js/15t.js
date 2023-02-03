@@ -110,8 +110,9 @@ class FifteenCard {
         this.textOption = document.createElement('input');
         this.textOption.setAttribute('style', 'visibility: hidden;');
         this.textOption.setAttribute('type', 'text');
-        this.textOption.id = button.toLowerCase() == 'create' ? 'lobbyPassword' : 'lobbyNumber';
-        this.textOption.setAttribute('placeholder', button.toLowerCase() == 'create' ? 'Password' : 'Lobby Number');
+        this.textOption.setAttribute('name', `${button.toLowerCase()}_option`);
+        this.textOption.id = `${button.toLowerCase()}TextOption`;
+        // this.textOption.setAttribute('placeholder', button.toLowerCase() == 'create' ? 'Password' : 'Lobby Number');
         this.button = document.createElement('input');
         this.button.classList.add('ft-button');
         this.button.setAttribute('type', 'submit');

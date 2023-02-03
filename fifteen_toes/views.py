@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.views.decorators.csrf import csrf_exempt
 import json
 
-from .models import Game, Lobby
+from .models import Game
 from .forms import CreateLobbyForm, JoinLobbyForm
 
 # Create your views here.
@@ -18,8 +18,8 @@ def fifteen_toes(request):
 @user_passes_test(lambda user: user.is_superuser)
 def check_for_match(request):
     current_user = request.user
-    matches = list(Game.objects.filter(player_one=current_user.id).all().values())
-    txt = 'Matches for ' + current_user.username + ': {}'
+    matches = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+    txt = 'Lobbies for ' + current_user.username + ': {}'
     print(txt.format(len(matches)))
     url = 'fifteentoes/'
     if (len(matches) > 0):
@@ -38,7 +38,37 @@ def start(request):
 
 @user_passes_test(lambda user: user.is_superuser)
 def lobby(request):
-    return render(request, 'fifteen_toes_lobby.html',)
+    current_user = request.user
+    lobby = {}
+    p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+    if (len(p1) == 1):
+        player2 = ''
+        if (p1[0]['player_two'] == 0):
+            player2 = 'Matching...'
+        lobby.update({
+            'id': p1[0]['game_id'],
+            'p1': current_user.username,
+            'p1_status': p1[0]['p1_status'],
+            'p2': player2,
+            'p2_status': p1[0]['p2_status'],
+            'privacy': p1[0]['privacy'],
+            'pw': p1[0]['password'],
+        })
+    elif (len(p2) == 1):
+        player1 = ''
+        if (p2[0]['player_one'] == 0):
+            player1 = 'Matching...'
+        lobby.update({
+            'id': p1[0]['game_id'],
+            'p1': player1,
+            'p1_status': p1[0]['p1_status'],
+            'p2': current_user.username,
+            'p2_status': p1[0]['p2_status'],
+            'privacy': p1[0]['privacy'],
+            'pw': p1[0]['password'],
+        })
+    return render(request, 'fifteen_toes_lobby.html', lobby)
 
 @csrf_exempt
 def user_click(request):
@@ -56,11 +86,25 @@ def create_lobby(request):
             return
         else:
             form = CreateLobbyForm(request.POST)
-            # print(form)
-            # print(form.is_valid())
+            current_user = request.user
             if form.is_valid():
-            # return HttpResponseRedirect('/fifteentoes/lobby/')
-                return render(request, 'fifteen_toes_lobby.html', {'form': form.cleaned_data})
+                f = form.cleaned_data
+                print(f['create_option'])
+                game = Game(
+                    status='LOBBY',
+                    player_one=current_user.id,
+                    p1_status='UNREADY',
+                    player_two=0,
+                    p2_status='UNREADY',
+                    round=0,
+                    winner=0,
+                    loser=0,
+                    privacy=f['create'],
+                    password=f['create_option'],
+                )
+                game.save()
+                # return render(request, 'fifteen_toes_lobby.html', {'form': lobby})
+                return HttpResponseRedirect('/fifteentoes/lobby')
         
 @csrf_exempt
 @user_passes_test(lambda user: user.is_superuser)
@@ -71,14 +115,13 @@ def join_lobby(request):
         else:
             form = JoinLobbyForm(request.POST)
             if form.is_valid():
-            # return HttpResponseRedirect('/fifteentoes/lobby/')
                 return render(request, 'fifteen_toes_lobby.html', {'form': form.cleaned_data})
         
 @user_passes_test(lambda user: user.is_superuser)
 def check_for_lobbies(request):
     current_user = request.user
-    lobbies = list(Lobby.objects.filter(player_one=current_user.id).all().values())
-    lobbies.extend(list(Lobby.objects.filter(player_two=current_user.id).all().values()))
+    lobbies = list(Game.objects.filter(player_one=current_user.id).all().values())
+    lobbies.extend(list(Game.objects.filter(player_two=current_user.id).all().values()))
     txt = 'User in {} lobbies'
     print(txt.format(len(lobbies)))
     if (len(lobbies) > 0):

@@ -9,7 +9,7 @@ class CreateLobbyForm(forms.Form):
         widget=forms.RadioSelect,
         choices=CHOICES,
     )
-    lobby_password = forms.CharField(max_length=20,required=False)
+    create_option = forms.CharField(max_length=20,required=False)
 
 class JoinLobbyForm(forms.Form):
     CHOICES = [
@@ -20,4 +20,4 @@ class JoinLobbyForm(forms.Form):
         widget=forms.RadioSelect,
         choices=CHOICES,
     )
-    lobby_number = forms.CharField(max_length=10,required=False)
+    join_option = forms.CharField(max_length=10,required=False)

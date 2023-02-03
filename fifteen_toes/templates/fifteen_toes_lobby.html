@@ -6,9 +6,10 @@
 {% block laydo_content_1 %}
 <div class="laydo-container laydo-app">
     <div class="ft-col">
-        <div class="ft-row ft-title">LOBBY #12345</div>
-        <div class="ft-row ft-title">
-            {{ form }}
+        <div class="ft-row ft-title">{{ privacy }} Lobby #{{ id }}</div>
+        <div class="ft-col">
+            <div class="ft-row">Player 1: {{ p1 }}</div>
+            <div class="ft-row">Player 2: {{ p2 }}</div>
         </div>
         <div class="ft-row">
             <div class="ft-button">READY</div>
