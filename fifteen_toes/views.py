@@ -7,6 +7,7 @@ import json
 
 from .models import Game
 from .forms import CreateLobbyForm, JoinLobbyForm
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -43,9 +44,9 @@ def lobby(request):
     p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
     p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
     if (len(p1) == 1):
-        player2 = ''
-        if (p1[0]['player_two'] == 0):
-            player2 = 'Matching...'
+        player2 = 0
+        if (p1[0]['player_two'] > 0):
+            player2 = User.objects.filter(id=p1[0]['player_two']).username
         lobby.update({
             'id': p1[0]['game_id'],
             'p1': current_user.username,
@@ -56,17 +57,14 @@ def lobby(request):
             'pw': p1[0]['password'],
         })
     elif (len(p2) == 1):
-        player1 = ''
-        if (p2[0]['player_one'] == 0):
-            player1 = 'Matching...'
         lobby.update({
-            'id': p1[0]['game_id'],
-            'p1': player1,
-            'p1_status': p1[0]['p1_status'],
+            'id': p2[0]['game_id'],
+            'p1': p2[0]['player_one'],
+            'p1_status': p2[0]['p1_status'],
             'p2': current_user.username,
-            'p2_status': p1[0]['p2_status'],
-            'privacy': p1[0]['privacy'],
-            'pw': p1[0]['password'],
+            'p2_status': p2[0]['p2_status'],
+            'privacy': p2[0]['privacy'],
+            'pw': p2[0]['password'],
         })
     return render(request, 'fifteen_toes_lobby.html', lobby)
 
@@ -114,8 +112,19 @@ def join_lobby(request):
             return
         else:
             form = JoinLobbyForm(request.POST)
+            current_user = request.user
             if form.is_valid():
-                return render(request, 'fifteen_toes_lobby.html', {'form': form.cleaned_data})
+                f = form.cleaned_data
+                if (f['join'] == 'Lobby Number'):
+                    game = Game.objects.filter(game_id=f['join_option'])
+                    game['player_two'] = current_user.id
+                    game.save()
+                else:
+                    games = list(Game.objects.filter(status='LOBBY').filter(player_two=0).exclude(player_one=0).all().values())
+                    game = games[0]
+                    game['player_two'] = current_user.id
+                    game.save()
+                return HttpResponseRedirect('/fifteentoes/lobby')
         
 @user_passes_test(lambda user: user.is_superuser)
 def check_for_lobbies(request):

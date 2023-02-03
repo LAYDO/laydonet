@@ -9,7 +9,7 @@
         <div class="ft-row ft-title">{{ privacy }} Lobby #{{ id }}</div>
         <div class="ft-col">
             <div class="ft-row">Player 1: {{ p1 }}</div>
-            <div class="ft-row">Player 2: {{ p2 }}</div>
+            <div class="ft-row">Player 2: {% if player_two > 0 %} {{ p2 }} {% else %} Matching... {% endif %}</div>
         </div>
         <div class="ft-row">
             <div class="ft-button">READY</div>
