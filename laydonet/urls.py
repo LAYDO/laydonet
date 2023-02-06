@@ -35,4 +35,5 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('tictactoe/', include('tictactoe.urls')),
     path('fifteentoes/', include('fifteen_toes.urls')),
+    path('users/', include('users.urls')),
 ]

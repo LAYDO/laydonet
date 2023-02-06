@@ -4,21 +4,22 @@
 <link rel="stylesheet" href="{% static '15toes/css/15t.css' %}" />
 {% endblock %}
 {% block laydo_content_1 %}
-<div id="createModal" class="ft-modal"></div>
-<div id="joinModal" class="ft-modal"></div>
 <div class="laydo-container laydo-app">
     <div class="ft-col">
-        <div class="ft-row ft-title">START MATCH</div>
+        <svg width="400" height="267" id="toesLogo"></svg>
+        <div class="ft-row ft-title">TOES</div>
         <div class="ft-row">
-            <div class="ft-button" onclick="showCreate()">CREATE</div>
+            <div class="ft-button" onclick="tictactoe()">LOCAL</div>
         </div>
         <div class="ft-row">
-            <div class="ft-button" onclick="showJoin()">JOIN</div>
+            <div class="ft-button" onclick="checkForMatch()">MULTIPLAYER</div>
+        </div>
+        <div class="ft-row">
+            <div class="ft-button">HOW TO PLAY</div>
         </div>
     </div>
 </div>
 {% endblock %}
 {% block page_scripts %}
 <script type="text/javascript" src="{% static '15toes/js/15t.js' %}"></script>
-<script type="text/javascript" src="{% static '15toes/js/15t_start.js' %}"></script>
 {% endblock %}

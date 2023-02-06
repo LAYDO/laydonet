@@ -1,0 +1,52 @@
+{% extends "app.html" %} {% load static %}
+{% block page_head %}
+<title>15 Toes</title>
+<link rel="stylesheet" href="{% static '15toes/css/15t.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div class="laydo-container laydo-app">
+    <div class="ft-col">
+        <div class="ft-row ft-title">{{ privacy }} Lobby #{{ id }}</div>
+        <div class="ft-col">
+            <div class="ft-row-b">
+                <div class="ft-margin-sb">
+                    Player 1: {{ p1 }}
+                </div>
+                {% if p1_status == 'READY' %}
+                <div class="fa-solid fa-check ft-lime"></div>
+                {% endif %}
+            </div>
+            <div class="ft-row-b">
+                <div class="ft-margin-sb">
+                    Player 2: {% if p2 == 0 %} <div class="ft-matching"> Matching...</div> {% else %} {{ p2 }} {% endif %}
+                </div>
+                {% if p2_status == 'READY' %}
+                <div class="fa-solid fa-check ft-lime"></div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="ft-row">
+                {% if user.get_username == p1 %}
+                    {% if p1_status == 'UNREADY' %}
+                    <div class="ft-button" onclick="lobbyReady()">READY</div>
+                    {% else %}
+                    <div class="ft-button" onclick="lobbyUnReady()">UNREADY</div>
+                    {% endif %}
+                {% elif user.get_username == p2 %}
+                    {% if p2_status == 'UNREADY' %}
+                    <div class="ft-button" onclick="lobbyReady()">READY</div>
+                    {% else %}
+                    <div class="ft-button" onclick="lobbyUnReady()">UNREADY</div>
+                    {% endif %}
+                {% endif %}
+                {% if p1_status == 'READY' and p2_status == 'READY' %}
+                <div class="ft-button">START</div>
+                {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static '15toes/js/15t.js' %}"></script>
+<script type="text/javascript" src="{% static '15toes/js/15t_lobby.js' %}"></script>
+{% endblock %}
