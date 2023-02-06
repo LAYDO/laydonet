@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.http.response import JsonResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
@@ -18,12 +19,8 @@ def fifteen_toes(request):
 
 @user_passes_test(lambda user: user.is_staff)
 def check_for_match(request):
-    current_user = request.user
-    matches = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-    txt = 'Lobbies for ' + current_user.username + ': {}'
-    print(txt.format(len(matches)))
     url = 'fifteentoes/'
-    if (len(matches) > 0):
+    if (check_for_lobbies(request)):
         url += 'lobby'
     else:
         url += 'start'
@@ -46,7 +43,7 @@ def lobby(request):
     if (len(p1) == 1):
         player2 = 0
         if (p1[0]['player_two'] > 0):
-            player2 = User.objects.filter(id=p1[0]['player_two']).username
+            player2 = User.objects.filter(id=p1[0]['player_two'])[0].username
         lobby.update({
             'id': p1[0]['game_id'],
             'p1': current_user.username,
@@ -57,9 +54,12 @@ def lobby(request):
             'pw': p1[0]['password'],
         })
     elif (len(p2) == 1):
+        player1 = 0
+        if (p2[0]['player_two'] > 0):
+            player1 = User.objects.filter(id=p2[0]['player_one'])[0].username
         lobby.update({
             'id': p2[0]['game_id'],
-            'p1': p2[0]['player_one'],
+            'p1': player1,
             'p1_status': p2[0]['p1_status'],
             'p2': current_user.username,
             'p2_status': p2[0]['p2_status'],
@@ -101,7 +101,6 @@ def create_lobby(request):
                     password=f['create_option'],
                 )
                 game.save()
-                # return render(request, 'fifteen_toes_lobby.html', {'form': lobby})
                 return HttpResponseRedirect('/fifteentoes/lobby')
         
 @csrf_exempt
@@ -117,13 +116,11 @@ def join_lobby(request):
                 f = form.cleaned_data
                 if (f['join'] == 'Lobby Number'):
                     game = Game.objects.filter(game_id=f['join_option'])
-                    game['player_two'] = current_user.id
-                    game.save()
+                    game.update(player_two=current_user.id)
                 else:
                     games = list(Game.objects.filter(status='LOBBY').filter(player_two=0).exclude(player_one=0).all().values())
-                    game = games[0]
-                    game['player_two'] = current_user.id
-                    game.save()
+                    game = Game.objects.filter(game_id=games[0]['game_id'])
+                    game.update(player_two=current_user.id)
                 return HttpResponseRedirect('/fifteentoes/lobby')
         
 @user_passes_test(lambda user: user.is_staff)
@@ -131,9 +128,46 @@ def check_for_lobbies(request):
     current_user = request.user
     lobbies = list(Game.objects.filter(player_one=current_user.id).all().values())
     lobbies.extend(list(Game.objects.filter(player_two=current_user.id).all().values()))
-    txt = 'User in {} lobbies'
-    print(txt.format(len(lobbies)))
+    txt = '{} in {} lobbies'
+    print(txt.format(current_user.username,len(lobbies)))
     if (len(lobbies) > 0):
         return True
     else:
         return False
+    
+@csrf_exempt   
+@user_passes_test(lambda user: user.is_staff)
+def game_ready(request):
+    if request.method == 'POST':
+        current_user = request.user
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        if (len(p1) > 0):
+            p = Game.objects.filter(game_id=p1[0]['game_id'])
+            p.update(p1_status='READY')
+        elif (len(p2) > 0):
+            p = Game.objects.filter(game_id=p2[0]['game_id'])
+            p.update(p2_status='READY')
+        # return HttpResponseRedirect('/fifteentoes/lobby')
+        # return redirect(reverse('lobby'))
+        # EX:    player1 = User.objects.filter(id=p2[0]['player_one'])[0].username
+        # return render(request, 'fifteen_toes_lobby.html', p[0])
+        return redirect(request.META['HTTP_REFERER'])
+
+@csrf_exempt
+@user_passes_test(lambda user: user.is_staff)
+def game_unready(request):
+    if request.method == 'POST':
+        current_user = request.user
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        if (len(p1) > 0):
+            p = Game.objects.filter(game_id=p1[0]['game_id'])
+            p.update(p1_status='UNREADY')
+        elif (len(p2) > 0):
+            p = Game.objects.filter(game_id=p2[0]['game_id'])
+            p.update(p2_status='UNREADY')
+        # Methods below used from https://stackoverflow.com/questions/64078178/django-reload-template-after-post-request
+        # return HttpResponseRedirect('/fifteentoes/lobby')
+        # return redirect(reverse('lobby'))
+        return redirect(request.META['HTTP_REFERER'])

@@ -8,15 +8,45 @@
     <div class="ft-col">
         <div class="ft-row ft-title">{{ privacy }} Lobby #{{ id }}</div>
         <div class="ft-col">
-            <div class="ft-row">Player 1: {{ p1 }}</div>
-            <div class="ft-row">Player 2: {% if player_two > 0 %} {{ p2 }} {% else %} Matching... {% endif %}</div>
+            <div class="ft-row-b">
+                <div class="ft-margin-sb">
+                    Player 1: {{ p1 }}
+                </div>
+                {% if p1_status == 'READY' %}
+                <div class="fa-solid fa-check ft-lime"></div>
+                {% endif %}
+            </div>
+            <div class="ft-row-b">
+                <div class="ft-margin-sb">
+                    Player 2: {% if p2 == 0 %} <div class="ft-matching"> Matching...</div> {% else %} {{ p2 }} {% endif %}
+                </div>
+                {% if p2_status == 'READY' %}
+                <div class="fa-solid fa-check ft-lime"></div>
+                {% endif %}
+            </div>
         </div>
         <div class="ft-row">
-            <div class="ft-button">READY</div>
+                {% if user.get_username == p1 %}
+                    {% if p1_status == 'UNREADY' %}
+                    <div class="ft-button" onclick="lobbyReady()">READY</div>
+                    {% else %}
+                    <div class="ft-button" onclick="lobbyUnReady()">UNREADY</div>
+                    {% endif %}
+                {% elif user.get_username == p2 %}
+                    {% if p2_status == 'UNREADY' %}
+                    <div class="ft-button" onclick="lobbyReady()">READY</div>
+                    {% else %}
+                    <div class="ft-button" onclick="lobbyUnReady()">UNREADY</div>
+                    {% endif %}
+                {% endif %}
+                {% if p1_status == 'READY' and p2_status == 'READY' %}
+                <div class="ft-button">START</div>
+                {% endif %}
         </div>
     </div>
 </div>
 {% endblock %}
 {% block page_scripts %}
 <script type="text/javascript" src="{% static '15toes/js/15t.js' %}"></script>
+<script type="text/javascript" src="{% static '15toes/js/15t_lobby.js' %}"></script>
 {% endblock %}

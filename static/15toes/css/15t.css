@@ -104,3 +104,9 @@
         opacity: 1
     }
 }
+.ft-margin-sb {
+    margin: 0 1rem;
+}
+.ft-lime {
+    color: lime;
+}
