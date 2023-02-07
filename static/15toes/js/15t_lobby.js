@@ -1,28 +1,12 @@
 "use strict";
-function lobbyReady() {
-    let url = `${window.location.href}ready`;
-    lobbyFetch(url, { 'clicked': 'READY' });
+let lobbyOptions = document.getElementById('lobbyOptions');
+let isMobile = window.matchMedia("only screen and (max-width: 48rem)").matches;
+if (!isMobile) {
+    lobbyOptions === null || lobbyOptions === void 0 ? void 0 : lobbyOptions.classList.add('ft-row');
 }
-function lobbyUnReady() {
-    let url = `${window.location.href}unready`;
-    lobbyFetch(url, { 'clicked': 'UNREADY' });
+else {
+    lobbyOptions === null || lobbyOptions === void 0 ? void 0 : lobbyOptions.classList.add('ft-col');
 }
 function gameStart() {
     let url = `${window.location.href}start/`;
-}
-async function lobbyFetch(_url, _body) {
-    fetch(_url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(_body),
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response;
-    }).catch(error => {
-        console.error('There has been a problem with your fetch operation: ', error);
-    });
 }
