@@ -148,10 +148,6 @@ def game_ready(request):
         elif (len(p2) > 0):
             p = Game.objects.filter(game_id=p2[0]['game_id'])
             p.update(p2_status='READY')
-        # return HttpResponseRedirect('/fifteentoes/lobby')
-        # return redirect(reverse('lobby'))
-        # EX:    player1 = User.objects.filter(id=p2[0]['player_one'])[0].username
-        # return render(request, 'fifteen_toes_lobby.html', p[0])
         return redirect(request.META['HTTP_REFERER'])
 
 @csrf_exempt
@@ -167,7 +163,21 @@ def game_unready(request):
         elif (len(p2) > 0):
             p = Game.objects.filter(game_id=p2[0]['game_id'])
             p.update(p2_status='UNREADY')
-        # Methods below used from https://stackoverflow.com/questions/64078178/django-reload-template-after-post-request
-        # return HttpResponseRedirect('/fifteentoes/lobby')
-        # return redirect(reverse('lobby'))
         return redirect(request.META['HTTP_REFERER'])
+    
+@csrf_exempt
+@user_passes_test(lambda user: user.is_staff)
+def game_leave(request):
+    if request.method == 'POST':
+        current_user = request.user
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        if (len(p1) > 0):
+            p = Game.objects.filter(game_id=p1[0]['game_id'])
+            p.update(p1_status='UNREADY')
+            p.update(player_one=0)
+        elif (len(p2) > 0):
+            p = Game.objects.filter(game_id=p2[0]['game_id'])
+            p.update(p2_status='UNREADY')
+            p.update(player_two=0)
+        return HttpResponseRedirect('/fifteentoes')
