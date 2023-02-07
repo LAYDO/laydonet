@@ -25,22 +25,32 @@
                 {% endif %}
             </div>
         </div>
-        <div class="ft-row">
+        <div id="lobbyOptions" class="ft-row">
                 {% if user.get_username == p1 %}
                     {% if p1_status == 'UNREADY' %}
-                    <div class="ft-button" onclick="lobbyReady()">READY</div>
+                    <form method="post" class="ft-col" action="ready">
+                        <input class="ft-button" type="submit" value="READY"></input>
+                    </form>
                     {% else %}
-                    <div class="ft-button" onclick="lobbyUnReady()">UNREADY</div>
+                    <form method="post" class="ft-col" action="unready">
+                        <input class="ft-button" type="submit" value="UNREADY"></input>
+                    </form>
                     {% endif %}
                 {% elif user.get_username == p2 %}
                     {% if p2_status == 'UNREADY' %}
-                    <div class="ft-button" onclick="lobbyReady()">READY</div>
+                    <form method="post" class="ft-col" action="ready">
+                        <input class="ft-button" type="submit" value="READY"></input>
+                    </form>
                     {% else %}
-                    <div class="ft-button" onclick="lobbyUnReady()">UNREADY</div>
+                    <form method="post" class="ft-col" action="unready">
+                        <input class="ft-button" type="submit" value="UNREADY"></input>
+                    </form>
                     {% endif %}
                 {% endif %}
                 {% if p1_status == 'READY' and p2_status == 'READY' %}
-                <div class="ft-button">START</div>
+                <form method="post" class="ft-col" action="start">
+                    <input class="ft-button" type="submit" value="START"></input>
+                </form>
                 {% endif %}
         </div>
     </div>

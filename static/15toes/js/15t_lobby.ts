@@ -1,29 +1,13 @@
-function lobbyReady() {
-    let url = `${window.location.href}ready`;
-    lobbyFetch(url, { 'clicked': 'READY' });
-    
-}
-function lobbyUnReady() {
-    let url = `${window.location.href}unready`;
-    lobbyFetch(url, { 'clicked': 'UNREADY' });
-}
-function gameStart() {
-    let url = `${window.location.href}start/`;
+let lobbyOptions = document.getElementById('lobbyOptions');
+let isMobile = window.matchMedia("only screen and (max-width: 48rem)").matches;
+
+if (!isMobile) {
+    lobbyOptions?.classList.add('ft-row');
+} else {
+    lobbyOptions?.classList.add('ft-col');
 }
 
-async function lobbyFetch(_url: string, _body: Object) {
-    fetch(_url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(_body),
-    }).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response;
-    }).catch(error => {
-        console.error('There has been a problem with your fetch operation: ', error);
-    })
+
+function gameStart() {
+    let url = `${window.location.href}start/`;
 }
