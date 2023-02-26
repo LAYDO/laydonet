@@ -12,6 +12,6 @@ urlpatterns = [
     path('lobby/ready', views.game_ready, name='game_ready'),
     path('lobby/unready', views.game_unready, name='game_unready'),
     path('lobby/leave', views.game_leave, name='game_leave'),
-    # path('game/start', views.lobby, name='lobby'),
+    path('lobby/start', views.game_start_continue, name='game_start_continue'),
     path('clicked/', views.user_click, name='user_click'),
 ]

@@ -116,11 +116,18 @@ def join_lobby(request):
                 f = form.cleaned_data
                 if (f['join'] == 'Lobby Number'):
                     game = Game.objects.filter(game_id=f['join_option'])
-                    game.update(player_two=current_user.id)
+                    if game[0].player_one == 0:
+                        game.update(player_one=current_user.id)
+                    elif game[0].player_two == 0:
+                        game.update(player_two=current_user.id)
                 else:
-                    games = list(Game.objects.filter(status='LOBBY').filter(player_two=0).exclude(player_one=0).all().values())
+                    games = list(Game.objects.filter(status='LOBBY').filter(player_two=0).all().values())
+                    games.extend(list(Game.objects.filter(status='LOBBY').filter(player_one=0).all().values()))
                     game = Game.objects.filter(game_id=games[0]['game_id'])
-                    game.update(player_two=current_user.id)
+                    if game[0].player_one == 0:
+                        game.update(player_one=current_user.id)
+                    elif game[0].player_two == 0:
+                        game.update(player_two=current_user.id)
                 return HttpResponseRedirect('/fifteentoes/lobby')
         
 @user_passes_test(lambda user: user.is_staff)
@@ -181,3 +188,22 @@ def game_leave(request):
             p.update(p2_status='UNREADY')
             p.update(player_two=0)
         return HttpResponseRedirect('/fifteentoes')
+
+@csrf_exempt
+@user_passes_test(lambda user: user.is_staff)  
+def game_start_continue(request):
+    current_user = request.user
+    games = list(Game.objects.filter(status='LOBBY').filter(player_two=current_user.id).all().values())
+    games.extend(list(Game.objects.filter(status='LOBBY').filter(player_one=current_user.id).all().values()))
+    games.extend(list(Game.objects.filter(status='IN-GAME').filter(player_two=current_user.id).all().values()))
+    games.extend(list(Game.objects.filter(status='IN-GAME').filter(player_one=current_user.id).all().values()))
+    game = games[0]
+    if game.round == 0:
+        game.update(status='IN-GAME',p1_status='IN-GAME', p2_status='IN-GAME',round=1)
+    return render(request, 'fifteen_toes_game.html', game)
+
+@csrf_exempt
+@user_passes_test(lambda user: user.is_staff)
+def game_turn(request):
+    if request.method == 'POST':
+        current_user = request.user
