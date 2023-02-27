@@ -46,6 +46,7 @@ def lobby(request):
             player2 = User.objects.filter(id=p1[0]['player_two'])[0].username
         lobby.update({
             'id': p1[0]['game_id'],
+            'status': p1[0]['status'],
             'p1': current_user.username,
             'p1_status': p1[0]['p1_status'],
             'p2': player2,
@@ -59,6 +60,7 @@ def lobby(request):
             player1 = User.objects.filter(id=p2[0]['player_one'])[0].username
         lobby.update({
             'id': p2[0]['game_id'],
+            'status': p2[0]['status'],
             'p1': player1,
             'p1_status': p2[0]['p1_status'],
             'p2': current_user.username,
@@ -192,18 +194,84 @@ def game_leave(request):
 @csrf_exempt
 @user_passes_test(lambda user: user.is_staff)  
 def game_start_continue(request):
-    current_user = request.user
-    games = list(Game.objects.filter(status='LOBBY').filter(player_two=current_user.id).all().values())
-    games.extend(list(Game.objects.filter(status='LOBBY').filter(player_one=current_user.id).all().values()))
-    games.extend(list(Game.objects.filter(status='IN-GAME').filter(player_two=current_user.id).all().values()))
-    games.extend(list(Game.objects.filter(status='IN-GAME').filter(player_one=current_user.id).all().values()))
-    game = games[0]
-    if game.round == 0:
-        game.update(status='IN-GAME',p1_status='IN-GAME', p2_status='IN-GAME',round=1)
-    return render(request, 'fifteen_toes_game.html', game)
+    if request.method == 'POST':
+        lobbyNum = player_active_lobby(request)
+        lobby = Game.objects.filter(game_id=lobbyNum)
+        if lobby:
+            print(('UPDATING GAME #{} TO IN-GAME').format(lobby[0].game_id))
+            lobby.update(status='IN-GAME')
+            lobby.update(p1_status='IN-GAME')
+            lobby.update(p2_status='IN-GAME')
+            lobby.update(round=1)
+    return HttpResponseRedirect('/fifteentoes/game')
 
 @csrf_exempt
 @user_passes_test(lambda user: user.is_staff)
 def game_turn(request):
     if request.method == 'POST':
-        current_user = request.user
+        game = player_active_game(request)
+        newPlays = game.plays
+        newPlays.extend(request.body['play'])
+        newSpaces = game.spaces
+        newSpaces[request.body['spaces']] = request.body['play']
+        newRound = game.round + 1
+        game.update(round=newRound)
+        game.update(plays=newPlays)
+        game.update(spaces=newSpaces)
+
+        if (game.checkWin()):
+            # Do some work to prep game for archivability 
+            return HttpResponseRedirect('/fifteentoes/lobby')
+        else:
+            return HttpResponseRedirect('/fifteentoes/game')
+
+def player_active_lobby(request):
+    current_user = request.user
+    games = list(Game.objects.filter(status='LOBBY').filter(player_two=current_user.id).all().values())
+    games.extend(list(Game.objects.filter(status='LOBBY').filter(player_one=current_user.id).all().values()))
+    print(games)
+    if len(games) == 1:
+        return games[0]['game_id']
+    else:
+        return 0
+    
+def player_active_game(request):
+    current_user = request.user
+    games = list(Game.objects.filter(status='IN-GAME').filter(player_two=current_user.id).all().values())
+    games.extend(list(Game.objects.filter(status='IN-GAME').filter(player_one=current_user.id).all().values()))
+    if len(games) == 1:
+        return games[0]
+    else:
+        return []
+    
+@user_passes_test(lambda user: user.is_staff)
+def game(request):
+    current_user = request.user
+    game = {}
+    p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+    if (len(p1) == 1):
+        player2 = 0
+        if (p1[0]['player_two'] > 0):
+            player2 = User.objects.filter(id=p1[0]['player_two'])[0].username
+        game.update({
+            'id': p1[0]['game_id'],
+            'p1': current_user.username,
+            'p2': player2,
+            'privacy': p1[0]['privacy'],
+            'spaces': p1[0]['spaces'],
+            'round': p1[0]['round'],
+        })
+    elif (len(p2) == 1):
+        player1 = 0
+        if (p2[0]['player_two'] > 0):
+            player1 = User.objects.filter(id=p2[0]['player_one'])[0].username
+        game.update({
+            'id': p2[0]['game_id'],
+            'p1': player1,
+            'p2': current_user.username,
+            'privacy': p2[0]['privacy'],
+            'spaces': p2[0]['spaces'],
+            'round': p2[0]['round'],
+        })
+    return render(request, 'fifteen_toes_game.html', game)

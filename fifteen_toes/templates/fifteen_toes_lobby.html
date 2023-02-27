@@ -34,7 +34,7 @@
                     <form method="post" class="ft-col" action="leave">
                         <input class="ft-button" type="submit" value="LEAVE"></input>
                     </form>
-                    {% else %}
+                    {% elif p1_status == 'READY' %}
                     <form method="post" class="ft-col" action="unready">
                         <input class="ft-button" type="submit" value="UNREADY"></input>
                     </form>
@@ -47,17 +47,21 @@
                     <form method="post" class="ft-col" action="leave">
                         <input class="ft-button" type="submit" value="LEAVE"></input>
                     </form>
-                    {% else %}
+                    {% elif p2_status == 'READY' %}
                     <form method="post" class="ft-col" action="unready">
                         <input class="ft-button" type="submit" value="UNREADY"></input>
                     </form>
                     {% endif %}
                 {% endif %}
-                {% if p1_status == 'READY' and p2_status == 'READY' %}
                 <form method="post" class="ft-col" action="start">
+                    {% if status == 'LOBBY' %}
                     <input class="ft-button" type="submit" value="START"></input>
+                    {% elif status == 'IN-GAME' %}
+                    <input class="ft-button" type="submit" value="CONTINUE"></input>
+                    {% else %}
+                    <input class="ft-button" type="submit" value="REMATCH"></input>
+                    {% endif %}
                 </form>
-                {% endif %}
         </div>
     </div>
 </div>
