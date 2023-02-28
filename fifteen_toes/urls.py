@@ -15,4 +15,5 @@ urlpatterns = [
     path('lobby/start', views.game_start_continue, name='game_start_continue'),
     path('clicked/', views.user_click, name='user_click'),
     path('game/', views.game, name='game'),
+    path('game/turn', views.game_turn, name='game_turn'),
 ]

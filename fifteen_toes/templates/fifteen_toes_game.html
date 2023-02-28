@@ -11,19 +11,19 @@
     <div class="ttt-board">
         <div class="ttt-col" id="ftSquares">
             <div class="ttt-row" id="squareRow0">
-                <div class="ttt-square ttt-border-right ttt-border-bottom" id="square0">{{ spaces.0 }}</div>
-                <div class="ttt-square ttt-border-right ttt-border-bottom" id="square1">{{ spaces.1 }}</div>
-                <div class="ttt-square ttt-border-bottom" id="square2">{{ spaces.2 }}</div>
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square0">{{ spaces.0|cut:"0" }}</div>
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square1">{{ spaces.1|cut:"0" }}</div>
+                <div class="ft-square ttt-border-bottom" id="square2">{{ spaces.2|cut:"0" }}</div>
             </div>
             <div class="ttt-row" id="squareRow1">
-                <div class="ttt-square ttt-border-right ttt-border-bottom" id="square3">{{ spaces.3 }}</div>
-                <div class="ttt-square ttt-border-right ttt-border-bottom" id="square4">{{ spaces.4 }}</div>
-                <div class="ttt-square ttt-border-bottom" id="square5">{{ spaces.5 }}</div>
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square3">{{ spaces.3|cut:"0" }}</div>
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square4">{{ spaces.4|cut:"0" }}</div>
+                <div class="ft-square ttt-border-bottom" id="square5">{{ spaces.5|cut:"0" }}</div>
             </div>
             <div class="ttt-row" id="squareRow2">
-                <div class="ttt-square ttt-border-right" id="square6">{{ spaces.6 }}</div>
-                <div class="ttt-square ttt-border-right" id="square7">{{ spaces.7 }}</div>
-                <div class="ttt-square" id="square8">{{ spaces.8 }}</div>
+                <div class="ft-square ttt-border-right" id="square6">{{ spaces.6|cut:"0" }}</div>
+                <div class="ft-square ttt-border-right" id="square7">{{ spaces.7|cut:"0" }}</div>
+                <div class="ft-square" id="square8">{{ spaces.8|cut:"0" }}</div>
             </div>
         </div>
         <div class="ttt-col-b" id="ftPlayerArea">
@@ -31,20 +31,25 @@
                 <div class="ttt-col-top">
                     <div class="ttt-player">{{ p1|default:'Player One' }}</div>
                     <div class="ttt-row-numbers">
-                        <div class="ttt-number" id="text0">1</div>
-                        <div class="ttt-number" id="text2">3</div>
-                        <div class="ttt-number" id="text4">5</div>
-                        <div class="ttt-number" id="text6">7</div>
-                        <div class="ttt-number" id="text8">9</div>
+                        {% for i in spaces %}
+                            {% if not forloop.counter|divisibleby:2 %}
+                                {% if not forloop.counter in plays %}
+                                    <div class="ttt-number" id="text{{ forloop.counter0 }}">{{ forloop.counter }}</div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
                 <div class="ttt-col-top">
                     <div class="ttt-player">{{ p2|default:'Player Two' }}</div>
                     <div class="ttt-row-numbers">
-                        <div class="ttt-number" id="text0">2</div>
-                        <div class="ttt-number" id="text2">4</div>
-                        <div class="ttt-number" id="text4">6</div>
-                        <div class="ttt-number" id="text6">8</div>
+                        {% for i in spaces %}
+                            {% if forloop.counter|divisibleby:2 %}
+                                {% if not forloop.counter in plays %}
+                                    <div class="ttt-number" id="text{{ forloop.counter0 }}">{{ forloop.counter }}</div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>

@@ -7,6 +7,3 @@ if (!isMobile) {
 else {
     lobbyOptions === null || lobbyOptions === void 0 ? void 0 : lobbyOptions.classList.add('ft-col');
 }
-function gameStart() {
-    let url = `${window.location.href}start/`;
-}
