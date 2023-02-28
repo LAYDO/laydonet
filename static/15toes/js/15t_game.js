@@ -24,7 +24,26 @@ for (let i = 0; i < 9; i++) {
     let square = document.getElementById(`square${i}`);
     square === null || square === void 0 ? void 0 : square.addEventListener('click', () => {
         if (selectedElement != null || selectedElement != '') {
-            console.log(`Trying to place ${selectedElement} in square ${square === null || square === void 0 ? void 0 : square.id.slice(-1)}`);
+            let selectedSquare = square === null || square === void 0 ? void 0 : square.id.slice(-1);
+            console.log(`Trying to place ${selectedElement} in square ${selectedSquare}`);
+            let url = `${window.location.href}turn`;
+            let data = { space: selectedSquare, play: selectedElement };
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(response => {
+                if (!response.ok) {
+                    throw new Error('Response was not ok from the server.');
+                }
+                response.json();
+            }).then(data => {
+                console.log(data);
+            }).catch(error => {
+                console.error(error);
+            });
         }
     });
 }

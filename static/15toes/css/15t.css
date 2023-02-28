@@ -113,3 +113,15 @@
 .ft-round {
     font-size: 1rem;
 }
+
+.ft-square {
+    width: 8.5625rem;
+    height: 8.5625rem;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font: bold 3rem serif;
+    fill: var(--font-color);
+}
