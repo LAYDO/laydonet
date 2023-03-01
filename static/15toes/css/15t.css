@@ -59,7 +59,7 @@
     opacity: 0.5;
 }
 .ft-title {
-    font-size: 3rem;
+    font-size: 2rem;
 }
 .ft-modal {
     display: none;
@@ -124,4 +124,7 @@
     align-items: center;
     font: bold 3rem serif;
     fill: var(--font-color);
+}
+.turn-disable {
+    pointer-events: none;
 }

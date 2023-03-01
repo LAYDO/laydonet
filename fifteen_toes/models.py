@@ -36,6 +36,8 @@ class Game(models.Model):
             for i in Game.winningArrays:
                 temp = list()
                 for x in i:
+                    if x == 0:
+                        return False
                     temp.extend(Game.spaces[x])
                 if (sum(temp) == 15):
                     return True
