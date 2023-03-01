@@ -10,6 +10,8 @@ register = template.Library()
 from .models import Game
 from .forms import CreateLobbyForm, JoinLobbyForm
 from django.contrib.auth.models import User
+import json
+from django.utils import timezone
 
 # Create your views here.
 
@@ -247,24 +249,51 @@ def game(request):
 @user_passes_test(lambda user: user.is_staff)
 def game_turn(request):
     if request.method == 'POST':
-        gameNum = player_active_game(request)
+        # Serializing the data
         data = json.loads(request.body)
-        game = Game.objects.filter(game_id=gameNum)
-        newPlays = game[0].plays
-        newPlays.extend(data['play'])
-        newSpaces = game[0].spaces
-        newSpaces[int(data['space'])] = data['play']
-        newRound = game[0].round + 1
-        if game:
-            game.update(round=newRound)
-            game.update(plays=newPlays)
-            game.update(spaces=newSpaces)
+        try:
+            # Check for active games to pull active game id and supplying it for game object
+            gameNum = player_active_game(request)
+            game = Game.objects.filter(game_id=gameNum)
+            if game[0].round % 2 == 0 and data['play'] % 2 != 0:
+                raise Exception("It is Player 2's turn!")
+            if game[0].round % 2 != 0 and data['play'] % 2 == 0:
+                raise Exception("It is Player 1's turn!")
+            # Initializing updates from current values below:
+            # Next subsequent play
+            newPlays = game[0].plays
+            newPlays.extend(data['play'])
+            # Board
+            newSpaces = game[0].spaces
+            newSpaces[int(data['space'])] = data['play']
+            # incrementing round
+            newRound = game[0].round + 1
+            if game:
+                game.update(round=newRound)
+                game.update(plays=newPlays)
+                game.update(spaces=newSpaces)
 
-        if (game[0].checkWin):
-            # Do some work to prep game for archivability 
-            return HttpResponseRedirect('/fifteentoes/lobby')
-        else:
-            return HttpResponseRedirect('/fifteentoes/game')
+            if (game[0].checkWin):
+                # Do some work to prep game for post-match lobby and archiving
+                game.update(status='COMPLETED')
+                game.update(p1_status='COMPLETED')
+                game.update(p2_status='COMPLETED')
+                game.update(ended=timezone.now)
+                if data['play'] % 2 == 0:
+                    game.update(winner=game[0].player_two)
+                    game.update(loser=game[0].player_one)
+                else:
+                    game.update(winner=game[0].player_one)
+                    game.update(loser=game[0].player_two)
+
+                return HttpResponseRedirect('/fifteentoes/lobby')
+            else:
+                return HttpResponseRedirect('/fifteentoes/game')
+        # Game not found
+        except Game.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': "This isn't your game bro!"},status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
         
 def player_active_game(request):
     current_user = request.user
@@ -283,7 +312,8 @@ def user_click(request):
         click = json.loads(request.body)
         print(txt.format(click['target']))
         return JsonResponse(click, safe=False)
-    
+
+# Custom filter for front-end to cut out zeroes on board used in spaces attribute
 @register.filter(name='cut')
 def cut(value, arg):
     return value.replace(arg, '')

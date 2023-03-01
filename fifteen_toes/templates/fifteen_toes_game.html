@@ -5,7 +5,12 @@
 <link rel="stylesheet" href="{% static 'tictactoe/css/ttt.css' %}" />
 {% endblock %}
 {% block laydo_content_1 %}
+{% if round|divisibleby:2 and user.username == p2 %}
+{% elif not round|divisibleby:2 and user.username == p1 %}
 <div class="laydo-container laydo-app">
+{% else %}
+<div class="laydo-container laydo-app turn-disable">
+{% endif %}
     <div class="ft-row ft-title">{{ privacy }} Game #{{ id }}</div>
     <div class="ft-row ft-round">Round {{ round }}</div>
     <div class="ttt-board">
@@ -40,7 +45,11 @@
                         {% endfor %}
                     </div>
                 </div>
+                {% if round|divisibleby:2 %}
                 <div class="ttt-col-top">
+                {% else %}
+                <div class="ttt-col-top disabled">
+                {% endif %}
                     <div class="ttt-player">{{ p2|default:'Player Two' }}</div>
                     <div class="ttt-row-numbers">
                         {% for i in spaces %}
