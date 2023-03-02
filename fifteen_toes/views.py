@@ -251,21 +251,22 @@ def game_turn(request):
     if request.method == 'POST':
         # Serializing the data
         data = json.loads(request.body)
-        try:
-            # Check for active games to pull active game id and supplying it for game object
-            gameNum = player_active_game(request)
-            game = Game.objects.filter(game_id=gameNum)
-            if game[0].round % 2 == 0 and data['play'] % 2 != 0:
-                raise Exception("It is Player 2's turn!")
-            if game[0].round % 2 != 0 and data['play'] % 2 == 0:
-                raise Exception("It is Player 1's turn!")
-            # Initializing updates from current values below:
-            # Next subsequent play
+        # try:
+        # Check for active games to pull active game id and supplying it for game object
+        gameNum = player_active_game(request)
+        game = Game.objects.filter(game_id=gameNum)
+        # if game[0].round % 2 == 0 and int(data['play']) % 2 != 0:
+        #     raise Exception("It is Player 2's turn!")
+        # if game[0].round % 2 != 0 and int(data['play']) % 2 == 0:
+        #     raise Exception("It is Player 1's turn!")
+        # Initializing updates from current values below:
+        # Next subsequent play
+        if game:
             newPlays = game[0].plays
-            newPlays.extend(data['play'])
+            newPlays.append(int(data['play']))
             # Board
             newSpaces = game[0].spaces
-            newSpaces[int(data['space'])] = data['play']
+            newSpaces[int(data['space'])] = int(data['play'])
             # incrementing round
             newRound = game[0].round + 1
             if game:
@@ -273,12 +274,12 @@ def game_turn(request):
                 game.update(plays=newPlays)
                 game.update(spaces=newSpaces)
 
-            if (game[0].checkWin):
+            if (checkWin(game[0])):
                 # Do some work to prep game for post-match lobby and archiving
                 game.update(status='COMPLETED')
                 game.update(p1_status='COMPLETED')
                 game.update(p2_status='COMPLETED')
-                game.update(ended=timezone.now)
+                game.update(ended=str(timezone.now()))
                 if data['play'] % 2 == 0:
                     game.update(winner=game[0].player_two)
                     game.update(loser=game[0].player_one)
@@ -286,23 +287,56 @@ def game_turn(request):
                     game.update(winner=game[0].player_one)
                     game.update(loser=game[0].player_two)
 
-                return HttpResponseRedirect('/fifteentoes/lobby')
-            else:
-                return HttpResponseRedirect('/fifteentoes/game')
-        # Game not found
-        except Game.DoesNotExist:
-            return JsonResponse({'status': 'error', 'message': "This isn't your game bro!"},status=404)
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=500)
+                return HttpResponseRedirect('/fifteentoes/post')
+             
+        return redirect(request.META['HTTP_REFERER'])
+        # # Game not found
+        # except Game.DoesNotExist:
+        #     return JsonResponse({'status': 'error', 'message': "This isn't your game bro!"},status=404)
+        # except Exception as e:
+        #     return JsonResponse({"status": "error", "message": str(e)}, status=500)
         
 def player_active_game(request):
     current_user = request.user
-    games = list(Game.objects.filter(status='IN-GAME').filter(player_two=current_user.id).all().values())
-    games.extend(list(Game.objects.filter(status='IN-GAME').filter(player_one=current_user.id).all().values()))
+    games = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+    games.extend(list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values()))
     if len(games) == 1:
         return games[0]['game_id']
     else:
         return 0
+    
+def checkWin(game):
+    if game.round <= 9:
+        for i in game.winningArrays:
+            temp = list()
+            for x in i:
+                if game.spaces[x] != 0:
+                    temp.append(game.spaces[x])
+            if (len(temp) == 3 and sum(temp) == 15):
+                return True
+            temp.clear()
+    return False
+    
+
+@user_passes_test(lambda user: user.is_staff)
+def post(request):
+    current_user = request.user
+    post = {}
+    games = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+    games.extend(list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values()))
+    if (len(games) == 1):
+        game = game[0]
+        winner = User.objects.filter(id=game['winer'])[0].username
+        loser = User.objects.filter(id=game['loser'])[0].username
+        post.update({
+            'id': game['game_id'],
+            'privacy': game['privacy'],
+            'winner': winner,
+            'loser': loser,
+            'spaces': game['spaces'],
+            'pw': game['password'],
+        })
+    return render(request, 'fifteen_toes_post.html', post)
 
 # Proof of concept for building metrics
 @csrf_exempt

@@ -1,0 +1,53 @@
+{% extends "app.html" %} {% load static %}
+{% block page_head %}
+<title>15 Toes</title>
+<link rel="stylesheet" href="{% static '15toes/css/15t.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div class="laydo-container laydo-app">
+    <div class="ft-col">
+        <div class="ft-row ft-title">{{ privacy }} Lobby #{{ id }}</div>
+        <div class="ft-col">
+            <div class="ft-row-b">
+                <div class="ft-margin-sb">
+                    Winner: {{ winner }}
+                </div>
+            </div>
+            <div class="ft-row-b">
+                <div class="ft-margin-sb">
+                    Loser: {% loser %}
+                </div>
+            </div>
+        </div>
+        <div class="ttt-col" id="ftSquares">
+            <div class="ttt-row" id="squareRow0">
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square0">{{ spaces.0|cut:"0" }}</div>
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square1">{{ spaces.1|cut:"0" }}</div>
+                <div class="ft-square ttt-border-bottom" id="square2">{{ spaces.2|cut:"0" }}</div>
+            </div>
+            <div class="ttt-row" id="squareRow1">
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square3">{{ spaces.3|cut:"0" }}</div>
+                <div class="ft-square ttt-border-right ttt-border-bottom" id="square4">{{ spaces.4|cut:"0" }}</div>
+                <div class="ft-square ttt-border-bottom" id="square5">{{ spaces.5|cut:"0" }}</div>
+            </div>
+            <div class="ttt-row" id="squareRow2">
+                <div class="ft-square ttt-border-right" id="square6">{{ spaces.6|cut:"0" }}</div>
+                <div class="ft-square ttt-border-right" id="square7">{{ spaces.7|cut:"0" }}</div>
+                <div class="ft-square" id="square8">{{ spaces.8|cut:"0" }}</div>
+            </div>
+        </div>
+        <div id="lobbyOptions" class="ft-row">
+            <form method="post" class="ft-col" action="rematch">
+                <input class="ft-button" type="submit" value="REMATCH"></input>
+            </form>
+            <form method="post" class="ft-col" action="leave">
+                <input class="ft-button" type="submit" value="LEAVE"></input>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static '15toes/js/15t.js' %}"></script>
+<script type="text/javascript" src="{% static '15toes/js/15t_lobby.js' %}"></script>
+{% endblock %}

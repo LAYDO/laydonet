@@ -33,12 +33,13 @@ for (let i = 0; i < 9; i++) {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
-                if (!response.ok) {
+                if (response.ok) {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    }
+                } else {
                     throw new Error('Response was not ok from the server.');
                 }
-                response.json();
-            }).then(data => {
-                console.log(data);
             }).catch(error => {
                 console.error(error);
             })
