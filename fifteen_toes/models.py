@@ -31,19 +31,6 @@ class Game(models.Model):
     created = models.DateTimeField(default=timezone.now)
     ended = models.DateTimeField(default=timezone.now)
 
-    def checkWin():
-        if round < 9:
-            for i in Game.winningArrays:
-                temp = list()
-                for x in i:
-                    if x == 0:
-                        return False
-                    temp.extend(Game.spaces[x])
-                if (sum(temp) == 15):
-                    return True
-                temp.clear()
-        return False
-
 class PlayerStats(models.Model):
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
