@@ -17,4 +17,6 @@ urlpatterns = [
     path('game/', views.game, name='game'),
     path('game/turn', views.game_turn, name='game_turn'),
     path('post/', views.post, name='post'),
+    path('post/rematch', views.post_rematch, name='post_rematch'),
+    path('post/leave', views.post_leave, name='post_leave'),
 ]
