@@ -216,8 +216,10 @@ def game(request):
     current_user = request.user
     game = {}
     p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())        
     if (len(p1) == 1):
+        if p1[0]['status'] == 'COMPLETED':
+            return HttpResponseRedirect('/fifteentoes/post')
         player2 = 0
         if (p1[0]['player_two'] > 0):
             player2 = User.objects.filter(id=p1[0]['player_two'])[0].username
@@ -231,6 +233,8 @@ def game(request):
             'round': p1[0]['round'],
         })
     elif (len(p2) == 1):
+        if p2[0]['status'] == 'COMPLETED':
+            return HttpResponseRedirect('/fifteentoes/post')
         player1 = 0
         if (p2[0]['player_two'] > 0):
             player1 = User.objects.filter(id=p2[0]['player_one'])[0].username
@@ -280,7 +284,7 @@ def game_turn(request):
                 game.update(p1_status='COMPLETED')
                 game.update(p2_status='COMPLETED')
                 game.update(ended=str(timezone.now()))
-                if data['play'] % 2 == 0:
+                if int(data['play']) % 2 == 0:
                     game.update(winner=game[0].player_two)
                     game.update(loser=game[0].player_one)
                 else:
@@ -325,16 +329,16 @@ def post(request):
     games = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
     games.extend(list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values()))
     if (len(games) == 1):
-        game = game[0]
-        winner = User.objects.filter(id=game['winer'])[0].username
-        loser = User.objects.filter(id=game['loser'])[0].username
+        game = games[0]
+        winner = User.objects.get(id=game['winner'])
+        loser = User.objects.get(id=game['loser'])
         post.update({
             'id': game['game_id'],
             'privacy': game['privacy'],
             'player_one': game['player_one'],
             'player_two': game['player_two'],
-            'winner': winner,
-            'loser': loser,
+            'winner': winner.username,
+            'loser': loser.username,
             'spaces': game['spaces'],
             'pw': game['password'],
         })
