@@ -6,6 +6,7 @@
 {% endblock %}
 {% block laydo_content_1 %}
 {% if round|divisibleby:2 and user.username == p2 %}
+<div class="laydo-container laydo-app">
 {% elif not round|divisibleby:2 and user.username == p1 %}
 <div class="laydo-container laydo-app">
 {% else %}
@@ -33,7 +34,11 @@
         </div>
         <div class="ttt-col-b" id="ftPlayerArea">
             <div class="ttt-row-b">
+                {% if not round|divisibleby:2 %}
                 <div class="ttt-col-top">
+                    {% else %}
+                    <div class="ttt-col-top disabled">
+                        {% endif %}
                     <div class="ttt-player">{{ p1|default:'Player One' }}</div>
                     <div class="ttt-row-numbers">
                         {% for i in spaces %}

@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django import template
 register = template.Library()
 
-from .models import Game
+from .models import Game, GameArchive
 from .forms import CreateLobbyForm, JoinLobbyForm
 from django.contrib.auth.models import User
 import json
@@ -72,7 +72,7 @@ def create_lobby(request):
                     loser=0,
                     privacy=f['create'],
                     password=f['create_option'],
-                    plays=[0,0,0,0,0,0,0,0,0],
+                    plays=[],
                     spaces=[0,0,0,0,0,0,0,0,0],
                 )
                 game.save()
@@ -331,12 +331,104 @@ def post(request):
         post.update({
             'id': game['game_id'],
             'privacy': game['privacy'],
+            'player_one': game['player_one'],
+            'player_two': game['player_two'],
             'winner': winner,
             'loser': loser,
             'spaces': game['spaces'],
             'pw': game['password'],
         })
     return render(request, 'fifteen_toes_post.html', post)
+
+@csrf_exempt
+@user_passes_test(lambda user: user.is_staff)
+def post_rematch(request):
+    if request.method == 'POST':
+        current_user = request.user
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        if (len(p1) > 0):
+            p = Game.objects.filter(game_id=p1[0]['game_id'])
+            p.update(p1_status='REMATCH')
+            if (p1[0].p2_status == 'REMATCH'):
+                game = Game(
+                    status='LOBBY',
+                    player_one=p1[0].winner,
+                    p1_status='UNREADY',
+                    player_two=p1[0].loser,
+                    p2_status='UNREADY',
+                    round=0,
+                    winner=0,
+                    loser=0,
+                    privacy='Public',
+                    plays=[],
+                    spaces=[0,0,0,0,0,0,0,0,0],
+                )
+                game.save()
+                return HttpResponseRedirect('/fifteentoes/lobby')
+            elif (p1[0].p2_status == 'LEFT'):
+                game_archival(p1[0].game_id)
+                return HttpResponseRedirect('/fifteentoes')
+        elif (len(p2) > 0):
+            p = Game.objects.filter(game_id=p2[0]['game_id'])
+            p.update(p2_status='REMATCH')
+            if (p2[0].p1_status == 'REMATCH'):
+                game = Game(
+                    status='LOBBY',
+                    player_one=p2[0].winner,
+                    p1_status='UNREADY',
+                    player_two=p2[0].loser,
+                    p2_status='UNREADY',
+                    round=0,
+                    winner=0,
+                    loser=0,
+                    privacy='Public',
+                    plays=[],
+                    spaces=[0,0,0,0,0,0,0,0,0],
+                )
+                game.save()
+                return HttpResponseRedirect('/fifteentoes/lobby')
+            elif (p2[0].p2_status == 'LEFT'):
+                game_archival(p2[0].game_id)
+                return HttpResponseRedirect('/fifteentoes')
+        return redirect(request.META['HTTP_REFERER'])
+    
+@csrf_exempt
+@user_passes_test(lambda user: user.is_staff)
+def post_leave(request):
+    if request.method == 'POST':
+        current_user = request.user
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        if (len(p1) > 0):
+            p = Game.objects.filter(game_id=p1[0]['game_id'])
+            p.update(p1_status='LEFT')
+            if p1[0].p2_status == 'LEFT':
+                game_archival(p1[0].game_id)
+        elif (len(p2) > 0):
+            p = Game.objects.filter(game_id=p2[0]['game_id'])
+            p.update(p2_status='LEFT')
+            if p2[0].p1_status == 'LEFT':
+                game_archival(p2[0].game_id)
+        return HttpResponseRedirect('/fifteentoes')
+    
+    
+def game_archival(id):
+    to_be_archived = Game.objects.get(game_id=id)
+    archival = GameArchive(
+        game_id=to_be_archived.game_id,
+        player_one=to_be_archived.player_one,
+        p1_status=to_be_archived.p1_status,
+        player_two=to_be_archived.player_two,
+        p2_status=to_be_archived.p2_status,
+        plays=to_be_archived.plays,
+        spaces=to_be_archived.spaces,
+        winner=to_be_archived.winner,
+        loser=to_be_archived.loser,
+        created=to_be_archived.created,
+        ended=to_be_archived.ended,
+    )
+    archival.save()
 
 # Proof of concept for building metrics
 @csrf_exempt
