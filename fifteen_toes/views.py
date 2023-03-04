@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django import template
 register = template.Library()
 
-from .models import Game, GameArchive
+from .models import Game
 from .forms import CreateLobbyForm, JoinLobbyForm
 from django.contrib.auth.models import User
 import json
@@ -23,10 +23,13 @@ def fifteen_toes(request):
 @user_passes_test(lambda user: user.is_staff)
 def check_for_match(request):
     url = 'fifteentoes/'
-    if (check_for_lobbies(request)):
-        url += 'lobby'
-    else:
-        url += 'start'
+    match (check_for_lobbies(request)):
+        case 2:
+            url += 'post'
+        case 1:
+            url += 'lobby'
+        case 0:
+            url += 'start'
     match = {}
     match.update({
         'pathname': url,
@@ -36,14 +39,16 @@ def check_for_match(request):
 @user_passes_test(lambda user: user.is_staff)
 def check_for_lobbies(request):
     current_user = request.user
-    lobbies = list(Game.objects.filter(player_one=current_user.id).all().values())
-    lobbies.extend(list(Game.objects.filter(player_two=current_user.id).all().values()))
+    lobbies = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+    lobbies.extend(list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values()))
     txt = '{} in {} lobbies'
     print(txt.format(current_user.username,len(lobbies)))
-    if (len(lobbies) > 0):
-        return True
+    if (len(lobbies) == 1):
+        if lobbies[0]['status'] == 'COMPLETED':
+            return 2
+        return 1
     else:
-        return False
+        return 0
 
 @user_passes_test(lambda user: user.is_staff)
 def start(request):
@@ -109,8 +114,8 @@ def join_lobby(request):
 def lobby(request):
     current_user = request.user
     lobby = {}
-    p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+    p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
     if (len(p1) == 1):
         player2 = 0
         if (p1[0]['player_two'] > 0):
@@ -146,8 +151,8 @@ def lobby(request):
 def game_ready(request):
     if request.method == 'POST':
         current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
         if (len(p1) > 0):
             p = Game.objects.filter(game_id=p1[0]['game_id'])
             p.update(p1_status='READY')
@@ -161,8 +166,8 @@ def game_ready(request):
 def game_unready(request):
     if request.method == 'POST':
         current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
         if (len(p1) > 0):
             p = Game.objects.filter(game_id=p1[0]['game_id'])
             p.update(p1_status='UNREADY')
@@ -176,8 +181,8 @@ def game_unready(request):
 def game_leave(request):
     if request.method == 'POST':
         current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
         if (len(p1) > 0):
             p = Game.objects.filter(game_id=p1[0]['game_id'])
             p.update(p1_status='UNREADY')
@@ -215,8 +220,8 @@ def player_active_lobby(request):
 def game(request):
     current_user = request.user
     game = {}
-    p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())        
+    p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())        
     if (len(p1) == 1):
         if p1[0]['status'] == 'COMPLETED':
             return HttpResponseRedirect('/fifteentoes/post')
@@ -302,8 +307,8 @@ def game_turn(request):
         
 def player_active_game(request):
     current_user = request.user
-    games = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
-    games.extend(list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values()))
+    games = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
+    games.extend(list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values()))
     if len(games) == 1:
         return games[0]['game_id']
     else:
@@ -326,8 +331,12 @@ def checkWin(game):
 def post(request):
     current_user = request.user
     post = {}
-    games = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-    games.extend(list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values()))
+    lobbies = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').exclude(status='COMPLETED').all().values())
+    lobbies.extend(list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').exclude(status='COMPLETED').all().values()))
+    if len(lobbies) > 0:
+        return HttpResponseRedirect('/fifteentoes/lobby')
+    games = list(Game.objects.filter(player_one=current_user.id).filter(status='COMPLETED').all().values())
+    games.extend(list(Game.objects.filter(player_two=current_user.id).filter(status='COMPLETED').all().values()))
     if (len(games) == 1):
         game = games[0]
         winner = User.objects.get(id=game['winner'])
@@ -337,6 +346,10 @@ def post(request):
             'privacy': game['privacy'],
             'player_one': game['player_one'],
             'player_two': game['player_two'],
+            'p1_status': game['p1_status'],
+            'p2_status': game['p2_status'],
+            'winner_id': game['winner'],
+            'loser_id': game['loser'],
             'winner': winner.username,
             'loser': loser.username,
             'spaces': game['spaces'],
@@ -349,17 +362,18 @@ def post(request):
 def post_rematch(request):
     if request.method == 'POST':
         current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
         if (len(p1) > 0):
             p = Game.objects.filter(game_id=p1[0]['game_id'])
             p.update(p1_status='REMATCH')
-            if (p1[0].p2_status == 'REMATCH'):
+            if (p1[0]['p2_status'] == 'REMATCH'):
+                game_archival(p1[0]['game_id'])
                 game = Game(
                     status='LOBBY',
-                    player_one=p1[0].winner,
+                    player_one=p1[0]['winner'],
                     p1_status='UNREADY',
-                    player_two=p1[0].loser,
+                    player_two=p1[0]['loser'],
                     p2_status='UNREADY',
                     round=0,
                     winner=0,
@@ -370,18 +384,19 @@ def post_rematch(request):
                 )
                 game.save()
                 return HttpResponseRedirect('/fifteentoes/lobby')
-            elif (p1[0].p2_status == 'LEFT'):
-                game_archival(p1[0].game_id)
+            elif (p1[0]['p2_status'] == 'LEFT'):
+                game_archival(p1[0]['game_id'])
                 return HttpResponseRedirect('/fifteentoes')
         elif (len(p2) > 0):
             p = Game.objects.filter(game_id=p2[0]['game_id'])
             p.update(p2_status='REMATCH')
-            if (p2[0].p1_status == 'REMATCH'):
+            if (p2[0]['p1_status'] == 'REMATCH'):
+                game_archival(p2[0]['game_id'])
                 game = Game(
                     status='LOBBY',
-                    player_one=p2[0].winner,
+                    player_one=p2[0]['winner'],
                     p1_status='UNREADY',
-                    player_two=p2[0].loser,
+                    player_two=p2[0]['loser'],
                     p2_status='UNREADY',
                     round=0,
                     winner=0,
@@ -392,8 +407,8 @@ def post_rematch(request):
                 )
                 game.save()
                 return HttpResponseRedirect('/fifteentoes/lobby')
-            elif (p2[0].p2_status == 'LEFT'):
-                game_archival(p2[0].game_id)
+            elif (p2[0]['p2_status'] == 'LEFT'):
+                game_archival(p2[0]['game_id'])
                 return HttpResponseRedirect('/fifteentoes')
         return redirect(request.META['HTTP_REFERER'])
     
@@ -402,37 +417,27 @@ def post_rematch(request):
 def post_leave(request):
     if request.method == 'POST':
         current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVED').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVED').all().values())
+        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
+        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
         if (len(p1) > 0):
             p = Game.objects.filter(game_id=p1[0]['game_id'])
             p.update(p1_status='LEFT')
             if p1[0].p2_status == 'LEFT':
-                game_archival(p1[0].game_id)
+                game_archival(p1[0]['game_id'])
         elif (len(p2) > 0):
             p = Game.objects.filter(game_id=p2[0]['game_id'])
             p.update(p2_status='LEFT')
             if p2[0].p1_status == 'LEFT':
-                game_archival(p2[0].game_id)
+                game_archival(p2[0]['game_id'])
         return HttpResponseRedirect('/fifteentoes')
     
     
 def game_archival(id):
     to_be_archived = Game.objects.get(game_id=id)
-    archival = GameArchive(
-        game_id=to_be_archived.game_id,
-        player_one=to_be_archived.player_one,
-        p1_status=to_be_archived.p1_status,
-        player_two=to_be_archived.player_two,
-        p2_status=to_be_archived.p2_status,
-        plays=to_be_archived.plays,
-        spaces=to_be_archived.spaces,
-        winner=to_be_archived.winner,
-        loser=to_be_archived.loser,
-        created=to_be_archived.created,
-        ended=to_be_archived.ended,
-    )
-    archival.save()
+    to_be_archived.status = 'ARCHIVE'
+    to_be_archived.p1_status = 'ARCHIVE'
+    to_be_archived.p2_status = 'ARCHIVE'
+    to_be_archived.save()
 
 # Proof of concept for building metrics
 @csrf_exempt

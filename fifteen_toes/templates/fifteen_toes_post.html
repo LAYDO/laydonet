@@ -13,9 +13,9 @@
                 <div class="ft-margin-sb">
                     Winner: {{ winner }}
                 </div>
-                {% if winner == player_one and p1_status == 'REMATCH' %}
+                {% if winner_id == player_one and p1_status == 'REMATCH' %}
                 <div class="fa-solid fa-check ft-lime"></div>
-                {% elif winner == player_two and p2_status == 'REMATCH' %}
+                {% elif winner_id == player_two and p2_status == 'REMATCH' %}
                 <div class="fa-solid fa-check ft-lime"></div>
                 {% endif %}
             </div>
@@ -23,9 +23,9 @@
                 <div class="ft-margin-sb">
                     Loser: {{ loser }}
                 </div>
-                {% if loser == player_one and p1_status == 'REMATCH' %}
+                {% if loser_id == player_one and p1_status == 'REMATCH' %}
                 <div class="fa-solid fa-check ft-lime"></div>
-                {% elif loser == player_two and p2_status == 'REMATCH' %}
+                {% elif loser_id == player_two and p2_status == 'REMATCH' %}
                 <div class="fa-solid fa-check ft-lime"></div>
                 {% endif %}
             </div>
