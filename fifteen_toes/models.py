@@ -40,17 +40,3 @@ class PlayerStats(models.Model):
     games_forfeited = models.IntegerField(default=0)
     win_percent = models.DecimalField(decimal_places=2,max_digits=3, default=0)
     loss_percent = models.DecimalField(decimal_places=2,max_digits=3, default=0)
-
-class GameArchive(models.Model):
-    archive_id: models.BigAutoField(primary_key=True)
-    game_id: models.BigIntegerField(blank=False)
-    player_one = models.IntegerField(blank=False, default=0)
-    p1_status = models.CharField(max_length=10, default='COMPLETED')
-    player_two = models.IntegerField(blank=False, default=0)
-    p2_status = models.CharField(max_length=10, default='COMPLETED')
-    plays: ArrayField(models.IntegerField(blank=False), size=9)
-    spaces: ArrayField(models.IntegerField(blank=False), size=9)
-    winner: models.IntegerField(blank=False)
-    loser: models.IntegerField(blank=False)
-    created = models.DateTimeField()
-    ended = models.DateTimeField()

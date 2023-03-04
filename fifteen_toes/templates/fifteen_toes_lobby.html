@@ -54,12 +54,10 @@
                     {% endif %}
                 {% endif %}
                 <form method="post" class="ft-col" action="start">
-                    {% if status == 'LOBBY' %}
+                    {% if p1_status == 'READY' and p2_status == 'READY' %}
                     <input class="ft-button" type="submit" value="START"></input>
                     {% elif status == 'IN-GAME' %}
                     <input class="ft-button" type="submit" value="CONTINUE"></input>
-                    {% else %}
-                    <input class="ft-button" type="submit" value="REMATCH"></input>
                     {% endif %}
                 </form>
         </div>
