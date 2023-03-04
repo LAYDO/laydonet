@@ -422,12 +422,12 @@ def post_leave(request):
         if (len(p1) > 0):
             p = Game.objects.filter(game_id=p1[0]['game_id'])
             p.update(p1_status='LEFT')
-            if p1[0].p2_status == 'LEFT':
+            if p1[0]['p2_status'] == 'LEFT':
                 game_archival(p1[0]['game_id'])
         elif (len(p2) > 0):
             p = Game.objects.filter(game_id=p2[0]['game_id'])
             p.update(p2_status='LEFT')
-            if p2[0].p1_status == 'LEFT':
+            if p2[0]['p1_status'] == 'LEFT':
                 game_archival(p2[0]['game_id'])
         return HttpResponseRedirect('/fifteentoes')
     
