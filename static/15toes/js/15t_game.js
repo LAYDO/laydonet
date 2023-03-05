@@ -25,9 +25,13 @@ for (let i = 0; i < 9; i++) {
     square === null || square === void 0 ? void 0 : square.addEventListener('click', () => {
         if (selectedElement != null || selectedElement != '') {
             let selectedSquare = square === null || square === void 0 ? void 0 : square.id.slice(-1);
+            if (square === null || square === void 0 ? void 0 : square.textContent) {
+                throw new Error('Square already has a value');
+            }
             console.log(`Trying to place ${selectedElement} in square ${selectedSquare}`);
             let url = `${window.location.href}turn`;
             let data = { space: selectedSquare, play: selectedElement };
+            square === null || square === void 0 ? void 0 : square.append(loader());
             fetch(url, {
                 method: 'POST',
                 body: JSON.stringify(data),
@@ -35,6 +39,9 @@ for (let i = 0; i < 9; i++) {
                     'Content-Type': 'application/json'
                 }
             }).then(response => {
+                square === null || square === void 0 ? void 0 : square.childNodes.forEach(node => {
+                    node.remove();
+                });
                 if (response.ok) {
                     if (response.redirected) {
                         window.location.href = response.url;
@@ -48,4 +55,39 @@ for (let i = 0; i < 9; i++) {
             });
         }
     });
+}
+function loader() {
+    let container = document.createElement('section');
+    container.classList.add('container');
+    let div1 = document.createElement('div');
+    let h6 = document.createElement('span');
+    h6.classList.add('one');
+    h6.classList.add('h6');
+    let h3 = document.createElement('span');
+    h3.classList.add('two');
+    h3.classList.add('h3');
+    div1.append(h6);
+    div1.append(h3);
+    let div2 = document.createElement('div');
+    let h1 = document.createElement('span');
+    h1.classList.add('one');
+    h1.classList.add('h1');
+    let h4 = document.createElement('span');
+    h4.classList.add('two');
+    h4.classList.add('h4');
+    div2.append(h1);
+    div2.append(h4);
+    let div3 = document.createElement('div');
+    let h5 = document.createElement('span');
+    h5.classList.add('one');
+    h5.classList.add('h5');
+    let h2 = document.createElement('span');
+    h2.classList.add('two');
+    h2.classList.add('h2');
+    div3.append(h5);
+    div3.append(h2);
+    container.append(div1);
+    container.append(div2);
+    container.append(div3);
+    return container;
 }

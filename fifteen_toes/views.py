@@ -260,50 +260,56 @@ def game_turn(request):
     if request.method == 'POST':
         # Serializing the data
         data = json.loads(request.body)
-        # try:
-        # Check for active games to pull active game id and supplying it for game object
-        gameNum = player_active_game(request)
-        game = Game.objects.filter(game_id=gameNum)
-        # if game[0].round % 2 == 0 and int(data['play']) % 2 != 0:
-        #     raise Exception("It is Player 2's turn!")
-        # if game[0].round % 2 != 0 and int(data['play']) % 2 == 0:
-        #     raise Exception("It is Player 1's turn!")
-        # Initializing updates from current values below:
-        # Next subsequent play
-        if game:
-            newPlays = game[0].plays
-            newPlays.append(int(data['play']))
-            # Board
-            newSpaces = game[0].spaces
-            newSpaces[int(data['space'])] = int(data['play'])
-            # incrementing round
-            newRound = game[0].round + 1
+        try:
+            # Check for active games to pull active game id and supplying it for game object
+            gameNum = player_active_game(request)
+            game = Game.objects.filter(game_id=gameNum)
+            if game[0].round % 2 == 0 and int(data['play']) % 2 != 0:
+                raise Exception("It is Player 2's turn!")
+            if game[0].round % 2 != 0 and int(data['play']) % 2 == 0:
+                raise Exception("It is Player 1's turn!")
+            if game[0].spaces[int(data['space'])] != 0:
+                raise Exception('Square is already occupied')
+            if game[0].round % 2 == 0 and int(data['play']) % 2 != 0:
+                raise Exception('Wrong number for the round. Should be an even from Player 2.')
+            if game[0].round % 2 != 0 and int(data['play']) % 2 == 0:
+                raise Exception('Wrong number for the round. Should be an odd from Player 1.')
+            # Initializing updates from current values below:
+            # Next subsequent play
             if game:
-                game.update(round=newRound)
-                game.update(plays=newPlays)
-                game.update(spaces=newSpaces)
+                newPlays = game[0].plays
+                newPlays.append(int(data['play']))
+                # Board
+                newSpaces = game[0].spaces
+                newSpaces[int(data['space'])] = int(data['play'])
+                # incrementing round
+                newRound = game[0].round + 1
+                if game:
+                    game.update(round=newRound)
+                    game.update(plays=newPlays)
+                    game.update(spaces=newSpaces)
 
-            if (checkWin(game[0])):
-                # Do some work to prep game for post-match lobby and archiving
-                game.update(status='COMPLETED')
-                game.update(p1_status='COMPLETED')
-                game.update(p2_status='COMPLETED')
-                game.update(ended=str(timezone.now()))
-                if int(data['play']) % 2 == 0:
-                    game.update(winner=game[0].player_two)
-                    game.update(loser=game[0].player_one)
-                else:
-                    game.update(winner=game[0].player_one)
-                    game.update(loser=game[0].player_two)
+                if (checkWin(game[0])):
+                    # Do some work to prep game for post-match lobby and archiving
+                    game.update(status='COMPLETED')
+                    game.update(p1_status='COMPLETED')
+                    game.update(p2_status='COMPLETED')
+                    game.update(ended=str(timezone.now()))
+                    if int(data['play']) % 2 == 0:
+                        game.update(winner=game[0].player_two)
+                        game.update(loser=game[0].player_one)
+                    else:
+                        game.update(winner=game[0].player_one)
+                        game.update(loser=game[0].player_two)
 
-                return HttpResponseRedirect('/fifteentoes/post')
-             
-        return redirect(request.META['HTTP_REFERER'])
+                    return HttpResponseRedirect('/fifteentoes/post')
+                
+            return redirect(request.META['HTTP_REFERER'])
         # # Game not found
-        # except Game.DoesNotExist:
-        #     return JsonResponse({'status': 'error', 'message': "This isn't your game bro!"},status=404)
-        # except Exception as e:
-        #     return JsonResponse({"status": "error", "message": str(e)}, status=500)
+        except Game.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': "This isn't your game bro!"},status=404)
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=500)
         
 def player_active_game(request):
     current_user = request.user
@@ -435,8 +441,6 @@ def post_leave(request):
 def game_archival(id):
     to_be_archived = Game.objects.get(game_id=id)
     to_be_archived.status = 'ARCHIVE'
-    to_be_archived.p1_status = 'ARCHIVE'
-    to_be_archived.p2_status = 'ARCHIVE'
     to_be_archived.save()
 
 # Proof of concept for building metrics
