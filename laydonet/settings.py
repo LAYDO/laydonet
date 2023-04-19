@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY") #'django-insecure-)f!c-)t!0$53a*mnm8*@xx9kem-eu-&l8kek7)um12lax&8^n9'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # os.getenv("DEBUG", "False") == "True"
@@ -115,7 +115,7 @@ if DEVELOPMENT_MODE is True:
 	    'NAME': 'laydonetdb',
         'USER': 'laydonetdb',
 	    'PASSWORD': os.environ.get("DB_PASSWORD"),
-	    'HOST': os.environ.get("DATABASE_URL"), #'app-29d13bde-6d4d-4934-b21f-6c9dfa708572-do-user-12113309-0.b.db.ondigitalocean.com',
+	    'HOST': os.environ.get("DATABASE_URL"),
         'PORT': '25060'
         }
     }
