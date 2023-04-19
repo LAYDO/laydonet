@@ -2,10 +2,10 @@ import time
 from django.http.response import JsonResponse
 from django.shortcuts import render
 # from geopy.geocoders import Nominatim
-import requests
+import requests, os
 
-APIKEY = '1e38a5a8f324c0f755a48e3d5bb75708'
-STLNKEY = '9de243494c0b295cca9337e1e96b00e2'
+APIKEY = os.getenv('OPEN_WEATHER_APP_ID')
+STLNKEY = os.getenv('OPEN_WEATHER_API_KEY')
 baseURL = 'https://api.openweathermap.org/data/2.5/'
 geoURL = 'https://api.openweathermap.org/geo/1.0/direct?'
 seaCoords = (47.602270, -122.320390)
@@ -14,6 +14,12 @@ seaCoords = (47.602270, -122.320390)
 
 # Create your views here.
 
+def get_tokens(request):
+    tokens = {
+        "mapbox_access_token": os.getenv('MAPBOX_ACCESS_KEY'),
+        "open_weather_api_key": os.getenv('OPEN_WEATHER_API_KEY'),
+    }
+    return JsonResponse(tokens)
 
 def weather(request):
     return render(request, 'weather.html', {})

@@ -53,7 +53,7 @@ class Sun extends ElementTile {
         let darkness = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         darkness.setAttribute('d', `
             M ${(this.baseW / 2) + ((this.radius * 0.81) * Math.cos(sunset))} ${(this.baseW / 2) + ((this.radius * 0.81) * Math.sin(sunset))}
-            A ${(this.radius * 0.81)} ${(this.radius * 0.81)}, 0, 1, 1, ${(this.baseW / 2) + ((this.radius * 0.81) * Math.cos(sunrise))} ${(this.baseW / 2) + ((this.radius * 0.81) * Math.sin(sunrise))}
+            A ${(this.radius * 0.81)} ${(this.radius * 0.81)}, 0, 0, 1, ${(this.baseW / 2) + ((this.radius * 0.81) * Math.cos(sunrise))} ${(this.baseW / 2) + ((this.radius * 0.81) * Math.sin(sunrise))}
             L ${(this.baseW / 2)} ${(this.baseW / 2)} Z
         `);
         darkness.setAttribute('fill', 'rgb(0, 0, 133)');
