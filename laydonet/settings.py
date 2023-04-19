@@ -115,7 +115,7 @@ if DEVELOPMENT_MODE is True:
 	    'NAME': 'laydonetdb',
         'USER': 'laydonetdb',
 	    'PASSWORD': os.environ.get("DB_PASSWORD"),
-	    'HOST': os.environ.get("DATABASE_URL"),
+	    'HOST': os.environ.get("DATABASE_HOST"),
         'PORT': '25060'
         }
     }
