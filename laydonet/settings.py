@@ -25,7 +25,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)f!c-)t!0$53a*mnm8*@xx9kem-eu-&l8kek7)um12lax&8^n9'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY") #'django-insecure-)f!c-)t!0$53a*mnm8*@xx9kem-eu-&l8kek7)um12lax&8^n9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True # os.getenv("DEBUG", "False") == "True"
@@ -36,6 +36,7 @@ ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS",'127.0.0.1,localhost').split(',
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'whitenoise.runserver_nostatic',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -58,6 +59,7 @@ INSTALLED_APPS = [
     'tictactoe',
     'fifteen_toes',
     'users',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -92,7 +94,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'laydonet.wsgi.application'
+# WSGI_APPLICATION = 'laydonet.wsgi.application'
+# Channels
+ASGI_APPLICATION = 'laydonet.asgi.application'
+
+CHANNEL_LAYERS = {
+    "BACKEND": "channels.layers.InMemoryChannelLayer"
+}
 
 DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
@@ -107,7 +115,7 @@ if DEVELOPMENT_MODE is True:
 	    'NAME': 'laydonetdb',
         'USER': 'laydonetdb',
 	    'PASSWORD': os.environ.get("DB_PASSWORD"),
-	    'HOST': 'app-29d13bde-6d4d-4934-b21f-6c9dfa708572-do-user-12113309-0.b.db.ondigitalocean.com',
+	    'HOST': os.environ.get("DATABASE_URL"), #'app-29d13bde-6d4d-4934-b21f-6c9dfa708572-do-user-12113309-0.b.db.ondigitalocean.com',
         'PORT': '25060'
         }
     }

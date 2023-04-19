@@ -1,3 +1,12 @@
+let MAPBOX_ACCESS_TOKEN: string;
+let OPENWEATHERMAP_ACCESS_TOKEN: string;
+
+async function fetchTokens() {
+    let response = await fetch('api/tokens');
+    let tokens = await response.json();
+    MAPBOX_ACCESS_TOKEN = tokens['mapbox_access_token'];
+    OPENWEATHERMAP_ACCESS_TOKEN = tokens['open_weather_api_key'];
+}
 class WMap {
     public mapElement: HTMLElement;
     private mapTitle: HTMLElement;
@@ -5,20 +14,24 @@ class WMap {
 
     constructor() {
         this.mapElement = document.getElementById('map')!;
-
+        
         this.mapTitle = document.createElement('div');
         this.mapTitle.className = 'container-title';
         let span = document.createElement('span');
         span.className = 'fas fa-map pad-right';
         this.mapTitle.append(span);
         this.mapTitle.append('Weather Map');
-
+        
         this.map = document.createElement('div');
         this.map.id = 'weatherMap';
         this.map.className = 'map-container';
-
+        
         this.mapElement.append(this.mapTitle);
         this.mapElement.append(this.map);
+
+        (async () => {
+            await fetchTokens();
+        })();
     }
 
     toggle(loaded: Boolean) {
@@ -43,26 +56,21 @@ class WMap {
             id: 'mapbox/dark-v10',
             tileSize: 512,
             zoomOffset: -1,
-            accessToken: 'pk.eyJ1IjoibGF5ZG8iLCJhIjoiY2t0bmcwZW5oMDJqNTJwbzJ1cm9uZHZjMiJ9.aP2xQEplUndXkrSgmkB9Sw'
+            accessToken: MAPBOX_ACCESS_TOKEN,
         }).addTo(weatherMap);
-        let precipMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
+        let precipMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/PR0/{z}/{x}/{y}?appid={accessToken}`, {
             attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-            op: 'PR0',
             opacity: 0.5,
-            accessToken: '9de243494c0b295cca9337e1e96b00e2',
+            accessToken: OPENWEATHERMAP_ACCESS_TOKEN,
         }),
-            windMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
+            windMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/WND/{z}/{x}/{y}?appid={accessToken}&use_norm=true&arrow_step=16`, {
                 attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-                op: 'WND',
-                use_norm: true,
-                arrow_step: 16,
-                accessToken: '9de243494c0b295cca9337e1e96b00e2',
+                accessToken: OPENWEATHERMAP_ACCESS_TOKEN,
             }),
-            cloudMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/{op}/{z}/{x}/{y}?appid={accessToken}`, {
+            cloudMap = L.tileLayer(`http://maps.openweathermap.org/maps/2.0/weather/CL/{z}/{x}/{y}?appid={accessToken}`, {
                 attribution: '&copy; <a href="https://openweathermap.org/api">OWM</a>',
-                op: 'CL',
                 opacity: 0.8,
-                accessToken: '9de243494c0b295cca9337e1e96b00e2',
+                accessToken: OPENWEATHERMAP_ACCESS_TOKEN,
             });
         let mapLayers = {
             'Precip': precipMap,

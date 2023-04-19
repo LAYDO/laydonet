@@ -1,4 +1,8 @@
 let selectedElement = '';
+let game_id = document.getElementById('ftSquares')?.getAttribute('game_id');
+
+let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
+let socket = new WebSocket(connectionString);
 
 for (let i = 0; i < 9; i++) {
     let text = document.getElementById(`text${i}`);
@@ -26,80 +30,56 @@ for (let i = 0; i < 9; i++) {
             if (square?.textContent) {
                 throw new Error('Square already has a value');
             }
-            console.log(`Trying to place ${selectedElement} in square ${selectedSquare}`);
-            let url = `${window.location.href}turn`;
-            let data = { space: selectedSquare, play: selectedElement };
-            square?.append(loader());
-            fetch(url, {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            }).then(response => {
-                square?.childNodes.forEach(node => {
-                    node.remove();
-                })
-                if (response.ok) {
-                    if (response.redirected) {
-                        window.location.href = response.url;
-                    }
-                } else {
-                    throw new Error('Response was not ok from the server.');
-                }
-            }).catch(error => {
-                console.error(error);
-            })
+            if (selectedSquare) {
+                console.log(`Trying to place ${selectedElement} in square ${selectedSquare}`);
+                makeMove(selectedSquare, selectedElement);
+            }
         }
     })
 }
 
-function loader() {
-    let container = document.createElement('section');
-    container.classList.add('container');
-
-    let div1 = document.createElement('div');
-
-    let h6 = document.createElement('span');
-    h6.classList.add('one');
-    h6.classList.add('h6');
-
-    let h3 = document.createElement('span');
-    h3.classList.add('two');
-    h3.classList.add('h3');
-
-    div1.append(h6);
-    div1.append(h3);
-
-    let div2 = document.createElement('div');
-
-    let h1 = document.createElement('span');
-    h1.classList.add('one');
-    h1.classList.add('h1');
-
-    let h4 = document.createElement('span');
-    h4.classList.add('two');
-    h4.classList.add('h4');
-
-    div2.append(h1);
-    div2.append(h4);
-
-    let div3 = document.createElement('div');
-
-    let h5 = document.createElement('span');
-    h5.classList.add('one');
-    h5.classList.add('h5');
-
-    let h2 = document.createElement('span');
-    h2.classList.add('two');
-    h2.classList.add('h2');
-
-    div3.append(h5);
-    div3.append(h2);
-
-    container.append(div1);
-    container.append(div2);
-    container.append(div3);
-
-    return container;
+function makeMove(square: string, play: string) {
+    let _square = parseInt(square);
+    let _play = parseInt(play);
+    let data = {
+        'type': 'move',
+        'message': {
+            'game_id': game_id,
+            'space': _square,
+            'play': _play
+        }
+    };
+    socket.send(JSON.stringify(data));
 }
+
+function connect() {
+    socket.onopen = function open() {
+        console.log('Connected to websocket');
+    }
+
+    socket.onclose = function (e) {
+        console.log('Disconnected from websocket.  Reconnect attempt in 1 second...', e.reason);
+        setTimeout(function () {
+            connect();
+        }, 1000);
+    }
+
+    socket.onmessage = function (e) {
+        let data = JSON.parse(e.data);
+        data = data['payload'];
+        if (data['type'] == 'move') {
+            let play = data['play'];
+            let space = data['space'];
+            let square = document.getElementById(`square${space}`);
+            if (square) {
+                square.innerHTML = play;
+            }
+        } else if (data['type'] == 'redirect') {
+            window.location.href = data['url'];
+        } else if (data['type'] == 'error') {
+            alert(data['message']);
+        }
+    }
+}
+
+connect();

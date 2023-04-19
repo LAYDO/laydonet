@@ -1,5 +1,5 @@
 class Moon extends ElementTile {
-    private remainInterval: number;
+    private remainInterval: any;
     public animMoonId: number;
     private baseW: number;
     private radius: number;
