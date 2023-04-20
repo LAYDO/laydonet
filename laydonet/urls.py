@@ -36,4 +36,5 @@ urlpatterns = [
     path('tictactoe/', include('tictactoe.urls')),
     path('fifteentoes/', include('fifteen_toes.urls')),
     path('users/', include('users.urls')),
+    path('orbiter/', include('orbiter.urls')),
 ]

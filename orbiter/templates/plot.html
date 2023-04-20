@@ -1,0 +1,14 @@
+{% extends "app.html" %} {% load static %}
+{% block page_head %}
+<title>Orbiter</title>
+<link rel="stylesheet" href="{% static 'orbiter/css/orbiter.css' %}" />
+<link rel="stylesheet" href="{% static 'orbiter/css/ol.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<h1>{{ satellite.name }}</h1>
+<div id="orbiterMap" data-satellite-id="{{ satellite.id }}" style="width: 100%; height: 500px;"></div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static 'orbiter/js/orbiter.js' %}"></script>
+<script type="text/javascript" src="{% static 'orbiter/js/ol.js' %}"></script>
+{% endblock %}

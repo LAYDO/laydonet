@@ -1,0 +1,28 @@
+{% extends "app.html" %} {% load static %}
+{% block page_head %}
+<title>Orbiter</title>
+<link rel="stylesheet" href="{% static 'orbiter/css/orbiter.css' %}" />
+<link rel="stylesheet" href="{% static 'orbiter/css/ol.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<h1>Satellite Orbit Plotter</h1>
+{% if user.is_staff %}
+<form method="post" action="{% url 'create_satellite' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Add Satellite</button>
+</form>
+{% endif %}
+<h2>Existing Satellites</h2>
+<ul>
+    {% for satellite in satellites %}
+    <li><a href="{% url 'plot_satellite' satellite.id %}">{{ satellite.name }}</a></li>
+    {% empty %}
+    <li>No satellites found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static 'orbiter/js/orbiter.js' %}"></script>
+<script type="text/javascript" src="{% static 'orbiter/js/ol.js' %}"></script>
+{% endblock %}
