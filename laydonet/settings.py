@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'tictactoe',
     'fifteen_toes',
     'users',
-    'channels'
+    'channels',
+    'orbiter',
 ]
 
 MIDDLEWARE = [
