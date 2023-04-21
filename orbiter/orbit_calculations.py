@@ -7,10 +7,8 @@ def calculate_positions(tle_line1, tle_line2, n_past=60, n_future=60):
     satellite = EarthSatellite(tle_line1, tle_line2)
     ts = load.timescale()
 
-    # Calculate current position
+    # Calculate current time during app startup
     t = ts.now()
-    geocentric = satellite.at(t)
-    current_position = geocentric.subpoint().longitude.degrees, geocentric.subpoint().latitude.degrees
     
     # Calculate past and future positions
     past_positions = []
@@ -28,10 +26,22 @@ def calculate_positions(tle_line1, tle_line2, n_past=60, n_future=60):
             future_positions.append(position_offset)
     
     return {
-        'current': {'longitude': current_position[0], 'latitude': current_position[1]}, 
-        'positions': {
             'past': past_positions,
             'future': future_positions
-        }
+    }
+
+def calculate_current_position(tle_line1, tle_line2):
+    # Load the TLE data
+    satellite = EarthSatellite(tle_line1, tle_line2)
+    ts = load.timescale()
+
+    # Calculate current position
+    t = ts.now()
+    geocentric = satellite.at(t)
+    current_position = geocentric.subpoint().longitude.degrees, geocentric.subpoint().latitude.degrees
+
+    return {
+        'longitude': current_position[0], 
+        'latitude': current_position[1]
     }
         

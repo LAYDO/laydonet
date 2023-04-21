@@ -1,3 +1,54 @@
+const updateInterval = 5000;
+
+async function fetchCurrentPosition(satelliteId) {
+    return fetch(`/orbiter/api/satellite/${satelliteId}/current_position/`)
+        .then((response) => {
+            return response.text();
+        }).then((responseText) => {
+            return JSON.parse(responseText);
+        }).then((data) => {
+            return data;
+        });
+}
+
+async function fetchTrajectory(satelliteId) {
+    return fetch(`/orbiter/api/satellite/${satelliteId}/trajectory/`)
+        .then((response) => {
+            return response.text();
+        }).then((responseText) => {
+            return JSON.parse(responseText);
+        }).then((data) => {
+            return data;
+        });
+}
+
+document.addEventListener('DOMContentLoaded', async function () {
+    const mapElement = document.getElementById('orbiterMap');
+    const satelliteId = mapElement.dataset.satelliteId;
+    if (typeof satelliteId !== 'undefined') {
+        const currentPosition = await fetchCurrentPosition(satelliteId);
+        const trajectory = await fetchTrajectory(satelliteId);
+
+        const mapData = createMap(
+            currentPosition.longitude,
+            currentPosition.latitude,
+            trajectory.past,
+            trajectory.future,
+        );
+
+        const map = mapData.map;
+        const currentPositionFeature = mapData.currentPositionFeature;
+
+        setInterval(async () => {
+            const currentPosition = await fetchCurrentPosition(satelliteId);
+
+            currentPositionFeature.getGeometry().setCoordinates(ol.proj.fromLonLat([currentPosition.longitude, currentPosition.latitude]));
+            map.getView().setCenter(ol.proj.fromLonLat([currentPosition.longitude, currentPosition.latitude]));
+
+        }, updateInterval);
+    }
+});
+
 function createMap(lon, lat, past_positions, future_positions) {
     // Create the map instance and set the view
     const map = new ol.Map({
@@ -59,31 +110,9 @@ function createMap(lon, lat, past_positions, future_positions) {
     // Add blue dots for future positions
     addPositionMarkers(future_positions, 'blue');
 
-    return map;
+    return {
+        map: map,
+        currentPositionFeature: currentPositionFeature
+    };
 }
-
-
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    const mapElement = document.getElementById('orbiterMap');
-    const satelliteId = mapElement.dataset.satelliteId;
-    if (typeof satelliteId !== 'undefined') {
-        fetch(`/orbiter/api/satellite/${satelliteId}/positions/`)
-            .then((response) => {
-                return response.text();
-            })
-            .then((responseText) => {
-                return JSON.parse(responseText);
-            })
-            .then((data) => {
-                console.log('Satellite positions received:', data);
-                const map = createMap(
-                    data.current.longitude,
-                    data.current.latitude,
-                    data.positions.past,
-                    data.positions.future,);
-            });
-    }
-});
 

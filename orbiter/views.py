@@ -21,9 +21,13 @@ def plot_satellite(request, satellite_id):
     satellite = Satellite.objects.get(pk=satellite_id)
     return render(request, 'plot.html', {'satellite': satellite})
 
-def satellite_positions(request, satellite_id):
+def satellite_current_position(request, satellite_id):
+    satellite = Satellite.objects.get(pk=satellite_id)
+    position = orbit_calculations.calculate_current_position(satellite.tle_line1, satellite.tle_line2)
+    return JsonResponse(position, safe=False)
+
+def satellite_trajectory(request, satellite_id):
     satellite = Satellite.objects.get(pk=satellite_id)
     positions = orbit_calculations.calculate_positions(satellite.tle_line1, satellite.tle_line2)
-    print(positions)
     return JsonResponse(positions, safe=False)
 
