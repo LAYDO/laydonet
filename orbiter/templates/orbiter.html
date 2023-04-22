@@ -6,19 +6,10 @@
 {% endblock %}
 {% block laydo_content_1 %}
 <h1>Satellite Orbit Plotter</h1>
-{% if user.is_staff %}
-<form method="post" action="{% url 'create_satellite' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Satellite</button>
-</form>
-{% endif %}
-<h2>Existing Satellites</h2>
-<ul>
+<h2>Space Stations</h2>
     {% for satellite in satellites %}
-    <li><a href="{% url 'plot_satellite' satellite.id %}">{{ satellite.name }}</a></li>
+    <a href="{% url 'plot_satellite' satellite.id %}">{{ satellite.name }}</a>
     {% empty %}
-    <li>No satellites found.</li>
+    No satellites found.
     {% endfor %}
-</ul>
 {% endblock %}
