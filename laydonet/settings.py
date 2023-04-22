@@ -15,6 +15,8 @@ from pathlib import Path
 import os
 import sys
 import dj_database_url
+from celery.schedules import crontab
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
@@ -184,3 +186,10 @@ CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+CELERY_BEAT_SCHEDULE = {
+    'load_tles_task': {
+        'task': 'laydonet.orbiter.tasks.load_tles_task',
+        'schedule': crontab(minute='*/5'),
+    },
+}
+
