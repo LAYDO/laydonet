@@ -4,7 +4,6 @@ async-timeout==4.0.2
 attrs==22.2.0
 autobahn==23.1.2
 Automat==22.10.0
-beautifulsoup4==4.11.1
 billiard==3.6.4.0
 bleach==5.0.1
 celery==5.2.7
@@ -44,7 +43,6 @@ service-identity==21.1.0
 sgp4==2.21
 six==1.16.0
 skyfield==1.46
-soupsieve==2.3.2.post1
 sqlparse==0.4.2
 Twisted==22.10.0
 txaio==23.1.1
