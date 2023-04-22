@@ -1,0 +1,1 @@
+worker: celery -A laydonet worker --concurrency 1 -l info

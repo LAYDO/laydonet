@@ -29,3 +29,24 @@ def satellite_trajectory(request, satellite_id):
     positions = orbit_calculations.calculate_positions(satellite.tle_line1, satellite.tle_line2)
     return JsonResponse(positions, safe=False)
 
+def load_tles(url):
+    response = requests.get(url)
+    if response.status_code != 200:
+        print("Failed to fetch TLEs")
+        return
+
+    tle_data = response.content.decode('utf-8')
+    tle_lines = tle_data.splitlines()
+
+    for i in range(0, len(tle_lines), 3):
+        satellite_name = tle_lines[i].strip()
+        tle_line1 = tle_lines[i+1].strip()
+        tle_line2 = tle_lines[i+2].strip()
+
+        satellite, created = Satellite.objects.get_or_create(name=satellite_name)
+        satellite.tle_line1 = tle_line1
+        satellite.tle_line2 = tle_line2
+        satellite.save()
+
+    print("TLEs fetched and updated")
+
