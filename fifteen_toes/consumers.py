@@ -3,11 +3,9 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 # from fifteen_toes.models import Game
 from django.utils import timezone
 from django.apps import apps
-from .models import Game
-
 class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
-    Game = apps.get_model('fifteen_toes', 'Game')
     async def connect(self):
+        Game = apps.get_model('fifteen_toes', 'Game')
         self.game_id = self.scope['url_route']['kwargs']['game_id']
         self.game_group_id = 'game_%s' % self.game_id
 
