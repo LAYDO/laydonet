@@ -14,8 +14,8 @@ from django.core.management.utils import get_random_secret_key
 from pathlib import Path
 import os
 import sys
-import dj_database_url
-from celery.schedules import crontab
+# import dj_database_url
+from urllib.parse import urlsplit
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -124,11 +124,37 @@ if DEVELOPMENT_MODE is True:
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    if os.getenv('DATABASE_URL', None) is None:
+    database_url = os.getenv('DATABASE_URL', None)
+    if database_url is None:
         raise Exception("DATABASE_URL environment variable not defined")
+
+    parsed_url = urlsplit(database_url)
+
+    if parsed_url.scheme in ['postgres', 'postgresql']:
+        database_engine = 'django.db.backends.postgresql'
+    elif parsed_url.scheme == 'mysql':
+        database_engine = 'django.db.backends.mysql'
+    elif parsed_url.scheme == 'sqlite':
+        database_engine = 'django.db.backends.sqlite3'
+    else:
+        raise ValueError(f"Unsupported database scheme: {parsed_url.scheme}")
+
     DATABASES = {
-        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+        "default": {
+            "ENGINE": database_engine,
+            "NAME": parsed_url.path[1:],
+            "USER": parsed_url.username,
+            "PASSWORD": parsed_url.password,
+            "HOST": parsed_url.hostname,
+            "PORT": parsed_url.port,
+        }
     }
+# if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+#     if os.getenv('DATABASE_URL', None) is None:
+#         raise Exception("DATABASE_URL environment variable not defined")
+#     DATABASES = {
+#         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
