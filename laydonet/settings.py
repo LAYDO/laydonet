@@ -11,10 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from django.core.management.utils import get_random_secret_key
-from pathlib import Path
 import os
 import sys
-import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
@@ -97,7 +95,7 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'laydonet.wsgi.application'
 # Channels
-ASGI_APPLICATION = 'laydonet.asgi.application'
+ASGI_APPLICATION = 'laydonet.asgi:application'
 
 CHANNEL_LAYERS = {
     "BACKEND": "channels.layers.InMemoryChannelLayer"
@@ -107,6 +105,7 @@ DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+from urllib.parse import urlsplit
 if DEVELOPMENT_MODE is True:
     DATABASES = {
         'default': {
@@ -121,6 +120,33 @@ if DEVELOPMENT_MODE is True:
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    database_url = os.getenv('DATABASE_URL', None)
+    if database_url is None:
+        raise Exception("DATABASE_URL environment variable not defined")
+
+    parsed_url = urlsplit(database_url)
+
+    if parsed_url.scheme in ['postgres', 'postgresql']:
+        database_engine = 'django.db.backends.postgresql'
+    elif parsed_url.scheme == 'mysql':
+        database_engine = 'django.db.backends.mysql'
+    elif parsed_url.scheme == 'sqlite':
+        database_engine = 'django.db.backends.sqlite3'
+    else:
+        raise ValueError(f"Unsupported database scheme: {parsed_url.scheme}")
+
+    DATABASES = {
+        "default": {
+            "ENGINE": database_engine,
+            "NAME": parsed_url.path[1:],
+            "USER": parsed_url.username,
+            "PASSWORD": parsed_url.password,
+            "HOST": parsed_url.hostname,
+            "PORT": parsed_url.port,
+        }
+    }
+
+if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
     if os.getenv('DATABASE_URL', None) is None:
         raise Exception("DATABASE_URL environment variable not defined")
     DATABASES = {
