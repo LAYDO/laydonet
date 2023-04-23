@@ -1,7 +1,9 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from fifteen_toes.models import Game
+# from fifteen_toes.models import Game
 from django.utils import timezone
+from django.apps import apps
+Game = apps.get_model('fifteen_toes', 'Game')
 
 class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
