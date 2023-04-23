@@ -10,9 +10,9 @@ app = Celery('laydonet')
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
 
-app.conf.beat_schedule = {
-    'load-tles-hourly': {
-        'task': 'orbiter.tasks.load_tles_task',
-        'schedule': crontab(minute='*/5'),
-    },
-}
+# app.conf.beat_schedule = {
+#     'load-tles-hourly': {
+#         'task': 'orbiter.tasks.load_tles_task',
+#         'schedule': crontab(minute='*/5'),
+#     },
+# }
