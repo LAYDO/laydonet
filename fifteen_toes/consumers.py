@@ -3,7 +3,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 # from fifteen_toes.models import Game
 from django.utils import timezone
 from django.apps import apps
-Game = apps.get_model('fifteen_toes', 'Game')
+
 class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         self.game_id = self.scope['url_route']['kwargs']['game_id']
@@ -91,6 +91,7 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
         }))
 
     async def get_game_instance(self, game_id):
+        Game = apps.get_model('fifteen_toes', 'Game')
         # Retrieve the model instance from the database
         try:
             game = await self.scope['django_db'].sync_to_async(
