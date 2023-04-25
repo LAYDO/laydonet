@@ -198,14 +198,27 @@ def game_leave(request):
 def game_start_continue(request):
     if request.method == 'POST':
         lobbyNum = player_active_lobby(request)
-        lobby = Game.objects.get(game_id=lobbyNum)
+        try:
+            lobby = Game.objects.get(game_id=lobbyNum)
+        except Game.DoesNotExist:
+            lobby = None
         if lobby:
-            print(('STARTING GAME #{}').format(lobby[0].game_id))
-            lobby.update(status='IN-GAME')
-            lobby.update(p1_status='IN-GAME')
-            lobby.update(p2_status='IN-GAME')
-            lobby.update(round=1)
+            print(('STARTING GAME #{}').format(lobby.game_id))
+            lobby.status='IN-GAME'
+            lobby.p1_status='IN-GAME'
+            lobby.p2_status='IN-GAME'
+            lobby.round=1
+            lobby.save()
             return HttpResponseRedirect('/fifteentoes/game/' + str(lobby.game_id))
+        gameNum = player_active_game(request)
+        try:
+            game = Game.objects.get(game_id=gameNum)
+        except Game.DoesNotExist:
+            game = None
+        if game:
+            print(('CONTINUING GAME #{}').format(game.game_id))
+            return HttpResponseRedirect('/fifteentoes/game/' + str(game.game_id))
+
 
 def player_active_lobby(request):
     current_user = request.user
@@ -220,7 +233,7 @@ def player_active_lobby(request):
 def game(request, game_id):
     current_user = request.user
     game = {}
-    match = Game.objects.get(id=game_id)
+    match = Game.objects.get(game_id=game_id)
     if (match.status == 'COMPLETED'):
         return HttpResponseRedirect('/fifteentoes/post')
     if (current_user.id == match.player_one):
@@ -247,8 +260,8 @@ def game(request, game_id):
         
 def player_active_game(request):
     current_user = request.user
-    games = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-    games.extend(list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values()))
+    games = list(Game.objects.filter(player_two=current_user.id).exclude(status__in=['ARCHIVE','LOBBY']).all().values())
+    games.extend(list(Game.objects.filter(player_one=current_user.id).exclude(status__in=['ARCHIVE','LOBBY']).all().values()))
     if len(games) == 1:
         return games[0]['game_id']
     else:

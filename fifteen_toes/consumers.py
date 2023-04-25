@@ -22,8 +22,7 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
 
-    async def receive(self, text_data=None):
-        response = json.loads(text_data)
+    async def receive_json(self, response):
         try:
             if response['type'] == 'move':
                 game_id = response.get('game_id', None)
