@@ -22,8 +22,7 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
             self.channel_name
         )
 
-    async def receive(self, text_data=None):
-        response = json.loads(text_data)
+    async def receive_json(self, response):
         try:
             if response['type'] == 'move':
                 game_id = response.get('game_id', None)
@@ -91,6 +90,7 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
         }))
 
     async def get_game_instance(self, game_id):
+        Game = apps.get_model('fifteen_toes', 'Game')
         # Retrieve the model instance from the database
         try:
             game = await self.scope['django_db'].sync_to_async(

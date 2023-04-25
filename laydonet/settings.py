@@ -11,10 +11,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from django.core.management.utils import get_random_secret_key
-from pathlib import Path
 import os
 import sys
-# import dj_database_url
 from urllib.parse import urlsplit
 
 
@@ -109,17 +107,16 @@ DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+from urllib.parse import urlsplit
 if DEVELOPMENT_MODE is True:
     DATABASES = {
         'default': {
-            # 'ENGINE': 'django.db.backends.sqlite3',
-            # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-	    'NAME': 'laydonetdb',
-        'USER': 'laydonetdb',
-	    'PASSWORD': os.environ.get("DB_PASSWORD"),
-	    'HOST': os.environ.get("DATABASE_HOST"),
-        'PORT': '25060'
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'laydonetdb',
+            'USER': 'laydonetdb',
+            'PASSWORD': os.environ.get("DB_PASSWORD"),
+            'HOST': os.environ.get("DATABASE_HOST"),
+            'PORT': '25060'
         }
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
@@ -148,12 +145,6 @@ elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
             "PORT": parsed_url.port,
         }
     }
-# if len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-#     if os.getenv('DATABASE_URL', None) is None:
-#         raise Exception("DATABASE_URL environment variable not defined")
-#     DATABASES = {
-#         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
-#     }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
