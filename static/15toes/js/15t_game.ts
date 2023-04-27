@@ -4,25 +4,8 @@ let game_id = document.getElementById('ftSquares')?.getAttribute('game_id');
 let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
 let socket = new WebSocket(connectionString);
 
+// Initialize the board
 for (let i = 0; i < 9; i++) {
-    let text = document.getElementById(`text${i}`);
-    text?.addEventListener('click', () => {
-        if (document.querySelectorAll('.selected').length == 0) {
-            text?.classList.add('selected');
-            if (text?.textContent) {
-                selectedElement = text.textContent;
-            }
-        } else if (document.querySelectorAll('.selected').length == 1) {
-            document.querySelectorAll('.selected')[0].classList.remove('selected');
-            text?.classList.add('selected');
-            if (text?.textContent) {
-                selectedElement = text.textContent;
-            }
-        } else {
-            text?.classList.remove('selected');
-            selectedElement = '';
-        }
-    })
     let square = document.getElementById(`square${i}`);
     square?.addEventListener('click', () => {
         if (selectedElement != null || selectedElement != '') {
@@ -36,6 +19,30 @@ for (let i = 0; i < 9; i++) {
             }
         }
     })
+}
+
+// Initialize event listeners for the numbers
+function setUpNumberEventListeners() {
+    for (let i = 0; i < 9; i++) {
+        let text = document.getElementById(`text${i}`);
+        text?.addEventListener('click', () => {
+            if (document.querySelectorAll('.selected').length == 0) {
+                text?.classList.add('selected');
+                if (text?.textContent) {
+                    selectedElement = text.textContent;
+                }
+            } else if (document.querySelectorAll('.selected').length == 1) {
+                document.querySelectorAll('.selected')[0].classList.remove('selected');
+                text?.classList.add('selected');
+                if (text?.textContent) {
+                    selectedElement = text.textContent;
+                }
+            } else {
+                text?.classList.remove('selected');
+                selectedElement = '';
+            }
+        });
+    }
 }
 
 function makeMove(square: string, play: string) {
@@ -92,15 +99,15 @@ function connect() {
                     p2Numbers?.classList.add('disabled');
                 }
                 // Update the player one numbers
-                let playerOneNumbersContainer = p1Numbers?.querySelector('.ttt-row-numbers');
+                const playerOneNumbersContainer = p1Numbers?.querySelector('.ttt-row-numbers');
                 if (playerOneNumbersContainer) {
                     playerOneNumbersContainer.innerHTML = '';
-                    for (let i = 0; i < data['spaces'].length; i++) {
-                        if (i % 2 !== 0 && !data['plays'].includes(i.toString())) {
+                    for (let i = 0; i < 9; i++) {
+                        if ((i + 1) % 2 !== 0 && !data['plays'].includes((i + 1))) {
                             const numberDiv = document.createElement('div');
                             numberDiv.className = 'ttt-number';
                             numberDiv.id = 'text' + i;
-                            numberDiv.textContent = i.toString();
+                            numberDiv.textContent = (i + 1).toString();
                             playerOneNumbersContainer.appendChild(numberDiv);
                         }
                     }
@@ -110,8 +117,8 @@ function connect() {
                 const playerTwoNumbersContainer = p2Numbers?.querySelector('.ttt-row-numbers');
                 if (playerTwoNumbersContainer) {
                     playerTwoNumbersContainer.innerHTML = '';
-                    for (let i = 0; i < data['spaces'].length; i++) {
-                        if (i % 2 === 0 && !data['plays'].includes((i + 1).toString())) {
+                    for (let i = 0; i < 9; i++) {
+                        if ((i + 1) % 2 === 0 && !data['plays'].includes((i + 1))) {
                             const numberDiv = document.createElement('div');
                             numberDiv.className = 'ttt-number';
                             numberDiv.id = 'text' + i;
@@ -121,12 +128,15 @@ function connect() {
                     }
                 }
 
+                // Set up the numbers' event listeners for each message
+                setUpNumberEventListeners();
+
                 // Check if the current user can play a move
                 let currentPlayer = data['round'] % 2 === 0 ? data['p2'] : data['p1'];
                 let appElement = document.getElementById('15t_app');
-                let currentUsername = appElement?.dataset.username;
+                let currentUserId = appElement?.dataset.userId;
 
-                if (currentPlayer === currentUsername) {
+                if (currentPlayer == currentUserId) {
                     appElement?.classList.remove('turn-disable');
                 } else {
                     appElement?.classList.add('turn-disable');
@@ -147,3 +157,4 @@ function connect() {
 
 
 connect();
+setUpNumberEventListeners();

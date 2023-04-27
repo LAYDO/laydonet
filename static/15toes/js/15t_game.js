@@ -4,27 +4,8 @@ let selectedElement = '';
 let game_id = (_a = document.getElementById('ftSquares')) === null || _a === void 0 ? void 0 : _a.getAttribute('game_id');
 let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
 let socket = new WebSocket(connectionString);
+// Initialize the board
 for (let i = 0; i < 9; i++) {
-    let text = document.getElementById(`text${i}`);
-    text === null || text === void 0 ? void 0 : text.addEventListener('click', () => {
-        if (document.querySelectorAll('.selected').length == 0) {
-            text === null || text === void 0 ? void 0 : text.classList.add('selected');
-            if (text === null || text === void 0 ? void 0 : text.textContent) {
-                selectedElement = text.textContent;
-            }
-        }
-        else if (document.querySelectorAll('.selected').length == 1) {
-            document.querySelectorAll('.selected')[0].classList.remove('selected');
-            text === null || text === void 0 ? void 0 : text.classList.add('selected');
-            if (text === null || text === void 0 ? void 0 : text.textContent) {
-                selectedElement = text.textContent;
-            }
-        }
-        else {
-            text === null || text === void 0 ? void 0 : text.classList.remove('selected');
-            selectedElement = '';
-        }
-    });
     let square = document.getElementById(`square${i}`);
     square === null || square === void 0 ? void 0 : square.addEventListener('click', () => {
         if (selectedElement != null || selectedElement != '') {
@@ -38,6 +19,31 @@ for (let i = 0; i < 9; i++) {
             }
         }
     });
+}
+// Initialize event listeners for the numbers
+function setUpNumberEventListeners() {
+    for (let i = 0; i < 9; i++) {
+        let text = document.getElementById(`text${i}`);
+        text === null || text === void 0 ? void 0 : text.addEventListener('click', () => {
+            if (document.querySelectorAll('.selected').length == 0) {
+                text === null || text === void 0 ? void 0 : text.classList.add('selected');
+                if (text === null || text === void 0 ? void 0 : text.textContent) {
+                    selectedElement = text.textContent;
+                }
+            }
+            else if (document.querySelectorAll('.selected').length == 1) {
+                document.querySelectorAll('.selected')[0].classList.remove('selected');
+                text === null || text === void 0 ? void 0 : text.classList.add('selected');
+                if (text === null || text === void 0 ? void 0 : text.textContent) {
+                    selectedElement = text.textContent;
+                }
+            }
+            else {
+                text === null || text === void 0 ? void 0 : text.classList.remove('selected');
+                selectedElement = '';
+            }
+        });
+    }
 }
 function makeMove(square, play) {
     let _square = parseInt(square);
@@ -90,15 +96,15 @@ function connect() {
                     p2Numbers === null || p2Numbers === void 0 ? void 0 : p2Numbers.classList.add('disabled');
                 }
                 // Update the player one numbers
-                let playerOneNumbersContainer = p1Numbers === null || p1Numbers === void 0 ? void 0 : p1Numbers.querySelector('.ttt-row-numbers');
+                const playerOneNumbersContainer = p1Numbers === null || p1Numbers === void 0 ? void 0 : p1Numbers.querySelector('.ttt-row-numbers');
                 if (playerOneNumbersContainer) {
                     playerOneNumbersContainer.innerHTML = '';
-                    for (let i = 0; i < data['spaces'].length; i++) {
-                        if (i % 2 !== 0 && !data['plays'].includes(i.toString())) {
+                    for (let i = 0; i < 9; i++) {
+                        if ((i + 1) % 2 !== 0 && !data['plays'].includes((i + 1))) {
                             const numberDiv = document.createElement('div');
                             numberDiv.className = 'ttt-number';
                             numberDiv.id = 'text' + i;
-                            numberDiv.textContent = i.toString();
+                            numberDiv.textContent = (i + 1).toString();
                             playerOneNumbersContainer.appendChild(numberDiv);
                         }
                     }
@@ -107,8 +113,8 @@ function connect() {
                 const playerTwoNumbersContainer = p2Numbers === null || p2Numbers === void 0 ? void 0 : p2Numbers.querySelector('.ttt-row-numbers');
                 if (playerTwoNumbersContainer) {
                     playerTwoNumbersContainer.innerHTML = '';
-                    for (let i = 0; i < data['spaces'].length; i++) {
-                        if (i % 2 === 0 && !data['plays'].includes((i + 1).toString())) {
+                    for (let i = 0; i < 9; i++) {
+                        if ((i + 1) % 2 === 0 && !data['plays'].includes((i + 1))) {
                             const numberDiv = document.createElement('div');
                             numberDiv.className = 'ttt-number';
                             numberDiv.id = 'text' + i;
@@ -117,11 +123,13 @@ function connect() {
                         }
                     }
                 }
+                // Set up the numbers' event listeners for each message
+                setUpNumberEventListeners();
                 // Check if the current user can play a move
                 let currentPlayer = data['round'] % 2 === 0 ? data['p2'] : data['p1'];
                 let appElement = document.getElementById('15t_app');
-                let currentUsername = appElement === null || appElement === void 0 ? void 0 : appElement.dataset.username;
-                if (currentPlayer === currentUsername) {
+                let currentUserId = appElement === null || appElement === void 0 ? void 0 : appElement.dataset.userId;
+                if (currentPlayer == currentUserId) {
                     appElement === null || appElement === void 0 ? void 0 : appElement.classList.remove('turn-disable');
                 }
                 else {
@@ -142,3 +150,4 @@ function connect() {
     };
 }
 connect();
+setUpNumberEventListeners();

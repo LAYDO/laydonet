@@ -241,12 +241,16 @@ def game(request, game_id):
         game.update({
             'player1': current_user.username,
             'player2': player2.username,
+            'p1': current_user.id,
+            'p2': player2.id,
         })
     elif (current_user.id == match.player_two):
         player1 = User.objects.get(id=match.player_one)
         game.update({
             'player1': player1.username,
             'player2': current_user.username,
+            'p1': player1.id,
+            'p2': current_user.id,
         })
     game.update({
         'id': game_id,

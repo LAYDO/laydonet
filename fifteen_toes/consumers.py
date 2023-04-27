@@ -41,6 +41,8 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                                 
                 print(f"game.round: {game.round}, play: {play}")
 
+                if play is None:
+                    raise Exception('A selection is required before clicking a square')
                 if game.round % 2 == 0 and play % 2 != 0:
                     raise Exception("It is Player 2's turn!")
                 if game.round % 2 != 0 and play % 2 == 0:
@@ -51,6 +53,7 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                     raise Exception('Wrong number for the round. Should be an even from Player 2.')
                 if game.round % 2 != 0 and play % 2 == 0:
                     raise Exception('Wrong number for the round. Should be an odd from Player 1.')
+                
 
                 newPlays = game.plays
                 newPlays.append(play)
