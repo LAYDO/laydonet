@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from django.core.management.utils import get_random_secret_key
 import os
 import sys
-from urllib.parse import urlsplit
+from urllib.parse import urlsplit, urlparse
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -99,11 +99,17 @@ TEMPLATES = [
 # Channels
 ASGI_APPLICATION = 'laydonet.asgi.application'
 
+# Get the Redis URL from the environment variable
+REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
+
+# Parse the Redis URL
+redis_url_parsed = urlparse(REDIS_URL)
+
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [(redis_url_parsed.hostname, redis_url_parsed.port)],
         },
     },
 }
