@@ -48,9 +48,11 @@
         </div>
         <div id="lobbyOptions" class="ft-row">
             <form method="post" class="ft-col" action="rematch">
+                {% csrf_token %}
                 <input class="ft-button" type="submit" value="REMATCH"></input>
             </form>
             <form method="post" class="ft-col" action="leave">
+                {% csrf_token %}
                 <input class="ft-button" type="submit" value="LEAVE"></input>
             </form>
         </div>

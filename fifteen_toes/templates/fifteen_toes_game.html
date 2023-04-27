@@ -13,6 +13,7 @@
 {% else %}
 <div id="15t_app" class="laydo-container laydo-app turn-disable" data-user-id="{{ user.id }}">
 {% endif %}
+{% csrf_token %}
     <div class="ft-row ft-title">{{ privacy }} Game #{{ id }}</div>
     <div class="ft-row ft-round" id="current_round">Round {{ round }}</div>
     <div class="ttt-board">

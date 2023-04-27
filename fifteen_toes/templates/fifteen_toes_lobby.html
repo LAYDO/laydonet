@@ -29,31 +29,38 @@
                 {% if user.get_username == p1 %}
                     {% if p1_status == 'UNREADY' %}
                     <form method="post" class="ft-col" action="ready">
+                        {% csrf_token %}
                         <input class="ft-button" type="submit" value="READY"></input>
                     </form>
                     <form method="post" class="ft-col" action="leave">
+                        {% csrf_token %}
                         <input class="ft-button" type="submit" value="LEAVE"></input>
                     </form>
                     {% elif p1_status == 'READY' %}
                     <form method="post" class="ft-col" action="unready">
+                        {% csrf_token %}
                         <input class="ft-button" type="submit" value="UNREADY"></input>
                     </form>
                     {% endif %}
                 {% elif user.get_username == p2 %}
                     {% if p2_status == 'UNREADY' %}
                     <form method="post" class="ft-col" action="ready">
+                        {% csrf_token %}
                         <input class="ft-button" type="submit" value="READY"></input>
                     </form>
                     <form method="post" class="ft-col" action="leave">
+                        {% csrf_token %}
                         <input class="ft-button" type="submit" value="LEAVE"></input>
                     </form>
                     {% elif p2_status == 'READY' %}
                     <form method="post" class="ft-col" action="unready">
+                        {% csrf_token %}
                         <input class="ft-button" type="submit" value="UNREADY"></input>
                     </form>
                     {% endif %}
                 {% endif %}
                 <form method="post" class="ft-col" action="start">
+                    {% csrf_token %}
                     {% if p1_status == 'READY' and p2_status == 'READY' %}
                     <input class="ft-button" type="submit" value="START"></input>
                     {% elif status == 'IN-GAME' %}
