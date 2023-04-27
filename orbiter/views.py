@@ -4,16 +4,10 @@ from .models import Satellite
 from .forms import SatelliteForm
 from . import orbit_calculations
 import requests
-import re
-from bs4 import BeautifulSoup
 
 # Create your views here.
 def orbiter(request):
     try:
-        response = fetch_tles('https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle')
-        if isinstance(response, JsonResponse) and response.status_code != 200:
-            return JsonResponse({"error": "Failed to fetch TLEs"}, status=400)
-
         satellites = Satellite.objects.all()
         form = SatelliteForm()
     except Satellite.DoesNotExist:
@@ -35,19 +29,11 @@ def satellite_trajectory(request, satellite_id):
     positions = orbit_calculations.calculate_positions(satellite.tle_line1, satellite.tle_line2)
     return JsonResponse(positions, safe=False)
 
-def fetch_space_stations(request):
-    fetch_tles('https://celestrak.org/NORAD/elements/gp.php?GROUP=stations&FORMAT=tle')
-
-def fetch_last_30(request):
-    fetch_tles('https://celestrak.org/NORAD/elements/gp.php?GROUP=last-30-days&FORMAT=tle')
-
-def fetch_starlink(request):
-    fetch_tles('https://celestrak.org/NORAD/elements/gp.php?GROUP=starlink&FORMAT=tle')
-
-def fetch_tles(url):
+def load_tles(url):
     response = requests.get(url)
     if response.status_code != 200:
-        return JsonResponse({"error": "Failed to fetch TLEs"}, status=400)
+        print("Failed to fetch TLEs")
+        return
 
     tle_data = response.content.decode('utf-8')
     tle_lines = tle_data.splitlines()
@@ -62,5 +48,5 @@ def fetch_tles(url):
         satellite.tle_line2 = tle_line2
         satellite.save()
 
-    return JsonResponse({"success": "TLEs fetched and updated"}, status=200)
+    print("TLEs fetched and updated")
 

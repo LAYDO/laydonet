@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from django.core.management.utils import get_random_secret_key
 import os
 import sys
+from urllib.parse import urlsplit
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
@@ -98,8 +100,14 @@ TEMPLATES = [
 ASGI_APPLICATION = 'laydonet.asgi.application'
 
 CHANNEL_LAYERS = {
-    "BACKEND": "channels.layers.InMemoryChannelLayer"
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }
+
 
 DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
@@ -193,3 +201,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Login/logout redirect
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+

@@ -1,11 +1,12 @@
 import json
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
-# from fifteen_toes.models import Game
+from channels.db import database_sync_to_async
+from asgiref.sync import sync_to_async
 from django.utils import timezone
 from django.apps import apps
-
 class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
+        Game = apps.get_model('fifteen_toes', 'Game')
         self.game_id = self.scope['url_route']['kwargs']['game_id']
         self.game_group_id = 'game_%s' % self.game_id
 
@@ -23,14 +24,23 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def receive_json(self, response):
+        print(f"Received JSON: {response}")
         try:
             if response['type'] == 'move':
-                game_id = response.get('game_id', None)
-                space = response.get('space', None)
-                play = response.get('play', None)
+                message = response.get('message', {})
+                game_id = message.get('game_id', None)
+                space = message.get('space', None)
+                play = message.get('play', None)
 
                 game = await self.get_game_instance(game_id)
 
+                if game is None:
+                    raise Exception('Game not found')
+                                
+                print(f"game.round: {game.round}, play: {play}")
+
+                if play is None:
+                    raise Exception('A selection is required before clicking a square')
                 if game.round % 2 == 0 and play % 2 != 0:
                     raise Exception("It is Player 2's turn!")
                 if game.round % 2 != 0 and play % 2 == 0:
@@ -41,6 +51,7 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                     raise Exception('Wrong number for the round. Should be an even from Player 2.')
                 if game.round % 2 != 0 and play % 2 == 0:
                     raise Exception('Wrong number for the round. Should be an odd from Player 1.')
+                
 
                 newPlays = game.plays
                 newPlays.append(play)
@@ -52,7 +63,9 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                 game.spaces = newSpaces
                 game.round = newRound
 
-                if (self.checkWin(game)):
+                win = await self.checkWin(game)
+
+                if (win):
                     game.status = 'COMPLETED'
                     if (play % 2 == 0):
                         game.winner = game.player_two
@@ -60,8 +73,9 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                     else:
                         game.winner = game.player_one
                         game.loser = game.player_two
-                    game.ended = str(timezone.now())
-                    game.save()
+                    # game.ended = str(timezone.now())
+                    game.ended = str(await sync_to_async(timezone.now)())
+                    await self.save_game(game)
                     await self.channel_layer.group_send(self.game_group_id, {
                         'type': 'redirect',
                         'message': {
@@ -69,39 +83,60 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                         }
                     })
 
-                game.save()
+                await self.save_game(game)
 
-                await self.channel_layer.group_send(self.game_group_id, {
-                    'type': 'send_message',
-                    'message': {
-                        'space': space,
-                        'play': play
-                    }
-                })
+                await self.channel_layer.group_send(
+                    self.game_group_id, {
+                        'type': 'send_message',
+                        'message': {
+                            'spaces': game.spaces,
+                            'round': game.round,
+                            'plays': game.plays,
+                            'p1': game.player_one,
+                            'p2': game.player_two,
+                        }
+                    })
         except Exception as e:
-            await self.channel_layer.group_send(self.game_group_id, {
-                'type': 'error_message',
-                'message': str(e)
-            })
+            message = response.get('message', {})
+            await self.channel_layer.group_send(
+                self.game_group_id, {
+                    'type': 'error_message',
+                    'message': str(e),
+                    'error_user': message.get('user_id', None),
+                })
 
-    async def send_message(self, res):
+    async def send_message(self, event):
         await self.send(text_data=json.dumps({
-            "payload": res,
+            "payload": {
+                "type": "move",
+                "spaces": event['message']['spaces'],
+                "round": event['message']['round'],
+                "plays": event['message']['plays'],
+                "p1": event['message']['p1'],
+                "p2": event['message']['p2'],
+            },
         }))
 
-    async def get_game_instance(self, game_id):
+    @database_sync_to_async
+    def get_game_instance(self, game_id):
         Game = apps.get_model('fifteen_toes', 'Game')
+
+        # Print the game_id received
+        print(f"Looking for game with ID: {game_id}")
+
         # Retrieve the model instance from the database
         try:
-            game = await self.scope['django_db'].sync_to_async(
-                Game.objects.get,
-                thread_sensitive=True
-            )(id=game_id)
+            game = Game.objects.get(game_id=game_id)
+            # Print the game instance found
+            print(f"Found game: {game}")
+
             return game
         except Game.DoesNotExist:
             return None
-        
-    async def checkWin(self, game):
+    
+    @sync_to_async
+    def checkWin(self, game):
+        win = False
         if game.round <= 9:
             for i in game.winningArrays:
                 temp = list()
@@ -109,6 +144,18 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                     if game.spaces[x] != 0:
                         temp.append(game.spaces[x])
                 if len(set(temp)) == 3 and sum(temp) == 15:
-                    return True
+                    win = True
                 temp.clear()
-        return False
+        return win
+    
+    async def error_message(self, event):
+        await self.send(text_data=json.dumps({
+            'payload': {
+                'type': 'error',
+                'error': event['message']
+            }
+        }))
+
+    @database_sync_to_async
+    def save_game(self, game):
+        game.save()
