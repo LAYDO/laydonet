@@ -54,7 +54,6 @@ def check_for_lobbies(request):
 def start(request):
     return render(request, 'fifteen_toes_start.html',)
 
-@csrf_exempt
 @user_passes_test(lambda user: user.is_staff)
 def create_lobby(request):
     if request.method == 'POST':
@@ -83,7 +82,6 @@ def create_lobby(request):
                 game.save()
                 return HttpResponseRedirect('/fifteentoes/lobby')
             
-@csrf_exempt
 @user_passes_test(lambda user: user.is_staff)
 def join_lobby(request):
     if request.method == 'POST':
@@ -146,7 +144,6 @@ def lobby(request):
         })
     return render(request, 'fifteen_toes_lobby.html', lobby)
     
-@csrf_exempt   
 @user_passes_test(lambda user: user.is_staff)
 def game_ready(request):
     if request.method == 'POST':
@@ -161,7 +158,6 @@ def game_ready(request):
             p.update(p2_status='READY')
         return redirect(request.META['HTTP_REFERER'])
 
-@csrf_exempt
 @user_passes_test(lambda user: user.is_staff)
 def game_unready(request):
     if request.method == 'POST':
@@ -176,7 +172,6 @@ def game_unready(request):
             p.update(p2_status='UNREADY')
         return redirect(request.META['HTTP_REFERER'])
     
-@csrf_exempt
 @user_passes_test(lambda user: user.is_staff)
 def game_leave(request):
     if request.method == 'POST':
@@ -193,7 +188,6 @@ def game_leave(request):
             p.update(player_two=0)
         return HttpResponseRedirect('/fifteentoes')
 
-@csrf_exempt
 @user_passes_test(lambda user: user.is_staff)  
 def game_start_continue(request):
     if request.method == 'POST':
@@ -314,7 +308,6 @@ def post(request):
         })
     return render(request, 'fifteen_toes_post.html', post)
 
-@csrf_exempt
 @user_passes_test(lambda user: user.is_staff)
 def post_rematch(request):
     if request.method == 'POST':
@@ -369,7 +362,6 @@ def post_rematch(request):
                 return HttpResponseRedirect('/fifteentoes')
         return redirect(request.META['HTTP_REFERER'])
     
-@csrf_exempt
 @user_passes_test(lambda user: user.is_staff)
 def post_leave(request):
     if request.method == 'POST':
