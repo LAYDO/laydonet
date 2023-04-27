@@ -34,7 +34,6 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
 
 
                 game = await self.get_game_instance(game_id)
-                print(f"Game object: {game}")
 
                 if game is None:
                     raise Exception('Game not found')
@@ -65,7 +64,6 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                 game.spaces = newSpaces
                 game.round = newRound
 
-                print(f"Game object, before winCheck: {game}")
                 win = await self.checkWin(game)
 
                 if (win):

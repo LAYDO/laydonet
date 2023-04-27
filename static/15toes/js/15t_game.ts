@@ -73,7 +73,6 @@ function connect() {
 
     socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
-        console.log(data);
         if ('payload' in data) {
             data = data['payload'];
             if (data['type'] == 'move') {
