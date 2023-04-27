@@ -21,7 +21,7 @@ class Game(models.Model):
     p1_status = models.CharField(max_length=10, default='UNREADY')
     player_two = models.IntegerField(blank=True, default=0)
     p2_status = models.CharField(max_length=10, default='UNREADY')
-    round = models.IntegerField(default=0)
+    round = models.IntegerField(default=1)
     plays = ArrayField(models.IntegerField(blank=True), size=9, default=list)
     spaces = ArrayField(models.IntegerField(blank=True), size=9, default=list)
     winner = models.IntegerField(blank=True, default=0)

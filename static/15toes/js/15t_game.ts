@@ -66,20 +66,84 @@ function connect() {
 
     socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
-        data = data['payload'];
-        if (data['type'] == 'move') {
-            let play = data['play'];
-            let space = data['space'];
-            let square = document.getElementById(`square${space}`);
-            if (square) {
-                square.innerHTML = play;
+        console.log(data);
+        if ('payload' in data) {
+            data = data['payload'];
+            if (data['type'] == 'move') {
+                for (let i = 0; i < data['spaces'].length; i++) {
+                    let square = document.getElementById(`square${i}`);
+                    if (square) {
+                        if (data['spaces'][i] == 0) {
+                            square.textContent = '';
+                        } else {
+                            square.textContent = data['spaces'][i];
+                        }
+                    }
+                }
+
+                let p1Numbers = document.getElementById('player_one_numbers');
+                let p2Numbers = document.getElementById('player_two_numbers');
+
+                if (data['round'] % 2 == 0) {
+                    p2Numbers?.classList.remove('disabled');
+                    p1Numbers?.classList.add('disabled');
+                } else {
+                    p1Numbers?.classList.remove('disabled');
+                    p2Numbers?.classList.add('disabled');
+                }
+                // Update the player one numbers
+                let playerOneNumbersContainer = p1Numbers?.querySelector('.ttt-row-numbers');
+                if (playerOneNumbersContainer) {
+                    playerOneNumbersContainer.innerHTML = '';
+                    for (let i = 0; i < data['spaces'].length; i++) {
+                        if (i % 2 !== 0 && !data['plays'].includes(i.toString())) {
+                            const numberDiv = document.createElement('div');
+                            numberDiv.className = 'ttt-number';
+                            numberDiv.id = 'text' + i;
+                            numberDiv.textContent = i.toString();
+                            playerOneNumbersContainer.appendChild(numberDiv);
+                        }
+                    }
+                }
+
+                // Update the player two numbers
+                const playerTwoNumbersContainer = p2Numbers?.querySelector('.ttt-row-numbers');
+                if (playerTwoNumbersContainer) {
+                    playerTwoNumbersContainer.innerHTML = '';
+                    for (let i = 0; i < data['spaces'].length; i++) {
+                        if (i % 2 === 0 && !data['plays'].includes((i + 1).toString())) {
+                            const numberDiv = document.createElement('div');
+                            numberDiv.className = 'ttt-number';
+                            numberDiv.id = 'text' + i;
+                            numberDiv.textContent = (i + 1).toString();
+                            playerTwoNumbersContainer.appendChild(numberDiv);
+                        }
+                    }
+                }
+
+                // Check if the current user can play a move
+                let currentPlayer = data['round'] % 2 === 0 ? data['p2'] : data['p1'];
+                let appElement = document.getElementById('15t_app');
+                let currentUsername = appElement?.dataset.username;
+
+                if (currentPlayer === currentUsername) {
+                    appElement?.classList.remove('turn-disable');
+                } else {
+                    appElement?.classList.add('turn-disable');
+                }
+            } else if (data['type'] == 'redirect') {
+                console.log("Redirect message received");
+                window.location.href = data['message']['url'];
+            } else if ('error' in data) {
+                alert(data['error']);
             }
-        } else if (data['type'] == 'redirect') {
-            window.location.href = data['url'];
-        } else if (data['type'] == 'error') {
-            alert(data['message']);
+        } else {
+            console.warn('No payload in message: ', data);
         }
     }
+
 }
+
+
 
 connect();

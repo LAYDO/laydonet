@@ -100,8 +100,14 @@ TEMPLATES = [
 ASGI_APPLICATION = 'laydonet.asgi.application'
 
 CHANNEL_LAYERS = {
-    "BACKEND": "channels.layers.InMemoryChannelLayer"
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
 }
+
 
 DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
