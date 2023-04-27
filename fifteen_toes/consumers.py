@@ -32,7 +32,6 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                 space = message.get('space', None)
                 play = message.get('play', None)
 
-
                 game = await self.get_game_instance(game_id)
 
                 if game is None:
@@ -98,10 +97,12 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                         }
                     })
         except Exception as e:
+            message = response.get('message', {})
             await self.channel_layer.group_send(
                 self.game_group_id, {
                     'type': 'error_message',
-                    'message': str(e)
+                    'message': str(e),
+                    'error_user': message.get('user_id', None),
                 })
 
     async def send_message(self, event):

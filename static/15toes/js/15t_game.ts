@@ -4,6 +4,9 @@ let game_id = document.getElementById('ftSquares')?.getAttribute('game_id');
 let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
 let socket = new WebSocket(connectionString);
 
+let appElement = document.getElementById('15t_app');
+let currentUserId = appElement?.dataset.userId;
+
 // Initialize the board
 for (let i = 0; i < 9; i++) {
     let square = document.getElementById(`square${i}`);
@@ -52,6 +55,7 @@ function makeMove(square: string, play: string) {
         'type': 'move',
         'message': {
             'game_id': game_id,
+            'user_id': currentUserId,
             'space': _square,
             'play': _play
         }
@@ -73,6 +77,11 @@ function connect() {
 
     socket.onmessage = function (e) {
         let data = JSON.parse(e.data);
+        console.log(data);
+        // Get current player
+        let currentPlayer = data['round'] % 2 === 0 ? data['p2'] : data['p1'];
+        
+
         if ('payload' in data) {
             data = data['payload'];
             if (data['type'] == 'move') {
@@ -131,11 +140,9 @@ function connect() {
                 setUpNumberEventListeners();
 
                 // Check if the current user can play a move
-                let currentPlayer = data['round'] % 2 === 0 ? data['p2'] : data['p1'];
-                let appElement = document.getElementById('15t_app');
-                let currentUserId = appElement?.dataset.userId;
+                
 
-                if (currentPlayer == currentUserId) {
+                if (currentPlayer === currentUserId) {
                     appElement?.classList.remove('turn-disable');
                 } else {
                     appElement?.classList.add('turn-disable');
@@ -143,8 +150,12 @@ function connect() {
             } else if (data['type'] == 'redirect') {
                 console.log("Redirect message received");
                 window.location.href = data['message']['url'];
-            } else if ('error' in data) {
-                alert(data['error']);
+            } else if (data['type'] == 'error_message') {
+                console.log(data);
+                let errorUser = data['error_user'];
+                if (errorUser === currentUserId) {
+                    alert(data['message']);
+                }
             }
         } else {
             console.warn('No payload in message: ', data);
