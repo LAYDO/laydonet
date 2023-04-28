@@ -2,7 +2,8 @@
 var _a;
 let selectedElement = '';
 let game_id = (_a = document.getElementById('ftSquares')) === null || _a === void 0 ? void 0 : _a.getAttribute('game_id');
-let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
+// let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
+let connectionString = (window.location.protocol === 'https:') ? `wss://${window.location.host}/ws/game/${game_id}/` : `ws://${window.location.host}/ws/game/${game_id}/`;
 let socket = new WebSocket(connectionString);
 let appElement = document.getElementById('15t_app');
 let currentUserId = appElement === null || appElement === void 0 ? void 0 : appElement.dataset.userId;

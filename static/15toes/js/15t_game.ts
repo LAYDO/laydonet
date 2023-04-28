@@ -1,7 +1,8 @@
 let selectedElement = '';
 let game_id = document.getElementById('ftSquares')?.getAttribute('game_id');
 
-let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
+// let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
+let connectionString = (window.location.protocol === 'https:') ? `wss://${window.location.host}/ws/game/${game_id}/` : `ws://${window.location.host}/ws/game/${game_id}/`;
 let socket = new WebSocket(connectionString);
 
 let appElement = document.getElementById('15t_app');
