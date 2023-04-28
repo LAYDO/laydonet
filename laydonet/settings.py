@@ -112,7 +112,6 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [(redis_url_parsed.hostname, redis_url_parsed.port)],
-            "ssl": redis_url_parsed.scheme == "rediss",
         },
     },
 }
