@@ -5,8 +5,6 @@ let game_id = (_a = document.getElementById('ftSquares')) === null || _a === voi
 // let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
 let connectionString = (window.location.protocol === 'https:') ? `wss://${window.location.host}/ws/game/${game_id}/` : `ws://${window.location.host}/ws/game/${game_id}/`;
 let socket = new WebSocket(connectionString);
-let appElement = document.getElementById('15t_app');
-let currentUserId = appElement === null || appElement === void 0 ? void 0 : appElement.dataset.userId;
 // Initialize the board
 for (let i = 0; i < 9; i++) {
     let square = document.getElementById(`square${i}`);
@@ -55,7 +53,7 @@ function makeMove(square, play) {
         'type': 'move',
         'message': {
             'game_id': game_id,
-            'user_id': currentUserId,
+            'user_id': getCurrentUserId(),
             'space': _square,
             'play': _play
         }
@@ -76,7 +74,7 @@ function connect() {
         let data = JSON.parse(e.data);
         console.log(data);
         // Get current player
-        let currentPlayer = data['round'] % 2 === 0 ? data['p2'] : data['p1'];
+        let currentPlayer = data['payload']['round'] % 2 === 0 ? data['payload']['p2'] : data['payload']['p1'];
         if ('payload' in data) {
             data = data['payload'];
             if (data['type'] == 'move') {
@@ -132,10 +130,12 @@ function connect() {
                 // Set up the numbers' event listeners for each message
                 setUpNumberEventListeners();
                 // Check if the current user can play a move
-                if (currentPlayer === currentUserId) {
+                if (currentPlayer === getCurrentUserId()) {
+                    let appElement = document.getElementById('15t_app');
                     appElement === null || appElement === void 0 ? void 0 : appElement.classList.remove('turn-disable');
                 }
                 else {
+                    let appElement = document.getElementById('15t_app');
                     appElement === null || appElement === void 0 ? void 0 : appElement.classList.add('turn-disable');
                 }
             }
@@ -146,7 +146,7 @@ function connect() {
             else if (data['type'] == 'error_message') {
                 console.log(data);
                 let errorUser = data['error_user'];
-                if (errorUser === currentUserId) {
+                if (errorUser === getCurrentUserId()) {
                     alert(data['message']);
                 }
             }
@@ -155,6 +155,17 @@ function connect() {
             console.warn('No payload in message: ', data);
         }
     };
+}
+function getCurrentUserId() {
+    var _a;
+    let appElement = document.getElementById('15t_app');
+    let id = (_a = (appElement === null || appElement === void 0 ? void 0 : appElement.dataset.userId)) === null || _a === void 0 ? void 0 : _a.toString();
+    if (id) {
+        return parseInt(id);
+    }
+    else {
+        throw new Error('User id not found');
+    }
 }
 connect();
 setUpNumberEventListeners();
