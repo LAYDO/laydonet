@@ -149,7 +149,7 @@ function connect() {
                 }
             } else if (data['type'] == 'redirect') {
                 console.log("Redirect message received");
-                window.location.href = data['message']['url'];
+                window.location.href = data['url'];
             } else if (data['type'] == 'error_message') {
                 console.log(data);
                 let errorUser = data['error_user'];

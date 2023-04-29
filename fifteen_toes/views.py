@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse
 from django.http.response import JsonResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
@@ -11,7 +10,6 @@ from .models import Game
 from .forms import CreateLobbyForm, JoinLobbyForm
 from django.contrib.auth.models import User
 import json
-from django.utils import timezone
 
 # Create your views here.
 
@@ -23,11 +21,11 @@ def fifteen_toes(request):
 @user_passes_test(lambda user: user.is_staff)
 def check_for_match(request):
     url = 'fifteentoes/'
-    match (check_for_lobbies(request)):
+    match (check_for_lobbies(request)[0]):
         case 2:
-            url += 'post'
+            url += f'post/{check_for_lobbies(request)[1]}'
         case 1:
-            url += 'lobby'
+            url += f'lobby/{check_for_lobbies(request)[1]}'
         case 0:
             url += 'start'
     match = {}
@@ -45,10 +43,10 @@ def check_for_lobbies(request):
     print(txt.format(current_user.username,len(lobbies)))
     if (len(lobbies) == 1):
         if lobbies[0]['status'] == 'COMPLETED':
-            return 2
-        return 1
+            return [2,lobbies[0]['game_id']]
+        return [1,lobbies[0]['game_id']]
     else:
-        return 0
+        return [0,0]
 
 @user_passes_test(lambda user: user.is_staff)
 def start(request):
@@ -80,12 +78,12 @@ def create_lobby(request):
                     spaces=[0,0,0,0,0,0,0,0,0],
                 )
                 game.save()
-                return HttpResponseRedirect('/fifteentoes/lobby')
+                return HttpResponseRedirect(f'/fifteentoes/lobby/{game.game_id}')
             
 @user_passes_test(lambda user: user.is_staff)
 def join_lobby(request):
     if request.method == 'POST':
-        if (check_for_lobbies(request)):
+        if (check_for_lobbies(request)[0] > 0):
             return
         else:
             form = JoinLobbyForm(request.POST)
@@ -93,107 +91,85 @@ def join_lobby(request):
             if form.is_valid():
                 f = form.cleaned_data
                 if (f['join'] == 'Lobby Number'):
-                    game = Game.objects.filter(game_id=f['join_option'])
-                    if game[0].player_one == 0:
-                        game.update(player_one=current_user.id)
-                    elif game[0].player_two == 0:
-                        game.update(player_two=current_user.id)
+                    game = Game.objects.get(game_id=f['join_option'])
+                    if game.player_one == 0:
+                        game.player_one=current_user.id
+                        game.save()
+                    elif game.player_two == 0:
+                        game.player_two=current_user.id
+                        game.save()
+                    return HttpResponseRedirect(f'/fifteentoes/lobby/{game.game_id}')
                 else:
                     games = list(Game.objects.filter(status='LOBBY').filter(player_two=0).all().values())
                     games.extend(list(Game.objects.filter(status='LOBBY').filter(player_one=0).all().values()))
-                    game = Game.objects.filter(game_id=games[0]['game_id'])
-                    if game[0].player_one == 0:
-                        game.update(player_one=current_user.id)
-                    elif game[0].player_two == 0:
-                        game.update(player_two=current_user.id)
-                return HttpResponseRedirect('/fifteentoes/lobby')
+                    game = Game.objects.get(game_id=games[0]['game_id'])
+                    if game.player_one == 0:
+                        game.player_one=current_user.id
+                        game.save()
+                    elif game.player_two == 0:
+                        game.player_two=current_user.id
+                        game.save()
+                    return HttpResponseRedirect(f'/fifteentoes/lobby/{game.game_id}')
 
 @user_passes_test(lambda user: user.is_staff)
-def lobby(request):
-    current_user = request.user
+def lobby(request, game_id):
     lobby = {}
-    p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
-    p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-    if (len(p1) == 1):
-        player2 = 0
-        if (p1[0]['player_two'] > 0):
-            player2 = User.objects.filter(id=p1[0]['player_two'])[0].username
-        lobby.update({
-            'id': p1[0]['game_id'],
-            'status': p1[0]['status'],
-            'p1': current_user.username,
-            'p1_status': p1[0]['p1_status'],
-            'p2': player2,
-            'p2_status': p1[0]['p2_status'],
-            'privacy': p1[0]['privacy'],
-            'pw': p1[0]['password'],
-        })
-    elif (len(p2) == 1):
-        player1 = 0
-        if (p2[0]['player_two'] > 0):
-            player1 = User.objects.filter(id=p2[0]['player_one'])[0].username
-        lobby.update({
-            'id': p2[0]['game_id'],
-            'status': p2[0]['status'],
-            'p1': player1,
-            'p1_status': p2[0]['p1_status'],
-            'p2': current_user.username,
-            'p2_status': p2[0]['p2_status'],
-            'privacy': p2[0]['privacy'],
-            'pw': p2[0]['password'],
-        })
+    game = Game.objects.get(game_id=game_id)
+    lobby.update({
+        'id': game.game_id,
+        'status': game.status,
+        'p1': User.objects.get(id=game.player_one).username,
+        'p1_status': game.p1_status,
+        'p2': User.objects.get(id=game.player_two).username,
+        'p2_status': game.p2_status,
+        'privacy': game.privacy,
+        'pw': game.password,
+    })
     return render(request, 'fifteen_toes_lobby.html', lobby)
     
 @user_passes_test(lambda user: user.is_staff)
-def game_ready(request):
+def game_ready(request, game_id):
     if request.method == 'POST':
-        current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-        if (len(p1) > 0):
-            p = Game.objects.filter(game_id=p1[0]['game_id'])
-            p.update(p1_status='READY')
-        elif (len(p2) > 0):
-            p = Game.objects.filter(game_id=p2[0]['game_id'])
-            p.update(p2_status='READY')
+        game = Game.objects.get(game_id=game_id)
+        if (game.player_one == request.user.id):
+            game.p1_status='READY'
+            game.save()
+        elif (game.player_two == request.user.id):
+            game.p2_status='READY'
+            game.save()
         return redirect(request.META['HTTP_REFERER'])
 
 @user_passes_test(lambda user: user.is_staff)
-def game_unready(request):
+def game_unready(request, game_id):
     if request.method == 'POST':
-        current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-        if (len(p1) > 0):
-            p = Game.objects.filter(game_id=p1[0]['game_id'])
-            p.update(p1_status='UNREADY')
-        elif (len(p2) > 0):
-            p = Game.objects.filter(game_id=p2[0]['game_id'])
-            p.update(p2_status='UNREADY')
+        game = Game.objects.get(game_id=game_id)
+        if (game.player_one == request.user.id):
+            game.p1_status='UNREADY'
+            game.save()
+        elif (game.player_two == request.user.id):
+            game.p2_status='UNREADY'
+            game.save()
         return redirect(request.META['HTTP_REFERER'])
     
 @user_passes_test(lambda user: user.is_staff)
-def game_leave(request):
+def game_leave(request, game_id):
     if request.method == 'POST':
-        current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-        if (len(p1) > 0):
-            p = Game.objects.filter(game_id=p1[0]['game_id'])
-            p.update(p1_status='UNREADY')
-            p.update(player_one=0)
-        elif (len(p2) > 0):
-            p = Game.objects.filter(game_id=p2[0]['game_id'])
-            p.update(p2_status='UNREADY')
-            p.update(player_two=0)
+        game = Game.objects.get(game_id=game_id)
+        if (game.player_one == request.user.id):
+            game.p1_status='UNREADY'
+            game.player_one=0
+            game.save()
+        elif (game.player_two == request.user.id):
+            game.p2_status='UNREADY'
+            game.player_two=0
+            game.save()
         return HttpResponseRedirect('/fifteentoes')
 
 @user_passes_test(lambda user: user.is_staff)  
-def game_start_continue(request):
+def game_start_continue(request, game_id):
     if request.method == 'POST':
-        lobbyNum = player_active_lobby(request)
         try:
-            lobby = Game.objects.get(game_id=lobbyNum)
+            lobby = Game.objects.get(game_id=game_id)
         except Game.DoesNotExist:
             lobby = None
         if lobby:
@@ -203,25 +179,14 @@ def game_start_continue(request):
             lobby.p2_status='IN-GAME'
             lobby.round=1
             lobby.save()
-            return HttpResponseRedirect('/fifteentoes/game/' + str(lobby.game_id))
-        gameNum = player_active_game(request)
+            return HttpResponseRedirect(f'/fifteentoes/game/{game_id}')
         try:
-            game = Game.objects.get(game_id=gameNum)
+            game = Game.objects.get(game_id=game_id)
         except Game.DoesNotExist:
             game = None
         if game:
             print(('CONTINUING GAME #{}').format(game.game_id))
-            return HttpResponseRedirect('/fifteentoes/game/' + str(game.game_id))
-
-
-def player_active_lobby(request):
-    current_user = request.user
-    games = list(Game.objects.filter(status='LOBBY').filter(player_two=current_user.id).all().values())
-    games.extend(list(Game.objects.filter(status='LOBBY').filter(player_one=current_user.id).all().values()))
-    if len(games) == 1:
-        return games[0]['game_id']
-    else:
-        return 0
+            return HttpResponseRedirect(f'/fifteentoes/game/{game_id}')
     
 @user_passes_test(lambda user: user.is_staff)
 def game(request, game_id):
@@ -255,15 +220,6 @@ def game(request, game_id):
     })
 
     return render(request, 'fifteen_toes_game.html', game)
-        
-def player_active_game(request):
-    current_user = request.user
-    games = list(Game.objects.filter(player_two=current_user.id).exclude(status__in=['ARCHIVE','LOBBY']).all().values())
-    games.extend(list(Game.objects.filter(player_one=current_user.id).exclude(status__in=['ARCHIVE','LOBBY']).all().values()))
-    if len(games) == 1:
-        return games[0]['game_id']
-    else:
-        return 0
     
 def checkWin(game):
     if game.round <= 9:
@@ -279,106 +235,104 @@ def checkWin(game):
     
 
 @user_passes_test(lambda user: user.is_staff)
-def post(request):
-    current_user = request.user
+def post(request, game_id):
+    try:
+        game = Game.objects.get(game_id=game_id)
+    except Game.DoesNotExist:
+        game = None
     post = {}
-    lobbies = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').exclude(status='COMPLETED').all().values())
-    lobbies.extend(list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').exclude(status='COMPLETED').all().values()))
-    if len(lobbies) > 0:
-        return HttpResponseRedirect('/fifteentoes/lobby')
-    games = list(Game.objects.filter(player_one=current_user.id).filter(status='COMPLETED').all().values())
-    games.extend(list(Game.objects.filter(player_two=current_user.id).filter(status='COMPLETED').all().values()))
-    if (len(games) == 1):
-        game = games[0]
-        winner = User.objects.get(id=game['winner'])
-        loser = User.objects.get(id=game['loser'])
+    if (game):
+        winner = User.objects.get(id=game.winner)
+        loser = User.objects.get(id=game.loser)
         post.update({
-            'id': game['game_id'],
-            'privacy': game['privacy'],
-            'player_one': game['player_one'],
-            'player_two': game['player_two'],
-            'p1_status': game['p1_status'],
-            'p2_status': game['p2_status'],
-            'winner_id': game['winner'],
-            'loser_id': game['loser'],
+            'id': game.game_id,
+            'privacy': game.privacy,
+            'player_one': game.player_one,
+            'player_two': game.player_two,
+            'p1_status': game.p1_status,
+            'p2_status': game.p2_status,
+            'winner_id': game.winner,
+            'loser_id': game.loser,
             'winner': winner.username,
             'loser': loser.username,
-            'spaces': game['spaces'],
-            'pw': game['password'],
+            'spaces': game.spaces,
+            'pw': game.password,
         })
     return render(request, 'fifteen_toes_post.html', post)
 
 @user_passes_test(lambda user: user.is_staff)
-def post_rematch(request):
+def post_rematch(request, game_id):
     if request.method == 'POST':
-        current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-        if (len(p1) > 0):
-            p = Game.objects.filter(game_id=p1[0]['game_id'])
-            p.update(p1_status='REMATCH')
-            if (p1[0]['p2_status'] == 'REMATCH'):
-                game_archival(p1[0]['game_id'])
-                game = Game(
-                    status='LOBBY',
-                    player_one=p1[0]['winner'],
-                    p1_status='UNREADY',
-                    player_two=p1[0]['loser'],
-                    p2_status='UNREADY',
-                    round=0,
-                    winner=0,
-                    loser=0,
-                    privacy='Public',
-                    plays=[],
-                    spaces=[0,0,0,0,0,0,0,0,0],
-                )
+        try:
+            game = Game.objects.get(game_id=game_id)
+        except Game.DoesNotExist:
+            game = None
+        if (game):
+            if (game.player_one == request.user.id):
+                game.p1_status='REMATCH'
                 game.save()
-                return HttpResponseRedirect('/fifteentoes/lobby')
-            elif (p1[0]['p2_status'] == 'LEFT'):
-                game_archival(p1[0]['game_id'])
-                return HttpResponseRedirect('/fifteentoes')
-        elif (len(p2) > 0):
-            p = Game.objects.filter(game_id=p2[0]['game_id'])
-            p.update(p2_status='REMATCH')
-            if (p2[0]['p1_status'] == 'REMATCH'):
-                game_archival(p2[0]['game_id'])
-                game = Game(
-                    status='LOBBY',
-                    player_one=p2[0]['winner'],
-                    p1_status='UNREADY',
-                    player_two=p2[0]['loser'],
-                    p2_status='UNREADY',
-                    round=0,
-                    winner=0,
-                    loser=0,
-                    privacy='Public',
-                    plays=[],
-                    spaces=[0,0,0,0,0,0,0,0,0],
-                )
+                if (game.p2_status == 'REMATCH'):
+                    game_archival(game_id)
+                    p = Game(
+                        status='LOBBY',
+                        player_one=game.winner,
+                        p1_status='UNREADY',
+                        player_two=game.loser,
+                        p2_status='UNREADY',
+                        password=game.password,
+                        privacy=game.privacy,
+                        spaces=[0,0,0,0,0,0,0,0,0],
+                        plays=[],
+                        round=0,
+                    )
+                    p.save()
+                    return HttpResponseRedirect(f'/fifteentoes/lobby/{p.game_id}')
+                elif (game.p2_status == 'LEFT'):
+                    game_archival(game_id)
+                    HttpResponseRedirect('/fifteentoes')
+            elif (game.player_two == request.user.id):
+                game.p2_status='REMATCH'
                 game.save()
-                return HttpResponseRedirect('/fifteentoes/lobby')
-            elif (p2[0]['p2_status'] == 'LEFT'):
-                game_archival(p2[0]['game_id'])
-                return HttpResponseRedirect('/fifteentoes')
+                if (game.p1_status == 'REMATCH'):
+                    game_archival(game_id)
+                    p = Game(
+                        status='LOBBY',
+                        player_one=game.winner,
+                        p1_status='UNREADY',
+                        player_two=game.loser,
+                        p2_status='UNREADY',
+                        password=game.password,
+                        privacy=game.privacy,
+                        spaces=[0,0,0,0,0,0,0,0,0],
+                        plays=[],
+                        round=0,
+                    )
+                    p.save()
+                    return HttpResponseRedirect(f'/fifteentoes/lobby/{p.game_id}')
+                elif (game.p1_status == 'LEFT'):
+                    game_archival(game_id)
+                    HttpResponseRedirect('/fifteentoes')
         return redirect(request.META['HTTP_REFERER'])
     
 @user_passes_test(lambda user: user.is_staff)
-def post_leave(request):
+def post_leave(request, game_id):
     if request.method == 'POST':
-        current_user = request.user
-        p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
-        p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-        if (len(p1) > 0):
-            p = Game.objects.filter(game_id=p1[0]['game_id'])
-            p.update(p1_status='LEFT')
-            if p1[0]['p2_status'] == 'LEFT':
-                game_archival(p1[0]['game_id'])
-        elif (len(p2) > 0):
-            p = Game.objects.filter(game_id=p2[0]['game_id'])
-            p.update(p2_status='LEFT')
-            if p2[0]['p1_status'] == 'LEFT':
-                game_archival(p2[0]['game_id'])
-        return HttpResponseRedirect('/fifteentoes')
+        try:
+            game = Game.objects.get(game_id=game_id)
+        except Game.DoesNotExist:
+            game = None
+        if (game):
+            if (game.player_one == request.user.id):
+                game.p1_status='LEFT'
+                game.save()
+                if (game.p2_status == 'LEFT'):
+                    game_archival(game_id)
+            elif (game.player_two == request.user.id):
+                game.p2_status='LEFT'
+                game.save()
+                if (game.p1_status == 'LEFT'):
+                    game_archival(game_id)
+            return HttpResponseRedirect('/fifteentoes')
     
     
 def game_archival(id):

@@ -76,12 +76,15 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                     # game.ended = str(timezone.now())
                     game.ended = str(await sync_to_async(timezone.now)())
                     await self.save_game(game)
-                    await self.channel_layer.group_send(self.game_group_id, {
-                        'type': 'redirect',
-                        'message': {
-                            'url': '/fifteen_toes/post/'
+                    await self.channel_layer.group_send(
+                        self.game_group_id, {
+                            'type': 'send_redirect',
+                            'message': {
+                                'url': f'/fifteentoes/post/{game.id}',
+                            }
                         }
-                    })
+                    )
+
 
                 await self.save_game(game)
 
@@ -115,6 +118,14 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                 "p1": event['message']['p1'],
                 "p2": event['message']['p2'],
             },
+        }))
+
+    async def send_redirect(self, event):
+        await self.send(text_data=json.dumps({
+            'payload': {
+                'type': 'redirect',
+                'url': event['message']['url']
+            }
         }))
 
     @database_sync_to_async
