@@ -293,7 +293,7 @@ def post(request):
     lobbies = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').exclude(status='COMPLETED').all().values())
     lobbies.extend(list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').exclude(status='COMPLETED').all().values()))
     if len(lobbies) > 0:
-        return HttpResponseRedirect(f'/fifteentoes/lobby/{lobbies[0]["game_id"]}')
+        return HttpResponseRedirect(f'/fifteentoes/lobby')
     games = list(Game.objects.filter(player_one=current_user.id).filter(status='COMPLETED').all().values())
     games.extend(list(Game.objects.filter(player_two=current_user.id).filter(status='COMPLETED').all().values()))
     if (len(games) == 1):
@@ -323,12 +323,10 @@ def post_rematch(request):
         current_user = request.user
         p1 = list(Game.objects.filter(player_one=current_user.id).exclude(status='ARCHIVE').all().values())
         p2 = list(Game.objects.filter(player_two=current_user.id).exclude(status='ARCHIVE').all().values())
-        gameId = 0
         if (len(p1) == 1):
             p = Game.objects.get(game_id=p1[0]['game_id'])
             p.p1_status='REMATCH'
             p.save()
-            gameId = p.game_id
             if (p.p2_status == 'REMATCH'):
                 game_archival(p.game_id)
                 game = Game(
@@ -345,7 +343,7 @@ def post_rematch(request):
                     spaces=[0,0,0,0,0,0,0,0,0],
                 )
                 game.save()
-                return HttpResponseRedirect(f'/fifteentoes/lobby/{game.game_id}')
+                return HttpResponseRedirect(f'/fifteentoes/lobby')
             elif (p.p2_status == 'LEFT'):
                 game_archival(p.game_id)
                 return HttpResponseRedirect('/fifteentoes')
@@ -353,7 +351,6 @@ def post_rematch(request):
             p = Game.objects.get(game_id=p2[0]['game_id'])
             p.p2_status='REMATCH'
             p.save()
-            gameId = p.game_id
             if (p.p1_status == 'REMATCH'):
                 game_archival(p.game_id)
                 game = Game(
@@ -370,7 +367,7 @@ def post_rematch(request):
                     spaces=[0,0,0,0,0,0,0,0,0],
                 )
                 game.save()
-                return HttpResponseRedirect(f'/fifteentoes/lobby/{game.game_id}')
+                return HttpResponseRedirect(f'/fifteentoes/lobby')
             elif (p.p1_status == 'LEFT'):
                 game_archival(p.game_id)
                 return HttpResponseRedirect('/fifteentoes')
