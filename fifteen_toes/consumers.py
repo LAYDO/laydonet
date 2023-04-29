@@ -80,7 +80,7 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                         self.game_group_id, {
                             'type': 'send_redirect',
                             'message': {
-                                'url': f'/fifteentoes/post/{game.id}',
+                                'url': f'/fifteentoes/post',
                             }
                         }
                     )
