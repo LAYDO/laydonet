@@ -21,11 +21,11 @@ def fifteen_toes(request):
 @user_passes_test(lambda user: user.is_staff)
 def check_for_match(request):
     url = 'fifteentoes/'
-    match (check_for_lobbies(request)[0]):
+    match (check_for_lobbies(request)):
         case 2:
             url += 'post'
         case 1:
-            url += f'lobby/{check_for_lobbies(request)[1]}'
+            url += 'lobby'
         case 0:
             url += 'start'
     match = {}
@@ -43,10 +43,10 @@ def check_for_lobbies(request):
     print(txt.format(current_user.username,len(lobbies)))
     if (len(lobbies) == 1):
         if lobbies[0]['status'] == 'COMPLETED':
-            return [2,0]
-        return [1, lobbies[0]['game_id']]
+            return 2
+        return 1
     else:
-        return [0,0]
+        return 0
 
 @user_passes_test(lambda user: user.is_staff)
 def start(request):
