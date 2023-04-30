@@ -128,6 +128,7 @@ function connect() {
                     }
                 }
                 // Set up the numbers' event listeners for each message
+                selectedElement = '';
                 setUpNumberEventListeners();
                 // Check if the current user can play a move
                 if (currentPlayer === getCurrentUserId()) {
