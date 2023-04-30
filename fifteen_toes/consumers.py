@@ -99,6 +99,10 @@ class FifteenToesConsumer(AsyncJsonWebsocketConsumer):
                             'p2': game.player_two,
                         }
                     })
+            elif response['type'] == 'heartbeat':
+                await self.send(text_data=json.dumps({
+                    'type': 'heartbeat'
+                }))
         except Exception as e:
             message = response.get('message', {})
             await self.channel_layer.group_send(
