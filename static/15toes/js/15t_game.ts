@@ -1,9 +1,12 @@
 let selectedElement = '';
 let game_id = document.getElementById('ftSquares')?.getAttribute('game_id');
 
-// let connectionString = `ws://${window.location.host}/ws/game/${game_id}/`;
+// Websocket stuff
 let connectionString = (window.location.protocol === 'https:') ? `wss://${window.location.host}/ws/game/${game_id}/` : `ws://${window.location.host}/ws/game/${game_id}/`;
 let socket = new WebSocket(connectionString);
+let retryInterval = 1000;
+let heartbeatInterval = 30000; // 30 seconds
+let heartbeatTimeout: any;
 
 // Initialize the board
 for (let i = 0; i < 9; i++) {
@@ -61,16 +64,26 @@ function makeMove(square: string, play: string) {
     socket.send(JSON.stringify(data));
 }
 
+function sendHeartbeat() {
+    if (socket.readyState !== socket.OPEN) {
+        socket.send(JSON.stringify({ type: 'heartbeat' }));
+    }
+    heartbeatTimeout = setTimeout(sendHeartbeat, heartbeatInterval);
+}
+
 function connect() {
     socket.onopen = function open() {
         console.log('Connected to websocket');
+        sendHeartbeat();
     }
 
     socket.onclose = function (e) {
         console.log('Disconnected from websocket.  Reconnect attempt in 1 second...', e.reason);
-        setTimeout(function () {
+        setTimeout(() => {
             connect();
-        }, 1000);
+            retryInterval *= 2;
+        }, retryInterval);
+        clearTimeout(heartbeatTimeout);
     }
 
     socket.onmessage = function (e) {
