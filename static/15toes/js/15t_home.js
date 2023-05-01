@@ -148,7 +148,6 @@ async function fetchHowToPlay(inner) {
                 closeButton.style.right = '0';
                 closeButton.style.cursor = 'pointer';
                 closeButton.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevent triggering the inner click event
                     howToPlay();
                 });
                 inner.append(closeButton);
