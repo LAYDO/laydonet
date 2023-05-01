@@ -6,10 +6,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django import template
 register = template.Library()
 
-from .models import Game
+from .models import Game, GameInstruction
 from .forms import CreateLobbyForm, JoinLobbyForm
 from django.contrib.auth.models import User
 import json
+# Import the Django JSON encoder
+from django.core.serializers.json import DjangoJSONEncoder
+from .encoders import QuillFieldEncoder
 
 # Create your views here.
 
@@ -411,3 +414,13 @@ def user_click(request):
 @register.filter(name='cut')
 def cut(value, arg):
     return value.replace(arg, '')
+
+def how_to_play(request):
+    how_to_play = {}
+    instructions = GameInstruction.objects.get(id=2)
+    how_to_play['title'] = instructions.title
+    how_to_play['instructions'] = instructions.content
+    quill_field_data = how_to_play["instructions"].html
+    how_to_play["instructions"] = quill_field_data
+    print(how_to_play)
+    return JsonResponse(how_to_play, safe=False, encoder=QuillFieldEncoder)
