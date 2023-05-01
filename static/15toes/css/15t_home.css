@@ -1,0 +1,43 @@
+.fift-card {
+    background-color: transparent;
+    height: 39rem;
+}
+
+.fift-card-inner {
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.fift-card.clicked .fift-card-inner{
+    transform: rotateY(180deg);
+}
+
+.fift-card-front,
+.fift-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.fift-card-back {
+    text-align: start;
+    transform: rotateY(180deg);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff8ed;
+    border-radius: 1rem;
+    overflow-y: auto;
+}
+
+.fift-title,
+.close-button {
+    font-size: 2rem;
+    margin: 0 1rem;
+}
+
+.fift-text {
+    margin: 1rem;
+}

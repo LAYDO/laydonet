@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
+from django_quill.fields import QuillField
 
 
 # Create your models here.
@@ -40,3 +41,10 @@ class PlayerStats(models.Model):
     games_forfeited = models.IntegerField(default=0)
     win_percent = models.DecimalField(decimal_places=2,max_digits=3, default=0)
     loss_percent = models.DecimalField(decimal_places=2,max_digits=3, default=0)
+
+class GameInstruction(models.Model):
+    title = models.CharField(max_length=50, unique=True)
+    content = QuillField()
+
+    def __str__(self):
+        return self.title
