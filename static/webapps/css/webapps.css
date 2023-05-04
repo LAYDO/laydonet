@@ -69,9 +69,6 @@
 #mtg {
     background-image: url('/static/mtg/img/mtgIcon.svg');
 }
-#fifteentoes {
-    padding: 0.75rem 0;
-}
 
 @media only screen and (min-width: 37.5rem) {
     .app-button {

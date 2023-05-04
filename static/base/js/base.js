@@ -46,23 +46,6 @@ function toggleOverlay() {
     }
 }
 
-async function getSomething() {
-
-    // let name = document.getElementById('').value;
-    let url = `${window.location.origin}/endpoint_here/?`;
-
-    fetch(url).then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    }).then(data => {
-        console.log(data);
-    }).catch(error => {
-        console.error('There has been a problem with your fetch operation: ', error);
-    })
-}
-
 // DARK/LIGHT THEME credit to 
 // https://medium.com/@haxzie/dark-and-light-theme-switcher-using-css-variables-and-pure-javascript-zocada-dd0059d72fa2
 
@@ -87,5 +70,15 @@ function openSocial(evt) {
         window.open("https://www.linkedin.com/in/landen-robinson-97683620/");
     } else if (social === "github") {
         window.open("https://github.com/LAYDO");
+    }
+}
+
+function redirectToUrl(evt) {
+    let subdomain = evt.currentTarget.id.toLowerCase();
+    if (typeof subdomain === 'string' && subdomain.trim().length > 0) {
+        const url = `https://www.${subdomain.trim()}.com`;
+        window.location.href = url;
+    } else {
+        console.error('Invalid subdomain provided.');
     }
 }
