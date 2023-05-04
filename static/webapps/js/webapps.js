@@ -2,8 +2,10 @@ init()
 
 function init() {
     let element = document.getElementById('schedule');
-    this.clock = new Clock(element);
-    setInterval(this.updateTime.bind(this));
+    if (element) {
+        this.clock = new Clock(element);
+        setInterval(this.updateTime.bind(this));
+    }
 }
 
 function updateTime() {

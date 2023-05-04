@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'blog',
     'users',
     'orbiter',
+    'channels',
 ]
 
 MIDDLEWARE = [
