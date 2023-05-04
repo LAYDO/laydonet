@@ -33,7 +33,9 @@
 #wedding {
     background-image: url('/static/wedding/img/Aieleen-Landen-Engagement-13.jpg');
 }
-
+#apollosarcade {
+    background-image: url('/static/websites/img/apollo.png');
+}
 
 @media only screen and (min-width: 37.5rem) {
     .site-div {
