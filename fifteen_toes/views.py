@@ -10,8 +10,6 @@ from .models import Game, GameInstruction
 from .forms import CreateLobbyForm, JoinLobbyForm
 from django.contrib.auth.models import User
 import json
-# Import the Django JSON encoder
-from django.core.serializers.json import DjangoJSONEncoder
 from .encoders import QuillFieldEncoder
 
 # Create your views here.

@@ -100,18 +100,6 @@ TEMPLATES = [
 # Channels
 ASGI_APPLICATION = 'laydonet.asgi.application'
 
-# Get the Redis URL from the environment variable
-REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379')
-
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [REDIS_URL],
-        },
-    },
-}
-
 
 DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
@@ -125,7 +113,7 @@ if DEVELOPMENT_MODE is True:
             'NAME': 'laydonetdb',
             'USER': 'laydonetdb',
             'PASSWORD': os.environ.get("DB_PASSWORD"),
-            'HOST': os.environ.get("DATABASE_HOST"),
+            'HOST': os.environ.get("DB_HOST"),
             'PORT': '25060'
         }
     }
