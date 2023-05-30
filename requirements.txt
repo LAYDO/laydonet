@@ -46,7 +46,7 @@ sgp4==2.21
 six==1.16.0
 skyfield==1.46
 soupsieve==2.4.1
-sqlparse==0.4.2
+sqlparse==0.4.4
 Twisted==22.10.0
 txaio==23.1.1
 typing_extensions==4.5.0
