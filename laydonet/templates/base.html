@@ -23,6 +23,7 @@
         <a class="nav-link" onclick="redirect(event)" id="webapps">Apps</a>
         <a class="nav-link" onclick="redirect(event)" id="websites">Sites</a>
         <a class="nav-link" onclick="redirect(event)" id="blog">Blog</a>
+        <a class="nav-link" onclick="redirect(event)" id="resume">Resume</a>
         {% if user.is_authenticated %}
           <a class="nav-link" id="logout" href="{% url 'logout' %}">Logout</a>
         {% else %}

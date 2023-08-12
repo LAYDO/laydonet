@@ -35,4 +35,5 @@ urlpatterns = [
     path('blog/', include('blog.urls')),
     path('users/', include('users.urls')),
     path('orbiter/', include('orbiter.urls')),
+    path('resume/', include('resume.urls')),
 ]

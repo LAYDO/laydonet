@@ -1,0 +1,14 @@
+h3, h4 {
+    text-align: start;
+    margin: 1rem;
+}
+
+li {
+    text-align: start;
+}
+
+.location-duration, .summary,
+.current, .accomplishments {
+    text-align: start;
+    margin: 1rem;
+}

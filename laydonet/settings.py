@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'users',
     'orbiter',
     'channels',
+    'resume',
 ]
 
 MIDDLEWARE = [
