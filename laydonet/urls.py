@@ -30,10 +30,9 @@ urlpatterns = [
     path('trackiss/', include('trackiss.urls')),
     path('jwst/', include('jwst.urls')),
     path('mtg/', include('mtg.urls')),
-    path('webapps/', include('webapps.urls')),
-    path('websites/', include('websites.urls')),
     path('blog/', include('blog.urls')),
     path('users/', include('users.urls')),
     path('orbiter/', include('orbiter.urls')),
     path('resume/', include('resume.urls')),
+    path('about/', include('about.urls')),
 ]

@@ -28,46 +28,47 @@
 </section>
 {% endblock %}
 {% block laydo_content %}
-<p>
-  Welcome to Laydo Net! This space on the Internet is primarily to showcase my 
-  skills and abilities surrounding software development. It's been built entirely
-  from scratch using a handful of web technologies that I'll accumulate below as time rolls on.
-  <br><br>
-  Generally, everything can be found on the menu and as of now, houses small web applications, sites,
-  and my personal blog that I've crafted over time. Most of the content on this site will be focused
-  on application development and will continually evolve until a point that becomes apparent.
-</p>
-<h2>Technologies & Platforms</h2>
-<div class="tech-plat">
-  <div class="tech-plat-item">
-    <a id="djangoUsed" href="https://www.djangoproject.com/"></a>
-    <label for="djangoUsed">Django</label>
+<div class="apps-space">
+  <div class="apps-title">Web Apps</div>
+  <div class="app-claim">
+    <button class="app-button" id="orbiter" onclick="redirect(event)"></button>
+    <h3 class="app-title">Orbiter</h3>
   </div>
-  <div class="tech-plat-item">
-    <a id="pythonUsed" href="https://www.python.org/"></a>
-    <label for="pythonUsed">Python</label>
+  <div class="app-claim">
+    <button class="app-button" id="jwst" onclick="redirect(event)"></button>
+    <h3 class="app-title">JWST</h3>
   </div>
-  <div class="tech-plat-item">
-    <a id="typescriptUsed" href="https://www.typescriptlang.org/"></a>
-    <label for="typescriptUsed">Typescript</label>
+  <div class="app-claim">
+    <button class="app-button" id="weather" onclick="redirect(event)"></button>
+    <h3 class="app-title">Weather</h3>
   </div>
-  <div class="tech-plat-item">
-    <a id="postgresUsed" href="https://www.postgresql.org/"></a>
-    <label for="postgresUsed">Postgres</label>
+  <div class="app-claim">
+    <button class="app-button" id="mtg" onclick="redirect(event)"></button>
+    <h3 class="app-title">MTG</h3>
   </div>
-  <div class="tech-plat-item">
-    <a id="githubUsed" href="https://github.com/"></a>
-    <label for="githubUsed">GitHub</label>
+  {% if user.is_staff %}
+  <div class="app-claim">
+    <button class="app-button" id="schedule" onclick="redirect(event)"></button>
+    <h3 class="app-title">Schedule</h3>
   </div>
-  <div class="tech-plat-item">
-    <a id="doUsed" href="https://www.digitalocean.com/"></a>
-    <label for="doUsed">Digital Ocean</label>
+  <div class="app-claim">
+    <button class="app-button" id="allergies" onclick="redirect(event)"></button>
+    <h3 class="app-title">Allergies</h3>
   </div>
-  <div class="tech-plat-item">
-    <a id="jestUsed" href="https://jestjs.io/"></a>
-    <label for="jestUsed">Jest</label>
+  {% endif %}
+</div>
+<div class="site-space">
+  <div class="sites-title">Web Sites</div>
+  <div class="site-claim">
+    <div class="site-div" id="apollosarcade" onclick="redirectToUrl(event)"></div>
+    <h3 class="site-title">Apollo's Arcade</h3>
+  </div>
+  <div class="site-claim">
+    <div class="site-div" id="wedding" onclick="redirect(event)"></div>
+    <h3 class="site-title">Wedding</h3>
   </div>
 </div>
 {% endblock %} {% block page_scripts %}
+<script type="text/javascript" src="{% static 'schedule/js/Clock.js' %}"></script>
 <script type="text/javascript" src="{% static 'home/js/home.js' %}"></script>
 {% endblock %}

@@ -46,11 +46,11 @@ def getSchedule(self):
                 # print(data)
                 match i:
                     case 1:
-                        weekClasses.append(str(data.text.replace('\n','').replace('\xa0','').replace('\t','')))
+                        weekClasses.append(str(data.text)) #.replace('\n','').replace('\xa0','').replace('\t','')))
                     case 2:
-                        startTimes.append(str(data.text.replace('\n','').replace('\xa0','').replace('\t','')))
+                        startTimes.append(str(data.text)) # .replace('\n','').replace('\xa0','').replace('\t','')))
                     case 3:
-                        endTimes.append(str(data.text.replace('\n','').replace('\xa0','').replace('\t','')))
+                        endTimes.append(str(data.text)) # .replace('\n','').replace('\xa0','').replace('\t','')))
     # print(f'CLASSES:\n{weekClasses}\nSTART:\n{startTimes}\nEND:\n{endTimes}\n')
     # print(f'weekday: {today.weekday()}')
     if (today.weekday() >= 0 and today.weekday() <= 4 and today.weekday() != 2):
