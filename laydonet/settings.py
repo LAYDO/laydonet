@@ -54,12 +54,12 @@ INSTALLED_APPS = [
     'trackiss',
     'jwst',
     'mtg',
-    'webapps',
-    'websites',
     'blog',
     'users',
     'orbiter',
     'channels',
+    'resume',
+    'about',
 ]
 
 MIDDLEWARE = [

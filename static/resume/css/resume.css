@@ -1,0 +1,125 @@
+h3, h4 {
+    text-align: start;
+    margin: 1rem;
+}
+
+a {
+    color: var(--font-color);
+}
+
+li {
+    text-align: start;
+}
+
+.summary, .current, .accomplishments {
+    text-align: start;
+    /* margin-left: 1rem; */
+}
+
+.resume {
+    padding-top: 1rem;
+}
+
+.circuit-border,
+.circuit-border-inner {
+    width: 96%;
+    /* height: 100px; */
+    display: inline-block;
+    position: relative;
+    border: 0.125rem solid var(--font-color);
+    /* color: var(--font-color); */
+    /* font: bold 18px/100px 'segoe ui'; */
+    /* text-transform: uppercase; */
+    text-align: center;
+    text-decoration: none;
+    background-color: var(--glass-backdrop);
+}
+.circuit-border-inner {
+    margin-bottom: 2rem;
+}
+.circuit-border {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 44px, 44px 0);
+}
+.circuit-border > .resume-content:before {
+    content: '';
+    position: absolute;
+    top: 0.8125rem;
+    left: 0.65625rem;
+    width: 66px;
+    height: 64px;
+    transform: rotate(45deg);
+    z-index: 1;
+    border-left: 0.125rem solid var(--font-color);
+}
+.circuit-border:before,
+.circuit-border:after,
+.circuit-border-inner:before,
+.circuit-border-inner:after {
+    content: '';
+    position: absolute;
+    top: -0.25rem;
+    left: -0.25rem;
+}
+
+.circuit-border:before {
+    width: 47px;
+    height: 0;
+    border-bottom: 0.25rem solid var(--color-primary);
+}
+
+.circuit-border:after {
+    width: 0;
+    height: 47px;
+    border-left: 0.25rem solid var(--color-primary);
+}
+.circuit-border-inner:before {
+    width: 47px;
+    height: 0;
+    border-bottom: 0.25rem solid transparent;
+}
+
+.circuit-border-inner:after {
+    width: 0;
+    height: 47px;
+    border-left: 0.25rem solid transparent;
+}
+.resume-content {
+    padding: 1rem;
+    width: 95%;
+}
+.resume-content p {
+    padding: 1rem;
+    text-align: start;
+}
+.resume-content a {
+    text-decoration: none;
+}
+.resume-personal {
+    text-align: center;
+}
+.experience-col {
+    text-align: start;
+    margin-left: 1rem;
+}
+.location-duration {
+    color: var(--font-faded);
+    margin-left: 1rem;
+}
+.experience-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+.summary {
+    font-style: italic;
+    margin: 1rem;
+    padding-left: 1rem;
+}
+.tech-used {
+    margin: 1rem 0;
+    padding-left: 2rem;
+    text-align: start;
+}
+
+/* 
+    https: //stackoverflow.com/questions/31785198/css3-diagonal-border-line
+ */

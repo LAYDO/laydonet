@@ -137,6 +137,8 @@ dmypy.json
 
 # VS Code preferences
 launch.json
+settings.json
+.vscode/
 
 # Node
 node_modules/

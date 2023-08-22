@@ -228,3 +228,143 @@
 #jestUsed {
   background-image: url('/static/home/img/jest.png');
 }
+
+.apps-space {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+
+.app-claim {
+  margin: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 16.5rem;
+}
+
+.app-button {
+  min-height: 6rem;
+  min-width: 6rem;
+  max-height: 6rem;
+  max-width: 6rem;
+  background-color: transparent;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 0.0625rem 0.25rem;
+  border-radius: 25%;
+  cursor: pointer;
+  background-position: inherit;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 0;
+}
+
+@keyframes appOpen {
+  from {
+    height: 10rem;
+    width: 10rem;
+    background-color: transparent;
+  }
+
+  to {
+    transform: scale(20);
+  }
+}
+
+.app-open {
+  animation-name: appOpen;
+  animation-duration: 1s;
+}
+
+.app-title {
+  font-size: 1rem;
+}
+
+#orbiter {
+  background-image: url('/static/iss/img/iss.png');
+}
+
+#jwst {
+  background-image: url('/static/jwst/img/jwst.svg');
+}
+
+#weather {
+  background-image: url('/static/weather/img/weatherIcon.svg');
+}
+
+#allergies {
+  background-image: url('/static/allergies/img/paw-print.jpg');
+}
+
+#mtg {
+  background-image: url('/static/mtg/img/mtgIcon.svg');
+}
+
+@media only screen and (min-width: 37.5rem) {
+  .app-button {
+    min-height: 10rem;
+    min-width: 10rem;
+  }
+
+  .app-title {
+    font-size: 2rem;
+  }
+}
+
+.site-space {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
+}
+
+.site-claim {
+  margin: 1rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.site-div {
+  min-height: 15rem;
+  min-width: 10rem;
+  background-color: transparent;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 0.0625rem 0.25rem;
+  border-radius: 5%;
+  cursor: pointer;
+  background-position: inherit;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.site-title {
+  font-size: 1rem;
+}
+
+#wedding {
+  background-image: url('/static/wedding/img/Aieleen-Landen-Engagement-13.jpg');
+}
+
+#apollosarcade {
+  background-image: url('/static/home/img/apollo.png');
+}
+
+@media only screen and (min-width: 37.5rem) {
+  .site-div {
+    min-height: 20rem;
+    min-width: 15rem;
+  }
+
+  .site-title {
+    font-size: 2rem;
+  }
+}
+
+.sites-title,
+.apps-title {
+  width: 100%;
+  font-size: 2rem;
+}
