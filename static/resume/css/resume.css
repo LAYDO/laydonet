@@ -37,7 +37,9 @@ li {
 .circuit-border-inner {
     margin-bottom: 2rem;
 }
-
+.circuit-border {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 44px, 44px 0);
+}
 .circuit-border > .resume-content:before {
     content: '';
     position: absolute;
