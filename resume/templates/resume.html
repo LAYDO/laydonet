@@ -2,89 +2,136 @@
 <link rel="stylesheet" href="{% static 'resume/css/resume.css' %}" />
 {% endblock %}
 {% block laydo_content_1 %}
-<div>
-    <h1>Landen Robinson</h1>
-    <p>
-        11017 South Sawyer Ave, Chicago, IL 60655 &#9883; 
-        (425) 280-6341 &#9883; 
-        <a href="mailto:robinsonlanden@gmail.com">robinsonlanden@gmail.com</a> &#9883; 
-        <a href="https://www.linkedin.com/in/landen-robinson-97683620/">LinkedIn</a> &#9883; 
-        <a href="https://www.apollosarcade.com">Apollo's Arcade</a>
-    </p>
+<div id="laydoResume" class="resume">
+    <div class="circuit-border">
+        <div class="resume-content">
+            <h1>Landen Robinson</h1>
+            <div class="resume-personal">
+                11017 South Sawyer Ave, Chicago, IL 60655 &#9883; 
+                (425) 280-6341 &#9883; 
+                <a href="mailto:robinsonlanden@gmail.com">robinsonlanden@gmail.com</a> &#9883; 
+                <a href="https://www.linkedin.com/in/landen-robinson-97683620/">LinkedIn</a>
+            </div>
 
-    <h2>SUMMARY OF QUALIFICATIONS</h2>
-    <ul>
-        <li>Business orientated background offering 6 years of business and systems analyst experience with finance,
-            health-care, customer-facing, and engineering applications</li>
-        <li>Informal and emerging forte with 5 years of professional programming experience, including full-stack
-            development with a primary focus on front-end</li>
-        <li>Bridging the gap by leveraging years of business application acumen to liaison with business and technical
-            stakeholders alike</li>
-        <li>Proponent of Agile to plan and execute development work across multiple inter-disciplinary teams</li>
-        <li>Emerging leadership skills that facilitate eloquent communication, prioritization and delegation of tasks,
-            and sound decision making based on well-established goals</li>
-    </ul>
+            <h2>SUMMARY OF QUALIFICATIONS</h2>
+            <ul>
+                <li>Business orientated background offering 6 years of business and systems analyst experience with finance,
+                    health-care, customer-facing, and engineering applications</li>
+                <li>Informal and emerging forte with 5 years of professional programming experience, including full-stack
+                    development with a primary focus on front-end</li>
+                <li>Bridging the gap by leveraging years of business application acumen to liaison with business and technical
+                    stakeholders alike</li>
+                <li>Champion of Agile practices to plan and execute development work across multiple inter-disciplinary teams</li>
+                <li>Emerging leadership skills that facilitate eloquent communication, prioritization and delegation of tasks,
+                    and sound decision-making based on well-established goals</li>
+            </ul>            
 
-    <h2>Technical Tools</h2>
-    <p>Java, Javascript, XML, HTML5, CSS/3, REST, Visual Studio Code, Eclipse, STS, SQL, MySQL, TOAD, JUnit, Weblogic,
-        Spring Framework, Hibernate, Maven, Gradle, Node.js, React, PuTTY, Ubuntu, Linux, Unix, Material Design,
-        Material UI, Bootstrap, jQuery, Oracle Forms & Reports, Pivotal Cloud Foundry (PCF), Git, GitLab, GitLab CI/CD,
-        Bash, Python and more</p>
+            <h2>EXPERIENCE</h2>
 
-    <h2>EXPERIENCE</h2>
+            <div class="circuit-border-inner">
+                <div class="resume-content">
+                    <div class="experience-col">
+                        <div class="experience-title">Senior Software Developer, The Boeing Company</div>
+                        <div class="location-duration"><span class="fa-solid fa-location-dot"></span> Seattle, WA &#8594; Chicago, IL</div>
+                        <div class="location-duration"><span class="fa-solid fa-calendar-days"></span> September 2018 - Present</div>
+                    </div>
+                    <div class="summary">Full-stack developer contributing to the conversion of legacy business applications to micro-services hosted
+                        within a cloud infrastructure, on top of modern technology stacks</div>
+        
+                    <h4>Current Statement of Work & Accomplishments</h4>
+                    <ul>
+                        <li>Currently, helping develop GUI components for pilot simulation training pertinent to specific, production,
+                            commercial models</li>
+                        <li>Led front-end development, re-writing a legacy, training catalog application to cloud-based micro-services,
+                            identifying and remedying gaps of tens of millions of dollars in accounting</li>
+                        <li>Led design and development work towards a “Landing Page” for Spare Parts Provisioning suite of apps,
+                            bringing consistency to user experience</li>
+                        <li>Provided production support to Spare Parts Provisioning applications, to maintain 99.5% application
+                            availability for our global users</li>
+                        <li>Converted 5% of our legacy Provisioning application, to prove a concept for micro-service architecture
+                            feasibility</li>
+                    </ul>
+                    <h4>Technologies Used</h4>
+                    <div class="tech-used">Java, Javascript, Typescript, C++, XML, HTML5, CSS, REST, SQL, MySQL, TOAD, JUnit, Weblogic, Spring Boot, Spring Hibernate, Maven, 
+                        Gradle, Node.js, React, PuTTY, , Material Design, Material UI, Bootstrap, jQuery, Shell Scripting, RedHat Linux,
+                        Oracle Forms & Reports, Pivotal Cloud Foundry (PCF), Git, GitLab, GitLab CI/CD, Bash, Python, and more</div>
+                </div>
+            </div>
 
-    <h3>Senior Software Developer, The Boeing Company</h3>
-    <p class="location-duration">Seattle, WA — September 2018 - Present</p>
-    <p class="summary">Full-stack developer contributing to the conversion of legacy business applications to micro-services hosted
-        within a cloud infrastructure, on top of modern technology stacks</p>
+            <div class="circuit-border-inner">
+                <div class="resume-content">
+                    <div class="experience-col">
+                        <div class="experience-title">Product Owner, The Boeing Company</div>
+                        <div class="location-duration"><span class="fa-solid fa-location-dot"></span> Renton, WA</div>
+                        <div class="location-duration"><span class="fa-solid fa-calendar-days"></span> May 2014 - September 2018</div>
+                    </div>
+                    <div class="summary">Lead Product Owner for multiple projects, aggregating requirements from business partners to design and test
+                        ongoing application support, as well as new projects to help facilitate a growing spare parts business</div>
 
-    <h4>Current Statement of Work & Accomplishments</h4>
-    <ul>
-        <li>Currently, helping develop GUI components for pilot simulation training pertinent to specific, production,
-            commercial models</li>
-        <li>Led front-end development, re-writing a legacy, training catalog application to cloud-based micro-services,
-            identifying and remedying gaps of tens of millions of dollars in accounting</li>
-        <li>Led design and development work towards a “Landing Page” for Spare Parts Provisioning suite of apps,
-            bringing consistency to user experience</li>
-        <li>Provided production support to Spare Parts Provisioning applications, to maintain 99.5% application
-            availability for our global users</li>
-        <li>Converted 5% of our legacy Provisioning application, to prove a concept for micro-service architecture
-            feasibility</li>
-    </ul>
+                    <h4>Accomplishments</h4>
+                    <ul>
+                        <li>Focal for Pricing integrations with spare parts provisioning and customer facing applications, in order to
+                            ensure a smooth transition to an enterprise-wide SAP system</li>
+                        <li>Led design, development priorities, testing plan, implementation checkout, and production support of, both
+                            Boeing and third party, customer facing and internal engineering applications to support spare parts
+                            provisioning</li>
+                        <li>Created functional automation tests, providing coverage to our entire suite of applications</li>
+                    </ul>
+                </div>
+            </div>
 
-    <h3>Product Owner, The Boeing Company</h3>
-    <p class="location-duration">Renton, WA — May 2014 – September 2018</p>
-    <p class="summary">Lead Product Owner for multiple projects, aggregating requirements from business partners to design and test
-        ongoing application support, as well as new projects to help facilitate a growing spare parts business</p>
+            <div class="circuit-border-inner">
+                <div class="resume-content">
+                    <div class="experience-col">
+                        <div class="experience-title">Business Analyst, CGI</div>
+                        <div class="location-duration"><span class="fa-solid fa-location-dot"></span> Fairfax, VA</div>
+                        <div class="location-duration"><span class="fa-solid fa-calendar-days"></span> June 2012 - April 2014</div>
+                    </div>
+                    <!-- <h3>Business Analyst, CGI</h3>
+                    <p class="location-duration">Fairfax, VA — June 2012 – April 2014</p> -->
+                    <div class="summary">Provided business analysis on a total of 4 projects ranging in size and scope, pertinent to financial and
+                        healthcare infrastructure solutions</div>
+                    <h4>Accomplishments</h4>
+                    <ul>
+                        <li>Lead analyst for the Vermont Health Connect website, contributing to 80,000+ residents acquiring health
+                            insurance within the first 6 months</li>
+                        <li>Completed requirements documentation for design and modifications of a COTS accounting system for
+                            subdivisions of medium to large-sized national financial institutions, typically upgrading existing systems
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
-    <h4>Accomplishments</h4>
-    <ul>
-        <li>Focal for Pricing integrations with spare parts provisioning and customer facing applications, in order to
-            ensure a smooth transition to an enterprise-wide SAP system</li>
-        <li>Led design, development priorities, testing plan, implementation checkout, and production support of, both
-            Boeing and third party, customer facing and internal engineering applications to support spare parts
-            provisioning</li>
-        <li>Created functional automation tests, providing coverage to our entire suite of applications</li>
-    </ul>
+            <h2>PROJECTS</h2>
+            <div class="circuit-border-inner">
+                <div class="resume-content">
+                    <div class="experience-col">
+                        <div class="experience-title">Apollo's Arcade <a href="https://www.apollosarcade.com" class="fa-solid fa-up-right-from-square" target="_blank"></a></div>
+                        <div class="location-duration"><span class="fa-solid fa-location-dot"></span> Chicago, IL</div>
+                        <div class="location-duration"><span class="fa-solid fa-calendar-days"></span> January 2023 - Present</div>
+                    </div>
+                    <div class="summary">Strategic, multiplayer mini-games for everyone</div>
+                    <h4>Technologies Used</h4>
+                    <div class="tech-used">Typescript, Javascript, WebSocket, Python, Django, Django Channels, PostgreSQL, Ubuntu, Linux, Digital Ocean, Git, GitHub</div>
+                </div>
+            </div>
 
-    <h3>Business Analyst, CGI</h3>
-    <p class="location-duration">Fairfax, VA — June 2012 – April 2014</p>
-    <p class="summary">Provided business analysis on a total of 4 projects ranging in size and scope, pertinent to financial and
-        healthcare infrastructure solutions</p>
-
-    <h4>Accomplishments</h4>
-    <ul>
-        <li>Lead analyst for the Vermont Health Connect website, contributing to 80,000+ residents acquiring health
-            insurance within the first 6 months</li>
-        <li>Completed requirements documentation for design and modifications of a COTS accounting system for
-            subdivisions of medium to large-sized national financial institutions, typically upgrading existing systems
-        </li>
-    </ul>
-
-    <h2>EDUCATION</h2>
-    <h3>Washington State University</h3>
-    <p class="location-duration">B.B.A. Management Information Systems — 2007- 2012</p>
-    <p class="location-duration">B.A. German Language & Literature — 2007- 2012</p>
+            <h2>EDUCATION</h2>
+            <div class="circuit-border-inner">
+                <div class="resume-content">
+                    <h3>Washington State University</h3>
+                    <div class="experience-col">
+                        <div class="location-duration">B.B.A. Management Information Systems</div>
+                        <div class="location-duration"><span class="fa-solid fa-calendar-days"></span> 2007 - 2012</div><br/>
+                        <div class="location-duration">B.A. German Language & Literature</div>
+                        <div class="location-duration"><span class="fa-solid fa-calendar-days"></span> 2007 - 2012</div>
+                    </div>
+                    <!-- <p class="location-duration">B.B.A. Management Information Systems — 2007- 2012</p>
+                    <p class="location-duration">B.A. German Language & Literature — 2007- 2012</p> -->
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %} {% block page_scripts %}
 <script type="text/javascript" src="{% static 'resume/js/resume.js' %}"></script>
