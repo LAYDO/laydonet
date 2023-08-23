@@ -35,4 +35,5 @@ urlpatterns = [
     path('orbiter/', include('orbiter.urls')),
     path('resume/', include('resume.urls')),
     path('about/', include('about.urls')),
+    path('home-planner/', include('homeplanner.urls')),
 ]
