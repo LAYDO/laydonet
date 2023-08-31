@@ -1,6 +1,6 @@
 import requests
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -122,7 +122,7 @@ class Schedule:
                     constructPeriods(x)
         self.weekend = True if datetime.today().weekday() > 4 else False
         self.todayStart = p[0]['start'] if p else 0
-        self.tomorrowStart = self.todayStart + datetime.timedelta(days=1) if self.dayOfWeek < 4 else 0
+        self.tomorrowStart = self.todayStart + timedelta(days=1) if self.dayOfWeek < 4 else 0
         if self.weekend and not self.summerTime:
             today = datetime.today()
             self.schoolStart = datetime(today.year, today.month, today.day + wknd[today.weekday()], 7, 55)
