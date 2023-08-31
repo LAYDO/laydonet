@@ -2,7 +2,16 @@
 <link rel="stylesheet" href="{% static 'planner/css/planner.css' %}" />
 {% endblock %}
 {% block laydo_content_1 %}
-<div class="planner-container" id="homePlanner"></div>
+<div class="planner-container" id="homePlanner">
+    <svg id="canvas" width="800" height="600">
+        <!-- House Component -->
+        <g class="draggable" id="house">
+            <!-- House shape here -->
+            <rect x="10" y="10" width="100" height="100"></rect>
+        </g>
+        <!-- Additional components go here -->
+    </svg>
+</div>
 {% endblock %} {% block page_scripts %}
 <script type="text/javascript" src="{% static 'planner/js/Planner.js' %}"></script>
 <script type="text/javascript" src="{% static 'planner/js/home-planner.js' %}"></script>
