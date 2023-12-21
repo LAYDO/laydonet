@@ -1,4 +1,6 @@
-class Precipitation extends ElementTile {
+import { ElementTile } from './ElementTile';
+
+export class Precipitation extends ElementTile {
     constructor() {
         super('Precipitation', 'tint', ['precipData'], 'elementRowTwo', ['precipTodayData']);
     }

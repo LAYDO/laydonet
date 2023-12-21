@@ -1,4 +1,7 @@
-class Celestial {
+import { Sun } from './Sun';
+import { Moon } from './Moon';
+
+export class Celestial {
     public celestialElement: HTMLElement;
     public celestialRow: HTMLElement;
 

@@ -1,4 +1,6 @@
-class Sun extends ElementTile {
+import { ElementTile } from "./ElementTile";
+
+export class Sun extends ElementTile {
     private riseUnix: number;
     private setUnix: number;
     private colorSunrise: string = '#FFE600';

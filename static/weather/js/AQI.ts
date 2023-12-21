@@ -1,4 +1,4 @@
-class AQI {
+export class AQI {
     public aqiElement: HTMLElement;
     public airTitle: HTMLElement;
     public aqiData: HTMLElement;

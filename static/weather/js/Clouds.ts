@@ -1,4 +1,4 @@
-class Clouds {
+export class Clouds {
     public cloudContainer: HTMLElement;
     public cloudElement: HTMLElement;
     public cloudTitle: HTMLElement;

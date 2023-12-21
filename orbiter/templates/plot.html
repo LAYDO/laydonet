@@ -9,6 +9,5 @@
 <div id="orbiterMap" data-satellite-id="{{ satellite.id }}" style="width: 100%; height: 500px;"></div>
 {% endblock %}
 {% block page_scripts %}
-<script type="text/javascript" src="{% static 'orbiter/js/orbiter.js' %}"></script>
-<script type="text/javascript" src="{% static 'orbiter/js/ol.js' %}"></script>
+<script type="text/javascript" src="{% static '/dist/orbiter.bundle.js' %}"></script>
 {% endblock %}

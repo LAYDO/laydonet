@@ -1,4 +1,4 @@
-class Daily {
+export class Daily {
     public dailyElement: HTMLElement;
     private dailyTitle: HTMLElement;
     private daily: HTMLElement;

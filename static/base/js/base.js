@@ -33,6 +33,11 @@ function redirect(evt) {
     }
 }
 
+let appButtons = document.getElementsByClassName('app-button');
+for (let appButton of appButtons) {
+    appButton.addEventListener('click', redirect);
+}
+
 
 function toggleOverlay() {
     let menu = document.getElementById('laydoNavIcon');
@@ -81,4 +86,9 @@ function redirectToUrl(evt) {
     } else {
         console.error('Invalid subdomain provided.');
     }
+}
+
+let siteRedirects = document.getElementsByClassName('site-div');
+for (let siteRedirect of siteRedirects) {
+    siteRedirect.addEventListener('click', redirectToUrl);
 }

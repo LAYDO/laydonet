@@ -1,4 +1,4 @@
-class Hourly {
+export class Hourly {
     public hourlyElement: HTMLElement;
     private hourlyTitle: HTMLElement;
     private hourly: HTMLElement;

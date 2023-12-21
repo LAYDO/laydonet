@@ -30,43 +30,42 @@
 {% block laydo_content %}
 <div class="apps-space">
   <div class="app-claim">
-    <button class="app-button" id="orbiter" onclick="redirect(event)"></button>
+    <button class="app-button" id="orbiter" ></button>
     <h3 class="app-title">Orbiter</h3>
   </div>
   <div class="app-claim">
-    <button class="app-button" id="jwst" onclick="redirect(event)"></button>
+    <button class="app-button" id="jwst" ></button>
     <h3 class="app-title">JWST</h3>
   </div>
   <div class="app-claim">
-    <button class="app-button" id="weather" onclick="redirect(event)"></button>
+    <button class="app-button" id="weather" ></button>
     <h3 class="app-title">Weather</h3>
   </div>
   <div class="app-claim">
-    <button class="app-button" id="mtg" onclick="redirect(event)"></button>
+    <button class="app-button" id="mtg" ></button>
     <h3 class="app-title">MTG</h3>
   </div>
   {% if user.is_staff %}
   <div class="app-claim">
-    <button class="app-button" id="schedule" onclick="redirect(event)"></button>
+    <button class="app-button" id="schedule" ></button>
     <h3 class="app-title">Schedule</h3>
   </div>
   <div class="app-claim">
-    <button class="app-button" id="allergies" onclick="redirect(event)"></button>
+    <button class="app-button" id="allergies" ></button>
     <h3 class="app-title">Allergies</h3>
   </div>
   {% endif %}
 </div>
 <div class="site-space">
   <div class="site-claim">
-    <div class="site-div" id="apollosarcade" onclick="redirectToUrl(event)"></div>
+    <div class="site-div" id="apollosarcade" ></div>
     <h3 class="site-title">Apollo's Arcade</h3>
   </div>
   <div class="site-claim">
-    <div class="site-div" id="wedding" onclick="redirect(event)"></div>
+    <div class="site-div" id="wedding" ></div>
     <h3 class="site-title">Wedding</h3>
   </div>
 </div>
 {% endblock %} {% block page_scripts %}
-<script type="text/javascript" src="{% static 'schedule/js/Clock.js' %}"></script>
-<script type="text/javascript" src="{% static 'home/js/home.js' %}"></script>
+<script type="text/javascript" src="{% static '/dist/home.bundle.js' %}"></script>
 {% endblock %}

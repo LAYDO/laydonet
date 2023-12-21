@@ -1,0 +1,119 @@
+{
+  "status": "done",
+  "assets": {
+    "allergies.bundle.js": {
+      "name": "allergies.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/allergies.bundle.js"
+    },
+    "app.bundle.js": {
+      "name": "app.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/app.bundle.js"
+    },
+    "base.bundle.js": {
+      "name": "base.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/base.bundle.js"
+    },
+    "blog.bundle.js": {
+      "name": "blog.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/blog.bundle.js"
+    },
+    "home.bundle.js": {
+      "name": "home.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/home.bundle.js"
+    },
+    "iss.bundle.js": {
+      "name": "iss.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/iss.bundle.js"
+    },
+    "jwst.bundle.js": {
+      "name": "jwst.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/jwst.bundle.js"
+    },
+    "mtg.bundle.js": {
+      "name": "mtg.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/mtg.bundle.js"
+    },
+    "our_story.bundle.js": {
+      "name": "our_story.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/our_story.bundle.js"
+    },
+    "plot.bundle.js": {
+      "name": "plot.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/plot.bundle.js"
+    },
+    "post_detail.bundle.js": {
+      "name": "post_detail.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/post_detail.bundle.js"
+    },
+    "resume.bundle.js": {
+      "name": "resume.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/resume.bundle.js"
+    },
+    "schedule.bundle.js": {
+      "name": "schedule.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/schedule.bundle.js"
+    },
+    "weather.bundle.js": {
+      "name": "weather.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/weather.bundle.js"
+    },
+    "wedding_base.bundle.js": {
+      "name": "wedding_base.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/wedding_base.bundle.js"
+    },
+    "wedding.bundle.js": {
+      "name": "wedding.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/wedding.bundle.js"
+    }
+  },
+  "chunks": {
+    "allergies": [
+      "allergies.bundle.js"
+    ],
+    "app": [
+      "app.bundle.js"
+    ],
+    "base": [
+      "base.bundle.js"
+    ],
+    "blog": [
+      "blog.bundle.js"
+    ],
+    "home": [
+      "home.bundle.js"
+    ],
+    "iss": [
+      "iss.bundle.js"
+    ],
+    "jwst": [
+      "jwst.bundle.js"
+    ],
+    "mtg": [
+      "mtg.bundle.js"
+    ],
+    "our_story": [
+      "our_story.bundle.js"
+    ],
+    "plot": [
+      "plot.bundle.js"
+    ],
+    "post_detail": [
+      "post_detail.bundle.js"
+    ],
+    "resume": [
+      "resume.bundle.js"
+    ],
+    "schedule": [
+      "schedule.bundle.js"
+    ],
+    "weather": [
+      "weather.bundle.js"
+    ],
+    "wedding": [
+      "wedding.bundle.js"
+    ],
+    "wedding_base": [
+      "wedding_base.bundle.js"
+    ]
+  }
+}
