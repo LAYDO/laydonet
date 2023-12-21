@@ -132,3 +132,19 @@ async function getLevelAllergies(level) {
         console.error('There has been a problem with your fetch operation: ', error);
     })
 }
+
+let toggle = document.getElementById('allergiesToggle');
+toggle.addEventListener('click', showAllergies);
+
+let filterReset = document.getElementById('allergiesFilterReset');
+filterReset.addEventListener('click', getAllergies);
+
+for (let i = 0; i < 4; i++) {
+    let level = document.getElementById(`allergiesFilter${i}`);
+    level.addEventListener('click', () => {
+        getLevelAllergies(i);
+    });
+}
+
+let check = document.getElementById('allergiesCheck');
+check.addEventListener('click', checkAllergies);

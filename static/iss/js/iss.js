@@ -55,3 +55,6 @@ function checkMetric() {
     let m = document.getElementById('metricCheck');
     m.className = metric ? 'metric-checked' : 'metric';
 }
+
+let metricCheck = document.getElementById('metricCheck');
+metricCheck.addEventListener('click', checkMetric);

@@ -12,7 +12,7 @@ module.exports = {
         post_detail: ['./static/blog/js/blog.js'],
         jwst: ['./static/jwst/js/jwst.js'],
         mtg: ['./static/mtg/js/mtg.js'],
-        plot: ['./static/orbiter/js/ol.js', './static/orbiter/js/orbiter.js'],
+        plot: ['./static/orbiter/js/orbiter.js'],
         schedule: ['./static/schedule/js/scheduler.js', './static/schedule/js/Clock.ts', './static/schedule/js/Schedule.ts', './static/schedule/js/Period.ts'],
         iss: ['./static/iss/js/iss.js'],
         weather: [
@@ -50,7 +50,8 @@ module.exports = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.ts'],
+        extensions: ['.tsx', '.ts', '.js'],
+        modules: ['node_modules'],
     },
     output: {
         filename: '[name].bundle.js',

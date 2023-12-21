@@ -6,13 +6,13 @@
 {% block laydo_content_1 %}
 <div class="allergies-section laydo-container laydo-app">
   <div class="allergies-app allergies-start" id="controlPanel">
-    <span id="allergiesToggle" class="allergies-control fas fa-minus" onclick="showAllergies()"></span>
+    <span id="allergiesToggle" class="allergies-control fas fa-minus" ></span>
     <span id="allergiesCheck" class="allergies-control fas fa-spinner"></span>
-    <span id="allergiesFilter" class="allergies-control fa-solid fa-filter-circle-xmark" onclick="getAllergies()"></span>
-    <span id="allergiesFilter" class="allergies-control fa-solid fa-0" onclick="getLevelAllergies(0)"></span>
-    <span id="allergiesFilter" class="allergies-control fa-solid fa-1" onclick="getLevelAllergies(1)"></span>
-    <span id="allergiesFilter" class="allergies-control fa-solid fa-2" onclick="getLevelAllergies(2)"></span>
-    <span id="allergiesFilter" class="allergies-control fa-solid fa-3" onclick="getLevelAllergies(3)"></span>
+    <span id="allergiesFilterReset" class="allergies-control fa-solid fa-filter-circle-xmark" ></span>
+    <span id="allergiesFilter0" class="allergies-control fa-solid fa-0" ></span>
+    <span id="allergiesFilter1" class="allergies-control fa-solid fa-1" ></span>
+    <span id="allergiesFilter2" class="allergies-control fa-solid fa-2" ></span>
+    <span id="allergiesFilter3" class="allergies-control fa-solid fa-3" ></span>
   </div>
   <div class="allergies-section">
     <div class="allergies-section" id="allergyTable">
@@ -22,7 +22,7 @@
         Please enter the ingredients of food, comma separated
       </div>
       <textarea id="ingredientInput" rows="10" cols="50"></textarea>
-      <button onclick="checkAllergies()">Check 'Em</button>
+      <button id="allergiesCheck" >Check 'Em</button>
       <br><br>
       <div class="allergies-section" id="recipeTable"></div>
     </div>

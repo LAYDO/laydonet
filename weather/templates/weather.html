@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
 {% endblock %} 
 {% block page_menu %}
-<a class="nav-link" onclick="toggleCitySearch()" id="">Search</a>
+<a class="nav-link" id="cityToggle">Search</a>
 {% endblock %}
 {% block laydo_content_1 %}
 <div id="Weather" class="laydo-app">
@@ -11,7 +11,7 @@
   <div class="laydo-column">
     <div id="citySection" class="city-search">
       <input type="text" id="citySearch" name="citySearch" placeholder="Enter a city" />
-      <button id="weatherSearch" onclick="getCurrentWeather()"><span id="searchIcon" class="fas fa-search"></span></button><br />
+      <button id="weatherSearch"><span id="searchIcon" class="fas fa-search"></span></button><br />
     </div>
     <div id="currentWeather"></div>
     <div id="celestialSection" class="elements-column"></div>

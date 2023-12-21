@@ -38,6 +38,16 @@ for (let appButton of appButtons) {
     appButton.addEventListener('click', redirect);
 }
 
+let navLinks = document.getElementsByClassName('nav-link');
+for (let navLink of navLinks) {
+    navLink.addEventListener('click', redirect);
+}
+
+let navTitle = document.getElementById('laydoNavTitle');
+if (navTitle) {
+    navTitle.addEventListener('click', redirect);
+}
+
 
 function toggleOverlay() {
     let menu = document.getElementById('laydoNavIcon');
@@ -88,7 +98,27 @@ function redirectToUrl(evt) {
     }
 }
 
-let siteRedirects = document.getElementsByClassName('site-div');
-for (let siteRedirect of siteRedirects) {
-    siteRedirect.addEventListener('click', redirectToUrl);
+let aa = document.getElementById('apollosarcade');
+if (aa) {
+    aa.addEventListener('click', redirectToUrl);
+}
+
+let wedding = document.getElementById('wedding');
+if (wedding) {
+    wedding.addEventListener('click', redirect);
+}
+
+let themeIcon = document.getElementById('themeIcon');
+if (themeIcon) {
+    themeIcon.addEventListener('click', toggleTheme);
+}
+
+let navIcon = document.getElementById('laydoNavIcon');
+if (navIcon) {
+    navIcon.addEventListener('click', toggleOverlay);
+}
+
+let socialIcons = document.getElementsByClassName('socicon');
+for (let socialIcon of socialIcons) {
+    socialIcon.addEventListener('click', openSocial);
 }

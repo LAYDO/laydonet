@@ -276,3 +276,6 @@ class MTGCard {
         this.rulings = _card.rulings;
     }
 }
+
+let mtgSearch = document.getElementById("mtgSearch");
+mtgSearch.addEventListener('click', checkSearch);

@@ -1,3 +1,13 @@
+import Map from 'ol/Map';
+import View from 'ol/View';
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import VectorSource from 'ol/source/Vector';
+import OSM from 'ol/source/OSM';
+import Point from 'ol/geom/Point';
+import Feature from 'ol/Feature';
+import { fromLonLat } from 'ol/proj';
+import { Circle, Fill, Style } from 'ol/style';
 const updateInterval = 5000;
 
 async function fetchCurrentPosition(satelliteId) {
@@ -14,31 +24,31 @@ async function fetchTrajectory(satelliteId) {
 
 function createMap(lon, lat, past_positions, future_positions) {
     past_positions.push([lon, lat]);
-    const map = new ol.Map({
+    const map = new Map({
         target: 'orbiterMap',
         layers: [
-            new ol.layer.Tile({
-                source: new ol.source.OSM(),
+            new TileLayer({
+                source: new OSM(),
             }),
         ],
-        view: new ol.View({
-            center: ol.proj.fromLonLat([lon, lat]),
+        view: new View({
+            center: fromLonLat([lon, lat]),
             zoom: 1,
         }),
     });
 
-    const currentPositionFeature = new ol.Feature({
-        geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat])),
+    const currentPositionFeature = new Feature({
+        geometry: new Point(fromLonLat([lon, lat])),
     });
 
-    const currentPositionLayer = new ol.layer.Vector({
-        source: new ol.source.Vector({
+    const currentPositionLayer = new VectorLayer({
+        source: new VectorSource({
             features: [currentPositionFeature],
         }),
-        style: new ol.style.Style({
-            image: new ol.style.Circle({
+        style: new Style({
+            image: new Circle({
                 radius: 5,
-                fill: new ol.style.Fill({ color: 'red' }),
+                fill: new Fill({ color: 'red' }),
             }),
         }),
     });
@@ -47,17 +57,17 @@ function createMap(lon, lat, past_positions, future_positions) {
 
     function addPositionMarkers(layer, positions) {
         const features = positions.map(
-            pos => new ol.Feature(new ol.geom.Point(ol.proj.fromLonLat(pos)))
+            pos => new Feature(new Point(fromLonLat(pos)))
         );
         layer.getSource().addFeatures(features);
     };
 
-    const pastTrajectoryLayer = new ol.layer.Vector({
-        source: new ol.source.Vector(),
-        style: new ol.style.Style({
-            image: new ol.style.Circle({
+    const pastTrajectoryLayer = new VectorLayer({
+        source: new VectorSource(),
+        style: new Style({
+            image: new Circle({
                 radius: 3,
-                fill: new ol.style.Fill({ color: 'yellow' }),
+                fill: new Fill({ color: 'yellow' }),
             }),
         }),
     });
@@ -65,12 +75,12 @@ function createMap(lon, lat, past_positions, future_positions) {
     map.addLayer(pastTrajectoryLayer);
     addPositionMarkers(pastTrajectoryLayer, past_positions);
 
-    const futureTrajectoryLayer = new ol.layer.Vector({
-        source: new ol.source.Vector(),
-        style: new ol.style.Style({
-            image: new ol.style.Circle({
+    const futureTrajectoryLayer = new VectorLayer({
+        source: new VectorSource(),
+        style: new Style({
+            image: new Circle({
                 radius: 3,
-                fill: new ol.style.Fill({ color: 'blue' }),
+                fill: new Fill({ color: 'blue' }),
             }),
         }),
     });
@@ -100,8 +110,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         setInterval(async () => {
             const currentPosition = await fetchCurrentPosition(satelliteId);
-            currentPositionFeature.getGeometry().setCoordinates(ol.proj.fromLonLat([currentPosition.longitude, currentPosition.latitude]));
-            map.getView().setCenter(ol.proj.fromLonLat([currentPosition.longitude, currentPosition.latitude]));
+            currentPositionFeature.getGeometry().setCoordinates(fromLonLat([currentPosition.longitude, currentPosition.latitude]));
+            map.getView().setCenter(fromLonLat([currentPosition.longitude, currentPosition.latitude]));
         }, updateInterval);
     }
 });

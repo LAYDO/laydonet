@@ -111,13 +111,13 @@ export class Weather {
     protected async getCurrentWeather(position: any = null) {
         // clearInterval(this.celestial.remainInterval);
         this.load();
-        let city = document.getElementById('citySearch');
+        let city = document.getElementById('citySearch') as HTMLInputElement;
         let q: string = '';
-        if (city?.textContent) {
-            q = city.textContent.trim();
+        if (city) {
+            q = city.value.trim();
         }
         let url = `${window.location.href}f/?`;
-        if (position) {
+        if (position != null) {
             url += `lat=${position.coords.latitude}&lon=${position.coords.longitude}`
         } else if (q) {
             url += `q=${q}`;
