@@ -1,4 +1,11 @@
-class Elements {
+import { Precipitation } from "./Precipitation";
+import { Wind } from "./Wind";
+import { Humidity } from "./Humidity";
+import { Barometer } from "./Barometer";
+import { Clouds } from "./Clouds";
+import { AQI } from "./AQI";
+
+export class Elements {
     public eTilesElement: HTMLElement;
     public elementRowOne: HTMLElement;
     public elementRowTwo: HTMLElement;

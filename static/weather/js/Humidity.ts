@@ -1,4 +1,6 @@
-class Humidity extends ElementTile {
+import { ElementTile } from './ElementTile';
+
+export class Humidity extends ElementTile {
     constructor() {
         super('Humidity', 'water', ['humidData'], 'elementRowThree', ['dewData']);
     }

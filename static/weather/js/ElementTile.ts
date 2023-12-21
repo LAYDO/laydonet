@@ -1,4 +1,4 @@
-class ElementTile {
+export class ElementTile {
     public container: HTMLElement;
     public element: HTMLElement;
     public title: HTMLElement;

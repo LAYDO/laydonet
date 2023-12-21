@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
 {% endblock %} 
 {% block page_menu %}
-<a class="nav-link" onclick="toggleCitySearch()" id="">Search</a>
+<a class="nav-link" id="cityToggle">Search</a>
 {% endblock %}
 {% block laydo_content_1 %}
 <div id="Weather" class="laydo-app">
@@ -11,7 +11,7 @@
   <div class="laydo-column">
     <div id="citySection" class="city-search">
       <input type="text" id="citySearch" name="citySearch" placeholder="Enter a city" />
-      <button id="weatherSearch" onclick="getCurrentWeather()"><span id="searchIcon" class="fas fa-search"></span></button><br />
+      <button id="weatherSearch"><span id="searchIcon" class="fas fa-search"></span></button><br />
     </div>
     <div id="currentWeather"></div>
     <div id="celestialSection" class="elements-column"></div>
@@ -30,21 +30,8 @@
 <div id="credits" class="sub-data">Weather data provided by <a href="https://openweathermap.org">OpenWeather</a></div>
 {% endblock %}
 {% block page_scripts %}
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-<script type="text/javascript" src="{% static 'weather/js/ElementTile.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Current.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Hourly.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Daily.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/WMap.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Elements.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/AQI.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Clouds.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Precipitation.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Wind.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Humidity.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Barometer.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Celestial.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Sun.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/Moon.js' %}"></script>
-<script type="text/javascript" src="{% static 'weather/js/weather.js' %}"></script>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+<script type="module" src="{% static '/dist/weather.bundle.js' %}"></script>
 {% endblock %}

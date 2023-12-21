@@ -62,6 +62,18 @@ function closeOverlay() {
     document.getElementById('aplNavIcon').style.display = "inherit";
 }
 
+let navLinks = document.getElementsByClassName('nav-link');
+for (let navLink of navLinks) {
+    navLink.addEventListener('click', redirect);
+}
+
+let appTitles = document.getElementsByClassName('apl-nav-title');
+for (let appTitle of appTitles) {
+    appTitle.addEventListener('click', redirect);
+}
+
+let navIcon = document.getElementById('aplNavIcon');
+navIcon.addEventListener('click', toggleNav);
 
 
 // Mobile Enhancements

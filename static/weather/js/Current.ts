@@ -1,4 +1,4 @@
-class Current {
+export class Current {
     public currentElement: HTMLElement;
     public cityName: HTMLElement;
     public currentTemp: HTMLElement;

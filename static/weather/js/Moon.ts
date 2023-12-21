@@ -1,4 +1,6 @@
-class Moon extends ElementTile {
+import { ElementTile } from "./ElementTile";
+
+export class Moon extends ElementTile {
     private remainInterval: any;
     public animMoonId: number;
     private baseW: number;

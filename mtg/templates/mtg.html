@@ -8,7 +8,7 @@
 <div id="MTG" class="laydo-app">
     <div class="arena">
         <input type="text" id="cardName" name="cardName" placeholder="Enter a card name">
-        <button id="mtgSearch" onclick="checkSearch()"><span id="searchIcon" class="fas fa-search"></span></button><br>
+        <button id="mtgSearch"><span id="searchIcon" class="fas fa-search"></span></button><br>
         <div id="filters" style="display: none;">
             <div id="colors"></div>
             <div id="sets"></div>
@@ -18,5 +18,5 @@
 </div>
 {% endblock %}
 {% block page_scripts %}
-<script type="text/javascript" src="{% static 'mtg/js/mtg.js' %}"></script>
+<script type="text/javascript" src="{% static '/dist/mtg.bundle.js' %}"></script>
 {% endblock %}

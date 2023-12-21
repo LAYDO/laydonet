@@ -1,4 +1,6 @@
-class Wind extends ElementTile {
+import { ElementTile } from './ElementTile';
+
+export class Wind extends ElementTile {
     constructor() {
         super('Wind', 'wind', ['windData'], 'elementRowTwo', ['gustData']);
     }

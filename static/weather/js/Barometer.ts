@@ -1,4 +1,6 @@
-class Barometer extends ElementTile {
+import { ElementTile } from './ElementTile';
+
+export class Barometer extends ElementTile {
 
     private baseW: number = 0;
     private baseH: number = 0;

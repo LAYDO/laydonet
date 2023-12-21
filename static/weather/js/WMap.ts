@@ -1,3 +1,5 @@
+import * as L from 'leaflet';
+
 let MAPBOX_ACCESS_TOKEN: string;
 let OPENWEATHERMAP_ACCESS_TOKEN: string;
 
@@ -7,7 +9,7 @@ async function fetchTokens() {
     MAPBOX_ACCESS_TOKEN = tokens['mapbox_access_token'];
     OPENWEATHERMAP_ACCESS_TOKEN = tokens['open_weather_api_key'];
 }
-class WMap {
+export class WMap {
     public mapElement: HTMLElement;
     private mapTitle: HTMLElement;
     private map: HTMLElement;

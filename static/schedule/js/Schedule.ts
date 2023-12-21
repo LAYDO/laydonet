@@ -1,4 +1,7 @@
-class Schedule {
+import { Clock } from "./Clock";
+import { Period } from "./Period";
+
+export class Schedule {
     private schedule: any;
     private url: string = window.location.href;
     private dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];

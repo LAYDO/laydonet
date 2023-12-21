@@ -1,4 +1,4 @@
-class Period {
+export class Period {
     public end: Date;
     public id: string;
     private plan: boolean;

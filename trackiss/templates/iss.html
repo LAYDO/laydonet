@@ -34,11 +34,11 @@ crossorigin=""></script>
       <div id="issVel">--</div>
     </div>
     <div class="iss-button">
-      <button class="metric" onclick="checkMetric()" id="metricCheck">Metric</button>
+      <button class="metric" id="metricCheck">Metric</button>
     </div>
   </div>
 </div>
 {% endblock %}
 {% block page_scripts %}
-<script type="text/javascript" src="{% static 'iss/js/iss.js' %}"></script>
+<script type="text/javascript" src="{% static '/dist/iss.bundle.js' %}"></script>
 {% endblock %}

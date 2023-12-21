@@ -58,6 +58,20 @@ function changeBackground() {
     }
 }
 
+function openNav() {
+    document.getElementById("aplOverlay").style.width = "67%";
+    document.getElementById("aplMNavbar").style.marginRight = "67%";
+    document.getElementById("aplMNavbar").style.justifyContent = "flex-end";
+    document.getElementById("aplNavTitle").style.display = "none";
+}
+
+function closeNav() {
+    document.getElementById("aplOverlay").style.width = "0";
+    document.getElementById("aplMNavbar").style.marginRight = "0";
+    document.getElementById("aplNavTitle").style.display = "block";
+    document.getElementById("aplMNavbar").style.justifyContent = "space-between";
+}
+
 // Mobile Enhancements
 
 document.addEventListener("click", function (e) {
