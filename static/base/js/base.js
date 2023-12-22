@@ -40,7 +40,9 @@ for (let appButton of appButtons) {
 
 let navLinks = document.getElementsByClassName('nav-link');
 for (let navLink of navLinks) {
-    navLink.addEventListener('click', redirect);
+    if (navLink.id != 'themeIcon') {
+        navLink.addEventListener('click', redirect);
+    }
 }
 
 let navTitle = document.getElementById('laydoNavTitle');
