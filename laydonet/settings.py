@@ -16,7 +16,7 @@ import sys
 from urllib.parse import urlsplit
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # BASE_DIR = Path(__file__).resolve().parent.parent
 # print(BASE_DIR)
 
@@ -27,69 +27,83 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # os.getenv("DEBUG", "False") == "True"
+DEBUG = True  # os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS",'127.0.0.1,localhost,*.laydo.net,https://laydonet-yztpa.ondigitalocean.app/').split(',')
+ALLOWED_HOSTS = os.getenv(
+    "DJANGO_ALLOWED_HOSTS",
+    "127.0.0.1,localhost,*.laydo.net,https://laydonet-yztpa.ondigitalocean.app/",
+).split(",")
 
-CSRF_TRUSTED_ORIGINS = ['https://*.laydo.net','https://laydonet-yztpa.ondigitalocean.app/']
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.laydo.net",
+    "https://laydonet-yztpa.ondigitalocean.app/",
+]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
-    'whitenoise.runserver_nostatic',
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django_quill',
-    'webpack_loader',
-    'home',
-    'wedding',
-    'weather',
-    'schedule',
-    'allergies',
-    'trackiss',
-    'jwst',
-    'mtg',
-    'blog',
-    'users',
-    'orbiter',
-    'channels',
-    'resume',
-    'about',
+    "daphne",
+    "whitenoise.runserver_nostatic",
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django_quill",
+    "webpack_loader",
+    "home",
+    "wedding",
+    "weather",
+    "schedule",
+    "allergies",
+    "trackiss",
+    "jwst",
+    "mtg",
+    "blog",
+    "users",
+    "orbiter",
+    "channels",
+    "resume",
+    "about",
 ]
+
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "CACHE": not DEBUG,
+        "BUNDLE_DIR_NAME": "dist/",  # must end with slash
+        "STATS_FILE": os.path.join(BASE_DIR, "webpack-stats.json"),
+        "POLL_INTERVAL": 0.1,
+        "TIMEOUT": None,  # 0.1
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
+    }
+}
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'laydonet.urls'
+ROOT_URLCONF = "laydonet.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            'laydonet/templates/',
-            'laydonet/static/'
-        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": ["laydonet/templates/", "laydonet/static/"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
@@ -97,38 +111,39 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'laydonet.wsgi.application'
 # Channels
-ASGI_APPLICATION = 'laydonet.asgi.application'
+ASGI_APPLICATION = "laydonet.asgi.application"
 
 
-DEVELOPMENT_MODE = True # os.getenv("DEVELOPMENT_MODE", "False") == "True"
+DEVELOPMENT_MODE = True  # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 from urllib.parse import urlsplit
+
 if DEVELOPMENT_MODE is True:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'laydonetdb',
-            'USER': 'laydonetdb',
-            'PASSWORD': os.environ.get("DB_PASSWORD"),
-            'HOST': os.environ.get("DB_HOST"),
-            'PORT': '25060'
+        "default": {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": "laydonetdb",
+            "USER": "laydonetdb",
+            "PASSWORD": os.environ.get("DB_PASSWORD"),
+            "HOST": os.environ.get("DB_HOST"),
+            "PORT": "25060",
         }
     }
-elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
-    database_url = os.getenv('DATABASE_URL', None)
+elif len(sys.argv) > 0 and sys.argv[1] != "collectstatic":
+    database_url = os.getenv("DATABASE_URL", None)
     if database_url is None:
         raise Exception("DATABASE_URL environment variable not defined")
 
     parsed_url = urlsplit(database_url)
 
-    if parsed_url.scheme in ['postgres', 'postgresql']:
-        database_engine = 'django.db.backends.postgresql'
-    elif parsed_url.scheme == 'mysql':
-        database_engine = 'django.db.backends.mysql'
-    elif parsed_url.scheme == 'sqlite':
-        database_engine = 'django.db.backends.sqlite3'
+    if parsed_url.scheme in ["postgres", "postgresql"]:
+        database_engine = "django.db.backends.postgresql"
+    elif parsed_url.scheme == "mysql":
+        database_engine = "django.db.backends.mysql"
+    elif parsed_url.scheme == "sqlite":
+        database_engine = "django.db.backends.sqlite3"
     else:
         raise ValueError(f"Unsupported database scheme: {parsed_url.scheme}")
 
@@ -148,16 +163,16 @@ elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -165,9 +180,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -179,17 +194,16 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [
-    BASE_DIR + "/static", 
+    BASE_DIR + "/static",
     # '/var/www/static/',
-    ]
-STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
+]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Login/logout redirect
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
-
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"
