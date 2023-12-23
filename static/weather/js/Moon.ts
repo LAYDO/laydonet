@@ -48,7 +48,7 @@ export class Moon extends ElementTile {
         phase.setAttribute('x', (this.baseW / 2).toFixed(0));
         phase.setAttribute('y', (this.radius * 1.7).toFixed(0));
         phase.setAttribute('text-anchor', 'middle');
-        phase.setAttribute('fill', 'var(--font-color)');
+        phase.setAttribute('fill', '#fff8ed');
         phase.setAttribute('font-size', '0.75rem');
 
         // Moon Shadow Mask
