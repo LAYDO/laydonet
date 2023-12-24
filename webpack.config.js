@@ -37,6 +37,7 @@ module.exports = {
         wedding: ['./static/wedding/js/wedding_home.js'],
         wedding_base: ['./static/wedding/js/wedding_base.js'],
         our_story: ['./static/wedding/js/ourstory.js'],
+        webgl: ['./static/webgl/js/WebGL.ts', './static/webgl/js/webbers.js', './static/webgl/js/init-buffers.js', './static/webgl/js/draw-scene.js'],
     },
     mode: 'development',
     cache: false,

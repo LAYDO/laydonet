@@ -67,6 +67,7 @@ INSTALLED_APPS = [
     "channels",
     "resume",
     "about",
+    "webgl",
 ]
 
 WEBPACK_LOADER = {
