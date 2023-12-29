@@ -1,0 +1,13 @@
+{% extends "app.html" %} {% load static %} {% block page_head %}
+<link rel="stylesheet" href="{% static 'webgl/css/webgl.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div class="app-title">WebGL</div>
+<div id="webGL" class="laydo-app"></div>
+{% endblock %}
+{% block page_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+    integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+    crossorigin="anonymous" defer></script>
+<script type="module" src="{% static '/dist/webgl.bundle.js' %}"></script>
+{% endblock %}

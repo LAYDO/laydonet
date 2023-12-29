@@ -57,6 +57,10 @@
       "name": "weather.bundle.js",
       "path": "/Users/laydo/github/laydonet/static/dist/weather.bundle.js"
     },
+    "webgl.bundle.js": {
+      "name": "webgl.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/webgl.bundle.js"
+    },
     "wedding_base.bundle.js": {
       "name": "wedding_base.bundle.js",
       "path": "/Users/laydo/github/laydonet/static/dist/wedding_base.bundle.js"
@@ -108,6 +112,9 @@
     ],
     "weather": [
       "weather.bundle.js"
+    ],
+    "webgl": [
+      "webgl.bundle.js"
     ],
     "wedding": [
       "wedding.bundle.js"
