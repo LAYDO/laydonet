@@ -119,7 +119,6 @@ DEVELOPMENT_MODE = True  # os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-from urllib.parse import urlsplit
 
 if DEVELOPMENT_MODE is True:
     DATABASES = {
