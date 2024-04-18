@@ -1,10 +1,11 @@
 {% extends "app.html" %} {% load static %}
 {% block page_head %}
+<link rel="stylesheet" href="{% static '/schedule/css/schedule.css' %}">
 {% endblock %}
 {% block laydo_content_1 %}
 <div id="Schedule" class="laydo-app">
     <div class="laydo-container">
-        <div id="newClock" style="min-height: 21rem;"></div>
+        <div id="newClock" style="min-height: 21rem; min-width: 50%;"></div>
         <div id="currentInfo"></div>
         <div id="periods"></div>
     </div>

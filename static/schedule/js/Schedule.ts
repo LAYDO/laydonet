@@ -6,46 +6,47 @@ export class Schedule {
     private url: string = window.location.href;
     private dayOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     private flip: boolean = false;
-    public clockElement: HTMLElement;
+    public clock: Clock;
     public periodsElement: HTMLElement;
-    private clock: any;
-    private periods: any;
-    private time: Date;
+    private periods: Array<Period>;
 
-    constructor(data: Object) {
-        this.clockElement = document.getElementById('newClock')!;
+    constructor() {
+        let clockElement = document.getElementById('newClock')!;
+        this.clock = new Clock(clockElement);
         this.periodsElement = document.getElementById('periods')!;
-
-        this.time = new Date();
-        this.schedule = data;
-        // console.log(this.schedule);
-        this.clock = new Clock(this.clockElement);
-        setInterval(this.updateTime.bind(this));
-
+        this.periods = [];
+        this.schedule = {};
+        this.fetchSchedule();
+        setInterval(this.updateSchedule.bind(this), 1000);
     }
 
-    updateTime() {
-        this.time = new Date();
-        let hour = this.time.getHours();
-        let minute = this.time.getMinutes();
-        let second = this.time.getSeconds();
+    private fetchSchedule() {
+        let url = window.location.href;
+        fetch(url + 'get').then(response => {
+            return response.json();
+        }).then(data => {
+            this.schedule = data;
+            this.displayPeriods();
+        }).catch(error => {
+            console.error('There has been a problem with your fetch operation: ', error);
+        });
+    }
 
-        hour = hour % 12;
-        hour = (hour * 30) + (minute / 2) + (second / 10);
-        this.clock.drawHand(hour, 'hourHand', '4', this.clock.baseW / 4);
+    public displayPeriods() {
+        this.schedule.periods.forEach((period: any) => {
+            let p = new Period(period, this.periodsElement);
+            if (p) {
+                this.periods.push(p);
+            }
+        });
+    }
 
-        minute = (minute * 6) + (second / 10);
-        this.clock.drawHand(minute, 'minuteHand', '3', this.clock.baseW / 6);
-
-        second = (second * 6);
-        this.clock.drawHand(second, 'secondHand', '2', this.clock.baseW / 9);
-
-        if (this.schedule.periods.length > 0) {
-            this.periodsElement.innerHTML = '';
-            this.schedule.periods.forEach((period: any) => {
-                let p = new Period(period, this.periodsElement, this.time);
-            });
-        }
-
+    public updateSchedule() {
+        let time = new Date();
+        this.clock.updateTime(time);
+        this.periods.forEach(period => {
+            period.updatePeriod(time);
+        });
     }
 }
+

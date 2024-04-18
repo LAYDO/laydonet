@@ -4,10 +4,12 @@ export class Clock {
     private radius: number = 0;
     public circle: any;
     public baseW: number;
+    private element: HTMLElement;
 
     constructor(element: HTMLElement) {
-
-        this.baseW = element.clientWidth;
+        // setInterval(this.updateTime.bind(this), 1000);
+        this.element = element;
+        this.baseW = this.element.clientWidth;
 
         this.clock = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.clock.setAttribute('width', this.baseW + 'px');
@@ -39,8 +41,34 @@ export class Clock {
 
         this.clock.append(this.circle);
 
-        element.innerHTML = '';
-        element.append(this.clock);
+        this.element.innerHTML = '';
+        this.element.append(this.clock);
+        let hour = 6;
+        let minute = 13;
+        let second = 0;
+        hour = (hour % 12) * 30 + (minute * 0.5) + (second * (0.5 / 60));
+        minute = (minute * 6) + (second / 10);
+        second = (second * 6);
+        this.drawHand(hour, 'hourHand', '4', this.baseW / 4);
+        this.drawHand(minute, 'minuteHand', '3', this.baseW / 6);
+        this.drawHand(second, 'secondHand', '2', this.baseW / 9);
+    }
+
+    public updateTime(time: Date) {
+        // time = new Date();
+        let hour = time.getHours();
+        let minute = time.getMinutes();
+        let second = time.getSeconds();
+
+        hour = hour % 12;
+        hour = (hour * 30) + (minute * 0.5) + (second * (0.5 / 60));
+        this.drawHand(hour, 'hourHand', '4', this.baseW / 4);
+
+        minute = (minute * 6) + (second / 10);
+        this.drawHand(minute, 'minuteHand', '3', this.baseW / 6);
+
+        second = (second * 6);
+        this.drawHand(second, 'secondHand', '2', this.baseW / 9);
 
     }
 

@@ -1,0 +1,22 @@
+@media only screen and (min-width: 37.5rem) {
+
+    .laydo-container {
+        flex-direction: row;
+    }
+
+    #periods {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        width: 96%;
+    }
+}
+
+.period {
+    margin: 0.5rem;
+}
+
+.period-active {
+    border: 0.125rem solid var(--font-color);
+}

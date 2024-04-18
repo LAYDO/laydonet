@@ -203,7 +203,7 @@ body {
 }
 
 .laydo-button {
-  background-color: var(--color-secondary);
+  background-color: var(--color-primary);
   color: var(--font-color);
   padding: 0.5rem 2rem;
   margin: 1rem auto;
@@ -360,10 +360,6 @@ body {
   #laydoNavIcon {
     padding: 1rem 2rem;
   }
-}
-
-.period-active {
-  border: 0.125rem solid var(--font-color);
 }
 
 @media only screen and (min-width: 37.5rem) {

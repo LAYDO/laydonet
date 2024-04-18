@@ -57,14 +57,14 @@ def getSchedule(self):
         print('========NORMAL==========')
         p.clear()
         temp = Schedule(
-            {"startTimes": startTimes[0:9], "endTimes": endTimes[0:9],"periods": weekClasses[0:9]}, today)
+            {"startTimes": startTimes[10:19], "endTimes": endTimes[10:19],"periods": weekClasses[10:19]}, today)
         constructSchedule(temp)
         clearArr()
     elif (today.weekday() == 2):
         print('========ADVISORY==========')
         p.clear()
         temp = Schedule(
-            {"startTimes": startTimes[9:18], "endTimes": endTimes[9:18], "periods": weekClasses[9:18]}, today)
+            {"startTimes": startTimes[19:28], "endTimes": endTimes[19:28], "periods": weekClasses[19:28]}, today)
         constructSchedule(temp)
         clearArr()
     else:
@@ -114,7 +114,7 @@ class Schedule:
     schoolStart = datetime(2023, 8, 14, 9, 00)
 
     def __init__(self, data, today):
-        print(f'self: {self} data: {data} today: {today}')
+        # print(f'self: {self} data: {data} today: {today}')
         if (data and len(data['startTimes']) == len(data['endTimes']) == len(data['periods'])):
             for idx, period in enumerate(data['periods']):
                 if ('period' in period.lower().replace(' ', '') or 'advisory' in period.lower().replace(' ', '')):
@@ -131,16 +131,15 @@ class Schedule:
 class Period:
     def __init__(self, id, start, end):
         t = datetime.today()
-
         startH = start.split(':')[0].strip()
         startM = start.split(':')[1].split(' ')[0].strip()
         endH = end.split(':')[0].strip()
         endM = end.split(':')[1].strip()[0:2]
         meridiemStart = start.split(' ')[1][0:1]
         meridiemEnd = end.split(' ')[1][0:1]
-        if meridiemEnd == 'p' and int(endH) < 12:
+        if meridiemEnd.upper() == 'P' and int(endH) < 12:
             endH = int(endH) + 12
-        if meridiemStart == 'p' and int(startH) < 12:
+        if meridiemStart.upper() == 'P' and int(startH) < 12:
             startH = int(startH) + 12
         self.id = id.lower().replace(' ', '')
         self.title = id
