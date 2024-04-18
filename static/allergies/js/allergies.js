@@ -1,5 +1,3 @@
-getAllergies();
-
 async function getAllergies() {
     let url = `${window.location.href}get`;
     document.getElementById('allergiesToggle').style.display = 'none';
@@ -47,10 +45,10 @@ function checkAllergies() {
     let ingredients = document.getElementById('ingredientInput').value;
     let ingredientArray = ingredients.split(', ');
     ingredientArray.sort();
-    console.log(ingredientArray);
+    // console.log(ingredientArray);
     let recipeArray = [];
     let allergiesArray = JSON.parse(window.sessionStorage.allergies);
-    console.log(allergiesArray);
+    // console.log(allergiesArray);
     ingredientArray.forEach(ingred => {
         allergiesArray.forEach(allergy => {
             if (allergy.food.toLowerCase().includes(ingred.toLowerCase())) {
@@ -58,7 +56,7 @@ function checkAllergies() {
             }
         });
     });
-    console.log(recipeArray);
+    // console.log(recipeArray);
     buildTable(recipeArray, 'recipeTable');
     percentGoodBoy(recipeArray, ingredientArray.length);
 }
@@ -133,6 +131,8 @@ async function getLevelAllergies(level) {
     })
 }
 
+getAllergies();
+
 let toggle = document.getElementById('allergiesToggle');
 toggle.addEventListener('click', showAllergies);
 
@@ -146,5 +146,5 @@ for (let i = 0; i < 4; i++) {
     });
 }
 
-let check = document.getElementById('allergiesCheck');
+let check = document.getElementById('allergyCheck');
 check.addEventListener('click', checkAllergies);
