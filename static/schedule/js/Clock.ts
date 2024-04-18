@@ -5,11 +5,9 @@ export class Clock {
     public circle: any;
     public baseW: number;
     private element: HTMLElement;
-    public time: Date;
 
     constructor(element: HTMLElement) {
-        this.time = new Date();
-        setInterval(this.updateTime.bind(this), 1000);
+        // setInterval(this.updateTime.bind(this), 1000);
         this.element = element;
         this.baseW = this.element.clientWidth;
 
@@ -45,17 +43,25 @@ export class Clock {
 
         this.element.innerHTML = '';
         this.element.append(this.clock);
-        
+        let hour = 6;
+        let minute = 13;
+        let second = 0;
+        hour = (hour % 12) * 30 + (minute * 0.5) + (second * (0.5 / 60));
+        minute = (minute * 6) + (second / 10);
+        second = (second * 6);
+        this.drawHand(hour, 'hourHand', '4', this.baseW / 4);
+        this.drawHand(minute, 'minuteHand', '3', this.baseW / 6);
+        this.drawHand(second, 'secondHand', '2', this.baseW / 9);
     }
 
-    updateTime() {
-        this.time = new Date();
-        let hour = this.time.getHours();
-        let minute = this.time.getMinutes();
-        let second = this.time.getSeconds();
+    public updateTime(time: Date) {
+        // time = new Date();
+        let hour = time.getHours();
+        let minute = time.getMinutes();
+        let second = time.getSeconds();
 
         hour = hour % 12;
-        hour = (hour * 30) + (minute / 2) + (second / 10);
+        hour = (hour * 30) + (minute * 0.5) + (second * (0.5 / 60));
         this.drawHand(hour, 'hourHand', '4', this.baseW / 4);
 
         minute = (minute * 6) + (second / 10);

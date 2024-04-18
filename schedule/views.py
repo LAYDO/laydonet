@@ -131,16 +131,15 @@ class Schedule:
 class Period:
     def __init__(self, id, start, end):
         t = datetime.today()
-
         startH = start.split(':')[0].strip()
         startM = start.split(':')[1].split(' ')[0].strip()
         endH = end.split(':')[0].strip()
         endM = end.split(':')[1].strip()[0:2]
         meridiemStart = start.split(' ')[1][0:1]
         meridiemEnd = end.split(' ')[1][0:1]
-        if meridiemEnd == 'p' and int(endH) < 12:
+        if meridiemEnd.upper() == 'P' and int(endH) < 12:
             endH = int(endH) + 12
-        if meridiemStart == 'p' and int(startH) < 12:
+        if meridiemStart.upper() == 'P' and int(startH) < 12:
             startH = int(startH) + 12
         self.id = id.lower().replace(' ', '')
         self.title = id
