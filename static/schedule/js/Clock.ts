@@ -4,10 +4,14 @@ export class Clock {
     private radius: number = 0;
     public circle: any;
     public baseW: number;
+    private element: HTMLElement;
+    public time: Date;
 
     constructor(element: HTMLElement) {
-
-        this.baseW = element.clientWidth;
+        this.time = new Date();
+        setInterval(this.updateTime.bind(this), 1000);
+        this.element = element;
+        this.baseW = this.element.clientWidth;
 
         this.clock = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.clock.setAttribute('width', this.baseW + 'px');
@@ -39,8 +43,26 @@ export class Clock {
 
         this.clock.append(this.circle);
 
-        element.innerHTML = '';
-        element.append(this.clock);
+        this.element.innerHTML = '';
+        this.element.append(this.clock);
+        
+    }
+
+    updateTime() {
+        this.time = new Date();
+        let hour = this.time.getHours();
+        let minute = this.time.getMinutes();
+        let second = this.time.getSeconds();
+
+        hour = hour % 12;
+        hour = (hour * 30) + (minute / 2) + (second / 10);
+        this.drawHand(hour, 'hourHand', '4', this.baseW / 4);
+
+        minute = (minute * 6) + (second / 10);
+        this.drawHand(minute, 'minuteHand', '3', this.baseW / 6);
+
+        second = (second * 6);
+        this.drawHand(second, 'secondHand', '2', this.baseW / 9);
 
     }
 

@@ -20,7 +20,7 @@ export class Period {
         let title = document.createElement('div');
         let schedule = document.createElement('div');
 
-        period.className = `laydo-row-even laydo-container ${this.active ? 'period-active' : ''}`;
+        period.className = `laydo-row-even laydo-container period ${this.active ? 'period-active' : ''}`;
         period.id = this.id;
 
         title.innerText = data.title;

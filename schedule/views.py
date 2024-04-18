@@ -57,14 +57,14 @@ def getSchedule(self):
         print('========NORMAL==========')
         p.clear()
         temp = Schedule(
-            {"startTimes": startTimes[0:9], "endTimes": endTimes[0:9],"periods": weekClasses[0:9]}, today)
+            {"startTimes": startTimes[10:19], "endTimes": endTimes[10:19],"periods": weekClasses[10:19]}, today)
         constructSchedule(temp)
         clearArr()
     elif (today.weekday() == 2):
         print('========ADVISORY==========')
         p.clear()
         temp = Schedule(
-            {"startTimes": startTimes[9:18], "endTimes": endTimes[9:18], "periods": weekClasses[9:18]}, today)
+            {"startTimes": startTimes[19:28], "endTimes": endTimes[19:28], "periods": weekClasses[19:28]}, today)
         constructSchedule(temp)
         clearArr()
     else:
@@ -114,7 +114,7 @@ class Schedule:
     schoolStart = datetime(2023, 8, 14, 9, 00)
 
     def __init__(self, data, today):
-        print(f'self: {self} data: {data} today: {today}')
+        # print(f'self: {self} data: {data} today: {today}')
         if (data and len(data['startTimes']) == len(data['endTimes']) == len(data['periods'])):
             for idx, period in enumerate(data['periods']):
                 if ('period' in period.lower().replace(' ', '') or 'advisory' in period.lower().replace(' ', '')):

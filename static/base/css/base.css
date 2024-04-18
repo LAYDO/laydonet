@@ -362,10 +362,6 @@ body {
   }
 }
 
-.period-active {
-  border: 0.125rem solid var(--font-color);
-}
-
 @media only screen and (min-width: 37.5rem) {
 
   #laydoHomeOne,
