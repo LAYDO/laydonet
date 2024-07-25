@@ -1,6 +1,10 @@
 {
   "status": "done",
   "assets": {
+    "ai.bundle.js": {
+      "name": "ai.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/ai.bundle.js"
+    },
     "allergies.bundle.js": {
       "name": "allergies.bundle.js",
       "path": "/Users/laydo/github/laydonet/static/dist/allergies.bundle.js"
@@ -71,6 +75,9 @@
     }
   },
   "chunks": {
+    "ai": [
+      "ai.bundle.js"
+    ],
     "allergies": [
       "allergies.bundle.js"
     ],

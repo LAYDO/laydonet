@@ -1,0 +1,225 @@
+html,
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: var(--color-primary);
+    color: var(--font-color);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+}
+
+header, footer {
+    flex-shrink: 0;
+}
+
+.theme-light {
+    --color-primary: #fff8ed;
+    --color-secondary: #c0aa92;
+    --color-accent: #80716c;
+    --font-color: #000020;
+    --font-faded: #00002090;
+    --font-faded50: #00002050;
+    --glass-backdrop: rgba(0, 0, 0, 0.15);
+}
+
+.theme-dark {
+    --color-primary: #000020;
+    --color-secondary: #80716c;
+    --color-accent: #ffe2b8;
+    --font-color: #fff8ed;
+    --font-faded: #fff8ed90;
+    --font-faded50: #fff8ed50;
+    --glass-backdrop: rgba(255, 255, 255, 0.15);
+}
+
+.laydo-header {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    padding: 1.75rem 1.5rem;
+}
+.laydo-main {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    padding: 0 1.5rem;
+    flex-grow: 1;
+    overflow: auto;
+}
+
+.laydo-logo {
+    position: fixed;
+    top: 1.75rem;
+    left: 1.5rem;
+    font-size: 2rem;
+    cursor: pointer;
+}
+
+.laydo-header-options {
+    grid-column-start: 2;
+    grid-column-end: 6;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.laydo-options select {
+    font-size: 1rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    background-color: var(--color-primary);
+    color: var(--font-color);
+    border: none;
+}
+
+.laydo-options select:focus {
+    outline: none;
+}
+
+.laydo-option {
+    margin: 0;
+}
+
+.laydo-chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    grid-column-start: 2;
+    grid-column-end: 6;
+    overflow: auto;
+}
+
+.laydo-footer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--color-primary);
+    padding: 0.5rem 0;
+    width: 100%;
+    color: var(--font-color);
+}
+
+.laydo-net-footer {
+    display: flex;
+    flex-direction: row;
+}
+
+.socicon {
+    cursor: pointer;
+    margin: 1rem;
+    font-size: 1.5rem;
+}
+
+.laydo-chat-output {
+    display: flex;
+    flex-direction: column;
+    /* background-color: var(--glass-backdrop); */
+    backdrop-filter: blur(5px);
+    border-radius: 1rem;
+    width: 100%;
+    margin: 1rem auto;
+    overflow-y: auto;
+    flex-grow: 1;
+}
+
+.laydo-chat-input {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-bottom: 0.125rem solid var(--font-faded);
+}
+
+.laydo-input {
+    padding: 0.5rem;
+    font-size: 1rem;
+    min-height: 1.25rem;
+    margin-right: 1rem;
+    text-align: start;
+    width: 100%;
+    padding: 0.75rem 0.5rem;
+}
+
+.laydo-input:focus {
+    outline: none;
+}
+
+.laydo-input:empty:before {
+    content: attr(data-placeholder);
+    color: var(--font-faded);
+}
+
+.laydo-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.laydo-user-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0.5rem;
+}
+
+.laydo-text {
+    font-size: 1rem;
+    margin: 0.5rem;
+    text-align: start;
+}
+
+.laydo-loading {
+    border: 0.25rem solid var(--font-color);
+    border-top: 0.25rem solid var(--glass-backdrop);
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    animation: spin 2s linear infinite;
+    margin: 0.5rem;
+}
+
+.laydo-button {
+    background-color: var(--color-primary);
+    color: var(--font-color);
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media only screen and (max-width: 48rem) {
+    .laydo-nav-title {
+        flex-wrap: nowrap;
+        width: 50%;
+    }
+
+    .title-name {
+        font-size: 3rem;
+    }
+
+    #laydoNavIcon {
+        padding: 1rem 2rem;
+    }
+}
+
+@media only screen and (min-width: 37.5rem) {
+
+    .container-title {
+        padding-top: 1rem;
+    }
+
+    .laydo-app {
+        margin-top: 1rem;
+    }
+}
