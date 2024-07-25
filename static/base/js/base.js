@@ -25,8 +25,10 @@ function redirect(evt) {
     for (var i = 0; i < y.length; i++) {
         y[i].className = '';
     }
-    if (evt.currentTarget.id == 'laydoNavTitle') {
-        window.location.pathname = '';
+    if (evt.currentTarget.id == 'laydoNavTitle' || evt.currentTarget.id == '') {
+        window.location.href = stripSubdomain(window.location.href);
+    } else if (evt.currentTarget.id == 'ai') {
+        window.location.host = 'ai.' + window.location.host;
     } else {
         window.location.pathname = evt.currentTarget.id.toLowerCase();
         // document.getElementById(window.location.pathname).className = 'active';
@@ -123,4 +125,22 @@ if (navIcon) {
 let socialIcons = document.getElementsByClassName('socicon');
 for (let socialIcon of socialIcons) {
     socialIcon.addEventListener('click', openSocial);
+}
+
+function stripSubdomain(url) {
+    const currentUrl = new URL(url);
+    const domainParts = currentUrl.hostname.split('.');
+    console.log(domainParts);
+    if (domainParts.length <= 2) {
+        const mainDomain = domainParts.pop();
+        currentUrl.hostname = mainDomain;
+        currentUrl.pathname = '';
+    } else {
+        const mainDomain = domainParts.at(-2).join('.');
+        currentUrl.hostname = mainDomain;
+        currentUrl.pathname = '';
+
+    }
+    console.log(currentUrl);
+    return currentUrl.href;
 }
