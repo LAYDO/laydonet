@@ -28,7 +28,11 @@ function redirect(evt) {
     if (evt.currentTarget.id == 'laydoNavTitle' || evt.currentTarget.id == '') {
         window.location.href = stripSubdomain(window.location.href);
     } else if (evt.currentTarget.id == 'ai') {
-        window.location.hostname = 'ai.' + window.location.hostname;
+        if (window.location.subdomain != undefined) {
+            window.location.subdomain.replace("www", "ai");
+        } else {
+            window.location.hostname = 'ai.' + window.location.hostname;
+        }
     } else {
         window.location.pathname = evt.currentTarget.id.toLowerCase();
         // document.getElementById(window.location.pathname).className = 'active';
