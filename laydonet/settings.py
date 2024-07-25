@@ -31,7 +31,7 @@ DEBUG = True  # os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv(
     "DJANGO_ALLOWED_HOSTS",
-    "127.0.0.1,localhost,*.laydo.net,https://laydonet-yztpa.ondigitalocean.app/,ai.localhost,ai.laydo.net",
+    "127.0.0.1,localhost,*.laydo.net,https://laydonet-yztpa.ondigitalocean.app/,ai.localhost,ai.laydo.net,www.ai.laydo.net",
 ).split(",")
 
 CSRF_TRUSTED_ORIGINS = [
