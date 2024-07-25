@@ -29,7 +29,7 @@ function redirect(evt) {
         window.location.href = stripSubdomain(window.location.href);
     } else if (evt.currentTarget.id == 'ai') {
         if (window.location.host.includes('www')) {
-            window.location.host.replace("www", "ai");
+            window.location.host = window.location.host.replace("www", "ai");
         } else {
             window.location.hostname = 'ai.' + window.location.hostname;
         }
