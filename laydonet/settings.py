@@ -31,7 +31,7 @@ DEBUG = True  # os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv(
     "DJANGO_ALLOWED_HOSTS",
-    "127.0.0.1,localhost,*.laydo.net,https://laydonet-yztpa.ondigitalocean.app/,ai.localhost,ai.laydo.net,www.ai.laydo.net",
+    "127.0.0.1,localhost,*.laydo.net,https://laydonet-yztpa.ondigitalocean.app/",
 ).split(",")
 
 CSRF_TRUSTED_ORIGINS = [
@@ -68,7 +68,6 @@ INSTALLED_APPS = [
     "resume",
     "about",
     "webgl",
-    "django_hosts",
     "ai",
 ]
 
@@ -84,7 +83,6 @@ WEBPACK_LOADER = {
 }
 
 MIDDLEWARE = [
-    "django_hosts.middleware.HostsRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -93,12 +91,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
 ROOT_URLCONF = "laydonet.urls"
-ROOT_HOSTCONF = "laydonet.hosts"
-DEFAULT_HOST = "www"
 
 TEMPLATES = [
     {
