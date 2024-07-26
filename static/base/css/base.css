@@ -216,12 +216,26 @@ body {
   color: inherit;
 }
 
+/* Jumping animation for laydoArrowDown */
+@keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
 #laydoArrowDown {
   position: absolute;
   bottom: 5%;
   color: var(--font-color);
   font-size: 3rem;
   font-weight: 400;
+  animation: jump 1s infinite;
 }
 
 .laydo-img-container {

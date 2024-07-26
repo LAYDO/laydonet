@@ -26,7 +26,6 @@ function redirect(evt) {
         y[i].className = '';
     }
     if (evt.currentTarget.id == 'laydoNavTitle' || evt.currentTarget.id == '') {
-        // window.location.href = stripSubdomain(window.location.href);
         window.location.pathname = '';
     } else {
         window.location.pathname = evt.currentTarget.id.toLowerCase();

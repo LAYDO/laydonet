@@ -1,10 +1,5 @@
 {% extends "app.html" %}{% load static %}
-<!-- <!DOCTYPE html>
-<html lang="en" class="theme-dark">
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="LaydoAI" /> -->
 {% block page_head %}
-<title>LaydoAI</title>
 <link rel="stylesheet" href="{% static 'ai/css/codehilite.css' %}" />
 <link rel="stylesheet" href="{% static 'ai/css/chat.css' %}" />
 {% endblock %}
@@ -20,28 +15,17 @@
     </div>
 </header>
 <main class="laydo-main">
-    <div class="laydo-chat-container">
+    <div id="laydoChatContainer" class="laydo-chat-container">
         <div id="laydoChatInput" class="laydo-chat-input">
             <div id="laydoContentInput" class="laydo-input" contenteditable="true"
                 data-placeholder="Message LaydoAI..."></div>
-            <button id="laydoContentSend" class="laydo-button" onclick="sendContent()"><span
+            <button id="laydoContentSend" class="laydo-button"><span
                     class="fa-solid fa-paper-plane"></span></button>
         </div>
         <div id="laydoChatOutput" class="laydo-chat-output"></div>
     </div>
 </main>
-<!-- <footer>
-    <div class="laydo-footer">
-        <div class="laydo-net-footer">{% block laydo_footer %}{% endblock %}</div>
-        <div class="laydo-net-footer">Development by Landen Robinson</div>
-        <div class="laydo-net-footer">
-            <span id="twitterIcon" class="fab fa-twitter socicon" onclick="openSocial(event)"></span>
-            <span id="linkedIcon" class="fab fa-linkedin-in socicon" onclick="openSocial(event)"></span>
-            <span id="githubIcon" class="fab fa-github socicon" onclick="openSocial(event)"></span>
-        </div>
-    </div>
-</footer> -->
 {% endblock %}
 {% block page_scripts %}
-<script type="text/javascript" src="{% static 'ai/js/chat.js' %}"></script>
+<script type="text/javascript" src="{% static '/dist/ai.bundle.js' %}"></script>
 {% endblock %}

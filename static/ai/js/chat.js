@@ -96,6 +96,7 @@ class Conversation {
 }
 
 init();
+document.getElementById('laydoContentSend').addEventListener('click', () => { sendContent() });
 
 function init() {
     this.laydoInput = document.getElementById('laydoContentInput');
@@ -149,6 +150,7 @@ function sendContent() {
         }
     };
     displayLoading();
+    window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
     let url = `${window.location.href}chat/`;
     let aiSelected = document.getElementById('selectedAI').value;
     if (aiSelected) {
@@ -173,6 +175,10 @@ function sendContent() {
                 this.conversation.id = data.conversation_id;
             }
             this.conversation.update(data);
+            if (document.getElementById('laydoChatContainer').children[0].id === 'laydoChatInput') {
+                let container = document.getElementById('laydoChatContainer');
+                container.append(document.getElementById('laydoChatInput'));
+            }
         }
     }).catch(error => {
         removeLoading();
@@ -189,11 +195,46 @@ function displayLoading() {
     userTitle.classList.add('laydo-user-title');
     userTitle.textContent = 'LaydoAI';
 
-    let loading = document.createElement('div');
-    loading.classList.add('laydo-loading');
+    let loading = document.createElement('section');
+    loading.classList.add('container');
+    let d1 = document.createElement('div');
+    let d2 = document.createElement('div');
+    let span1 = document.createElement('span');
+    span1.classList.add('one', 'h6');
+    let span2 = document.createElement('span');
+    span2.classList.add('two', 'h3');
+    d2.append(span1);
+    d2.append(span2);
+    d1.append(d2);
+    let d3 = document.createElement('div');
+    let d4 = document.createElement('div');
+    let span3 = document.createElement('span');
+    span3.classList.add('one', 'h1');
+    let span4 = document.createElement('span');
+    span4.classList.add('two', 'h4');
+    d4.append(span3);
+    d4.append(span4);
+    d3.append(d4);
+    let d5 = document.createElement('div');
+    let d6 = document.createElement('div');
+    let span5 = document.createElement('span');
+    span5.classList.add('one', 'h5');
+    let span6 = document.createElement('span');
+    span6.classList.add('two', 'h2');
+    d6.append(span5);
+    d6.append(span6);
+    d5.append(d6);
+    loading.append(d1);
+    loading.append(d3);
+    loading.append(d5);
+
+    let loadingContainer = document.createElement('div');
+    loadingContainer.classList.add('laydo-loading-container');
+
+    loadingContainer.append(loading);
 
     container.appendChild(userTitle);
-    container.appendChild(loading);
+    container.appendChild(loadingContainer);
 
     this.laydoOutput.appendChild(container);
 }
