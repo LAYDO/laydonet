@@ -36,4 +36,5 @@ urlpatterns = [
     path('resume/', include('resume.urls')),
     path('about/', include('about.urls')),
     path('webgl/', include('webgl.urls')),
+    path('ai/', include('ai.urls')),
 ]

@@ -4,7 +4,6 @@ from ai.views import chat, userChat
 
 urlpatterns = [
     path("", chat, name="ai"),
-    path("admin/", admin.site.urls),
+    # path("admin/", admin.site.urls),
     path("chat/<ai_id>/", userChat, name="userChat"),
-    path("users/", include("users.urls")),
 ]

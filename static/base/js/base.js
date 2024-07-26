@@ -26,13 +26,8 @@ function redirect(evt) {
         y[i].className = '';
     }
     if (evt.currentTarget.id == 'laydoNavTitle' || evt.currentTarget.id == '') {
-        window.location.href = stripSubdomain(window.location.href);
-    } else if (evt.currentTarget.id == 'ai') {
-        if (window.location.host.includes('www')) {
-            window.location.host = window.location.host.replace("www", "ai");
-        } else {
-            window.location.hostname = 'ai.' + window.location.hostname;
-        }
+        // window.location.href = stripSubdomain(window.location.href);
+        window.location.pathname = '';
     } else {
         window.location.pathname = evt.currentTarget.id.toLowerCase();
         // document.getElementById(window.location.pathname).className = 'active';
