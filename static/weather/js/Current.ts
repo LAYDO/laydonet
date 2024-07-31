@@ -1,4 +1,5 @@
 export class Current {
+    protected root: HTMLElement;
     public currentElement: HTMLElement;
     public cityName: HTMLElement;
     public currentTemp: HTMLElement;
@@ -7,8 +8,10 @@ export class Current {
     public currentLow: HTMLElement;
     public currentDesc: HTMLElement;
 
-    constructor() {
-        this.currentElement = document.getElementById('currentWeather')!;
+    constructor(_root: HTMLElement) {
+        this.root = _root;
+        this.currentElement = document.createElement('div');
+        this.currentElement.id = 'currentWeather';
 
         this.cityName = document.createElement('h2');
         this.cityName.id = 'cityName';
@@ -50,6 +53,7 @@ export class Current {
         cw.append(cm);
 
         this.currentElement.append(cw);
+        this.root.append(this.currentElement);
     }
 
     toggle(loaded: Boolean) {

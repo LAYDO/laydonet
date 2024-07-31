@@ -10,6 +10,8 @@ baseURL = 'https://api.openweathermap.org/data/2.5/'
 geoURL = 'https://api.openweathermap.org/geo/1.0/direct?'
 seaCoords = (47.602270, -122.320390)
 # geolocater = Nominatim(user_agent="laydo")
+weatherGovURL = "https://api.weather.gov/points/" # {latitude},{longitude}"
+weatherGovFlag = False
 
 
 # Create your views here.
@@ -32,6 +34,8 @@ def getWeatherF(request):
     aqiURL = baseURL + 'air_pollution?'
     foreURL = baseURL + 'forecast/daily?'
     revGeoURL = 'https://api.openweathermap.org/geo/1.0/reverse?'
+    lat = ''
+    lon = ''
     for parm in request.GET:
         if (parm == 'q'):
             city = str(request.GET[parm])
@@ -46,11 +50,13 @@ def getWeatherF(request):
                 aqiURL += 'lon=' + str(location[0]['lon']) + '&'
                 revGeoURL += 'lon=' + str(location[0]['lon']) + '&'
         elif (parm == 'lat'):
+            lat = str(request.GET[parm])
             currURL += 'lat=' + str(request.GET[parm]) + '&'
             aqiURL += 'lat=' + str(request.GET[parm]) + '&'
             foreURL += 'lat=' + str(request.GET[parm]) + '&'
             revGeoURL += 'lat=' + str(request.GET[parm]) + '&'
         elif (parm == 'lon'):
+            lon = str(request.GET[parm])
             currURL += 'lon=' + str(request.GET[parm]) + '&'
             aqiURL += 'lon=' + str(request.GET[parm]) + '&'
             foreURL += 'lon=' + str(request.GET[parm]) + '&'
@@ -60,6 +66,19 @@ def getWeatherF(request):
     aqiURL += 'appid=' + APIKEY
     foreURL += 'cnt=10&units=imperial&appid=' + STLNKEY
     revGeoURL += 'limit=1&appid=' + APIKEY
+    weatherGURL = weatherGovURL + lat + ',' + lon
+    print(weatherGURL)
+    if (weatherGovFlag):
+        w = requests.get(weatherGURL).json()
+        print(w['properties']['relativeLocation']['properties']['city'])
+        print(w['properties']['relativeLocation']['properties']['state'])
+        forecastURL = w['properties']['forecast']
+        print(forecastURL)
+        hourlyURL = w['properties']['forecastHourly']
+        print(hourlyURL)
+        stationsURL = w["properties"]["observationStations"]
+        print(stationsURL)
+        forecastData = requests.get(forecastURL).json()
     m = requests.get(metricURL).json()
     c = requests.get(currURL).json()
     a = requests.get(aqiURL).json()

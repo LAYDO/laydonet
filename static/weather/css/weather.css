@@ -1,3 +1,9 @@
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 #citySearch {
   width: 50%;
   height: 2rem;
@@ -66,17 +72,6 @@
 
 #mapid {
   height: 20rem;
-}
-
-.loader {
-  justify-content: center;
-  border: 1rem solid transparent;
-  border-top: 1rem solid var(--font-color);
-  border-radius: 50%;
-  width: 7.5rem;
-  height: 7.5rem;
-  animation: spin 1s linear infinite;
-  display: none;
 }
 
 @keyframes spin {
@@ -343,6 +338,17 @@ h2 {
   margin-bottom: 1rem;
 }
 
+.celestial-tile {
+  display: flex;
+  flex-direction: row;
+  background-color: var(--glass-backdrop);
+  backdrop-filter: blur(5px);
+  border-radius: 1rem;
+  min-height: 9rem;
+  max-height: 9rem;
+  margin-bottom: 1rem;
+}
+
 .pad-right {
   margin-right: 0.25rem;
   color: var(--font-faded);
@@ -352,14 +358,12 @@ h2 {
   #Weather {
     display: flex;
     flex-direction: row;
-    min-height: 88vh;
   }
 
   .laydo-column {
     display: flex;
     flex-direction: column;
-    width: 32%;
-    justify-content: space-between;
+    width: 48%;
   }
 
   #currentWeather {

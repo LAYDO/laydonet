@@ -1,8 +1,9 @@
 import { ElementTile } from './ElementTile';
 
 export class Precipitation extends ElementTile {
-    constructor() {
-        super('Precipitation', 'tint', ['precipData'], 'elementRowTwo', ['precipTodayData']);
+    constructor(_row: HTMLElement) {
+        super('Precipitation', 'tint', ['precipData'], _row, ['precipTodayData']);
+        this.element.className = 'element-tile';
     }
 
     populate(next: number, today: number) {

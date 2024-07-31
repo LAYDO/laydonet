@@ -5,35 +5,32 @@ export class Moon extends ElementTile {
     public animMoonId: number;
     private baseW: number;
     private radius: number;
-    private moonGraphic: HTMLElement;
     private moon_phase: number;
     private phaseText: string;
+    private moonSVG: SVGElement;
 
-    constructor() {
-        super('Moon', 'moon', ['moonData', 'moonGraphic2'], 'celestialRow', ['moonRemain']);
+    constructor(_row: HTMLElement) {
+        super('Moon', 'moon', ['moonData', 'moonGraphic2'], _row, ['moonRemain']);
         this.remainInterval = 0;
         this.animMoonId = 0;
         this.baseW = 0;
         this.radius = 0;
-        this.moonGraphic = document.getElementById('moonGraphic2')!;
         this.moon_phase = 0;
         this.phaseText = '';
+        this.moonSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        this.moonSVG.id = 'moonSVG';
+        this.element.classList.add('celestial-tile');
     }
 
     populate(data: any) {
         clearInterval(this.remainInterval);
         this.remainInterval = setInterval(this.moonRemaining.bind(this, data));
 
-        this.baseW = this.moonGraphic?.clientWidth * 0.9;
+        this.baseW = this.minis[1]?.clientWidth * 0.9;
         this.radius = this.baseW / 2;
 
         this.moon_phase = data.moon_phase;
-        this.moonGraphic.innerHTML = '';
-
-        let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', this.baseW.toFixed(0));
-        svg.setAttribute('height', this.baseW.toFixed(0));
-        svg.id = 'moonSVG';
+        this.minis[1].innerHTML = '';
 
         // Black background
         let background = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -121,12 +118,14 @@ export class Moon extends ElementTile {
         mask.append(shadow);
         defs.append(mask);
 
-        svg.append(defs);
-        svg.append(background);
-        svg.append(moon);
-        svg.append(phase);
+        this.moonSVG.append(defs);
+        this.moonSVG.append(background);
+        this.moonSVG.append(moon);
+        this.moonSVG.append(phase);
+        this.moonSVG.setAttribute('width', this.baseW.toFixed(0));
+        this.moonSVG.setAttribute('height', this.baseW.toFixed(0));
 
-        this.moonGraphic.append(svg);
+        this.minis[1].append(this.moonSVG);
     }
 
     moonRemaining(data: any) {
@@ -142,46 +141,62 @@ export class Moon extends ElementTile {
 
         let m = document.getElementById('moonRemain')!;
 
+        if (!m) {
+            return;
+        }
+
         if (moonset != undefined && moonset < moonrise) {
             if (n < moonset) {
                 let diff = Math.abs(moonset.valueOf() - n.valueOf());
-                document.getElementById('moonTitle')!.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
-                document.getElementById('moonData')!.innerText = moonset.toLocaleString('en-US', {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                });
+                this.title.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
+                let d = document.getElementById('moonData');
+                if (d) {
+                    d.innerText = moonset.toLocaleString('en-US', {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    });
+                }
                 this.plugDiff(diff, m, 'Moonset');
             } else {
                 let diff = Math.abs(moonrise.valueOf() - n.valueOf());
-                document.getElementById('moonTitle')!.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
-                document.getElementById('moonData')!.innerText = moonrise.toLocaleTimeString('en-US', {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                });
+                this.title.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
+                let d = document.getElementById('moonData');
+                if (d) {
+                    d.innerText = moonrise.toLocaleTimeString('en-US', {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    });
+                }
                 this.plugDiff(diff, m, 'Moonrise');
 
             }
         } else {
             if (n < moonrise) {
                 let diff = Math.abs(moonrise.valueOf() - n.valueOf());
-                document.getElementById('moonTitle')!.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
-                document.getElementById('moonData')!.innerText = moonrise.toLocaleTimeString('en-US', {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                });
-                this.plugDiff(diff, m, 'Moonrise');
-            } else {
-                if (moonset != undefined) {
-                    let diff = Math.abs(moonset.valueOf() - n.valueOf());
-                    document.getElementById('moonTitle')!.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
-                    document.getElementById('moonData')!.innerText = moonset.toLocaleString('en-US', {
+                this.title.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonrise`;
+                let d = document.getElementById('moonData');
+                if (d) {
+                    d.innerText = moonrise.toLocaleTimeString('en-US', {
                         hour: "2-digit",
                         minute: "2-digit",
                         hour12: true,
                     });
+                }
+                this.plugDiff(diff, m, 'Moonrise');
+            } else {
+                if (moonset != undefined) {
+                    let diff = Math.abs(moonset.valueOf() - n.valueOf());
+                    this.title.innerHTML = `<span class="fas fa-moon pad-right"></span>Moonset`;
+                    let d = document.getElementById('moonData');
+                    if (d) {
+                        d.innerText = moonset.toLocaleString('en-US', {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                        });
+                    }
                     this.plugDiff(diff, m, 'Moonset');
                 }
 

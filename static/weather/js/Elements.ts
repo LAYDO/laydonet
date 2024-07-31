@@ -16,9 +16,15 @@ export class Elements {
     public Wind: any;
     public Humidity: any;
     public Barometer: any;
+    protected root: HTMLElement;
 
-    constructor() {
-        this.eTilesElement = document.getElementById('elementTiles')!;
+    constructor(_root: HTMLElement) {
+        this.root = _root;
+
+        this.eTilesElement = document.createElement('div');
+        this.eTilesElement.classList.add('elements-column');
+        this.eTilesElement.id = 'elementTiles';
+        this.root.append(this.eTilesElement);
 
         this.elementRowOne = document.createElement('div');
         this.elementRowOne.id = 'elementRowOne';
@@ -35,14 +41,18 @@ export class Elements {
 
         this.eTilesElement.append(this.elementRowOne);
         this.eTilesElement.append(this.elementRowTwo);
-        this.eTilesElement.append(this.elementRowThree);
+        const isMobile = !window.matchMedia('(min-device-width: 37.5rem)').matches;
 
-        this.AQI = new AQI();
-        this.Clouds = new Clouds();
-        this.Precipitation = new Precipitation();
-        this.Wind = new Wind();
-        this.Humidity = new Humidity();
-        this.Barometer = new Barometer();
+        if (isMobile) {
+            this.eTilesElement.append(this.elementRowThree);
+        }
+
+        this.AQI = new AQI(this.elementRowOne);
+        this.Clouds = new Clouds(this.elementRowOne);
+        this.Precipitation = new Precipitation(isMobile ? this.elementRowTwo : this.elementRowOne);
+        this.Wind = new Wind(this.elementRowTwo);
+        this.Humidity = new Humidity(isMobile ? this.elementRowThree : this.elementRowTwo);
+        this.Barometer = new Barometer(isMobile ? this.elementRowThree : this.elementRowTwo);
     }
 
     toggle(loaded: Boolean) {

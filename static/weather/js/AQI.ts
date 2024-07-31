@@ -13,7 +13,8 @@ export class AQI {
     public pm10Data: HTMLElement;
     public nh3Data: HTMLElement;
 
-    constructor() {
+    constructor(_root: HTMLElement) {
+        this.aqiContainer = _root;
         this.aqiElement = document.createElement('div');
         this.aqiElement.id = 'aqi';
         this.aqiElement.className = 'element-tile';
@@ -82,7 +83,6 @@ export class AQI {
         this.aqiElement.append(this.aqiData);
         this.aqiElement.append(aqiRow);
 
-        this.aqiContainer = document.getElementById('elementRowOne')!
         this.aqiContainer.append(this.aqiElement);
     }
 

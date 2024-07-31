@@ -1,5 +1,8 @@
 html,
 body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
   margin: 0;
   font-family: "Montserrat", sans-serif;
@@ -127,8 +130,9 @@ body {
 
 #laydoHomeOne,
 #laydoHomeTwo {
-  min-height: 90vh;
+  /* min-height: 90vh; */
   margin-top: 4rem;
+  min-height: 100%;
 }
 
 .laydo-title,
@@ -380,7 +384,8 @@ body {
 
   #laydoHomeOne,
   #laydoHomeTwo {
-    min-height: 90vh;
+    /* min-height: 90vh; */
+    min-height: 100%;
   }
   .container-title {
     padding-top: 1rem;

@@ -2,11 +2,11 @@ export class ElementTile {
     public container: HTMLElement;
     public element: HTMLElement;
     public title: HTMLElement;
+    public minis: Array<HTMLElement>;
 
-    constructor(element: string, icon: string, mini: Array<string>, container: string, sub?: Array<string>) {
+    constructor(element: string, icon: string, mini: Array<string>, container: HTMLElement, sub?: Array<string>) {
         this.element = document.createElement('div');
         this.element.id = `${element.toLowerCase()}`;
-        this.element.className = 'element-tile';
 
         this.title = document.createElement('div');
         this.title.id = `${element.toLowerCase()}Title`;
@@ -16,11 +16,13 @@ export class ElementTile {
         this.title.append(span);
         this.title.append(`${element}`);
         this.element.append(this.title);
+        this.minis = [];
 
-        mini.forEach(m => {
+        mini.forEach((m, i) => {
             let miniData = document.createElement('div');
             miniData.id = `${m}`;
             miniData.className = 'mini-data';
+            this.minis.push(miniData);
             this.element.append(miniData);
         })
 
@@ -33,7 +35,7 @@ export class ElementTile {
             this.element.append(subData);
         })
 
-        this.container = document.getElementById(`${container}`)!;
+        this.container = container;
         this.container.append(this.element);
     }
 

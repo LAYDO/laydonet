@@ -1,8 +1,9 @@
 import { ElementTile } from './ElementTile';
 
 export class Humidity extends ElementTile {
-    constructor() {
-        super('Humidity', 'water', ['humidData'], 'elementRowThree', ['dewData']);
+    constructor(_row: HTMLElement) {
+        super('Humidity', 'water', ['humidData'], _row, ['dewData']);
+        this.element.className = 'element-tile';
     }
 
     populate(humidity: number, dew: number) {

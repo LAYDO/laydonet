@@ -6,8 +6,9 @@ export class Barometer extends ElementTile {
     private baseH: number = 0;
     private radius: number = 0;
 
-    constructor() {
-        super('Pressure', 'weight', ['pressureData'], 'elementRowThree');
+    constructor(_row: HTMLElement) {
+        super('Pressure', 'weight', ['pressureData'], _row);
+        this.element.className = 'element-tile';
     }
 
     drawBarometer(p: number) {

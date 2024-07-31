@@ -1,8 +1,9 @@
 import { ElementTile } from './ElementTile';
 
 export class Wind extends ElementTile {
-    constructor() {
-        super('Wind', 'wind', ['windData'], 'elementRowTwo', ['gustData']);
+    constructor(_row: HTMLElement) {
+        super('Wind', 'wind', ['windData'], _row, ['gustData']);
+        this.element.className = 'element-tile';
     }
 
     generateWindDial(velocity: number, gust: number, degree: number) {
