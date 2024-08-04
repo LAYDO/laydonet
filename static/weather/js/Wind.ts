@@ -1,12 +1,17 @@
 import { ElementTile } from './ElementTile';
 
+interface WindData {
+    wind_speed: number;
+    wind_gust: number;
+    wind_direction: number;
+}
+
 export class Wind extends ElementTile {
     constructor(_row: HTMLElement) {
-        super('Wind', 'wind', ['windData'], _row, ['gustData']);
-        this.element.className = 'element-tile';
+        super('Wind', _row);
     }
 
-    generateWindDial(velocity: number, gust: number, degree: number) {
+    update(data: WindData) {
         // console.log(degree);
 
         let baseW = this.element.clientWidth * 0.7;
@@ -63,7 +68,7 @@ export class Wind extends ElementTile {
         }
 
         for (let y = 1; y <= 360; y++) {
-            if (y == degree) {
+            if (y === data.wind_direction) {
                 let g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
                 let arrowLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
                 arrowLine.setAttribute('x1', (baseW / 2).toFixed(0));
@@ -108,7 +113,7 @@ export class Wind extends ElementTile {
         vel.setAttribute('text-anchor', 'middle');
         vel.setAttribute('fill', 'var(--font-color)');
         vel.setAttribute('font-size', '1rem');
-        vel.textContent = `${velocity.toFixed(0)} MPH`;
+        vel.textContent = `${data.wind_speed.toFixed(0)} MPH`;
 
         let gusts = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         gusts.setAttribute('x', '50%');
@@ -116,7 +121,7 @@ export class Wind extends ElementTile {
         gusts.setAttribute('text-anchor', 'middle');
         gusts.setAttribute('fill', 'var(--font-color)');
         gusts.setAttribute('font-size', '0.5rem');
-        gusts.textContent = `Gusts: ${gust.toFixed(0)} MPH`;
+        gusts.textContent = `Gusts: ${data.wind_gust.toFixed(0)} MPH`;
 
         dial.append(circle);
         dial.append(vel);

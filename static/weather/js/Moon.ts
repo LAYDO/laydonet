@@ -1,6 +1,6 @@
-import { ElementTile } from "./ElementTile";
+import { CelestialTile } from "./CelestialTile";
 
-export class Moon extends ElementTile {
+export class Moon extends CelestialTile {
     private remainInterval: any;
     public animMoonId: number;
     private baseW: number;

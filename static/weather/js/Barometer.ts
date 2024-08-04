@@ -1,17 +1,20 @@
 import { ElementTile } from './ElementTile';
 
+interface BaroData {
+    pressure: number;
+}
+
 export class Barometer extends ElementTile {
 
     private baseW: number = 0;
     private baseH: number = 0;
     private radius: number = 0;
 
-    constructor(_row: HTMLElement) {
-        super('Pressure', 'weight', ['pressureData'], _row);
-        this.element.className = 'element-tile';
+    constructor(_container: HTMLElement) {
+        super('Pressure', _container);
     }
 
-    drawBarometer(p: number) {
+    update(data: BaroData) {
 
         if (this.element) {
             this.baseW = this.element.clientWidth * 0.7;
@@ -29,7 +32,7 @@ export class Barometer extends ElementTile {
         circle.setAttribute('fill', 'transparent');
         circle.setAttribute('d', `M ${this.baseW * 0.1} ${this.radius} C 0 0, ${this.baseW} 0, ${this.baseW * 0.9} ${this.radius}`);
 
-        let hpa = p;
+        let hpa = data.pressure;
         let inhg = hpa * 0.02953;
 
         let pressure = document.createElementNS('http://www.w3.org/2000/svg', 'text');

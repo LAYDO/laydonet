@@ -66,9 +66,9 @@ export class Elements {
     populate(data: any) {
         this.AQI.populate(data.aqi);
         this.Clouds.populate(data.clouds, data.uvi, data.visibility);
-        this.Precipitation.populate(data.rain_next, data.rain_today);
-        this.Wind.generateWindDial(data.windSpeed, data.windGust, data.windDeg);
-        this.Humidity.populate(data.humidity, data.dew_point);
-        this.Barometer.drawBarometer(data.pressure);
+        this.Precipitation.update({ rain_percent: data.rain_today, rain_amount: data.rain_amount});
+        this.Wind.update({ wind_speed: data.windSpeed, wind_gust: data.windGust, wind_direction: data.windDeg});
+        this.Humidity.update({humidity: data.humidity, dew: data.dew_point});
+        this.Barometer.update({pressure: data.pressure});
     }
 }

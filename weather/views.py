@@ -115,7 +115,10 @@ def getWeatherF(request):
         aqi = a['list'][0]
     else:
         aqi = {}
-    # print(a)
+    # print(c['daily'])
+    rain_amount = 0
+    if (c['daily'][0]['pop'] > 0):
+        rain_amount = c['daily'][0]['rain']
     current.update({
         'name': l[0]['name'],
         'latitude': c['lat'],
@@ -137,7 +140,7 @@ def getWeatherF(request):
         'clouds': c['current']['clouds'],
         'uvi': c['current']['uvi'],
         'visibility': c['current']['visibility'],
-        'rain_next': c['hourly'][0]['pop'],
+        'rain_amount': rain_amount,
         'rain_today': c['daily'][0]['pop'],
         'tomorrow': c['daily'][1],
         'todaily': c['daily'][0],

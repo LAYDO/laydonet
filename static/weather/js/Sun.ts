@@ -1,6 +1,6 @@
-import { ElementTile } from "./ElementTile";
+import { CelestialTile } from "./CelestialTile";
 
-export class Sun extends ElementTile {
+export class Sun extends CelestialTile {
     private riseUnix: number;
     private setUnix: number;
     private colorSunrise: string = '#FFE600';

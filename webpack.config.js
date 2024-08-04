@@ -19,6 +19,7 @@ module.exports = {
             './static/weather/js/ElementTile.ts',
             './static/weather/js/Elements.ts',
             './static/weather/js/Celestial.ts',
+            './static/weather/js/CelestialTile.ts',
             './static/weather/js/Current.ts',
             './static/weather/js/Daily.ts',
             './static/weather/js/Hourly.ts',
