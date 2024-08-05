@@ -70,9 +70,9 @@ export class Precipitation extends ElementTile {
             const elementWidth = this.element.getBoundingClientRect().width;
             this.graphicText.textContent = `${Math.round(percentage)}\u0025`;
             const textWidth = this.graphicText.getBoundingClientRect().width;
-            this.graphicText.setAttribute('x', `${(elementWidth / 2) - (textWidth / 2)}`);
-            this.graphicText.setAttribute('y', `${elementWidth / 2}`);
-            this.graphicText.setAttribute('stroke', 'white');
+            this.graphicText.setAttribute('x', `${(elementWidth * 0.5) - (textWidth * 0.5)}`);
+            this.graphicText.setAttribute('y', `${elementWidth * 0.5}`);
+            this.graphicText.setAttribute('stroke', 'var(--font-color)');
         }
         if (this.subText && typeof data.rain_amount === 'number' && !Number.isNaN(data.rain_amount)) {
             this.subText.innerText = `${data.rain_amount.toFixed(2)}"`;
