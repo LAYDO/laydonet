@@ -6,7 +6,8 @@ export class Clouds {
     public uvData: HTMLElement;
     public visibilityData: HTMLElement;
 
-    constructor() {
+    constructor(_root: HTMLElement) {
+        this.cloudContainer = _root;
         this.cloudElement = document.createElement('div');
         this.cloudElement.id = 'atmosphere';
         this.cloudElement.className = 'element-tile';
@@ -36,7 +37,6 @@ export class Clouds {
         this.cloudElement.append(this.uvData);
         this.cloudElement.append(this.visibilityData);
 
-        this.cloudContainer = document.getElementById('elementRowOne')!;
         this.cloudContainer.append(this.cloudElement);
     }
 

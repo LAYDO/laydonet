@@ -34,31 +34,73 @@ const icons = {
 
 
 export class Weather {
+    protected root: HTMLElement;
+    protected column1: HTMLElement;
+    protected column2: HTMLElement;
     protected loading: Boolean;
     protected current: Current;
     protected hourly: Hourly;
     protected daily: Daily;
-    protected map: WMap;
+    // protected map: WMap;
     protected elements: Elements;
     protected celestial: Celestial;
-    protected loader: HTMLElement;
     protected searches: HTMLElement;
-    protected credits: HTMLElement;
+    protected cityInput: HTMLElement;
+    protected cityButton: HTMLElement;
+    protected searchIcon: HTMLElement;
 
-    constructor() {
+    constructor(_root: HTMLElement) {
+        // Establish root
+        this.root = _root;
+        // Build column 1 (current and celestial sections)
+        this.column1 = document.createElement('div');
+        this.column1.classList.add('laydo-column');
+        this.column1.id = 'currentAndCelestialColumn';
+        // Build column 2 (hourly and daily forecast sections)
+        this.column2 = document.createElement('div');
+        this.column2.classList.add('laydo-column');
+        this.column2.id = 'hourlyAndDailyColumn';
+        // Instantiate other elements
         this.loading = false;
-        this.current = new Current();
+        // Search container
+        this.searches = document.createElement('div');
+        this.searches.classList.add('city-search');
+        this.searches.id = 'citySection';
+        // Search input
+        this.cityInput = document.createElement('input');
+        this.cityInput.setAttribute('type', 'text');
+        this.cityInput.setAttribute('name', 'citySearch');
+        this.cityInput.setAttribute('placeholder', 'Enter a city');
+        this.cityInput.id = 'citySearch';
+        // Search button
+        this.cityButton = document.createElement('button');
+        this.cityButton.id = 'weatherSearch';
+        this.cityButton.addEventListener('click', this.getCurrentWeather.bind(this));
+        // Search icon
+        this.searchIcon = document.createElement('span');
+        this.searchIcon.classList.add('fas', 'fa-search');
+        this.cityButton.append(this.searchIcon);
+        // Append search elements
+        this.searches.append(this.cityInput);
+        this.searches.append(this.cityButton);
+        this.searches.append(document.createElement('br'));
+        // Append search container
+        this.column1.append(this.searches);
+        // Current display
+        this.current = new Current(this.column1);
+        this.current.cityName.addEventListener('click', this.toggleCitySearch.bind(this));
+        // Various weather elements
+        this.elements = new Elements(this.column1);
+        // Sun and Moon
+        this.celestial = new Celestial(this.column1);
+        this.root.prepend(this.column1);
+
+        // Forecasts
         this.hourly = new Hourly();
         this.daily = new Daily();
-        this.map = new WMap();
-        this.elements = new Elements();
-        this.celestial = new Celestial();
-        this.loader = document.getElementById('loader') as HTMLElement;
-        this.searches = document.getElementById('citySection') as HTMLElement;
-        this.credits = document.getElementById('credits') as HTMLElement;
 
-        this.loader.style.display = 'none';
-        this.credits.style.display = 'none';
+        // Map - deprecated until refactor
+        // this.map = new WMap();
 
         document.addEventListener('keyup', (event) => {
             event.preventDefault();
@@ -85,10 +127,10 @@ export class Weather {
     protected toggleCitySearch() {
         if (this.current.cityName.style.display != 'none') {
             this.current.cityName.style.display = 'none';
-            this.searches.style.display = 'inherit';
+            this.searches.style.visibility = 'visible';
         } else {
             this.current.cityName.style.display = 'inherit';
-            this.searches.style.display = 'none';
+            this.searches.style.visibility = 'hidden';
         }
     }
 
@@ -97,15 +139,11 @@ export class Weather {
         this.current.toggle(this.loading);
         this.hourly.toggle(this.loading);
         this.daily.toggle(this.loading);
-        this.map.toggle(this.loading);
+        // this.map.toggle(this.loading);
         this.elements.toggle(this.loading);
         this.celestial.toggle(this.loading);
-
-        this.credits.style.display = this.loading ? 'flex' : 'none';
-        this.loader.style.display = this.loading ? 'none' : 'inline-block';
-
         this.loading = !this.loading;
-        this.searches.style.display = 'none';
+        this.searches.style.visibility = 'hidden';
     }
 
     protected async getCurrentWeather(position: any = null) {
@@ -117,7 +155,7 @@ export class Weather {
             q = city.value.trim();
         }
         let url = `${window.location.href}f/?`;
-        if (position != null) {
+        if (position instanceof GeolocationPosition) {
             url += `lat=${position.coords.latitude}&lon=${position.coords.longitude}`
         } else if (q) {
             url += `q=${q}`;
@@ -131,12 +169,13 @@ export class Weather {
         }).then(data => {
             console.log(data);
 
-            this.current.populate(data, icons);
+            this.current.populate(data);
+            this.celestial.populate(data);
+
             this.hourly.populate(data.hourly, icons);
             this.daily.populate(data.forecast, icons);
-            this.map.populate(data.latitude, data.longitude);
-            this.elements.populate(data);
-            this.celestial.populate(data);
+            // this.map.populate(data.latitude, data.longitude);
+            this.elements.populate(data, icons);
 
         }).catch(error => {
             console.error('There has been a problem with your fetch operation: ', error);

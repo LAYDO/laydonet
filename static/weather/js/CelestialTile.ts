@@ -1,9 +1,13 @@
-"use strict";
-class ElementTile {
-    constructor(element, icon, mini, container, sub) {
+export class CelestialTile {
+    public container: HTMLElement;
+    public element: HTMLElement;
+    public title: HTMLElement;
+    public minis: Array<HTMLElement>;
+
+    constructor(element: string, icon: string, mini: Array<string>, container: HTMLElement, sub?: Array<string>) {
         this.element = document.createElement('div');
         this.element.id = `${element.toLowerCase()}`;
-        this.element.className = 'element-tile';
+
         this.title = document.createElement('div');
         this.title.id = `${element.toLowerCase()}Title`;
         this.title.className = 'container-title';
@@ -12,28 +16,33 @@ class ElementTile {
         this.title.append(span);
         this.title.append(`${element}`);
         this.element.append(this.title);
-        mini.forEach(m => {
+        this.minis = [];
+
+        mini.forEach((m, i) => {
             let miniData = document.createElement('div');
             miniData.id = `${m}`;
             miniData.className = 'mini-data';
+            this.minis.push(miniData);
             this.element.append(miniData);
-        });
-        sub === null || sub === void 0 ? void 0 : sub.forEach(s => {
+        })
+
+        sub?.forEach(s => {
             let subData = document.createElement('div');
             subData.className = 'sub-data';
             if (sub) {
                 subData.id = `${s}`;
             }
             this.element.append(subData);
-        });
-        this.container = document.getElementById(`${container}`);
+        })
+
+        this.container = container;
         this.container.append(this.element);
     }
-    toggle(loaded) {
+
+    toggle(loaded: Boolean) {
         if (loaded) {
             this.element.style.display = 'flex';
-        }
-        else {
+        } else {
             this.element.style.display = 'none';
         }
     }
