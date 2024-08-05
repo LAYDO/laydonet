@@ -95,7 +95,7 @@ export class Wind extends ElementTile {
             }
     
             this.graphicText.setAttribute('x', (baseW * 0.5).toFixed(0));
-            this.graphicText.setAttribute('y', (baseH * 0.4).toFixed(0));
+            this.graphicText.setAttribute('y', (baseH * 0.5).toFixed(0));
             this.graphicText.setAttribute('text-anchor', 'middle');
             this.graphicText.setAttribute('fill', 'var(--font-color)');
             this.graphicText.setAttribute('font-size', '0.75rem');
