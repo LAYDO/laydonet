@@ -6,7 +6,7 @@ import requests, os
 
 APIKEY = os.getenv('OPEN_WEATHER_APP_ID')
 STLNKEY = os.getenv('OPEN_WEATHER_API_KEY')
-AQIKEY = os.getenv("AQI_API_KEY", "455DD34E-7002-4A9E-B10F-307824F418E3")
+AQIKEY = os.getenv("AQI_API_KEY")
 baseURL = 'https://api.openweathermap.org/data/2.5/'
 geoURL = 'https://api.openweathermap.org/geo/1.0/direct?'
 seaCoords = (47.602270, -122.320390)
