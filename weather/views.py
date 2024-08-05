@@ -6,10 +6,10 @@ import requests, os
 
 APIKEY = os.getenv('OPEN_WEATHER_APP_ID')
 STLNKEY = os.getenv('OPEN_WEATHER_API_KEY')
+AQIKEY = os.getenv("AQI_API_KEY", "455DD34E-7002-4A9E-B10F-307824F418E3")
 baseURL = 'https://api.openweathermap.org/data/2.5/'
 geoURL = 'https://api.openweathermap.org/geo/1.0/direct?'
 seaCoords = (47.602270, -122.320390)
-# geolocater = Nominatim(user_agent="laydo")
 weatherGovURL = "https://api.weather.gov/points/" # {latitude},{longitude}"
 weatherGovFlag = False
 
@@ -31,7 +31,7 @@ def getWeatherF(request):
     city = ''
     current = {}
     currURL = baseURL + 'onecall?'
-    aqiURL = baseURL + 'air_pollution?'
+    aqiURL = "https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&"
     foreURL = baseURL + 'forecast/daily?'
     revGeoURL = 'https://api.openweathermap.org/geo/1.0/reverse?'
     lat = ''
@@ -43,27 +43,27 @@ def getWeatherF(request):
             location = requests.get(geoURL + 'q=' + city + '&limit=1&appid=' + APIKEY).json() # geolocater.geocode(city)
             if location[0]['lat']:
                 currURL += 'lat=' + str(location[0]['lat']) + '&'
-                aqiURL += 'lat=' + str(location[0]['lat']) + '&'
+                aqiURL += "latitude=" + str(location[0]["lat"]) + "&"
                 revGeoURL += 'lat=' + str(location[0]['lat']) + '&'
             if location[0]['lon']:
                 currURL += 'lon=' + str(location[0]['lon']) + '&'
-                aqiURL += 'lon=' + str(location[0]['lon']) + '&'
+                aqiURL += "longitude=" + str(location[0]["lon"]) + "&"
                 revGeoURL += 'lon=' + str(location[0]['lon']) + '&'
         elif (parm == 'lat'):
             lat = str(request.GET[parm])
             currURL += 'lat=' + str(request.GET[parm]) + '&'
-            aqiURL += 'lat=' + str(request.GET[parm]) + '&'
+            aqiURL += "latitude=" + str(request.GET[parm]) + "&"
             foreURL += 'lat=' + str(request.GET[parm]) + '&'
             revGeoURL += 'lat=' + str(request.GET[parm]) + '&'
         elif (parm == 'lon'):
             lon = str(request.GET[parm])
             currURL += 'lon=' + str(request.GET[parm]) + '&'
-            aqiURL += 'lon=' + str(request.GET[parm]) + '&'
+            aqiURL += "longitude=" + str(request.GET[parm]) + "&"
             foreURL += 'lon=' + str(request.GET[parm]) + '&'
             revGeoURL += 'lon=' + str(request.GET[parm]) + '&'
     metricURL = currURL + 'exclude=minutely,alerts&units=metric&appid=' + APIKEY
     currURL += 'exclude=minutely,alerts&units=imperial&appid=' + APIKEY
-    aqiURL += 'appid=' + APIKEY
+    aqiURL += "distance=15&API_KEY=" + AQIKEY
     foreURL += 'cnt=10&units=imperial&appid=' + STLNKEY
     revGeoURL += 'limit=1&appid=' + APIKEY
     weatherGURL = weatherGovURL + lat + ',' + lon
@@ -111,8 +111,8 @@ def getWeatherF(request):
         sunrise = todaySR
     sunset = todaySS
 
-    if (len(a['list']) > 0):
-        aqi = a['list'][0]
+    if (len(a) > 1):
+        aqi = a[1]
     else:
         aqi = {}
     # print(c['daily'])

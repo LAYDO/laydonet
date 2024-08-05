@@ -1,114 +1,56 @@
-export class AQI {
-    public aqiElement: HTMLElement;
-    public airTitle: HTMLElement;
-    public aqiData: HTMLElement;
-    public aqiContainer: HTMLElement;
+import { ElementTile } from "./ElementTile";
 
-    public coData: HTMLElement;
-    public noData: HTMLElement;
-    public no2Data: HTMLElement;
-    public o3Data: HTMLElement;
-    public so2Data: HTMLElement;
-    public pm25Data: HTMLElement;
-    public pm10Data: HTMLElement;
-    public nh3Data: HTMLElement;
+interface AQIData {
+    category: number;
+    pm25: number;
+    desc: string;
+}
 
-    constructor(_root: HTMLElement) {
-        this.aqiContainer = _root;
-        this.aqiElement = document.createElement('div');
-        this.aqiElement.id = 'aqi';
-        this.aqiElement.className = 'element-tile';
+export class AQI extends ElementTile {
 
-        this.airTitle = document.createElement('div');
-        this.airTitle.id = 'airTitle';
-        this.airTitle.className = 'container-title';
-        let span = document.createElement('span');
-        span.className = 'fas fa-smog pad-right';
-        this.airTitle.append(span);
-        this.airTitle.append('AQI');
-
-        this.aqiData = document.createElement('div');
-        this.aqiData.id = 'aqiData';
-        this.aqiData.className = 'mini-data';
-
-        let aqiRow = document.createElement('div');
-        aqiRow.className = 'elements-row';
-
-
-        this.coData = document.createElement('div');
-        this.coData.className = 'sub-data';
-
-        this.noData = document.createElement('div');
-        this.noData.className = 'sub-data';
-
-        this.no2Data = document.createElement('div');
-        this.no2Data.className = 'sub-data';
-
-        this.o3Data = document.createElement('div');
-        this.o3Data.className = 'sub-data';
-
-
-        this.so2Data = document.createElement('div');
-        this.so2Data.className = 'sub-data';
-
-        this.pm25Data = document.createElement('div');
-        this.pm25Data.className = 'sub-data';
-
-        this.pm10Data = document.createElement('div');
-        this.pm10Data.className = 'sub-data';
-
-        this.nh3Data = document.createElement('div');
-        this.nh3Data.className = 'sub-data';
-
-        let aqiColumn1 = document.createElement('div');
-        aqiColumn1.className = 'elements-column';
-
-        let aqiColumn2 = document.createElement('div');
-        aqiColumn2.className = 'elements-column';
-
-        aqiColumn1.append(this.coData);
-        aqiColumn1.append(this.noData);
-        aqiColumn1.append(this.no2Data);
-        aqiColumn1.append(this.o3Data);
-
-        aqiColumn2.append(this.so2Data);
-        aqiColumn2.append(this.pm25Data);
-        aqiColumn2.append(this.pm10Data);
-        aqiColumn2.append(this.nh3Data);
-
-        aqiRow.append(aqiColumn1);
-        aqiRow.append(aqiColumn2);
-
-        this.aqiElement.append(this.airTitle);
-        this.aqiElement.append(this.aqiData);
-        this.aqiElement.append(aqiRow);
-
-        this.aqiContainer.append(this.aqiElement);
+    constructor(_container: HTMLElement) {
+        super('AQI', _container);
     }
 
-    toggle(loaded: Boolean) {
-        if (loaded) {
-            this.aqiElement.style.display = 'flex';
-        } else {
-            this.aqiElement.style.display = 'none';
+    update(data: AQIData) {
+        if (!data) {
+            console.error('Invalid data passed to update method');
+            this.graphicText.textContent = '--';
+            return;
         }
-    }
+        if (this.element && this.graphic && this.graphicDrawGroup && this.graphicDrawing && this.graphicText) {
+            let baseW = this.element.getBoundingClientRect().width;
+            let baseH = this.element.getBoundingClientRect().height;
+            let gW = this.graphic.getBoundingClientRect().width;
+            let gH = this.graphic.getBoundingClientRect().height;
 
-    populate(data: any) {
-        if (data.main != undefined && data.components != undefined) {
-            this.aqiData.innerText = `${data.main.aqi}`;
-            this.aqiData.style.color = this.getAQIColor(data.main.aqi);
-            this.airTitle.style.color = this.getAQIColor(data.main.aqi);
-            this.coData.innerText = `CO: ${data.components.co}`;
-            this.noData.innerText = `NO: ${data.components.no}`;
-            this.no2Data.innerText = `NO2: ${data.components.no2}`;
-            this.o3Data.innerText = `O3: ${data.components.o3}`;
-            this.so2Data.innerText = `SO2: ${data.components.so2}`;
-            this.pm10Data.innerText = `PM10: ${data.components.pm10}`;
-            this.pm25Data.innerText = `PM2.5: ${data.components.pm2_5}`;
-            this.nh3Data.innerText = `NH3: ${data.components.nh3}`;
-        } else {
-            this.aqiData.innerText = '--';
+            for (let i = 0; i < data.pm25; i++) {
+                let circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', (Math.random() * gW).toFixed(0));
+                circle.setAttribute('cy', (Math.random() * gH).toFixed(0));
+                circle.setAttribute('r', '1');
+                circle.setAttribute('fill', 'gray');
+                this.graphicDrawGroup.append(circle);
+            }
+            this.graphicText.setAttribute('x', (baseW * 0.5).toFixed(0));
+            this.graphicText.setAttribute('y', (baseH * 0.4).toFixed(0));
+            this.graphicText.setAttribute('text-anchor', 'middle');
+            this.graphicText.setAttribute('fill', this.getAQIColor(data.category));
+            this.graphicText.setAttribute('font-size', '2rem');
+            
+            let tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+            tspan.setAttribute('x', (baseW * 0.5).toFixed(0));
+            tspan.setAttribute('dy', '2em');
+            tspan.setAttribute('font-size', '1rem');
+            tspan.textContent = data.desc;
+
+            this.graphicText.innerHTML = '';
+            this.graphicText.append(document.createTextNode(data.category.toFixed(0)));
+            this.graphicText.append(tspan);
+        }
+        if (this.subText && typeof data.pm25 === 'number' && !Number.isNaN(data.pm25)) {
+            this.subText.innerText = `PM2.5: ${data.pm25}`;
+            this.subText.style.fontSize = '0.8rem';
         }
     }
 
@@ -117,7 +59,7 @@ export class AQI {
             case 1:
                 return '#00e400';
             case 2:
-                return '#ffff00';
+                return '#ffea00';
             case 3:
                 return '#ff7e00';
             case 4:

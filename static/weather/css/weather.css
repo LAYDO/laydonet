@@ -321,9 +321,9 @@ h2 {
 .element-tile {
   display: flex;
   flex-direction: column;
-  background-color: var(--glass-backdrop);
+  /* background-color: var(--glass-backdrop);
   backdrop-filter: blur(5px);
-  border-radius: 1rem;
+  border-radius: 1rem; */
   min-width: 8rem;
   min-height: 8rem;
   max-width: 8rem;

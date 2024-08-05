@@ -67,7 +67,7 @@ export class Elements {
     }
 
     populate(data: any, icons: any) {
-        this.AQI.populate(data.aqi);
+        this.AQI.update({ category: data.aqi['Category']['Number'], pm25: data.aqi['AQI'], desc: data.aqi['Category']['Name']});
         this.Clouds.populate(data.clouds, data.uvi, data.visibility);
         this.Precipitation.update({ rain_percent: data.rain_today, rain_amount: data.rain_amount});
         this.Wind.update({ wind_speed: data.windSpeed, wind_gust: data.windGust, wind_direction: data.windDeg});
