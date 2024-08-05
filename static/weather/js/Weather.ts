@@ -169,13 +169,13 @@ export class Weather {
         }).then(data => {
             console.log(data);
 
-            this.current.populate(data, icons);
+            this.current.populate(data);
             this.celestial.populate(data);
 
             this.hourly.populate(data.hourly, icons);
             this.daily.populate(data.forecast, icons);
             // this.map.populate(data.latitude, data.longitude);
-            this.elements.populate(data);
+            this.elements.populate(data, icons);
 
         }).catch(error => {
             console.error('There has been a problem with your fetch operation: ', error);

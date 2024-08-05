@@ -3,10 +3,8 @@ export class Current {
     public currentElement: HTMLElement;
     public cityName: HTMLElement;
     public currentTemp: HTMLElement;
-    public currentIcon: HTMLElement;
     public currentHigh: HTMLElement;
     public currentLow: HTMLElement;
-    public currentDesc: HTMLElement;
 
     constructor(_root: HTMLElement) {
         this.root = _root;
@@ -27,10 +25,6 @@ export class Current {
         this.currentTemp.id = 'current-temp';
         cm.append(this.currentTemp);
 
-        this.currentIcon = document.createElement('span');
-        this.currentIcon.id = 'current-icon';
-        cm.append(this.currentIcon);
-
         let lrs = document.createElement('div');
         lrs.className = 'laydo-row-space';
 
@@ -42,12 +36,6 @@ export class Current {
         this.currentLow = document.createElement('div');
         this.currentLow.id = 'current-low';
         lrs.append(this.currentLow);
-
-        this.currentDesc = document.createElement('div');
-        this.currentDesc.id = 'tempTitle';
-        this.currentDesc.className = 'mini-title';
-        lrs.append(this.currentDesc);
-
 
         cm.append(lrs);
         cw.append(cm);
@@ -65,14 +53,12 @@ export class Current {
         }
     }
 
-    populate(data: any, icons: any) {
+    populate(data: any) {
         if (data) {
             this.cityName.innerText = `${data.name}`;
             this.currentTemp.innerText = `${Math.round(data.temp)}\xB0 F`;
-            this.currentIcon.className = icons[data.weatherIcon];
             this.currentHigh.innerText = `H: ${Math.round(data.high)}\xB0`;
             this.currentLow.innerText = `L: ${Math.round(data.low)}\xB0`;
-            this.currentDesc.innerText = `${data.weatherDesc}`;
         }
     }
 

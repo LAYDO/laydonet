@@ -34,6 +34,7 @@ module.exports = {
             './static/weather/js/Wind.ts',
             './static/weather/js/Humidity.ts',
             './static/weather/js/Barometer.ts',
+            './static/weather/js/Observation.ts',
         ],
         wedding: ['./static/wedding/js/wedding_home.js'],
         wedding_base: ['./static/wedding/js/wedding_base.js'],

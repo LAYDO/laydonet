@@ -1,3 +1,12 @@
+/* 
+--color-aqi-green: #00e400;
+--color-aqi-yellow: #ffff00;
+--color-aqi-orange: #ff7e00;
+--color-aqi-red: #ff0000;
+--color-aqi-purple: #99004c;
+--color-aqi-maroon: #7e0023;
+ */
+
 body {
   display: flex;
   flex-direction: column;
@@ -72,16 +81,6 @@ body {
 
 #mapid {
   height: 20rem;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
 }
 
 #weatherSearch {
@@ -237,14 +236,6 @@ body {
   padding: 2rem;
 }
 
-/* 
---color-aqi-green: #00e400;
---color-aqi-yellow: #ffff00;
---color-aqi-orange: #ff7e00;
---color-aqi-red: #ff0000;
---color-aqi-purple: #99004c;
---color-aqi-maroon: #7e0023;
- */
 .container-forecast {
   display: flex;
   flex-direction: column;
@@ -354,6 +345,10 @@ h2 {
 .pad-right {
   margin-right: 0.25rem;
   color: var(--font-faded);
+}
+
+.current-icon {
+  font-size: 5rem;
 }
 
 @media only screen and (min-width: 37.5rem) {

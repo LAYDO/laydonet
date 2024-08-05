@@ -4,18 +4,20 @@ import { Humidity } from "./Humidity";
 import { Barometer } from "./Barometer";
 import { Clouds } from "./Clouds";
 import { AQI } from "./AQI";
+import { Observation } from "./Observation";
 
 export class Elements {
     public eTilesElement: HTMLElement;
     public elementRowOne: HTMLElement;
     public elementRowTwo: HTMLElement;
     public elementRowThree: HTMLElement;
-    public AQI: any;
-    public Clouds: any;
-    public Precipitation: any;
-    public Wind: any;
-    public Humidity: any;
-    public Barometer: any;
+    public AQI: AQI;
+    public Clouds: Clouds;
+    public Precipitation: Precipitation;
+    public Wind: Wind;
+    // public Humidity: Humidity;
+    public Barometer: Barometer;
+    public Observation: Observation;
     protected root: HTMLElement;
 
     constructor(_root: HTMLElement) {
@@ -51,7 +53,8 @@ export class Elements {
         this.Clouds = new Clouds(this.elementRowOne);
         this.Precipitation = new Precipitation(isMobile ? this.elementRowTwo : this.elementRowOne);
         this.Wind = new Wind(this.elementRowTwo);
-        this.Humidity = new Humidity(isMobile ? this.elementRowThree : this.elementRowTwo);
+        // this.Humidity = new Humidity(isMobile ? this.elementRowThree : this.elementRowTwo);
+        this.Observation = new Observation(isMobile ? this.elementRowThree : this.elementRowTwo);
         this.Barometer = new Barometer(isMobile ? this.elementRowThree : this.elementRowTwo);
     }
 
@@ -63,12 +66,13 @@ export class Elements {
         }
     }
 
-    populate(data: any) {
+    populate(data: any, icons: any) {
         this.AQI.populate(data.aqi);
         this.Clouds.populate(data.clouds, data.uvi, data.visibility);
         this.Precipitation.update({ rain_percent: data.rain_today, rain_amount: data.rain_amount});
         this.Wind.update({ wind_speed: data.windSpeed, wind_gust: data.windGust, wind_direction: data.windDeg});
-        this.Humidity.update({humidity: data.humidity, dew: data.dew_point});
-        this.Barometer.update({pressure: data.pressure});
+        // this.Humidity.update({humidity: data.humidity, dew: data.dew_point});
+        this.Observation.update({ desc: data.weatherDesc, icon: icons[data.weatherIcon] });
+        this.Barometer.update({ pressure: data.pressure });
     }
 }
