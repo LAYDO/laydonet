@@ -292,6 +292,28 @@ header, footer {
     animation: load6 7.2s ease 3s infinite;
 }
 
+.laydo-step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: var(--glass-backdrop);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.laydo-step-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0.5rem;
+}
+
+.laydo-step-text {
+    font-size: 1rem;
+    margin: 0.5rem;
+    text-align: start;
+}
+
 @keyframes load1 {
     0% {
         bottom: 0;
