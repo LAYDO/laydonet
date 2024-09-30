@@ -1,7 +1,35 @@
 class Chat {
     constructor(parent, text, user) {
+        this.stepContainer = document.createElement('div');
+        this.stepContainer.classList.add('laydo-step-container');
         if (text != undefined) {
-            this.text = text;
+            let textContent = text.replace("<p>", "").replace("</p>", "");
+            try {
+                if (user == 'LaydoAI') {
+                    let parsedText = JSON.parse(textContent);
+                    if (Array.isArray(parsedText)) {
+                        parsedText?.forEach(item => {
+                            if (item[0] && item[1] && item[2]) {
+
+                                let stepTitle = document.createElement('div');
+                                stepTitle.classList.add('laydo-step-title');
+                                stepTitle.textContent = `${item[0]}\n\n`;
+
+                                let stepText = document.createElement('div');
+                                stepText.classList.add('laydo-step-text');
+                                stepText.innerHTML = `${item[1]} <i>(${item[2].toFixed(2)} seconds)</i>`;
+
+                                this.stepContainer.appendChild(stepTitle);
+                                this.stepContainer.appendChild(stepText);
+                            }
+                        });
+                    }
+                } else {
+                    this.text = text;
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
         if (user != undefined) {
             this.user = user;
@@ -15,7 +43,12 @@ class Chat {
 
         this.userText = document.createElement('div');
         this.userText.classList.add('laydo-text');
-        this.userText.innerHTML = this.text;
+        
+        if (this.stepContainer.hasChildNodes()) {
+            this.userText.appendChild(this.stepContainer);
+        } else {
+            this.userText.innerHTML = this.text;
+        }
 
         if (this.textContainer) {
             this.textContainer.appendChild(this.userTitle);
@@ -57,24 +90,18 @@ class Conversation {
 
     update(data) {
         this.messages = data.messages;
-        let content, lastContent;
+        let content;
         this.conversationContainer.innerHTML = '';
         this.messages.forEach((message, index) => {
-            if (message.role == 'user') {
-                content = new User(this.conversationContainer, message.content);
-            } else if (message.role == 'assistant') {
-                content = new Laydo(this.conversationContainer, message.content);
-                this.conversationContainer.appendChild(content.textContainer);
-                // if (content && (index < this.messages.length - 1)) {
-                //     this.conversationContainer.appendChild(content.textContainer);
-                // } else {
-                //     lastContent = content;
-                // }
+            if (message.display_content) {
+                if (message.role == 'user') {
+                    content = new User(this.conversationContainer, message.content);
+                } else if (message.role == 'assistant') {
+                    content = new Laydo(this.conversationContainer, message.content);
+                    // this.conversationContainer.appendChild(content.textContainer);
+                }
             }
         });
-        // if (lastContent) {
-        //     this.typeOutText(lastContent.userText, lastContent.text, 1);
-        // }
     }
 
     addUserMessage(message) {

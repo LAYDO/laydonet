@@ -10,8 +10,10 @@
 
 .container div {
   position: absolute;
-  width: 5.625rem;
-  height: 3.1875rem;
+  width: 4.5rem;
+  height: 2.55rem;
+  /* width: 5.625rem;
+  height: 3.1875rem; */
 }
 
 .container div:nth-of-type(2) {
@@ -309,6 +311,12 @@
 
   .app-title {
     font-size: 2rem;
+  }
+
+  .container div {
+    position: absolute;
+    width: 7.5rem;
+    height: 4.25rem;
   }
 }
 
