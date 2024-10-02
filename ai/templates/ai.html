@@ -8,10 +8,11 @@
     <div class="laydo-header-options">
         <div class="laydo-options">
             <select id="selectedAI">
-                <option value="0">llama-3.2-90b-text-preview (Groq)</option>
-                <option value="1">llama-3.2-1b-preview (Groq)</option>
-                <option value="2">llama-3.2-11b-vision-preview (Groq)</option>
-                <option value="3">llama-3.1-70b-versatile (Groq)</option>
+                <option value="0">llama-3.2-90b-text-preview with CoT</option>
+                <option value="1">llama-3.2-90b-text-preview</option>
+                <option value="2">llama-3.2-1b-preview</option>
+                <option value="3">llama-3.2-11b-vision-preview</option>
+                <option value="4">llama-3.1-70b-versatile</option>
             </select>
         </div>
     </div>
@@ -19,15 +20,14 @@
 <main class="laydo-main">
     <div id="laydoChatContainer" class="laydo-chat-container">
         <div id="laydoChatInput" class="laydo-chat-input">
-            <div id="laydoContentInput" class="laydo-input" contenteditable="true"
-                data-placeholder="Message LaydoAI..."></div>
-            <button id="laydoContentSend" class="laydo-button"><span
-                    class="fa-solid fa-paper-plane"></span></button>
+            <div id="laydoContentInput" class="laydo-input" contenteditable="true" data-placeholder="Message LaydoAI..."></div>
+            <button id="laydoContentSend" class="laydo-button"><span class="fa-solid fa-paper-plane"></span></button>
         </div>
         <div id="laydoChatOutput" class="laydo-chat-output"></div>
     </div>
 </main>
 {% endblock %}
+{% block laydo_footer %}<div style="margin-right: 0.25rem;">Powered by </div><a href="https://www.groq.com/">Groq</a>{% endblock %}
 {% block page_scripts %}
 <script type="text/javascript" src="{% static '/dist/ai.bundle.js' %}"></script>
 {% endblock %}

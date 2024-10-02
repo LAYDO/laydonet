@@ -1,28 +1,31 @@
 class Chat {
     constructor(parent, text, user) {
         this.stepContainer = document.createElement('div');
-        this.stepContainer.classList.add('laydo-step-container');
         if (text != undefined) {
             let textContent = text.replace("<p>", "").replace("</p>", "");
             try {
                 if (user == 'LaydoAI') {
-                    let parsedText = JSON.parse(textContent);
-                    if (Array.isArray(parsedText)) {
-                        parsedText?.forEach(item => {
-                            if (item[0] && item[1] && item[2]) {
+                    if (textContent.startsWith('[')) {
+                        let parsedText = JSON.parse(textContent);
+                        if (Array.isArray(parsedText)) {
+                            parsedText?.forEach(item => {
+                                if (item[0] && item[1] && item[2]) {
 
-                                let stepTitle = document.createElement('div');
-                                stepTitle.classList.add('laydo-step-title');
-                                stepTitle.textContent = `${item[0]}\n\n`;
+                                    let stepTitle = document.createElement('div');
+                                    stepTitle.classList.add('laydo-step-title');
+                                    stepTitle.textContent = `${item[0]}\n\n`;
 
-                                let stepText = document.createElement('div');
-                                stepText.classList.add('laydo-step-text');
-                                stepText.innerHTML = `${item[1]} <i>(${item[2].toFixed(2)} seconds)</i>`;
+                                    let stepText = document.createElement('div');
+                                    stepText.classList.add('laydo-step-text');
+                                    stepText.innerHTML = `${item[1]} <i>(${item[2].toFixed(2)} seconds)</i>`;
 
-                                this.stepContainer.appendChild(stepTitle);
-                                this.stepContainer.appendChild(stepText);
-                            }
-                        });
+                                    this.stepContainer.appendChild(stepTitle);
+                                    this.stepContainer.appendChild(stepText);
+                                }
+                            });
+                        }
+                    } else {
+                        this.text = text;
                     }
                 } else {
                     this.text = text;
@@ -42,7 +45,7 @@ class Chat {
         this.userTitle.textContent = this.user;
 
         this.userText = document.createElement('div');
-        this.userText.classList.add('laydo-text');
+        this.userText.classList.add('laydo-text', 'laydo-step-container');
         
         if (this.stepContainer.hasChildNodes()) {
             this.userText.appendChild(this.stepContainer);
@@ -128,6 +131,7 @@ document.getElementById('laydoContentSend').addEventListener('click', () => { se
 function init() {
     this.laydoInput = document.getElementById('laydoContentInput');
     this.laydoOutput = document.getElementById('laydoChatOutput');
+    this.aiSelected = document.getElementById('selectedAI');
     this.laydoInput.onfocus = function () {
         if (this.textContent === '') {
             this.innerHTML = '';
@@ -155,7 +159,13 @@ function init() {
         }
     });
 
+    this.aiSelected.addEventListener('change', (event) => {
+        this.aiSelected = event.target.value;
+        this.conversation = new Conversation(this.laydoOutput, null);
+    });
+
     this.conversation;
+    this.aiSelected = 0;
 }
 
 function sendContent() {
@@ -179,9 +189,8 @@ function sendContent() {
     displayLoading();
     window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
     let url = `${window.location.href}chat/`;
-    let aiSelected = document.getElementById('selectedAI').value;
-    if (aiSelected) {
-        url = `${url}${aiSelected}/`;
+    if (this.aiSelected) {
+        url = `${url}${this.aiSelected}/`;
     }
     fetch(url, {
         method: 'POST',
