@@ -3,68 +3,93 @@ from groq import Groq
 from ai.models import Conversation
 from django.core.exceptions import ValidationError
 from django.db.utils import DataError
-
+from django.http import JsonResponse
 current_path = os.path.dirname(os.path.abspath(__file__))
-system_prompt_path = os.path.join(current_path, "system_prompt.txt")
+system_basic_path = os.path.join(current_path, "system_basic.txt")
+system_reasoning_path = os.path.join(current_path, "system_reasoning.txt")
 starting_point_path = os.path.join(current_path, "starting_point.txt")
 
 try:
-    with open(system_prompt_path, "r") as file:
-        system_content = file.read()
+    with open(system_basic_path, "r") as file:
+        system_basic = file.read()
+
+    with open(system_reasoning_path, "r") as file:
+        system_reasoning = file.read()
 
     with open(starting_point_path, "r") as file:
         starting_point = file.read()
 except FileNotFoundError:
-    print(f'File not found: {system_prompt_path} or {starting_point_path}')
+    print(f'File not found: {system_basic_path} or {starting_point_path}')
 
 start = True
 
+AI_MODELS = {
+    0: "llama-3.2-90b-text-preview",
+    1: "llama-3.2-90b-text-preview",
+    2: "llama-3.2-1b-preview",
+    3: "llama-3.2-11b-vision-preview",
+    4: "llama-3.1-70b-versatile",
+}
+
+
+def remove_html_tags(text):
+    """Remove html tags from a string"""
+    return re.sub(r"<[^>]+>", "", text)
+
+def determine_ai_model(ai_id):
+    if ai_id in AI_MODELS:
+        return AI_MODELS[ai_id]
+    else:
+        raise ValueError("Invalid AI ID")
+
 def call_groq(ai_id, client, messages, is_final_answer=False):
     for attempt in range(3):
-        try:
             # Determine the AI model based on the AI ID
-            ai_model = ""
+            ai_model = determine_ai_model(ai_id)
+            # Determine if reasoning is true
             if ai_id == 0:
-                ai_model = "llama-3.2-90b-text-preview"
-            elif ai_id == 1:
-                ai_model = "llama-3.2-1b-preview"
-            elif ai_id == 2:
-                ai_model = "llama-3.2-11b-vision-preview"
-            elif ai_id == 3:
-                ai_model = "llama-3.1-70b-versatile"
+                try:
+                    # Call the Groq API
+                    if is_final_answer:
+                        response = client.chat.completions.create(
+                            model=ai_model,
+                            messages=messages,
+                            temperature=0.2,
+                        )
+                        return response.choices[0].message.content
+                    else:
+                        response = client.chat.completions.create(
+                            model=ai_model,
+                            messages=messages,
+                            temperature=0.2,
+                            response_format={"type": "json_object"}
+                        )
+                        return json.loads(response.choices[0].message.content)
+                except Exception as e:
+                    if attempt < 3:
+                        if is_final_answer:
+                            return {
+                                "title": "Error",
+                                "content": f"Failed to generate final answer after 3 attempts. Error: {str(e)}",
+                                "next_action": "final_answer"
+                            }
+                        else:
+                            return {
+                                "title": "Error",
+                                "content": f"Failed to generate final answer after 3 attempts. Error: {str(e)}", "next_action": "final_answer"
+                            }
+                    time.sleep(1)
             else:
-                raise ValueError("Invalid AI ID")
-
-            # Call the Groq API
-            if is_final_answer:
-                response = client.chat.completions.create(
-                    model=ai_model,
-                    messages=messages,
+                try:
+                    response = client.chat.completions.create(
+                        model=ai_model,
+                        messages=messages,
                     temperature=0.2,
-                )
-                return response.choices[0].message.content
-            else:
-                response = client.chat.completions.create(
-                    model=ai_model,
-                    messages=messages,
-                    temperature=0.2,
-                    response_format={"type": "json_object"}
-                )
-                return json.loads(response.choices[0].message.content)
-        except Exception as e:
-            if attempt < 3:
-                if is_final_answer:
-                    return {
-                        "title": "Error",
-                        "content": f"Failed to generate final answer after 3 attempts. Error: {str(e)}",
-                        "next_action": "final_answer"
-                    }
-                else:
-                    return {
-                        "title": "Error",
-                        "content": f"Failed to generate final answer after 3 attempts. Error: {str(e)}", "next_action": "final_answer"
-                    }
-            time.sleep(1)
+                    )
+                    return response.choices[0].message.content
+                except Exception as e:
+                    print(f"ERROR: {e}")
+                    return JsonResponse({"error": str(e)})
 
 def groq(ai_id, conversation_id, user_message):
 
@@ -84,8 +109,10 @@ def groq(ai_id, conversation_id, user_message):
         else:
             start = True
             conversation = Conversation.objects.create()
-            if ai_id != 2:
-                conversation.addMessage(role="system", content=system_content)
+            if ai_id == 0:
+                conversation.addMessage(role="system", content=system_reasoning)
+            else:
+                conversation.addMessage(role="system", content=system_basic)
 
         # Check if user_message is provided, if not raise an error
         if not user_message:
@@ -96,14 +123,21 @@ def groq(ai_id, conversation_id, user_message):
             user_message.get("content") if isinstance(user_message, dict) else user_message
         )
 
-        # Check if user_message is not empty
-        if not user_message:
-            raise ValueError("User message is empty")
-
         # Add user message to conversation
         conversation.addMessage(role="user", content=user_message)
+        if ai_id == 0:
+            return chain_of_thought(ai_id, conversation, client, start)
+        else:
+            result = basic_answer(ai_id, conversation, user_message, client)
+            return result
+    except (ValueError, ValidationError, DataError) as e:
+        print(f"ERROR: {e}")
+        return JsonResponse({"error": str(e)})
 
-        # Add starting point to conversation, if new conversation
+
+def chain_of_thought(ai_id, conversation, client, start):
+    try:
+    # Add starting point to conversation, if new conversation
         if start:
             conversation.addMessage(role="assistant", content=starting_point, display_content=False)
             start = False
@@ -166,9 +200,24 @@ def groq(ai_id, conversation_id, user_message):
     except (ValueError, ValidationError, DataError):
         conversation = Conversation.objects.create()
         if ai_id != 2:
-            conversation.addMessage(role="system", content=system_content)
+            conversation.addMessage(role="system", content=system_reasoning)
 
+def basic_answer(ai_id, conversation, user_message, client):
+    try:
+        # Prepare messages to send to Groq
+        messages_to_send = [
+            {"role": message["role"], "content": message["content"]}
+            for message in conversation.messages
+            if isinstance(message["content"], str)
+        ]
 
-def remove_html_tags(text):
-    """Remove html tags from a string"""
-    return re.sub(r"<[^>]+>", "", text)
+        # print(conversation.messages)
+        assistant_response = call_groq(ai_id, client, messages_to_send)
+        conversation.addMessage(role="assistant", content=assistant_response)
+        return conversation
+    except (ValueError, ValidationError, DataError) as e:
+        print(f"ERROR: {e}")
+        return JsonResponse({"error": str(e)})
+
+def vision_answer(ai_id, conversation_id, user_message):
+    pass
