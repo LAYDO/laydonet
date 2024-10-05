@@ -160,12 +160,12 @@ function init() {
     });
 
     this.aiSelected.addEventListener('change', (event) => {
-        this.aiSelected = event.target.value;
+        this.aiModel = event.target.value;
         this.conversation = new Conversation(this.laydoOutput, null);
     });
 
     this.conversation;
-    this.aiSelected = 0;
+    this.aiModel = 0;
 }
 
 function sendContent() {
@@ -189,9 +189,9 @@ function sendContent() {
     displayLoading();
     window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
     let url = `${window.location.href}chat/`;
-    if (this.aiSelected) {
-        url = `${url}${this.aiSelected}/`;
-    }
+    // if (this.aiSelected) {
+    url = `${url}${this.aiModel}/`;
+    // }
     fetch(url, {
         method: 'POST',
         headers: {
