@@ -14,9 +14,9 @@ export class Recipe {
     public title: string;
     public category: string;
     public time_required: number;
-    public ingredients: string;
-    public instructions: string;
-    constructor(id: string, title: string, category: string, time_required: number, ingredients: string, instructions: string) {
+    public ingredients: Array<string>;
+    public instructions: Array<string>;
+    constructor(id: string, title: string, category: string, time_required: number, ingredients: Array<string>, instructions: Array<string>) {
         this.id = id;
         this.title = title;
         this.category = category;
@@ -34,16 +34,15 @@ export class RecipeItem extends Recipe {
     public rightContainer: HTMLElement;
     public categoryElement: HTMLElement;
     public titleElement: HTMLElement;
-    public ingredientsElement: HTMLElement;
     public timeRequiredElement: HTMLElement;
 
-    constructor(parentContainer: HTMLElement, id: string, title: string, category: string, time_required: number, ingredients: string, instructions: string) {
+    constructor(parentContainer: HTMLElement, id: string, title: string, category: string, time_required: number, ingredients: Array<string>, instructions: Array<string>) {
         super(id, title, category, time_required, ingredients, instructions);
 
         this.parentContainer = parentContainer;
 
         this.container = document.createElement('div');
-        this.container.classList.add('laydo-row-around', 'laydo-recipe-item');
+        this.container.classList.add('laydo-row-space', 'laydo-recipe-item');
         this.container.addEventListener('click', () => {
             this.showRecipeDetail(this.id);
         });
@@ -70,11 +69,6 @@ export class RecipeItem extends Recipe {
         this.titleElement.classList.add('laydo-middle-title');
         this.titleElement.textContent = this.title;
         this.middleContainer.appendChild(this.titleElement);
-        
-        this.ingredientsElement = document.createElement('div');
-        this.ingredientsElement.classList.add('laydo-middle-ingredients');
-        this.ingredientsElement.textContent = this.ingredients;
-        this.middleContainer.appendChild(this.ingredientsElement);
         
         this.timeRequiredElement = document.createElement('div');
         this.timeRequiredElement.textContent = `${this.time_required.toString()} mins`;

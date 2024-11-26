@@ -22,12 +22,10 @@ def recipe_list(request):
             'created_on': recipe.created_on,
             'updated_on': recipe.updated_on
         })
-    print(result)
     return JsonResponse({"recipes": result})
 
 def recipe_detail(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
-    print(recipe.ingredients)
     return render(request, 'recipe_detail.html', {'recipe': recipe})
 
 def recipe_search(request):
@@ -46,7 +44,6 @@ def recipe_add(request):
     instructions = body_data.get("instructions")
     image = None #body_data.FILES.get('image')
     recipe = {'title': title, 'category': category, 'ingredients': ingredients, 'time_required': time_required, 'instructions': instructions}
-    print(recipe)
     Recipe.objects.create(title=title, category=category, ingredients=ingredients, time_required=time_required, instructions=instructions, image=image)
     recipes = Recipe.objects.all().order_by('-created_on')
     result = []
@@ -64,6 +61,4 @@ def recipe_add(request):
                 "updated_on": r.updated_on,
             }
         )
-    print(result)
-    # return render(request, 'recipe_list.html', {'recipes': recipes})
     return JsonResponse({'message': 'Recipe added successfully!', 'recipe_created': recipe, 'recipes': result})

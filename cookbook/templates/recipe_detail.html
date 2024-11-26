@@ -4,9 +4,22 @@
 {% endblock %}
 {% block laydo_content_1 %}
 <h1>{{ recipe.title }} - {{ recipe.time_required }} mins</h1>
-<h2>Ingredients</h2>
-<p>{{ recipe.ingredients }}</p>
-<h2>Instructions</h2>
-<p>{{ recipe.instructions }}</p>
-<p>{{ recipe }}</p>
-{% endblock %}
+<div class="cook-detail-container">
+    <h2>Ingredients</h2>
+    <div class="cook-align-start">
+        <ul>
+            {% for ingredient in recipe.ingredients %}
+                <li>{{ ingredient }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <h2>Instructions</h2>
+    <div class="cook-align-start">
+        <ol>
+            {% for instruction in recipe.instructions %}
+                <li>{{ instruction }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+    {% endblock %}
+</div>

@@ -3,7 +3,8 @@
     margin: 1rem;
 }
 
-.cook-add {
+.cook-add,
+.cook-search {
     background-color: var(--color-primary);
     color: var(--font-color);
     border: none;
@@ -21,7 +22,6 @@
     width: 100%;
     padding: 0.75rem 0.5rem;
     border-bottom: 0.125rem solid var(--font-faded);
-    min-width: 30rem;
 }
 
 .cook-input:focus {
@@ -357,25 +357,23 @@
 }
 
 .laydo-recipe-item {
-    min-width: 70%;
+    min-width: 75%;
     border: 0.125rem solid var(--font-faded);
     cursor: pointer;
 }
 
 .laydo-recipe-left {
-    width: 15%;
     min-height: 3rem;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    min-width: 20%;
 }
 .laydo-recipe-middle {
     width: 70%;
 }
-.laydo-recipe-right {
-    width: 15%;
-}
 
-.laydo-category {
-    font-size: 2rem;
-    color: var(--color-primary);
+.laydo-recipe-right {
+    margin-right: 1rem;
 }
 
 .laydo-middle-title {
@@ -386,4 +384,54 @@
     color: var(--font-faded);
     font-size: 0.75rem;
     align-items: end;
+}
+
+.cook-search-container {
+    min-width: 50%;
+}
+
+.cook-detail-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 50%;
+}
+
+.cook-detail-ingreds,
+.cook-detail-instructs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
+
+@media only screen and (max-width: 48rem) {
+    .cook-search-container,
+    .cook-detail-container {
+        min-width: 75%;
+    }
+    .laydo-recipe-middle {
+        width: 60%;
+    }
+    .laydo-recipe-left {
+        font-size: 1rem;
+    }
+    .laydo-recipe-item {
+        min-width: 100%;
+    }
+    .laydo-recipe-right {
+        margin-right: 0.25rem;
+    }
+}
+
+.laydo-flex-home {
+    align-items: center;
+}
+
+.cook-align-start {
+    text-align: start;
+}
+
+#cookbookContainer {
+    min-width: 90%;
 }

@@ -33,7 +33,7 @@ export class Cookbook {
         this.container.appendChild(this.header);
 
         this.searchContainer = document.createElement('div');
-        this.searchContainer.classList.add('laydo-row-even');
+        this.searchContainer.classList.add('laydo-row-even', 'cook-search-container');
         this.header.appendChild(this.searchContainer);
 
         this.searchInput = document.createElement('div');
@@ -44,8 +44,7 @@ export class Cookbook {
         this.searchContainer.appendChild(this.searchInput);
 
         this.searchButton = document.createElement('button');
-        this.searchButton.textContent = 'Search';
-        this.searchButton.classList.add('laydo-button');
+        this.searchButton.classList.add('cook-search', 'fa-solid', 'fa-magnifying-glass');
         this.searchButton.id = 'cookSearchButton';
         this.searchContainer.appendChild(this.searchButton);
 
@@ -163,12 +162,15 @@ export class Cookbook {
         this.createButton.classList.add('laydo-button');
         this.createButton.id = 'recipeAdd';
         this.createButton.addEventListener('click', () => {
+            let ingreds = this.recipeIngredients.value.split('\n');
+            let instructs = this.recipeInstructions.value.split('\n');
+            console.log(ingreds);
             const newRecipe = {
                 title: this.recipeTitle.value,
                 category: this.recipeCategory.value,
                 time_required: this.recipeTimeRequired.value,
-                ingredients: this.recipeIngredients.value,
-                instructions: this.recipeInstructions.value,
+                ingredients: ingreds,
+                instructions: instructs,
                 image: this.recipeImage.value,
             };
 
