@@ -31,7 +31,22 @@ def recipe_detail(request, pk):
 def recipe_search(request):
     query = request.GET.get('q')
     recipes = Recipe.objects.filter(title__icontains=query).order_by('-created_on')
-    return render(request, 'recipe_list.html', {'recipes': recipes})
+    result = []
+    for r in recipes:
+        result.append(
+            {
+                "id": r.id,
+                "title": r.title,
+                "category": r.category,
+                "ingredients": r.ingredients,
+                "time_required": r.time_required,
+                "instructions": r.instructions,
+                "image": r.image.url if r.image else None,
+                "created_on": r.created_on,
+                "updated_on": r.updated_on,
+            }
+        )
+    return JsonResponse({'recipes': result})
 
 @require_http_methods(["POST"])
 def recipe_add(request):

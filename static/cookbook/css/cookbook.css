@@ -4,7 +4,8 @@
 }
 
 .cook-add,
-.cook-search {
+.cook-search,
+.cook-search-cancel {
     background-color: var(--color-primary);
     color: var(--font-color);
     border: none;
@@ -12,6 +13,10 @@
     width: auto;
     cursor: pointer;
     font-size: 1.5rem;
+}
+
+.cook-search-cancel {
+    display: none;
 }
 
 .cook-input {

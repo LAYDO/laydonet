@@ -21,6 +21,7 @@ export class Cookbook {
     private recipeInstructions: HTMLTextAreaElement;
     private recipeImage: HTMLInputElement;
     private createButton: HTMLButtonElement;
+    private searchCancelButton: HTMLButtonElement;
 
     constructor(container: HTMLElement) {
         this.container = container;
@@ -41,11 +42,18 @@ export class Cookbook {
         this.searchInput.classList.add('cook-input');
         this.searchInput.setAttribute('contenteditable', 'true');
         this.searchInput.setAttribute('data-placeholder', 'Search recipes...');
+        this.searchInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                this.searchRecipes();
+            }
+        });
         this.searchContainer.appendChild(this.searchInput);
 
         this.searchButton = document.createElement('button');
         this.searchButton.classList.add('cook-search', 'fa-solid', 'fa-magnifying-glass');
         this.searchButton.id = 'cookSearchButton';
+        this.searchButton.addEventListener('click', () => { this.searchRecipes(); });
         this.searchContainer.appendChild(this.searchButton);
 
         this.addButton = document.createElement('button');
@@ -53,6 +61,12 @@ export class Cookbook {
         this.addButton.classList.add('cook-add');
         this.addButton.addEventListener('click', () => { this.showModal(); });
         this.header.appendChild(this.addButton);
+
+        this.searchCancelButton = document.createElement('button');
+        this.searchCancelButton.textContent = 'x';
+        this.searchCancelButton.classList.add('cook-search-cancel');
+        this.searchCancelButton.addEventListener('click', () => { this.cancelSearch(); });
+        this.header.appendChild(this.searchCancelButton);
 
         this.recipesContainer = document.createElement('div');
         this.recipesContainer.classList.add('laydo-flex-col');
@@ -284,6 +298,7 @@ export class Cookbook {
     }
 
     private displayLoading() {
+        this.recipesContainer.innerHTML = '';
         let container = document.createElement('div');
         container.classList.add('laydo-text-container');
         container.id = 'laydoLoading';
@@ -336,5 +351,52 @@ export class Cookbook {
         if (loading) {
             loading.remove();
         }
+    }
+
+    private searchRecipes() {
+        let searchInput = document.getElementById('cookSearchInput') as HTMLInputElement;
+        let searchValue = searchInput.textContent;
+        if (!searchValue || searchValue === '') {
+            return;
+        }
+        let url = window.location.origin + window.location.pathname + 'search/?q=' + searchValue;
+        this.displayLoading();
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            this.loadRecipes(data.recipes);
+            this.searchCancelButton.style.display = 'block';
+            this.addButton.style.display = 'none';
+        }).catch(error => {
+            this.removeLoading();
+            console.error('There has been a problem with your fetch operation: ', error);
+        });
+    }
+
+    private cancelSearch() {
+        let url = window.location.origin + window.location.pathname + 'recipes/';
+        this.displayLoading();
+        fetch(url).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        }).then(data => {
+            this.loadRecipes(data.recipes);
+            this.searchCancelButton.style.display = 'none';
+            this.addButton.style.display = 'block';
+            this.searchInput.textContent = '';
+        }).catch(error => {
+            this.removeLoading();
+            console.error('There has been a problem with your fetch operation: ', error);
+        });
     }
 }
