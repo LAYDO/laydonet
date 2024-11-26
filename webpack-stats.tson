@@ -21,6 +21,10 @@
       "name": "blog.bundle.js",
       "path": "/Users/laydo/github/laydonet/static/dist/blog.bundle.js"
     },
+    "cookbook.bundle.js": {
+      "name": "cookbook.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/cookbook.bundle.js"
+    },
     "home.bundle.js": {
       "name": "home.bundle.js",
       "path": "/Users/laydo/github/laydonet/static/dist/home.bundle.js"
@@ -89,6 +93,9 @@
     ],
     "blog": [
       "blog.bundle.js"
+    ],
+    "cookbook": [
+      "cookbook.bundle.js"
     ],
     "home": [
       "home.bundle.js"

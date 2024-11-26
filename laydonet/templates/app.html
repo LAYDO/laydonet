@@ -58,6 +58,12 @@
     {% block page_backgrounds %}{% endblock %}
     <div class="laydo-flex-home">
       <div class="laydo-flex-home" id="laydoHomeOne">
+        <div id="messageModal" class="modal">
+          <div id="modalContainer" class="modal-content">
+            <div id="messageContent" class="alert"></div>
+            <div class="close" id="message_close">OK</div>
+          </div>
+        </div>
         {% block laydo_content_1 %}
         {% endblock %}
       </div>

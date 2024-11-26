@@ -39,6 +39,7 @@ module.exports = {
         our_story: ['./static/wedding/js/ourstory.js'],
         webgl: ['./static/webgl/js/WebGL.ts', './static/webgl/js/webbers.js', './static/webgl/js/init-buffers.js', './static/webgl/js/draw-scene.js'],
         ai: ['./static/ai/js/chat.js'],
+        cookbook: ['./static/cookbook/js/cooky.ts', './static/cookbook/js/Cookbook.ts', './static/cookbook/js/Recipe.ts'],
     },
     mode: 'development',
     cache: false,
