@@ -9,19 +9,7 @@ def cookbook(request):
 
 def recipe_list(request):
     recipes = Recipe.objects.all().order_by('-created_on')
-    result = []
-    for recipe in recipes:
-        result.append({
-            'id': recipe.id,
-            'title': recipe.title,
-            'category': recipe.category,
-            'ingredients': recipe.ingredients,
-            'time_required': recipe.time_required,
-            'instructions': recipe.instructions,
-            'image': recipe.image.url if recipe.image else None,
-            'created_on': recipe.created_on,
-            'updated_on': recipe.updated_on
-        })
+    result = build_recipe_list(recipes)
     return JsonResponse({"recipes": result})
 
 def recipe_detail(request, pk):
@@ -31,21 +19,7 @@ def recipe_detail(request, pk):
 def recipe_search(request):
     query = request.GET.get('q')
     recipes = Recipe.objects.filter(title__icontains=query).order_by('-created_on')
-    result = []
-    for r in recipes:
-        result.append(
-            {
-                "id": r.id,
-                "title": r.title,
-                "category": r.category,
-                "ingredients": r.ingredients,
-                "time_required": r.time_required,
-                "instructions": r.instructions,
-                "image": r.image.url if r.image else None,
-                "created_on": r.created_on,
-                "updated_on": r.updated_on,
-            }
-        )
+    result = build_recipe_list(recipes)
     return JsonResponse({'recipes': result})
 
 @require_http_methods(["POST"])
@@ -61,19 +35,21 @@ def recipe_add(request):
     recipe = {'title': title, 'category': category, 'ingredients': ingredients, 'time_required': time_required, 'instructions': instructions}
     Recipe.objects.create(title=title, category=category, ingredients=ingredients, time_required=time_required, instructions=instructions, image=image)
     recipes = Recipe.objects.all().order_by('-created_on')
-    result = []
-    for r in recipes:
-        result.append(
-            {
-                "id": r.id,
-                "title": r.title,
-                "category": r.category,
-                "ingredients": r.ingredients,
-                "time_required": r.time_required,
-                "instructions": r.instructions,
-                "image": r.image.url if r.image else None,
-                "created_on": r.created_on,
-                "updated_on": r.updated_on,
-            }
-        )
+    result = build_recipe_list(recipes)
     return JsonResponse({'message': 'Recipe added successfully!', 'recipe_created': recipe, 'recipes': result})
+
+def build_recipe_list(recipes):
+    result = []
+    for recipe in recipes:
+        result.append({
+            'id': recipe.id,
+            'title': recipe.title,
+            'category': recipe.category,
+            'ingredients': recipe.ingredients,
+            'time_required': recipe.time_required,
+            'instructions': recipe.instructions,
+            'image': recipe.image.url if recipe.image else None,
+            'created_on': recipe.created_on,
+            'updated_on': recipe.updated_on
+        })
+    return result
