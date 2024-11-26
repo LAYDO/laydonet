@@ -60,6 +60,7 @@ function postFetch(url: string, _body: Object = {}) {
         return data;
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
+        return error;
     })
 }
 

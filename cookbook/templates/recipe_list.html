@@ -1,0 +1,10 @@
+{% extends "app.html" %}{% load static %}
+{% block page_head %}
+<link rel="stylesheet" href="{% static 'cookbook/css/cookbook.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div id="cookbookContainer"></div>
+{% endblock %}
+{% block page_scripts %}
+<script type="text/javascript" src="{% static '/dist/cookbook.bundle.js' %}"></script>
+{% endblock %}

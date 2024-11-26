@@ -1,0 +1,442 @@
+.laydo-button {
+    width: auto;
+    margin: 1rem;
+}
+
+.cook-add,
+.cook-search,
+.cook-search-cancel {
+    background-color: var(--color-primary);
+    color: var(--font-color);
+    border: none;
+    padding: 0.5rem;
+    width: auto;
+    cursor: pointer;
+    font-size: 1.5rem;
+}
+
+.cook-search-cancel {
+    display: none;
+}
+
+.cook-input {
+    font-size: 1rem;
+    min-height: 1.25rem;
+    margin-right: 1rem;
+    text-align: start;
+    width: 100%;
+    padding: 0.75rem 0.5rem;
+    border-bottom: 0.125rem solid var(--font-faded);
+}
+
+.cook-input:focus {
+    outline: none;
+}
+
+.cook-input:empty:before {
+    content: attr(data-placeholder);
+    color: var(--font-faded);
+}
+
+/* Modal styles */
+.cook-modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.cook-modal-content {
+    background-color: var(--color-primary);
+    margin: 5% auto;
+    padding: 1rem;
+    border: 1px solid var(--font-color);
+    width: 80%;
+    max-width: 600px;
+    position: relative;
+}
+
+.cook-modal-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    color: var(--font-color);
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cook-modal-close:hover {
+    color: var(--font-faded);
+}
+
+#recipeForm label {
+    display: block;
+    margin-top: 0.5rem;
+}
+
+#recipeForm input[type="text"],
+#recipeForm input[type="number"],
+#recipeForm textarea {
+    width: 90%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid var(--font-faded);
+    background-color: var(--color-primary);
+    color: var(--font-color);
+}
+
+#recipeForm input[type="submit"] {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-primary);
+    color: var(--font-color);
+    border: none;
+    cursor: pointer;
+}
+
+.laydo-text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.laydo-loading-container {
+    min-width: 6rem;
+    min-height: 6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+.laydo-loading {
+    border: 0.25rem solid var(--font-color);
+    border-top: 0.25rem solid var(--glass-backdrop);
+    border-radius: 50%;
+    width: 1.5rem;
+    height: 1.5rem;
+    animation: spin 1s linear infinite;
+    margin: 0.5rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.container div {
+    position: absolute;
+    width: 5.625rem;
+    height: 3.1875rem;
+}
+
+.container div:nth-of-type(2) {
+    transform: rotate(60deg);
+}
+
+.container div:nth-of-type(3) {
+    transform: rotate(-60deg);
+}
+
+.container div div {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.container div div span {
+    position: absolute;
+    width: 4px;
+    height: 0%;
+    background: var(--font-color);
+    z-index: 999999;
+}
+
+.h1 {
+    left: 0;
+    animation: load1 3.6s ease infinite;
+}
+
+.h2 {
+    right: 0;
+    animation: load2 3.6s ease 0.3s infinite;
+}
+
+.h3 {
+    right: 0;
+    animation: load3 3.6s ease 0.6s infinite;
+}
+
+.h4 {
+    right: 0;
+    animation: load4 3.6s ease 0.9s infinite;
+}
+
+.h5 {
+    left: 0;
+    animation: load5 3.6s ease 1.2s infinite;
+}
+
+.h6 {
+    left: 0;
+    animation: load6 3.6s ease 1.5s infinite;
+}
+
+.laydo-step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background-color: var(--glass-backdrop);
+    border-radius: 1rem;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.laydo-step-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0.5rem;
+}
+
+.laydo-step-text {
+    font-size: 1rem;
+    margin: 0.5rem;
+    text-align: start;
+}
+
+@keyframes load1 {
+    0% {
+        bottom: 0;
+        height: 0;
+    }
+
+    6.944444444% {
+        bottom: 0;
+        height: 100%;
+    }
+
+    50% {
+        top: 0;
+        height: 100%;
+    }
+
+    59.944444433% {
+        top: 0;
+        height: 0;
+    }
+
+    /*   91.6666667%{top:0;height:0%;} */
+}
+
+@keyframes load2 {
+    0% {
+        top: 0;
+        height: 0;
+    }
+
+    6.944444444% {
+        top: 0;
+        height: 100%;
+    }
+
+    50% {
+        bottom: 0;
+        height: 100%;
+    }
+
+    59.944444433% {
+        bottom: 0;
+        height: 0;
+    }
+
+    /*   91.6666667%{bottom:0;height:0%} */
+}
+
+@keyframes load3 {
+    0% {
+        top: 0;
+        height: 0;
+    }
+
+    6.944444444% {
+        top: 0;
+        height: 100%;
+    }
+
+    50% {
+        bottom: 0;
+        height: 100%;
+    }
+
+    59.94444443% {
+        bottom: 0;
+        height: 0;
+    }
+
+    /*   91.6666667%{bottom:0;height:0%;} */
+}
+
+@keyframes load4 {
+    0% {
+        top: 0;
+        height: 0;
+    }
+
+    6.944444444% {
+        top: 0;
+        height: 100%;
+    }
+
+    50% {
+        bottom: 0;
+        height: 100%;
+    }
+
+    59.94444443% {
+        bottom: 0;
+        height: 0;
+    }
+
+    /*   91.6666667%{bottom:0;height:0%;} */
+}
+
+@keyframes load5 {
+    0% {
+        bottom: 0;
+        height: 0;
+    }
+
+    6.944444444% {
+        bottom: 0;
+        height: 100%;
+    }
+
+    50% {
+        top: 0;
+        height: 100%;
+    }
+
+    59.94444443% {
+        top: 0;
+        height: 0;
+    }
+
+    /*   91.6666667%{top:0;height:0%;} */
+}
+
+@keyframes load6 {
+    0% {
+        bottom: 0;
+        height: 0;
+    }
+
+    6.944444444% {
+        bottom: 0;
+        height: 100%;
+    }
+
+    50% {
+        top: 0;
+        height: 100%;
+    }
+
+    59.94444443% {
+        top: 0;
+        height: 0;
+    }
+
+    /*   91.6666667%{top:0;height:0%;} */
+}
+
+.laydo-recipe-item {
+    min-width: 75%;
+    border: 0.125rem solid var(--font-faded);
+    cursor: pointer;
+}
+
+.laydo-recipe-left {
+    min-height: 3rem;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+    min-width: 20%;
+}
+.laydo-recipe-middle {
+    width: 70%;
+}
+
+.laydo-recipe-right {
+    margin-right: 1rem;
+}
+
+.laydo-middle-title {
+    font-size: 1.5rem;
+}
+
+.laydo-middle-ingredients {
+    color: var(--font-faded);
+    font-size: 0.75rem;
+    align-items: end;
+}
+
+.cook-search-container {
+    min-width: 50%;
+}
+
+.cook-detail-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 50%;
+}
+
+.cook-detail-ingreds,
+.cook-detail-instructs {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
+
+@media only screen and (max-width: 48rem) {
+    .cook-search-container,
+    .cook-detail-container {
+        min-width: 75%;
+    }
+    .laydo-recipe-middle {
+        width: 60%;
+    }
+    .laydo-recipe-left {
+        font-size: 1rem;
+    }
+    .laydo-recipe-item {
+        min-width: 100%;
+    }
+    .laydo-recipe-right {
+        margin-right: 0.25rem;
+    }
+}
+
+.laydo-flex-home {
+    align-items: center;
+}
+
+.cook-align-start {
+    text-align: start;
+}
+
+#cookbookContainer {
+    min-width: 90%;
+}

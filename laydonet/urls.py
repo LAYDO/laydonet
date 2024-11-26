@@ -37,4 +37,5 @@ urlpatterns = [
     path('about/', include('about.urls')),
     path('webgl/', include('webgl.urls')),
     path('ai/', include('ai.urls')),
+    path('cookbook/', include('cookbook.urls')),
 ]
