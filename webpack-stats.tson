@@ -61,6 +61,10 @@
       "name": "schedule.bundle.js",
       "path": "/Users/laydo/github/laydonet/static/dist/schedule.bundle.js"
     },
+    "sports.bundle.js": {
+      "name": "sports.bundle.js",
+      "path": "/Users/laydo/github/laydonet/static/dist/sports.bundle.js"
+    },
     "weather.bundle.js": {
       "name": "weather.bundle.js",
       "path": "/Users/laydo/github/laydonet/static/dist/weather.bundle.js"
@@ -123,6 +127,9 @@
     ],
     "schedule": [
       "schedule.bundle.js"
+    ],
+    "sports": [
+      "sports.bundle.js"
     ],
     "weather": [
       "weather.bundle.js"

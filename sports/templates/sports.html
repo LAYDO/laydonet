@@ -1,0 +1,12 @@
+{% extends "app.html" %} {% load static %} {% block page_head %}
+<link rel="stylesheet" href="{% static 'sports/css/sports.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div id="sportsElements" class="laydo-app"></div>
+{% endblock %}
+{% block laydo_footer %}
+<div id="credits" class="sub-data">Sports data provided by <a href="https://www.espn.com">ESPN</a></div>
+{% endblock %}
+{% block page_scripts %}
+<script type="module" src="{% static '/dist/sports.bundle.js' %}"></script>
+{% endblock %}
