@@ -1,0 +1,50 @@
+.sports-widget {
+    background-color: var(--glass-backdrop);
+    padding: 10px;
+    margin: 1rem;
+    border-radius: 1rem;
+    width: 50%;
+    justify-content: space-between;
+    border: 0.125rem solid var(--font-color);
+    color: #fff8ed;
+}
+
+.sport-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 1rem;
+    margin-right: 1.5rem;
+    display: block;
+}
+
+.team-name {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.team-record-standing {
+    display: flex;
+    flex-direction: column;
+}
+
+.team-record {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.team-standing {
+    text-align: center;
+    font-size: 1rem;
+}
+
+.team-next-event-date {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+@media only screen and (max-width: 48rem) {
+    .sports-widget {
+        width: 80%;
+    }
+    
+}

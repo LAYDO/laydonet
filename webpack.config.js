@@ -40,6 +40,7 @@ module.exports = {
         webgl: ['./static/webgl/js/WebGL.ts', './static/webgl/js/webbers.js', './static/webgl/js/init-buffers.js', './static/webgl/js/draw-scene.js'],
         ai: ['./static/ai/js/chat.js'],
         cookbook: ['./static/cookbook/js/cooky.ts', './static/cookbook/js/cookbook.ts', './static/cookbook/js/Recipe.ts'],
+        sports: ['./static/sports/js/sports.ts', './static/sports/js/SportsWidgets.ts'],
     },
     mode: 'development',
     cache: false,

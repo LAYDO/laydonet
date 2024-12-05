@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "webgl",
     "ai",
     "cookbook",
+    "sports",
 ]
 
 WEBPACK_LOADER = {

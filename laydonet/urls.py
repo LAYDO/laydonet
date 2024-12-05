@@ -38,4 +38,5 @@ urlpatterns = [
     path('webgl/', include('webgl.urls')),
     path('ai/', include('ai.urls')),
     path('cookbook/', include('cookbook.urls')),
+    path('sports/', include('sports.urls')),
 ]
