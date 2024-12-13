@@ -1,10 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import requests, json
-from datetime import datetime
-from zoneinfo import ZoneInfo
 
 NFL_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
+COLLEGE_FOOTBALL_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
 
 # Create your views here.
 def sports(request):
@@ -17,20 +16,30 @@ def getNFLTeam(request, id: int):
 
     if response.status_code != 200:
         return JsonResponse({"error": "Failed to fetch team data"}, status=500)
-    
+
     data = json.loads(response.text)
 
-    user_timezone = request.GET.get("tz", "UTC")
-    try:
-        user_tz = ZoneInfo(user_timezone)
-    except Exception:
-        user_tz = ZoneInfo("UTC")
+    status = data["team"]["nextEvent"][0]["competitions"][0]["status"]["type"]["name"]
+    if (status == "STATUS_SCHEDULED" or status == "STATUS_IN_PROGRESS"):
+        nextEvent = data["team"]["nextEvent"][0]["shortName"]
+        nextEventDate = data["team"]["nextEvent"][0]["date"]
+        broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+    elif (status == "STATUS_FINAL"):
+        week = data["team"]["nextEvent"][0]["week"]["number"] + 1
+        scheduleURL = f"{NFL_TEAM_URL}/{id}/schedule?season="
+        currYear = data["team"]["nextEvent"][0]["date"].split("-")[0]
+        scheduleURL += currYear
+        response = requests.get(scheduleURL)
+        schedData = json.loads(response.text)
+        byeWeek = schedData["byeWeek"]
+        if (week > byeWeek):
+            week -= 2
+        else:
+            week -= 1
+        nextEvent = schedData["events"][week]["shortName"]
+        nextEventDate = schedData["events"][week]["date"]
+        broadcast = schedData["events"][week]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
 
-
-    # Convert date to local time
-    utc_date = datetime.fromisoformat(data["team"]["nextEvent"][0]["date"])
-    local_date = utc_date.astimezone(user_tz)
-    formatted_date = local_date.strftime("%m/%d %I:%M %p")
     team = {
         "id": id,
         "name": data["team"]["displayName"],
@@ -39,8 +48,9 @@ def getNFLTeam(request, id: int):
         "alternateColor": data["team"]["alternateColor"],
         "record": data["team"]["record"]["items"][0]["summary"],
         "standing": data["team"]["standingSummary"],
-        "nextEvent": data["team"]["nextEvent"][0]["shortName"],
-        "nextEventDate": formatted_date,
+        "nextEvent": nextEvent,
+        "nextEventDate": nextEventDate,
+        "nextEventBroadcast": broadcast,
     }
     return JsonResponse(team)
 
@@ -61,3 +71,47 @@ def getNFLTeams():
             "nextEventDate": team["team"]["nextEvent"][0]["date"],
         })
     return JsonResponse(teams)
+
+def getCollegeFootballTeam(request, id: int):
+    url = f"{COLLEGE_FOOTBALL_TEAM_URL}/{id}"
+    response = requests.get(url)
+
+    if response.status_code != 200:
+        return JsonResponse({"error": "Failed to fetch team data"}, status=500)
+
+    data = json.loads(response.text)
+
+    status = data["team"]["nextEvent"][0]["competitions"][0]["status"]["type"]["name"]
+    if (status == "STATUS_SCHEDULED" or status == "STATUS_IN_PROGRESS"):
+        nextEvent = data["team"]["nextEvent"][0]["shortName"]
+        nextEventDate = data["team"]["nextEvent"][0]["date"]
+        broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+    elif (status == "STATUS_FINAL"):
+        week = data["team"]["nextEvent"][0]["week"]["number"] + 1
+        scheduleURL = f"{COLLEGE_FOOTBALL_TEAM_URL}/{id}/schedule?season="
+        currYear = data["team"]["nextEvent"][0]["date"].split("-")[0]
+        scheduleURL += currYear
+        response = requests.get(scheduleURL)
+        schedData = json.loads(response.text)
+        byeWeek = schedData["byeWeek"]
+        if (week > byeWeek):
+            week -= 2
+        else:
+            week -= 1
+        nextEvent = schedData["events"][week]["shortName"]
+        nextEventDate = schedData["events"][week]["date"]
+        broadcast = schedData["events"][week]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+
+    team = {
+        "id": id,
+        "name": data["team"]["displayName"],
+        "logo": data["team"]["logos"][1]["href"],
+        "color": data["team"]["color"],
+        "alternateColor": data["team"]["alternateColor"],
+        "record": data["team"]["record"]["items"][0]["summary"],
+        "standing": data["team"]["standingSummary"],
+        "nextEvent": nextEvent,
+        "nextEventDate": nextEventDate,
+        "nextEventBroadcast": broadcast,
+    }
+    return JsonResponse(team)

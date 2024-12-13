@@ -1,3 +1,11 @@
+const options: Intl.DateTimeFormatOptions = {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+};
+
 export abstract class SportsWidget {
     container: HTMLElement;
     widget: HTMLElement;
@@ -17,8 +25,6 @@ export abstract class SportsWidget {
         this.container.appendChild(this.widget);
     }
     
-    // protected abstract fetchData(id: number, league: string, timeZone: string): void;
-
     protected abstract populateWidget(): void;
 }
 
@@ -33,6 +39,7 @@ export class TeamWidget extends SportsWidget {
     teamStanding: string;
     teamNextEvent: string;
     teamNextEventDate: string;
+    teamNextEventBroadcast: string;
 
     // nameElement: HTMLElement;
 
@@ -45,8 +52,9 @@ export class TeamWidget extends SportsWidget {
     nextEventElement: HTMLElement;
     nextEventDateElement: HTMLElement;
     nextEventOpponentElement: HTMLElement;
+    nextEventBroadcastElement: HTMLElement;
 
-    constructor(container: HTMLElement, id: number, league: string, timeZone: string) {
+    constructor(container: HTMLElement, id: number, league: string) {
         super(container);
         this.teamId = id;
         this.teamLeague = league;
@@ -58,6 +66,7 @@ export class TeamWidget extends SportsWidget {
         this.teamStanding = '';
         this.teamNextEvent = '';
         this.teamNextEventDate = '';
+        this.teamNextEventBroadcast = '';
 
         // this.nameElement = document.createElement('div');
         // this.nameElement.classList.add('team-name');
@@ -87,18 +96,24 @@ export class TeamWidget extends SportsWidget {
         this.nextEventOpponentElement.classList.add('team-next-event-opponent');
         this.nextEventElement.appendChild(this.nextEventOpponentElement);
 
-        this.fetchData(this.teamId, this.teamLeague, timeZone);
+        this.nextEventBroadcastElement = document.createElement('div');
+        this.nextEventBroadcastElement.classList.add('team-next-event-broadcast');
+        this.nextEventElement.appendChild(this.nextEventBroadcastElement);
+
+        this.fetchData(this.teamId, this.teamLeague);
     }
 
-    fetchData(id: number, league: string, timeZone: string) {
+    fetchData(id: number, league: string) {
         let url = window.location.href;
-        url = `${url}${league}/${id}/?tz=${timeZone}`;
+        url = `${url}${league}/${id}/`;
         fetch(url).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         }).then(data => {
+            let utcDate = new Date(data['nextEventDate']);
+            let localDate = utcDate.toLocaleString('en-US', options);
             this.teamName = data['name'];
             this.teamLogo = data['logo'];
             this.teamColor = data['color'];
@@ -106,7 +121,8 @@ export class TeamWidget extends SportsWidget {
             this.teamRecord = data['record'];
             this.teamStanding = data['standing'];
             this.teamNextEvent = data['nextEvent'];
-            this.teamNextEventDate = data['nextEventDate'];
+            this.teamNextEventDate = localDate;
+            this.teamNextEventBroadcast = data['nextEventBroadcast'];
             this.populateWidget();
         }).catch(error => {
             console.error('There has been a problem with your fetch operation: ', error);
@@ -121,13 +137,20 @@ export class TeamWidget extends SportsWidget {
         this.standingElement.textContent = this.teamStanding;
         this.nextEventDateElement.textContent = this.teamNextEventDate;
         this.nextEventOpponentElement.textContent = this.teamNextEvent;
+        this.nextEventBroadcastElement.textContent = this.teamNextEventBroadcast;
         this.widget.style.backgroundColor = `#${this.teamColor}`;
         this.widget.style.borderColor = `#${this.teamAltColor}`;
     }
 }
 
 export class NFLTeamWidget extends TeamWidget {
-    constructor(container: HTMLElement, id: number, timeZone: string) {
-        super(container, id, 'nfl', timeZone);
+    constructor(container: HTMLElement, id: number) {
+        super(container, id, 'nfl');
+    }
+}
+
+export class CollegeFootballTeamWidget extends TeamWidget {
+    constructor(container: HTMLElement, id: number) {
+        super(container, id, 'college-football');
     }
 }
