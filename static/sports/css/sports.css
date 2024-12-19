@@ -9,6 +9,13 @@
     color: #fff8ed;
 }
 
+.sports-widget-loading {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--glass-backdrop);
+    animation: loadingShimmer 1s linear infinite alternate;
+}
+
 .sport-logo {
     width: 100px;
     height: 100px;
@@ -57,4 +64,14 @@
         width: 80%;
     }
     
+}
+
+@keyframes loadingShimmer {
+    0% {
+        background-color: var(--glass-backdrop);
+    }
+
+    100% {
+        background-color: hsla(204, 20%, 95%, 0.689);
+    }
 }
