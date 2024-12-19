@@ -41,8 +41,6 @@ export class TeamWidget extends SportsWidget {
     teamNextEventDate: string;
     teamNextEventBroadcast: string;
 
-    // nameElement: HTMLElement;
-
     // Elements for the record and standing
     recordStandingElement: HTMLElement;
     recordElement: HTMLElement;
@@ -67,10 +65,6 @@ export class TeamWidget extends SportsWidget {
         this.teamNextEvent = '';
         this.teamNextEventDate = '';
         this.teamNextEventBroadcast = '';
-
-        // this.nameElement = document.createElement('div');
-        // this.nameElement.classList.add('team-name');
-        // this.widget.appendChild(this.nameElement);
 
         this.recordStandingElement = document.createElement('div');
         this.recordStandingElement.classList.add('team-record-standing');
@@ -106,6 +100,7 @@ export class TeamWidget extends SportsWidget {
     fetchData(id: number, league: string) {
         let url = window.location.href;
         url = `${url}${league}/${id}/`;
+        this.widget.classList.add("sports-widget-loading");
         fetch(url).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -120,19 +115,25 @@ export class TeamWidget extends SportsWidget {
             this.teamAltColor = data['alternateColor'];
             this.teamRecord = data['record'];
             this.teamStanding = data['standing'];
-            this.teamNextEvent = data['nextEvent'];
-            this.teamNextEventDate = localDate;
-            this.teamNextEventBroadcast = data['nextEventBroadcast'];
+            if (data['nextEvent'] === "Off Season") {
+                this.teamNextEvent = "Off Season";
+                this.teamNextEventDate = "";
+                this.teamNextEventBroadcast = "";
+            } else {
+                this.teamNextEvent = data['nextEvent'];
+                this.teamNextEventDate = localDate;
+                this.teamNextEventBroadcast = data['nextEventBroadcast'];
+            }
             this.populateWidget();
         }).catch(error => {
             console.error('There has been a problem with your fetch operation: ', error);
+            this.widget.classList.remove("sports-widget-loading");
         });
     }
 
     populateWidget() {
         this.logoElement.src = this.teamLogo;
         this.logoElement.alt = this.teamName;
-        // this.nameElement.textContent = this.teamName;
         this.recordElement.textContent = this.teamRecord;
         this.standingElement.textContent = this.teamStanding;
         this.nextEventDateElement.textContent = this.teamNextEventDate;
@@ -140,6 +141,7 @@ export class TeamWidget extends SportsWidget {
         this.nextEventBroadcastElement.textContent = this.teamNextEventBroadcast;
         this.widget.style.backgroundColor = `#${this.teamColor}`;
         this.widget.style.borderColor = `#${this.teamAltColor}`;
+        this.widget.classList.remove("sports-widget-loading");
     }
 }
 
@@ -152,5 +154,11 @@ export class NFLTeamWidget extends TeamWidget {
 export class CollegeFootballTeamWidget extends TeamWidget {
     constructor(container: HTMLElement, id: number) {
         super(container, id, 'college-football');
+    }
+}
+
+export class MLBTeamWidget extends TeamWidget {
+    constructor(container: HTMLElement, id: number) {
+        super(container, id, 'mlb');
     }
 }
