@@ -212,6 +212,7 @@
     .team-header,
     .team-body {
         width: 88%;
+        border: 0.125rem solid var(--font-color);
     }
 }
 
