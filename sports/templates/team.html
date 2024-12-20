@@ -1,0 +1,18 @@
+{% extends "app.html" %} {% load static %} {% block page_head %}
+<link rel="stylesheet" href="{% static 'sports/css/sports.css' %}" />
+{% endblock %}
+{% block laydo_content_1 %}
+<div id="context-data" style="display:none;" data-team-id="{{ id }}" data-league="{{ league }}"
+    data-name="{{ name }}" data-logo="{{ logo }}"
+    data-color="{{ color }}" data-alt-color="{{ alternateColor }}" data-record="{{ record }}"
+    data-standing="{{ standing }}" data-next-event="{{ nextEvent }}" data-next-event-date="{{ nextEventDate }}"
+    data-next-event-broadcast="{{ nextEventBroadcast }}">
+</div>
+<div id="sportsTeamPage" class="laydo-app team-container"></div>
+{% endblock %}
+{% block laydo_footer %}
+<div id="credits" class="sub-data">Sports data provided by <a href="https://www.espn.com">ESPN</a></div>
+{% endblock %}
+{% block page_scripts %}
+<script type="module" src="{% static '/dist/sports.bundle.js' %}"></script>
+{% endblock %}

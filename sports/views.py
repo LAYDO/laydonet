@@ -12,6 +12,17 @@ MLB_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams
 def sports(request):
     return render(request, "sports.html")
 
+def team(request, league: str, id: int):
+    if league == "nfl":
+        teamData = getNFLTeam(request, id)
+    elif league == "college-football":
+        teamData = getCollegeFootballTeam(request, id)
+    elif league == "mlb":
+        teamData = getMLBTeam(request, id)
+    # Convert the JsonResponse to a dictionary
+    teamData = json.loads(teamData.content)
+    return render(request, "team.html", teamData)
+
 class BaseTeam(ABC, View):
     @property
     @abstractmethod
