@@ -67,32 +67,34 @@ export class TeamWidget extends SportsWidget {
         this.teamNextEventBroadcast = '';
 
         this.recordStandingElement = document.createElement('div');
-        this.recordStandingElement.classList.add('team-record-standing');
+        this.recordStandingElement.classList.add('sports-record-standing');
         this.widget.appendChild(this.recordStandingElement);
 
         this.recordElement = document.createElement('div');
-        this.recordElement.classList.add('team-record');
+        this.recordElement.classList.add('sports-record');
         this.recordStandingElement.appendChild(this.recordElement);
 
         this.standingElement = document.createElement('div');
-        this.standingElement.classList.add('team-standing');
+        this.standingElement.classList.add('sports-standing');
         this.recordStandingElement.appendChild(this.standingElement);
 
         this.nextEventElement = document.createElement('div');
-        this.nextEventElement.classList.add('team-next-event');
+        this.nextEventElement.classList.add('sports-next-event');
         this.widget.appendChild(this.nextEventElement);
 
         this.nextEventDateElement = document.createElement('div');
-        this.nextEventDateElement.classList.add('team-next-event-date');
+        this.nextEventDateElement.classList.add('sports-next-event-date');
         this.nextEventElement.appendChild(this.nextEventDateElement);
 
         this.nextEventOpponentElement = document.createElement('div');
-        this.nextEventOpponentElement.classList.add('team-next-event-opponent');
+        this.nextEventOpponentElement.classList.add('sports-next-event-opponent');
         this.nextEventElement.appendChild(this.nextEventOpponentElement);
 
         this.nextEventBroadcastElement = document.createElement('div');
-        this.nextEventBroadcastElement.classList.add('team-next-event-broadcast');
+        this.nextEventBroadcastElement.classList.add('sports-next-event-broadcast');
         this.nextEventElement.appendChild(this.nextEventBroadcastElement);
+
+        this.widget.addEventListener('click', () => this.openTeamPage());
 
         this.fetchData(this.teamId, this.teamLeague);
     }
@@ -142,6 +144,10 @@ export class TeamWidget extends SportsWidget {
         this.widget.style.backgroundColor = `#${this.teamColor}`;
         this.widget.style.borderColor = `#${this.teamAltColor}`;
         this.widget.classList.remove("sports-widget-loading");
+    }
+
+    openTeamPage() {
+        window.location.pathname = `sports/${this.teamLeague}/team/${this.teamId}/`;
     }
 }
 
