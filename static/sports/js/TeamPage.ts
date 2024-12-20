@@ -139,10 +139,10 @@ export class TeamPage {
         this.nextEventBroadcastElement.innerText = this.nextEventBroadcast;
 
         this.headerElement.style.backgroundImage = `linear-gradient(#${this.color} 70%, var(--color-primary) 100%)`;
-        // this.headerElement.style.borderColor = `#${this.altColor}`;
-        // this.headerElement.style.borderStyle = 'solid';
-        // this.headerElement.style.borderWidth = '0.125rem';
-        // this.headerElement.style.borderBottom = '0';
+        this.headerElement.style.borderLeft = `0.125rem solid #${this.altColor}`;
+        this.headerElement.style.borderRight = `0.125rem solid #${this.altColor}`;
+        this.headerElement.style.borderTop = `0.125rem solid #${this.altColor}`;
+        this.headerElement.style.borderBottom = '0';
         this.bodyElement.style.borderColor = `#${this.altColor}`;
         this.bodyElement.style.borderStyle = 'solid';
         this.bodyElement.style.borderWidth = '0.125rem';
