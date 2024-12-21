@@ -1,3 +1,11 @@
+const options: Intl.DateTimeFormatOptions = {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+};
+
 class Utils {
     static svgns: "http://www.w3.org/2000/svg";
 
@@ -85,4 +93,9 @@ function metricPost(url: string, action: string, target: string) {
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
+}
+
+export function convertToLocalDatetime(utcDateStr: string) {
+    const localDate = new Date(utcDateStr);
+    return localDate.toLocaleString('en-US', options);
 }
