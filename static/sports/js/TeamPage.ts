@@ -138,14 +138,16 @@ export class TeamPage {
         this.nextEventDateElement.innerText = this.nextEventDate;
         this.nextEventBroadcastElement.innerText = this.nextEventBroadcast;
 
+        // this.headerElement.style.borderLeft = `0.125rem solid #${this.altColor}`;
+        // this.headerElement.style.borderRight = `0.125rem solid #${this.altColor}`;
+        // this.headerElement.style.borderTop = `0.125rem solid #${this.altColor}`;
         this.headerElement.style.backgroundImage = `linear-gradient(#${this.color} 70%, var(--color-primary) 100%)`;
-        this.headerElement.style.borderLeft = `0.125rem solid #${this.altColor}`;
-        this.headerElement.style.borderRight = `0.125rem solid #${this.altColor}`;
-        this.headerElement.style.borderTop = `0.125rem solid #${this.altColor}`;
-        this.headerElement.style.borderBottom = '0';
-        this.bodyElement.style.borderColor = `#${this.altColor}`;
-        this.bodyElement.style.borderStyle = 'solid';
-        this.bodyElement.style.borderWidth = '0.125rem';
-        this.bodyElement.style.borderTop = '0';
+        // this.headerElement.style.borderBottom = '0';
+        // this.bodyElement.style.borderLeft = `0.125rem solid #${this.altColor}`;
+        // this.bodyElement.style.borderRight = `0.125rem solid #${this.altColor}`;
+        // this.bodyElement.style.borderBottom = `0.125rem solid #${this.altColor}`;
+        // this.bodyElement.style.borderTop = '0';
+
+        this.container.style.border = `0.125rem solid #${this.altColor}`;
     }
 }
