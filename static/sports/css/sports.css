@@ -60,13 +60,10 @@
     flex-direction: row;
     justify-content: start;
     align-items: center;
-    border-top: 0.125rem solid var(--font-color);
-    border-right: 0.125rem solid var(--font-color);
-    border-left: 0.125rem solid var(--font-color);
     border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
-    width: 94%;
-    padding: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
 }
 
 .team-logo {
@@ -112,14 +109,11 @@
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    border-right: 0.125rem solid var(--font-color);
-    border-left: 0.125rem solid var(--font-color);
-    border-bottom: 0.125rem solid var(--font-color);
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
-    width: 94%;
+    width: 100%;
     background-color: var(--color-primary);
-    padding: 1rem;
+    /* padding: 1rem; */
 }
 
 .team-container {
@@ -127,6 +121,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 96%;
+    border-radius: 1rem;
 }
 
 .team-next-event-container {
@@ -136,7 +132,6 @@
     align-items: center;
     width: 49%;
     background-color: var(--glass-backdrop);
-    min-height: 35rem;
 }
 
 .team-next-event {
@@ -168,7 +163,6 @@
     align-items: center;
     width: 49%;
     background-color: var(--glass-backdrop);
-    min-height: 35rem;
 }
 
 .team-standings-container,
@@ -182,12 +176,12 @@
     width: 96%;
 }
 
-.team-standings-container {
+/* .team-standings-container {
     min-height: 15vh;
 }
 .team-schedule-container {
     height: 35vh;
-}
+} */
 
 @media only screen and (max-width: 48rem) {
     .sports-widget {
@@ -196,7 +190,6 @@
 
     .team-next-event-container,
     .team-season-results-container {
-        min-height: 25rem;
         width: 100%;
     }
     .team-body {
@@ -209,11 +202,11 @@
     .team-name {
         font-size: 1.25em;
     }
-    .team-header,
+    /* .team-header,
     .team-body {
         width: 88%;
         border: 0.125rem solid var(--font-color);
-    }
+    } */
 }
 
 @keyframes loadingShimmer {
