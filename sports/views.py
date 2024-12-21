@@ -4,8 +4,17 @@ from django.views import View
 import requests, json
 from abc import ABC, abstractmethod
 
+# ESPN API URLs
+########################################################################################
+
+# NFL
 NFL_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
+NFL_EVENT_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event="
+
+# College Football
 COLLEGE_FOOTBALL_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
+
+# MLB
 MLB_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams"
 
 # Create your views here.
@@ -46,25 +55,59 @@ class BaseTeam(ABC, View):
             return JsonResponse(data, status=status)
         processed_data = self.process_data(data, id)
         return JsonResponse(processed_data)
-    
+
 class GetNFLTeam(BaseTeam):
     @property
     def team_url(self):
         return NFL_TEAM_URL
-    
+
     def process_data(self, data, id: int):
         status = data["team"]["nextEvent"][0]["competitions"][0]["status"]["type"]["name"]
+        scheduleURL = f"{NFL_TEAM_URL}/{id}/schedule?season="
+        currYear = data["team"]["nextEvent"][0]["date"].split("-")[0]
+        scheduleURL += currYear
+        response = requests.get(scheduleURL)
+        schedData = json.loads(response.text)
+        scheduleList = []
+        for event in schedData["events"]:
+            comp = event["competitions"][0]
+            teamHome = comp["competitors"][0]["team"]["id"] == str(id)
+            vsText = "vs" if teamHome else "@"
+            opponent = comp["competitors"][1]["team"]["abbreviation"] if teamHome else comp["competitors"][0]["team"]["abbreviation"]
+            opponentLogo = comp["competitors"][1]["team"]["logos"][0]["href"] if teamHome else comp["competitors"][0]["team"]["logos"][0]["href"]
+            outcome = ""
+            score = ""
+            if ("winner" in comp["competitors"][0]):
+                outcome = "W" if (teamHome and comp["competitors"][0]["winner"]) or (not teamHome and comp["competitors"][1]["winner"]) else "L"
+                if (comp["competitors"][0]["winner"] == False and comp["competitors"][1]["winner"] == False):
+                    outcome = "T"
+            if ("score" in comp["competitors"][0] and "score" in comp["competitors"][1]):
+                if (comp["competitors"][0]["score"] and comp["competitors"][1]["score"] and comp["competitors"][0]["score"]["value"] > comp["competitors"][1]["score"]["value"]):
+                    score = f"{comp['competitors'][0]['score']['displayValue']} - {comp['competitors'][1]['score']['displayValue']}"
+                elif (comp["competitors"][0]["score"] and comp["competitors"][1]["score"] and comp["competitors"][0]["score"]["value"] < comp["competitors"][1]["score"]["value"]):
+                    score = f"{comp['competitors'][1]['score']['displayValue']} - {comp['competitors'][0]['score']['displayValue']}"
+                else:
+                    score = ""
+            scheduleList.append(
+                {
+                    "shortName": event["shortName"],
+                    "date": event["date"],
+                    "competition": {
+                        "id": comp["id"],
+                        "vsText": vsText,
+                        "opponent": opponent,
+                        "opponentLogo": opponentLogo,
+                        "outcome": outcome,
+                        "score": score,
+                    },
+                }
+            )
         if (status == "STATUS_SCHEDULED" or status == "STATUS_IN_PROGRESS"):
             nextEvent = data["team"]["nextEvent"][0]["shortName"]
             nextEventDate = data["team"]["nextEvent"][0]["date"]
             broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
         elif (status == "STATUS_FINAL"):
             week = data["team"]["nextEvent"][0]["week"]["number"] + 1
-            scheduleURL = f"{NFL_TEAM_URL}/{id}/schedule?season="
-            currYear = data["team"]["nextEvent"][0]["date"].split("-")[0]
-            scheduleURL += currYear
-            response = requests.get(scheduleURL)
-            schedData = json.loads(response.text)
             byeWeek = schedData["byeWeek"]
             if (week > byeWeek):
                 week -= 2
@@ -84,6 +127,8 @@ class GetNFLTeam(BaseTeam):
             "nextEvent": nextEvent,
             "nextEventDate": nextEventDate,
             "nextEventBroadcast": broadcast,
+            "schedule": scheduleList,
+            "seasonYear": currYear,
         }
         return team
 
@@ -91,9 +136,74 @@ class GetCollegeFootballTeam(BaseTeam):
     @property
     def team_url(self):
         return COLLEGE_FOOTBALL_TEAM_URL
-    
+
     def process_data(self, data, id: int):
         status = data["team"]["nextEvent"][0]["competitions"][0]["status"]["type"]["name"]
+        scheduleURL = f"{COLLEGE_FOOTBALL_TEAM_URL}/{id}/schedule?season="
+        currYear = data["team"]["nextEvent"][0]["date"].split("-")[0]
+        scheduleURL += currYear
+        response = requests.get(scheduleURL)
+        schedData = json.loads(response.text)
+        scheduleList = []
+        for event in schedData["events"]:
+            comp = event["competitions"][0]
+            teamHome = comp["competitors"][0]["team"]["id"] == str(id)
+            vsText = "vs" if teamHome else "@"
+            opponent = (
+                comp["competitors"][1]["team"]["abbreviation"]
+                if teamHome
+                else comp["competitors"][0]["team"]["abbreviation"]
+            )
+            opponentLogo = (
+                comp["competitors"][1]["team"]["logos"][0]["href"]
+                if teamHome
+                else comp["competitors"][0]["team"]["logos"][0]["href"]
+            )
+            outcome = ""
+            score = ""
+            if "winner" in comp["competitors"][0]:
+                outcome = (
+                    "W"
+                    if (teamHome and comp["competitors"][0]["winner"])
+                    or (not teamHome and comp["competitors"][1]["winner"])
+                    else "L"
+                )
+                if (
+                    comp["competitors"][0]["winner"] == False
+                    and comp["competitors"][1]["winner"] == False
+                ):
+                    outcome = "T"
+            if "score" in comp["competitors"][0] and "score" in comp["competitors"][1]:
+                if (
+                    comp["competitors"][0]["score"]
+                    and comp["competitors"][1]["score"]
+                    and comp["competitors"][0]["score"]["value"]
+                    > comp["competitors"][1]["score"]["value"]
+                ):
+                    score = f"{comp['competitors'][0]['score']['displayValue']} - {comp['competitors'][1]['score']['displayValue']}"
+                elif (
+                    comp["competitors"][0]["score"]
+                    and comp["competitors"][1]["score"]
+                    and comp["competitors"][0]["score"]["value"]
+                    < comp["competitors"][1]["score"]["value"]
+                ):
+                    score = f"{comp['competitors'][1]['score']['displayValue']} - {comp['competitors'][0]['score']['displayValue']}"
+                else:
+                    score = ""
+            scheduleList.append(
+                {
+                    "shortName": event["shortName"],
+                    "date": event["date"],
+                    "competition": {
+                        "id": comp["id"],
+                        "vsText": vsText,
+                        "opponent": opponent,
+                        "opponentLogo": opponentLogo,
+                        "outcome": outcome,
+                        "score": score,
+                    },
+                }
+            )
         if (status == "STATUS_SCHEDULED" or status == "STATUS_IN_PROGRESS"):
             nextEvent = data["team"]["nextEvent"][0]["shortName"]
             nextEventDate = data["team"]["nextEvent"][0]["date"]
@@ -124,9 +234,11 @@ class GetCollegeFootballTeam(BaseTeam):
             "nextEvent": nextEvent,
             "nextEventDate": nextEventDate,
             "nextEventBroadcast": broadcast,
+            "schedule": scheduleList,
+            "seasonYear": currYear,
         }
         return team
-    
+
 class GetMLBTeam(BaseTeam):
     @property
     def team_url(self):
@@ -166,7 +278,7 @@ class GetMLBTeam(BaseTeam):
             "nextEventBroadcast": broadcast,
         }
         return team
-    
+
 getNFLTeam = GetNFLTeam.as_view()
 getCollegeFootballTeam = GetCollegeFootballTeam.as_view()
 getMLBTeam = GetMLBTeam.as_view()

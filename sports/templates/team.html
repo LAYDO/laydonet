@@ -1,14 +1,43 @@
-{% extends "app.html" %} {% load static %} {% block page_head %}
+{% extends "app.html" %} {% load static %} {% load tz %} {% block page_head %}
 <link rel="stylesheet" href="{% static 'sports/css/sports.css' %}" />
 {% endblock %}
 {% block laydo_content_1 %}
-<div id="context-data" style="display:none;" data-team-id="{{ id }}" data-league="{{ league }}"
-    data-name="{{ name }}" data-logo="{{ logo }}"
-    data-color="{{ color }}" data-alt-color="{{ alternateColor }}" data-record="{{ record }}"
-    data-standing="{{ standing }}" data-next-event="{{ nextEvent }}" data-next-event-date="{{ nextEventDate }}"
-    data-next-event-broadcast="{{ nextEventBroadcast }}">
+<div id="sportsTeamPage" class="laydo-app team-container" style=" border: 0.125rem solid #{{ alternateColor }};">
+    <div class="team-header" style="background-image: linear-gradient(#{{ color }} 70%, var(--color-primary) 100%);">
+        <img class="team-logo" src="{{ logo }}" alt="{{ name }}" />
+        <div class="team-header-info">
+            <div class="team-name">{{ name }}</div>
+            <div class="team-record-standing">
+                <div class="team-record">{{ record }}</div>
+                <div class="team-standing">{{ standing }}</div>
+            </div>
+        </div>
+    </div>
+    <div class="team-body">
+        <div class="team-next-event-container">
+            <div class="team-next-event">{{ nextEvent }}</div>
+            <div class="team-next-event-date">{{ nextEventDate }}</div>
+            <div class="team-next-event-broadcast">{{ nextEventBroadcast }}</div>
+        </div>
+        <div class="team-season-results-container">
+            <div class="team-standings-container">Standings</div>
+            <div class="team-schedule-container">
+                <div class="team-schedule-header">{{ seasonYear }} Schedule</div>
+                <div class="team-schedule">
+                    {% for game in schedule %}
+                    <div class="team-schedule-event">
+                        <div class="team-schedule-date" data-utc="{{ game.date }}"></div>
+                        <div class="team-schedule-vs">{{ game.competition.vsText }}</div>
+                        <div class="team-schedule-opponent"><img class="team-schedule-logo" src="{{ game.competition.opponentLogo}}">{{ game.competition.opponent }}</div>
+                        <div class="team-schedule-outcome" data-outcome="{{ game.competition.outcome }}"></div>
+                        <div class="team-schedule-score">{{ game.competition.score }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-<div id="sportsTeamPage" class="laydo-app team-container"></div>
 {% endblock %}
 {% block laydo_footer %}
 <div id="credits" class="sub-data">Sports data provided by <a href="https://www.espn.com">ESPN</a></div>
