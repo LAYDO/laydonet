@@ -1,6 +1,13 @@
 import { convertToLocalDatetime } from '../../base/js/Utils';
 
 document.addEventListener('DOMContentLoaded', () => {
+    const nextEventDate = document.querySelector('.team-next-event-date');
+    const nextEventDateElement = nextEventDate as HTMLElement;
+    const utcDateStr = nextEventDate?.getAttribute('data-utc');
+    if (utcDateStr) {
+        const localDate = convertToLocalDatetime(utcDateStr);
+        nextEventDateElement.textContent = localDate;
+    }
     const dates = document.querySelectorAll('.team-schedule-date');
     dates.forEach(date => {
         const utcDateStr = date.getAttribute('data-utc');

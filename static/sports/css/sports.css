@@ -92,7 +92,7 @@
     margin-right: 1rem;
 }
 
-.team-standing {
+.team-header-standing {
     text-align: center;
     font-size: 0.75rem;
 }
@@ -180,11 +180,17 @@
     width: 100%;
 }
 
-.team-schedule-event {
+.team-schedule-event,
+.team-standing-record {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
+    border-bottom: 0.125rem solid var(--font-faded);
+}
+
+.team-schedule-header {
+    margin-bottom: 1rem;
 }
 
 .team-schedule-date {
@@ -208,12 +214,39 @@
     margin-right: 0.5rem;
 }
 
-/* .team-standings-container {
-    min-height: 15vh;
+.team-standing-team {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 40%;
+    text-align: center;
 }
-.team-schedule-container {
-    height: 35vh;
-} */
+
+.team-standing-team-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 40%;
+    text-align: center;
+}
+
+.team-standing-wins,
+.team-standing-losses,
+.team-standing-ties,
+.team-standing-pct,
+.team-standing-pa,
+.team-standing-pf {
+    width: 10%;
+    text-align: center;
+}
+
+.team-standing {
+    width: 100%;
+}
+
+.team-standing-title {
+    margin-bottom: 1rem;
+}
 
 @media only screen and (max-width: 48rem) {
     .sports-widget {

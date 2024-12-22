@@ -6,23 +6,47 @@
     <div class="team-header" style="background-image: linear-gradient(#{{ color }} 70%, var(--color-primary) 100%);">
         <img class="team-logo" src="{{ logo }}" alt="{{ name }}" />
         <div class="team-header-info">
-            <div class="team-name">{{ name }}</div>
+            <div class="team-name">{{ seasonYear }} {{ name }}</div>
             <div class="team-record-standing">
                 <div class="team-record">{{ record }}</div>
-                <div class="team-standing">{{ standing }}</div>
+                <div class="team-header-standing">{{ standing }}</div>
             </div>
         </div>
     </div>
     <div class="team-body">
         <div class="team-next-event-container">
-            <div class="team-next-event">{{ nextEvent }}</div>
-            <div class="team-next-event-date">{{ nextEventDate }}</div>
-            <div class="team-next-event-broadcast">{{ nextEventBroadcast }}</div>
+            <div class="team-next-event">{{ nextEvent.event }}</div>
+            <div class="team-next-event-date" data-utc="{{ nextEvent.date }}"></div>
+            <div class="team-next-event-broadcast">{{ nextEvent.broadcast }}</div>
         </div>
         <div class="team-season-results-container">
-            <div class="team-standings-container">Standings</div>
+            <div class="team-standings-container">
+                <div class="team-standing-title">{{ standingHeader }}</div>
+                <div class="team-standing">
+                    <div class="team-standing-record">
+                        <div class="team-standing-team-center">Team</div>
+                        <div class="team-standing-wins">W</div>
+                        <div class="team-standing-losses">L</div>
+                        <div class="team-standing-ties">T</div>
+                        <div class="team-standing-pct">PCT</div>
+                        <div class="team-standing-pa">PA</div>
+                        <div class="team-standing-pf">PF</div>
+                    </div>
+                    {% for team in standings %}
+                    <div class="team-standing-record">
+                        <div class="team-standing-team"><img class="team-schedule-logo" src="{{ team.logo}}">{{ team.team }}</div>
+                        <div class="team-standing-wins">{{ team.w }}</div>
+                        <div class="team-standing-losses">{{ team.l }}</div>
+                        <div class="team-standing-ties">{{ team.t }}</div>
+                        <div class="team-standing-pct">{{ team.pct }}</div>
+                        <div class="team-standing-pa">{{ team.pa }}</div>
+                        <div class="team-standing-pf">{{ team.pf }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
             <div class="team-schedule-container">
-                <div class="team-schedule-header">{{ seasonYear }} Schedule</div>
+                <div class="team-schedule-header">Schedule</div>
                 <div class="team-schedule">
                     {% for game in schedule %}
                     <div class="team-schedule-event">

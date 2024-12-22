@@ -116,6 +116,33 @@ class GetNFLTeam(BaseTeam):
             nextEvent = schedData["events"][week]["shortName"]
             nextEventDate = schedData["events"][week]["date"]
             broadcast = schedData["events"][week]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+        nextEventID = data["team"]["nextEvent"][0]["id"]
+        response = requests.get(f"{NFL_EVENT_URL}{nextEventID}")
+        eventData = json.loads(response.text)
+        groupID = data["team"]["groups"]["id"]
+        standingGroups = eventData["standings"]["groups"]
+        standings = []
+        standingHeader = ""
+        for group in standingGroups:
+            hrefID = group["href"].split("/")[-1]
+            if (hrefID == groupID):
+                standingHeader = group["header"]
+                for team in group["standings"]["entries"]:
+                    standings.append(
+                        {
+                            "id": team["id"],
+                            "team": team["team"],
+                            "logo": team["logo"][0]["href"],
+                            "l": team["stats"][0]["displayValue"],
+                            "pa": team["stats"][1]["displayValue"],
+                            "pf": team["stats"][2]["displayValue"],
+                            "t": team["stats"][3]["displayValue"],
+                            "pct": team["stats"][4]["displayValue"],
+                            "w": team["stats"][5]["displayValue"],
+                            "record": team["stats"][6]["displayValue"],
+                        }
+                    )
+
         team = {
             "id": data["team"]["id"],
             "name": data["team"]["displayName"],
@@ -124,11 +151,15 @@ class GetNFLTeam(BaseTeam):
             "alternateColor": data["team"]["alternateColor"],
             "record": data["team"]["record"]["items"][0]["summary"],
             "standing": data["team"]["standingSummary"],
-            "nextEvent": nextEvent,
-            "nextEventDate": nextEventDate,
-            "nextEventBroadcast": broadcast,
+            "nextEvent": {
+                "event": nextEvent,
+                "date": nextEventDate,
+                "broadcast": broadcast,
+            },
             "schedule": scheduleList,
-            "seasonYear": currYear,
+            "seasonYear": data["team"]["nextEvent"][0]["season"]["year"],
+            "standings": standings,
+            "standingHeader": standingHeader,
         }
         return team
 
@@ -231,9 +262,11 @@ class GetCollegeFootballTeam(BaseTeam):
             "alternateColor": data["team"]["alternateColor"],
             "record": record,
             "standing": data["team"]["standingSummary"],
-            "nextEvent": nextEvent,
-            "nextEventDate": nextEventDate,
-            "nextEventBroadcast": broadcast,
+            "nextEvent": {
+                "event": nextEvent,
+                "date": nextEventDate,
+                "broadcast": broadcast,
+            },
             "schedule": scheduleList,
             "seasonYear": currYear,
         }
@@ -243,7 +276,7 @@ class GetMLBTeam(BaseTeam):
     @property
     def team_url(self):
         return MLB_TEAM_URL
-    
+
     def process_data(self, data, id: int):
         status = data["team"]["nextEvent"][0]["competitions"][0]["status"]["type"]["name"]
         if (status == "STATUS_SCHEDULED" or status == "STATUS_IN_PROGRESS"):
@@ -273,9 +306,11 @@ class GetMLBTeam(BaseTeam):
             "alternateColor": data["team"]["alternateColor"],
             "record": record,
             "standing": data["team"]["standingSummary"],
-            "nextEvent": nextEvent,
-            "nextEventDate": nextEventDate,
-            "nextEventBroadcast": broadcast,
+            "nextEvent": {
+                "event": nextEvent,
+                "date": nextEventDate,
+                "broadcast": broadcast,
+            },
         }
         return team
 
