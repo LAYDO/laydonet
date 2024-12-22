@@ -109,7 +109,7 @@ export class TeamWidget extends SportsWidget {
             }
             return response.json();
         }).then(data => {
-            let utcDate = new Date(data['nextEventDate']);
+            let utcDate = new Date(data['nextEvent']['date']);
             let localDate = utcDate.toLocaleString('en-US', options);
             this.teamName = data['name'];
             this.teamLogo = data['logo'];
@@ -117,14 +117,14 @@ export class TeamWidget extends SportsWidget {
             this.teamAltColor = data['alternateColor'];
             this.teamRecord = data['record'];
             this.teamStanding = data['standing'];
-            if (data['nextEvent'] === "Off Season") {
+            if (data['nextEvent']['event'] === "Off Season") {
                 this.teamNextEvent = "Off Season";
                 this.teamNextEventDate = "";
                 this.teamNextEventBroadcast = "";
             } else {
-                this.teamNextEvent = data['nextEvent'];
+                this.teamNextEvent = data['nextEvent']['event'];
                 this.teamNextEventDate = localDate;
-                this.teamNextEventBroadcast = data['nextEventBroadcast'];
+                this.teamNextEventBroadcast = data['nextEvent']['broadcast'];
             }
             this.populateWidget();
         }).catch(error => {
