@@ -13,6 +13,7 @@ NFL_EVENT_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summ
 
 # College Football
 COLLEGE_FOOTBALL_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
+COLLEGE_FOOTBALL_EVENT_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/summary?event="
 
 # MLB
 MLB_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/teams"
@@ -119,33 +120,30 @@ class GetNFLTeam(BaseTeam):
         nextEventID = data["team"]["nextEvent"][0]["id"]
         response = requests.get(f"{NFL_EVENT_URL}{nextEventID}")
         eventData = json.loads(response.text)
-        groupID = data["team"]["groups"]["id"]
         standingGroups = eventData["standings"]["groups"]
         standings = []
         standingHeader = ""
         for group in standingGroups:
-            hrefID = group["href"].split("/")[-1]
-            if (hrefID == groupID):
+            if any(entry["id"] == str(id) for entry in group["standings"]["entries"]):
                 standingHeader = group["header"]
                 for team in group["standings"]["entries"]:
-                    standings.append(
-                        {
-                            "id": team["id"],
-                            "team": team["team"],
-                            "logo": team["logo"][0]["href"],
-                            "l": team["stats"][0]["displayValue"],
-                            "pa": team["stats"][1]["displayValue"],
-                            "pf": team["stats"][2]["displayValue"],
-                            "t": team["stats"][3]["displayValue"],
-                            "pct": team["stats"][4]["displayValue"],
-                            "w": team["stats"][5]["displayValue"],
-                            "record": team["stats"][6]["displayValue"],
-                        }
-                    )
-
+                    standings.append({
+                        "id": team["id"],
+                        "team": team["team"],
+                        "logo": team["logo"][0]["href"],
+                        "l": team["stats"][0]["displayValue"],
+                        "pa": team["stats"][1]["displayValue"],
+                        "pf": team["stats"][2]["displayValue"],
+                        "t": team["stats"][3]["displayValue"],
+                        "pct": team["stats"][4]["displayValue"],
+                        "w": team["stats"][5]["displayValue"],
+                        "record": team["stats"][6]["displayValue"],
+                    })
+                break
         team = {
             "id": data["team"]["id"],
             "name": data["team"]["displayName"],
+            "league": "nfl",
             "logo": data["team"]["logos"][0]["href"],
             "color": data["team"]["color"],
             "alternateColor": data["team"]["alternateColor"],
@@ -254,9 +252,29 @@ class GetCollegeFootballTeam(BaseTeam):
                 record = f"{currYear} Results"
             else:
                 record = data["team"]["record"]["items"][0]["summary"]
+
+        nextEventID = data["team"]["nextEvent"][0]["id"]
+        response = requests.get(f"{COLLEGE_FOOTBALL_EVENT_URL}{nextEventID}")
+        eventData = json.loads(response.text)
+        standingGroups = eventData["standings"]["groups"]
+        standings = []
+        standingHeader = ""
+        for group in standingGroups:
+            if any(entry["id"] == str(id) for entry in group["standings"]["entries"]):
+                standingHeader = group["header"]
+                for entry in group["standings"]["entries"]:
+                    standings.append({
+                        "id": entry["id"],
+                        "team": entry["team"],
+                        "logo": entry["logo"][0]["href"],
+                        "overall": entry["stats"][0]["displayValue"],
+                        "conference": entry["stats"][1]["displayValue"],
+                    })
+                break
         team = {
             "id": data["team"]["id"],
             "name": data["team"]["displayName"],
+            "league": "ncaaf",
             "logo": data["team"]["logos"][1]["href"],
             "color": data["team"]["color"],
             "alternateColor": data["team"]["alternateColor"],
@@ -268,7 +286,9 @@ class GetCollegeFootballTeam(BaseTeam):
                 "broadcast": broadcast,
             },
             "schedule": scheduleList,
-            "seasonYear": currYear,
+            "seasonYear": data["team"]["nextEvent"][0]["season"]["year"],
+            "standings": standings,
+            "standingHeader": standingHeader,
         }
         return team
 
@@ -301,6 +321,7 @@ class GetMLBTeam(BaseTeam):
         team = {
             "id": data["team"]["id"],
             "name": data["team"]["displayName"],
+            "league": "mlb",
             "logo": data["team"]["logos"][1]["href"],
             "color": data["team"]["color"],
             "alternateColor": data["team"]["alternateColor"],
