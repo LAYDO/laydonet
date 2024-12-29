@@ -159,7 +159,7 @@ export class NFLTeamWidget extends TeamWidget {
 
 export class CollegeFootballTeamWidget extends TeamWidget {
     constructor(container: HTMLElement, id: number) {
-        super(container, id, 'college-football');
+        super(container, id, 'ncaaf');
     }
 }
 
