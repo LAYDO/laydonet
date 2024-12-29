@@ -15,7 +15,7 @@ export class TeamPage {
         this.populatePage(data);
     }
     populatePage(data: HTMLElement) {
-        let url = 'http://localhost:8000/sports/';
+        let url = '/sports/';
         switch (data.dataset.league) {
             case 'nfl':
                 url += 'nfl/';
