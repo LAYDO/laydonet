@@ -25,7 +25,7 @@ def sports(request):
 def team(request, league: str, id: int):
     if league == "nfl":
         teamData = getNFLTeam(request, id)
-    elif league == "college-football":
+    elif league == "ncaaf":
         teamData = getCollegeFootballTeam(request, id)
     elif league == "mlb":
         teamData = getMLBTeam(request, id)
@@ -70,6 +70,7 @@ class GetNFLTeam(BaseTeam):
         response = requests.get(scheduleURL)
         schedData = json.loads(response.text)
         scheduleList = []
+        nextEvent = ""
         for event in schedData["events"]:
             comp = event["competitions"][0]
             teamHome = comp["competitors"][0]["team"]["id"] == str(id)
@@ -114,9 +115,14 @@ class GetNFLTeam(BaseTeam):
                 week -= 2
             else:
                 week -= 1
-            nextEvent = schedData["events"][week]["shortName"]
-            nextEventDate = schedData["events"][week]["date"]
-            broadcast = schedData["events"][week]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+            if (schedData["events"][week] is not None):
+                nextEvent = schedData["events"][week]["shortName"]
+                nextEventDate = schedData["events"][week]["date"]
+                broadcast = schedData["events"][week]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+            else:
+                nextEvent = data["team"]["nextEvent"][0]["shortName"]
+                nextEventDate = data["team"]["nextEvent"][0]["date"]
+                broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
         nextEventID = data["team"]["nextEvent"][0]["id"]
         response = requests.get(f"{NFL_EVENT_URL}{nextEventID}")
         eventData = json.loads(response.text)
@@ -140,6 +146,8 @@ class GetNFLTeam(BaseTeam):
                         "record": team["stats"][6]["displayValue"],
                     })
                 break
+        home = eventData["header"]["competitions"][0]["competitors"][0]
+        away = eventData["header"]["competitions"][0]["competitors"][1]
         team = {
             "id": data["team"]["id"],
             "name": data["team"]["displayName"],
@@ -153,6 +161,8 @@ class GetNFLTeam(BaseTeam):
                 "event": nextEvent,
                 "date": nextEventDate,
                 "broadcast": broadcast,
+                "home": home,
+                "away": away,
             },
             "schedule": scheduleList,
             "seasonYear": data["team"]["nextEvent"][0]["season"]["year"],
@@ -239,17 +249,18 @@ class GetCollegeFootballTeam(BaseTeam):
             broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
             record = data["team"]["record"]["items"][0]["summary"]
         elif (status == "STATUS_FINAL"):
-            scheduleURL = f"{COLLEGE_FOOTBALL_TEAM_URL}/{id}/schedule?season="
-            currYear = data["team"]["nextEvent"][0]["date"].split("-")[0]
-            scheduleURL += currYear
-            response = requests.get(scheduleURL)
-            schedData = json.loads(response.text)
             seasonStatus = schedData["season"]["name"]
             if (seasonStatus == "Off Season"):
                 nextEvent = "Off Season"
                 nextEventDate = "N/A"
                 broadcast = "N/A"
                 record = f"{currYear} Results"
+            elif (seasonStatus == "Postseason"):
+                print("POSTSEASON")
+                nextEvent = data["team"]["nextEvent"][0]["shortName"]
+                nextEventDate = data["team"]["nextEvent"][0]["date"]
+                broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+                record = data["team"]["record"]["items"][0]["summary"]
             else:
                 record = data["team"]["record"]["items"][0]["summary"]
 
@@ -271,6 +282,8 @@ class GetCollegeFootballTeam(BaseTeam):
                         "conference": entry["stats"][1]["displayValue"],
                     })
                 break
+        home = eventData["header"]["competitions"][0]["competitors"][0]
+        away = eventData["header"]["competitions"][0]["competitors"][1]
         team = {
             "id": data["team"]["id"],
             "name": data["team"]["displayName"],
@@ -284,6 +297,8 @@ class GetCollegeFootballTeam(BaseTeam):
                 "event": nextEvent,
                 "date": nextEventDate,
                 "broadcast": broadcast,
+                "home": home,
+                "away": away,
             },
             "schedule": scheduleList,
             "seasonYear": data["team"]["nextEvent"][0]["season"]["year"],

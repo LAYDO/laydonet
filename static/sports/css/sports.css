@@ -108,12 +108,10 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
     border-bottom-left-radius: 1rem;
     border-bottom-right-radius: 1rem;
-    width: 100%;
+    width: 96%;
     background-color: var(--color-primary);
-    /* padding: 1rem; */
 }
 
 .team-container {
@@ -128,10 +126,9 @@
 .team-next-event-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    width: 49%;
-    background-color: var(--glass-backdrop);
+    width: 50%;
     margin-bottom: 1rem;
 }
 
@@ -160,9 +157,10 @@
 .team-season-results-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    width: 49%;
+    width: 50%;
+    margin-bottom: 1rem;
 }
 
 .team-standings-container,
@@ -272,6 +270,119 @@
     background-color: var(--glass-backdrop);
 }
 
+.team-next-event-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: var(--glass-backdrop);
+    width: 100%;
+}
+
+.team-next-event-futures,
+.team-next-event-past {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.team-next-event-futures {
+    width: 40%;
+}
+
+.team-next-event-past {
+    width: 60%;
+}
+
+.event-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: var(--glass-backdrop);
+    /* border: 0.125rem solid var(--font-color); */
+    width: 100%;
+    min-height: 7rem;
+}
+
+.event-predictor-container,
+.event-odds-container,
+.event-team-stats-container,
+.event-season-leaders-container,
+.event-last-five-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--glass-backdrop);
+}
+.event-predictor-container {
+    min-height: 25rem;
+    border: 0.125rem solid var(--font-color);
+    width: 100%;
+}
+
+.event-odds-container {
+    min-height: 10rem;
+    border: 0.125rem solid var(--font-color);
+    width: 100%;
+}
+
+.event-team-stats-container {
+    min-height: 10rem;
+    border: 0.125rem solid var(--font-color);
+    width: 100%;
+}
+
+.event-season-leaders-container {
+    min-height: 10rem;
+    border: 0.125rem solid var(--font-color);
+    width: 100%;
+}
+
+.event-last-five-container {
+    min-height: 15rem;
+    border: 0.125rem solid var(--font-color);
+    width: 100%;
+}
+
+.event-header-home,
+.event-header-away {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+.event-header-home-team,
+.event-header-away-team {
+    margin: 0 0.5rem;
+}
+.event-header-home-record,
+.event-header-away-record {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.event-header-away-logo,
+.event-header-home-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 1rem;
+    margin-right: 1.5rem;
+    display: block;
+    /* border: 0.125rem solid var(--font-color); */
+    margin: 0 0.5rem;
+}
+
+.event-header-middle-date {
+    font-size: 0.75rem;
+}
+
 @media only screen and (max-width: 48rem) {
     .sports-widget {
         width: 80%;
@@ -290,6 +401,32 @@
     }
     .team-name {
         font-size: 1.25em;
+    }
+    /* .event-header-away-logo,
+    .event-header-home-logo {
+        width: 50px;
+        height: 50px;
+    } */
+
+    .event-header-home-name,
+    .event-header-away-name,
+    .event-header-home-record,
+    .event-header-away-record {
+        font-size: 0.75rem;
+    }
+
+    .team-next-event-body {
+        flex-direction: column;
+    }
+
+    .team-next-event-futures,
+    .team-next-event-past,
+    .event-predictor-container,
+    .event-odds-container,
+    .event-team-stats-container,
+    .event-season-leaders-container,
+    .event-last-five-container {
+        width: 100%;
     }
 }
 
