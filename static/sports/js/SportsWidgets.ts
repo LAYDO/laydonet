@@ -20,8 +20,6 @@ export abstract class SportsWidget {
 
         this.logoElement = document.createElement('img');
         this.logoElement.classList.add('sport-logo');
-        this.widget.appendChild(this.logoElement);
-
         this.container.appendChild(this.widget);
     }
     
@@ -136,6 +134,7 @@ export class TeamWidget extends SportsWidget {
     populateWidget() {
         this.logoElement.src = this.teamLogo;
         this.logoElement.alt = this.teamName;
+        this.widget.prepend(this.logoElement);
         this.recordElement.textContent = this.teamRecord;
         this.standingElement.textContent = this.teamStanding;
         this.nextEventDateElement.textContent = this.teamNextEventDate;

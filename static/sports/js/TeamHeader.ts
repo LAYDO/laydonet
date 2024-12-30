@@ -17,8 +17,6 @@ export class TeamHeader {
 
         this.logoElement = document.createElement('img');
         this.logoElement.classList.add('team-logo');
-        this.headerElement.appendChild(this.logoElement);
-
         this.headerInfoElement = document.createElement('div');
         this.headerInfoElement.classList.add('team-header-info');
         this.headerElement.appendChild(this.headerInfoElement);
@@ -43,6 +41,7 @@ export class TeamHeader {
     populateHeader(data: any) {
         this.headerElement.style.background = `linear-gradient(#${data.color} 70%, var(--color-primary) 100%)`;
         this.logoElement.src = data.logo;
+        this.headerElement.prepend(this.logoElement);
         this.teamNameElement.textContent = `${data.seasonYear} ${data.name}`;
         this.recordElement.textContent = data.record;
         this.standingElement.textContent = data.standing;

@@ -42,7 +42,6 @@ export class EventHeader {
 
         this.awayNameElement = document.createElement('div');
         this.awayNameElement.classList.add('event-header-away-name');
-        this.awayNameElement.innerHTML = 'Away Team';
         this.awayTeamElement.appendChild(this.awayNameElement);
 
         this.awayRecordElement = document.createElement('div');
@@ -51,18 +50,14 @@ export class EventHeader {
 
         this.awayOverallRecordElement = document.createElement('div');
         this.awayOverallRecordElement.classList.add('event-header-away-overall-record');
-        this.awayOverallRecordElement.innerHTML = '0 - 0, ';
         this.awayRecordElement.appendChild(this.awayOverallRecordElement);
 
         this.awayAwayRecordElement = document.createElement('div');
         this.awayAwayRecordElement.classList.add('event-header-away-away-record');
-        this.awayAwayRecordElement.innerHTML = '0 - 0';
         this.awayRecordElement.appendChild(this.awayAwayRecordElement);
 
         this.awayLogoElement = document.createElement('img');
         this.awayLogoElement.classList.add('event-header-away-logo');
-        this.awayHeaderElement.appendChild(this.awayLogoElement);
-
         // Middle info
         this.middleInfoElement = document.createElement('div');
         this.middleInfoElement.classList.add('event-header-middle');
@@ -70,12 +65,10 @@ export class EventHeader {
 
         this.middleBroadcastElement = document.createElement('div');
         this.middleBroadcastElement.classList.add('event-header-middle-broadcast');
-        this.middleBroadcastElement.innerHTML = 'Broadcast';
         this.middleInfoElement.appendChild(this.middleBroadcastElement);
 
         this.middleDateElement = document.createElement('div');
         this.middleDateElement.classList.add('event-header-middle-date');
-        this.middleDateElement.innerHTML = 'Date';
         this.middleInfoElement.appendChild(this.middleDateElement);
 
         // Home
@@ -85,15 +78,12 @@ export class EventHeader {
 
         this.homeLogoElement = document.createElement('img');
         this.homeLogoElement.classList.add('event-header-home-logo');
-        this.homeHeaderElement.appendChild(this.homeLogoElement);
-
         this.homeTeamElement = document.createElement('div');
         this.homeTeamElement.classList.add('event-header-home-team');
         this.homeHeaderElement.appendChild(this.homeTeamElement);
 
         this.homeNameElement = document.createElement('div');
         this.homeNameElement.classList.add('event-header-home-name');
-        this.homeNameElement.innerHTML = 'Home Team';
         this.homeTeamElement.appendChild(this.homeNameElement);
 
         this.homeRecordElement = document.createElement('div');
@@ -102,12 +92,10 @@ export class EventHeader {
 
         this.homeOverallRecordElement = document.createElement('div');
         this.homeOverallRecordElement.classList.add('event-header-home-overall-record');
-        this.homeOverallRecordElement.innerHTML = '0 - 0, ';
         this.homeRecordElement.appendChild(this.homeOverallRecordElement);
 
         this.homeHomeRecordElement = document.createElement('div');
         this.homeHomeRecordElement.classList.add('event-header-home-home-record');
-        this.homeHomeRecordElement.innerHTML = '0 - 0';
         this.homeRecordElement.appendChild(this.homeHomeRecordElement);
 
 
@@ -115,22 +103,22 @@ export class EventHeader {
     }
 
     populateHeader(data: any) {
-        console.log(data);
         let away = data.nextEvent.away;
         let home = data.nextEvent.home;
         let broadcast = data.nextEvent.broadcast;
         let localDate = convertToLocalDatetime(data.nextEvent.date);
 
         // Header
-        this.headerElement.style.borderStyle = "solid";
-        this.headerElement.style.borderWidth = "0.125rem";
-        this.headerElement.style.borderImageSource = `linear-gradient(to right, #${away.team.color}, #${home.team.color})`;
-        this.headerElement.style.borderImageSlice = "1";
+        // this.headerElement.style.borderStyle = "solid";
+        // this.headerElement.style.borderWidth = "0.125rem";
+        // this.headerElement.style.borderImageSource = `linear-gradient(to right, #${away.team.color}, #${home.team.color})`;
+        // this.headerElement.style.borderImageSlice = "1";
         // Away
         this.awayNameElement.innerHTML = away.team.nickname;
         this.awayOverallRecordElement.innerHTML = `${away.record[0].displayValue},`;
         this.awayAwayRecordElement.innerHTML = away.record[1].displayValue;
         this.awayLogoElement.src = away.team.logos[0].href;
+        this.awayHeaderElement.appendChild(this.awayLogoElement);
 
         // Middle info
         this.middleBroadcastElement.innerHTML = broadcast;
@@ -141,5 +129,6 @@ export class EventHeader {
         this.homeOverallRecordElement.innerHTML = `${home.record[0].displayValue},`;
         this.homeHomeRecordElement.innerHTML = home.record[1].displayValue;
         this.homeLogoElement.src = home.team.logos[0].href;
+        this.homeHeaderElement.prepend(this.homeLogoElement);
     }
 }
