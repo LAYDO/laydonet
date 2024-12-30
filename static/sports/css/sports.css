@@ -396,8 +396,10 @@
 }
 
 @media only screen and (max-width: 48rem) {
-    .sports-widget {
+    .sports-widget,
+    .sports-widget-loading {
         width: 80%;
+        min-width: 22rem;
     }
 
     .team-next-event-container,
