@@ -108,15 +108,10 @@ export class EventHeader {
         let broadcast = data.nextEvent.broadcast;
         let localDate = convertToLocalDatetime(data.nextEvent.date);
 
-        // Header
-        // this.headerElement.style.borderStyle = "solid";
-        // this.headerElement.style.borderWidth = "0.125rem";
-        // this.headerElement.style.borderImageSource = `linear-gradient(to right, #${away.team.color}, #${home.team.color})`;
-        // this.headerElement.style.borderImageSlice = "1";
         // Away
         this.awayNameElement.innerHTML = away.team.nickname;
-        this.awayOverallRecordElement.innerHTML = `${away.record[0].displayValue},`;
-        this.awayAwayRecordElement.innerHTML = away.record[1].displayValue;
+        this.awayOverallRecordElement.innerHTML = `${away.record[0].displayValue}, `;
+        this.awayAwayRecordElement.innerHTML = `${away.record[1].displayValue} Away`;
         this.awayLogoElement.src = away.team.logos[0].href;
         this.awayHeaderElement.appendChild(this.awayLogoElement);
 
@@ -126,8 +121,8 @@ export class EventHeader {
 
         // Home
         this.homeNameElement.innerHTML = home.team.nickname;
-        this.homeOverallRecordElement.innerHTML = `${home.record[0].displayValue},`;
-        this.homeHomeRecordElement.innerHTML = home.record[1].displayValue;
+        this.homeOverallRecordElement.innerHTML = `${home.record[0].displayValue}, `;
+        this.homeHomeRecordElement.innerHTML = `${home.record[1].displayValue} Home`;
         this.homeLogoElement.src = home.team.logos[0].href;
         this.homeHeaderElement.prepend(this.homeLogoElement);
     }

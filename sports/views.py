@@ -174,7 +174,7 @@ class GetNFLTeam(BaseTeam):
             "nextEvent": {
                 "event": nextEvent,
                 "date": nextEventDate,
-                "broadcast": broadcast,
+                "broadcast": broadcast if broadcast != "NFL Sunday Ticket" else "TBD",
                 "home": home,
                 "away": away,
             },

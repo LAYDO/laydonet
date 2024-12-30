@@ -8,6 +8,8 @@
     border: 0.125rem solid var(--font-color);
     color: #fff8ed;
     cursor: pointer;
+    min-width: 23.75rem;
+    min-height: 6.25rem;
 }
 
 .sports-widget-loading {
@@ -39,7 +41,7 @@
 
 .sports-standing {
     text-align: center;
-    font-size: 1rem;
+    font-size: 0.75rem;
 }
 .sports-next-event-date {
     text-align: center;
@@ -48,7 +50,7 @@
 
 .sports-next-event-opponent {
     text-align: center;
-    font-size: 1.25rem;
+    font-size: 1rem;
 }
 
 .sports-next-event-broadcast {
@@ -376,7 +378,7 @@
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    font-size: 1rem;
+    font-size: 0.75rem;
 }
 
 .event-header-away-logo,
