@@ -8,7 +8,6 @@
     border: 0.125rem solid var(--font-color);
     color: #fff8ed;
     cursor: pointer;
-    min-width: 23.75rem;
     min-height: 6.25rem;
 }
 
@@ -399,7 +398,6 @@
     .sports-widget,
     .sports-widget-loading {
         width: 80%;
-        min-width: 21.75rem;
     }
 
     .team-next-event-container,
