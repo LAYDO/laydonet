@@ -18,9 +18,6 @@ export class TeamEvent {
     eventTeamStatsElement: EventTeamStats;
     eventSeasonLeadersElement: EventSeasonLeaders;
     eventLastFiveElement: EventLastFive;
-    // eventDateElement: HTMLElement;
-    // eventOpponentElement: HTMLElement;
-    // eventBroadcastElement: HTMLElement;
 
     constructor(container: HTMLElement) {
         this.container = container;
@@ -52,6 +49,10 @@ export class TeamEvent {
     }
 
     populateEvent(data: any) {
+        this.eventElement.style.borderStyle = "solid";
+        this.eventElement.style.borderWidth = "0.125rem";
+        this.eventElement.style.borderImageSource = `linear-gradient(to right, #${data.nextEvent.away.team.color}, #${data.nextEvent.home.team.color})`;
+        this.eventElement.style.borderImageSlice = "1";
         this.eventHeaderElement.populateHeader(data);
         this.eventPredictorElement.populatePredictor(data);
         this.eventOddsElement.populateOdds(data);

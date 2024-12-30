@@ -11,6 +11,8 @@
 }
 
 .sports-widget-loading {
+    min-width: 23.75rem;
+    min-height: 6.25rem;
     position: relative;
     overflow: hidden;
     background-color: var(--glass-backdrop);
@@ -60,10 +62,11 @@
     flex-direction: row;
     justify-content: start;
     align-items: center;
-    border-top-left-radius: 1rem;
-    border-top-right-radius: 1rem;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
     width: 100%;
     margin-bottom: 1rem;
+    color: #fff8ed;
 }
 
 .team-logo {
@@ -112,6 +115,7 @@
     border-bottom-right-radius: 1rem;
     width: 96%;
     background-color: var(--color-primary);
+    margin-bottom: 1rem;
 }
 
 .team-container {
@@ -121,6 +125,13 @@
     align-items: center;
     width: 96%;
     border-radius: 1rem;
+}
+
+.team-container-loading {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--glass-backdrop);
+    animation: loadingShimmer 1s linear infinite alternate;
 }
 
 .team-next-event-container {
@@ -272,14 +283,18 @@
 
 .team-next-event-body {
     display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    background-color: var(--glass-backdrop);
     width: 100%;
 }
 
-.team-next-event-futures,
+.team-next-event-futures {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 .team-next-event-past {
     display: flex;
     flex-direction: column;
@@ -287,12 +302,9 @@
     align-items: center;
 }
 
-.team-next-event-futures {
-    width: 40%;
-}
-
+.team-next-event-futures,
 .team-next-event-past {
-    width: 60%;
+    width: 100%;
 }
 
 .event-header {
@@ -301,8 +313,7 @@
     justify-content: space-evenly;
     align-items: center;
     background-color: var(--glass-backdrop);
-    /* border: 0.125rem solid var(--font-color); */
-    width: 100%;
+    min-width: 100%;
     min-height: 7rem;
 }
 
@@ -318,32 +329,32 @@
     background-color: var(--glass-backdrop);
 }
 .event-predictor-container {
-    min-height: 25rem;
-    border: 0.125rem solid var(--font-color);
+    min-height: 10rem;
+    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-odds-container {
     min-height: 10rem;
-    border: 0.125rem solid var(--font-color);
+    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-team-stats-container {
     min-height: 10rem;
-    border: 0.125rem solid var(--font-color);
+    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-season-leaders-container {
     min-height: 10rem;
-    border: 0.125rem solid var(--font-color);
+    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-last-five-container {
     min-height: 15rem;
-    border: 0.125rem solid var(--font-color);
+    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
@@ -375,7 +386,6 @@
     border-radius: 1rem;
     margin-right: 1.5rem;
     display: block;
-    /* border: 0.125rem solid var(--font-color); */
     margin: 0 0.5rem;
 }
 
@@ -389,7 +399,9 @@
     }
 
     .team-next-event-container,
-    .team-season-results-container {
+    .team-season-results-container,
+    .team-standings-container,
+    .team-schedule-container {
         width: 100%;
     }
     .team-body {
@@ -402,11 +414,6 @@
     .team-name {
         font-size: 1.25em;
     }
-    /* .event-header-away-logo,
-    .event-header-home-logo {
-        width: 50px;
-        height: 50px;
-    } */
 
     .event-header-home-name,
     .event-header-away-name,

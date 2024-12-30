@@ -15,27 +15,8 @@ export class TeamPage {
         this.populatePage(data);
     }
     populatePage(data: HTMLElement) {
-        let url = '/sports/';
-        switch (data.dataset.league) {
-            case 'nfl':
-                url += 'nfl/';
-                break;
-            case 'ncaaf':
-                url += 'ncaaf/';
-                break;
-            case 'nba':
-                url += 'nba/';
-                break;
-            case 'mlb':
-                url += 'mlb/';
-                break;
-            case 'nhl':
-                url += 'nhl/';
-                break;
-            default:
-                url += 'nfl/';
-        }
-        url += data.dataset.teamId;
+        let url = `/sports/${data.dataset.league}/${data.dataset.teamId}`;
+        this.container.classList.add('team-container-loading');
         fetch(url).then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -45,8 +26,10 @@ export class TeamPage {
             this.container.style.border = `0.125rem solid #${data.alternateColor}`;
             this.headerElement.populateHeader(data);
             this.bodyElement.populateBody(data);
+            this.container.classList.remove('team-container-loading');
         }).catch(error => {
             console.error('There has been a problem with your fetch operation: ', error);
+            this.container.classList.remove('team-container-loading');
         });
     }
 }

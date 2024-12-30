@@ -71,6 +71,7 @@ class GetNFLTeam(BaseTeam):
         schedData = json.loads(response.text)
         scheduleList = []
         nextEvent = ""
+        nextEventID = ""
         for event in schedData["events"]:
             comp = event["competitions"][0]
             teamHome = comp["competitors"][0]["team"]["id"] == str(id)
@@ -108,6 +109,7 @@ class GetNFLTeam(BaseTeam):
             nextEvent = data["team"]["nextEvent"][0]["shortName"]
             nextEventDate = data["team"]["nextEvent"][0]["date"]
             broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+            nextEventID = data["team"]["nextEvent"][0]["id"]
         elif (status == "STATUS_FINAL"):
             week = data["team"]["nextEvent"][0]["week"]["number"] + 1
             byeWeek = schedData["byeWeek"]
@@ -119,13 +121,25 @@ class GetNFLTeam(BaseTeam):
                 nextEvent = schedData["events"][week]["shortName"]
                 nextEventDate = schedData["events"][week]["date"]
                 broadcast = schedData["events"][week]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
+                nextEventID = schedData["events"][week]["competitions"][0]["id"]
             else:
                 nextEvent = data["team"]["nextEvent"][0]["shortName"]
                 nextEventDate = data["team"]["nextEvent"][0]["date"]
                 broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
-        nextEventID = data["team"]["nextEvent"][0]["id"]
-        response = requests.get(f"{NFL_EVENT_URL}{nextEventID}")
-        eventData = json.loads(response.text)
+                nextEventID = data["team"]["nextEvent"][0]["id"]
+        if not nextEventID:
+            print(f"Warning: nextEventID is empty for team {id}: {nextEventID}")
+            return
+        try:
+            full_url = f"{NFL_EVENT_URL}{nextEventID}"
+            # print(f"Requesting URL: {full_url}")
+            response = requests.get(full_url)
+            response.raise_for_status()
+            eventData = json.loads(response.text)
+            # print(eventData)
+        except requests.RequestException as err:
+            print(f"API request failed: {err}")
+            return
         standingGroups = eventData["standings"]["groups"]
         standings = []
         standingHeader = ""
@@ -256,7 +270,6 @@ class GetCollegeFootballTeam(BaseTeam):
                 broadcast = "N/A"
                 record = f"{currYear} Results"
             elif (seasonStatus == "Postseason"):
-                print("POSTSEASON")
                 nextEvent = data["team"]["nextEvent"][0]["shortName"]
                 nextEventDate = data["team"]["nextEvent"][0]["date"]
                 broadcast = data["team"]["nextEvent"][0]["competitions"][0]["broadcasts"][0]["media"]["shortName"]
@@ -353,21 +366,3 @@ class GetMLBTeam(BaseTeam):
 getNFLTeam = GetNFLTeam.as_view()
 getCollegeFootballTeam = GetCollegeFootballTeam.as_view()
 getMLBTeam = GetMLBTeam.as_view()
-
-def getNFLTeams():
-    response = requests.get(NFL_TEAM_URL)
-    data = json.loads(response.text)
-    teams = []
-    for team in data["sports"][0]["leagues"][0]["teams"]:
-        teams.append({
-            "id": team["id"],
-            "name": team["team"]["displayName"],
-            "logo": team["team"]["logos"][0]["href"],
-            "color": team["team"]["color"],
-            "alternateColor": team["team"]["alternateColor"],
-            "record": team["team"]["record"]["items"][0]["summary"],
-            "standing": team["team"]["standingSummary"],
-            "nextEvent": team["team"]["nextEvent"][0]["shortName"],
-            "nextEventDate": team["team"]["nextEvent"][0]["date"],
-        })
-    return JsonResponse(teams)
