@@ -111,7 +111,7 @@ export class EventHeader {
         // Away
         this.awayNameElement.innerHTML = away.team.nickname;
         this.awayOverallRecordElement.innerHTML = `${away.record[0].displayValue}, `;
-        this.awayAwayRecordElement.innerHTML = `${away.record[1].displayValue} Away`;
+        this.awayAwayRecordElement.innerHTML = `${away.record[1].displayValue}`;
         this.awayLogoElement.src = away.team.logos[0].href;
         this.awayHeaderElement.appendChild(this.awayLogoElement);
 
@@ -122,7 +122,7 @@ export class EventHeader {
         // Home
         this.homeNameElement.innerHTML = home.team.nickname;
         this.homeOverallRecordElement.innerHTML = `${home.record[0].displayValue}, `;
-        this.homeHomeRecordElement.innerHTML = `${home.record[1].displayValue} Home`;
+        this.homeHomeRecordElement.innerHTML = `${home.record[1].displayValue}`;
         this.homeLogoElement.src = home.team.logos[0].href;
         this.homeHeaderElement.prepend(this.homeLogoElement);
     }
