@@ -38,7 +38,7 @@ module.exports = {
         wedding_base: ['./static/wedding/js/wedding_base.js'],
         our_story: ['./static/wedding/js/ourstory.js'],
         webgl: ['./static/webgl/js/WebGL.ts', './static/webgl/js/webbers.js', './static/webgl/js/init-buffers.js', './static/webgl/js/draw-scene.js'],
-        ai: ['./static/ai/js/chat.js'],
+        ai: ['./static/ai/js/chat_main.ts','./static/ai/js/Chat.ts', './static/ai/js/Conversation.ts', './static/ai/js/ChatUI.ts'],
         cookbook: ['./static/cookbook/js/cooky.ts', './static/cookbook/js/cookbook.ts', './static/cookbook/js/Recipe.ts'],
         sports: [
             './static/sports/js/sports.ts',
