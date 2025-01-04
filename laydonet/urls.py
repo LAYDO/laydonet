@@ -36,7 +36,6 @@ urlpatterns = [
     path('resume/', include('resume.urls')),
     path('about/', include('about.urls')),
     path('webgl/', include('webgl.urls')),
-    path('ai/', include('ai.urls')),
     path('cookbook/', include('cookbook.urls')),
     path('sports/', include('sports.urls')),
 ]

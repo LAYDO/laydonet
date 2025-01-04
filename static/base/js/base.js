@@ -26,7 +26,25 @@ function redirect(evt) {
         y[i].className = '';
     }
     if (evt.currentTarget.id == 'laydoNavTitle' || evt.currentTarget.id == '') {
-        window.location.pathname = '';
+        const hostname = window.location.hostname;
+        const port = window.location.port;
+        const protocol = window.location.protocol;
+
+        // Handle localhost separately
+        const baseHostname = hostname.includes('localhost') ? 'localhost' : hostname.split('.').slice(-2).join('.');
+        const newUrl = `${protocol}//${baseHostname}${port ? ':' + port : ''}`;
+
+        window.location.href = newUrl;
+    } else if (evt.currentTarget.id == 'ai') {
+        const hostname = window.location.hostname;
+        const port = window.location.port;
+        const protocol = window.location.protocol;
+
+        // Handle localhost separately
+        const baseHostname = hostname === 'localhost' ? 'localhost' : hostname.split('.').slice(-2).join('.');
+        const newUrl = `${protocol}//ai.${baseHostname}${port ? ':' + port : ''}`;
+
+        window.location.href = newUrl;
     } else {
         window.location.pathname = evt.currentTarget.id.toLowerCase();
         // document.getElementById(window.location.pathname).className = 'active';
