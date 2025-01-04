@@ -31,7 +31,7 @@ DEBUG = True  # os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv(
     "DJANGO_ALLOWED_HOSTS",
-    "127.0.0.1,localhost,*.laydo.net,laydonet-yztpa.ondigitalocean.app",
+    "127.0.0.1,localhost,ai.localhost,*.laydo.net,ai.laydo.net,laydonet-yztpa.ondigitalocean.app",
 ).split(",")
 
 CSRF_TRUSTED_ORIGINS = [
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_quill",
+    "django_hosts",
     "webpack_loader",
     "home",
     "wedding",
@@ -87,6 +88,7 @@ WEBPACK_LOADER = {
 }
 
 MIDDLEWARE = [
+    "django_hosts.middleware.HostsRequestMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -95,8 +97,12 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "laydonet.middleware.SubdomainMiddleware",
+    "django_hosts.middleware.HostsResponseMiddleware",
 ]
 
+ROOT_HOSTCONF = "laydonet.hosts"
+DEFAULT_HOST = "www"
 ROOT_URLCONF = "laydonet.urls"
 
 TEMPLATES = [
@@ -232,5 +238,6 @@ else:
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Login/logout redirect
-LOGIN_REDIRECT_URL = "home"
-LOGOUT_REDIRECT_URL = "home"
+LOGIN_URL = '/accounts/login/'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"

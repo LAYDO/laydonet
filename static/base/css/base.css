@@ -68,9 +68,12 @@ body {
   flex-direction: column;
   justify-content: center;
   display: none;
+  align-items: center;
 }
 
-.laydo-overlay a {
+.laydo-overlay a,
+.laydo-overlay form,
+.laydo-overlay button {
   padding: 1rem;
   text-decoration: none;
   font-size: 1.5rem;
@@ -78,6 +81,9 @@ body {
   display: block;
   cursor: pointer;
   letter-spacing: 0.0625rem;
+  background-color: transparent;
+  border: none;
+  font-family: "Montserrat", sans-serif;
 }
 
 .laydo-overlay .nav-link:hover {
