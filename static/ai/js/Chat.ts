@@ -1,4 +1,5 @@
 import { marked } from 'marked';
+import { localMessage } from '../../base/js/Utils';
 
 class Chat {
     parentContainer: HTMLElement;
@@ -87,9 +88,9 @@ class Chat {
                 return;
             }
             navigator.clipboard.writeText(this.userText.textContent).then(() => {
-                console.log('Text copied to clipboard');
+                localMessage('Copied to clipboard!', 'info');
             }, (error) => {
-                console.error('Could not copy text: ', error);
+                localMessage(`Could not copy text: ${error}`, 'error');
             });
         });
         buttonContainer.appendChild(this.copyButton);
