@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+	<!-- Main football shape -->
+	<path d="M20 20 
+    	Q 150 10 140 140
+    	Q 10 150 20 20 Z"
+    	fill="#804000" stroke="#663300" stroke-width="2"/>
+	<line x1="20" y1="20" x2="140" y2="140" style="stroke:#663300;stroke-width:1" />
+  
+  	<!-- Center white stripe -->
+	<rect width="70" height="5" x="45" y="75" rx="2" ry="2"
+  		style="stroke:#804000;stroke-width:0.5;fill:white;"
+    	transform="rotate(45, 80, 80)"/>
+	<rect width="70" height="5" x="45" y="80" rx="2" ry="2"
+    	style="stroke:#804000;stroke-width:0.5;fill:white;"
+    	transform="rotate(45, 80, 80)"/>
+        
+	<!-- Stitching lines -->
+	<rect width="5" height="15" x="46.875" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+    <rect width="5" height="15" x="55.625" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+    <rect width="5" height="15" x="64.375" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+    <rect width="5" height="15" x="73.125" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+    <rect width="5" height="15" x="81.875" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+    <rect width="5" height="15" x="90.625" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+    <rect width="5" height="15" x="99.375" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+    <rect width="5" height="15" x="108.125" y="73" rx="2" ry="2"
+    	style="fill:white;" 
+        transform="rotate(45, 80, 80)"/>
+</svg>
