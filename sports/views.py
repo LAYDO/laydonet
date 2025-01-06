@@ -10,6 +10,7 @@ from abc import ABC, abstractmethod
 # NFL
 NFL_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/teams"
 NFL_EVENT_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/summary?event="
+NFL_SCOREBOARD_URL = "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard"
 
 # College Football
 COLLEGE_FOOTBALL_TEAM_URL = "https://site.api.espn.com/apis/site/v2/sports/football/college-football/teams"
@@ -65,8 +66,10 @@ class GetNFLTeam(BaseTeam):
     def process_data(self, data, id: int):
         status = data["team"]["nextEvent"][0]["competitions"][0]["status"]["type"]["name"]
         scheduleURL = f"{NFL_TEAM_URL}/{id}/schedule?season="
-        currYear = data["team"]["nextEvent"][0]["date"].split("-")[0]
-        scheduleURL += currYear
+        scoreboardData = json.loads(requests.get(NFL_SCOREBOARD_URL).text)
+        currYear = scoreboardData["leagues"][0]["season"]["year"]
+        scheduleURL += str(currYear)
+        # print(f"SCHEDULE URL: {scheduleURL}")
         response = requests.get(scheduleURL)
         schedData = json.loads(response.text)
         scheduleList = []
@@ -112,12 +115,13 @@ class GetNFLTeam(BaseTeam):
             nextEventID = data["team"]["nextEvent"][0]["id"]
         elif (status == "STATUS_FINAL"):
             week = data["team"]["nextEvent"][0]["week"]["number"] + 1
+            # print(f"SCHED DATA: {schedData}")
             byeWeek = schedData["byeWeek"]
             if (week > byeWeek):
                 week -= 2
             else:
                 week -= 1
-            if (schedData["events"][week] is not None):
+            if (week in schedData["events"]):
                 nextEvent = schedData["events"][week]["shortName"]
                 nextEventDate = schedData["events"][week]["date"]
                 broadcast = schedData["events"][week]["competitions"][0]["broadcasts"][0]["media"]["shortName"]

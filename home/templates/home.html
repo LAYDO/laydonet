@@ -3,90 +3,92 @@
 {% endblock %} {% block page_backgrounds %}
 <div class="laydo-background" id="laydoBackgroundHome"></div>
 {% endblock %} {% block laydo_home_title %}
-<div class="laydo-title">
-  <div class="title-dark">Crafting</div>
-  <div class="title-name title-dark">Digital<br />Experiences</div>
+<div class="app-site-container">
+  <div class="apps-space">
+    <div class="app-claim">
+      <button class="app-button" id="ai" >
+        <!-- https://codepen.io/osama-belal/pen/NZYrvM -->
+        <section class="container">
+          <div>
+            <div>
+              <span class="one h6"></span>
+              <span class="two h3"></span>
+            </div>
+          </div>
+          <div>
+            <div>
+              <span class="one h1"></span>
+              <span class="two h4"></span>
+            </div>
+          </div>
+          <div>
+            <div>
+              <span class="one h5"></span>
+              <span class="two h2"></span>
+            </div>
+          </div>
+        </section>
+      </button>
+      <h3 class="app-title">laydoAI</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="sports" ></button>
+      <h3 class="app-title">Sports</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="orbiter" ></button>
+      <h3 class="app-title">Orbiter</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="jwst" ></button>
+      <h3 class="app-title">JWST</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="weather" ></button>
+      <h3 class="app-title">Weather</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="mtg" ></button>
+      <h3 class="app-title">MTG</h3>
+    </div>
+    {% if user.is_staff %}
+    <div class="app-claim">
+      <button class="app-button" id="schedule" ></button>
+      <h3 class="app-title">Schedule</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="allergies" ></button>
+      <h3 class="app-title">Allergies</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="webgl" ></button>
+      <h3 class="app-title">WebGL</h3>
+    </div>
+    <div class="app-claim">
+      <button class="app-button" id="cookbook" ></button>
+      <h3 class="app-title">Cookbook</h3>
+    </div>
+    {% endif %}
+  </div>
+  <div class="site-space">
+    <div class="site-claim">
+      <div class="site-div" id="apollosarcade" ></div>
+      <h3 class="site-title">Apollo's Arcade</h3>
+    </div>
+    <div class="site-claim">
+      <div class="site-div" id="wedding" ></div>
+      <h3 class="site-title">Wedding</h3>
+    </div>
+  </div>
 </div>
 <div class="laydo-bottom">
   <div class="material-icons" id="laydoArrowDown">keyboard_arrow_down</div>
 </div>
 {% endblock %}
 {% block laydo_content %}
-<div class="apps-space">
-  <div class="app-claim">
-    <button class="app-button" id="ai" >
-      <!-- https://codepen.io/osama-belal/pen/NZYrvM -->
-      <section class="container">
-        <div>
-          <div>
-            <span class="one h6"></span>
-            <span class="two h3"></span>
-          </div>
-        </div>
-        <div>
-          <div>
-            <span class="one h1"></span>
-            <span class="two h4"></span>
-          </div>
-        </div>
-        <div>
-          <div>
-            <span class="one h5"></span>
-            <span class="two h2"></span>
-          </div>
-        </div>
-      </section>
-    </button>
-    <h3 class="app-title">laydoAI</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="sports" ></button>
-    <h3 class="app-title">Sports</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="orbiter" ></button>
-    <h3 class="app-title">Orbiter</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="jwst" ></button>
-    <h3 class="app-title">JWST</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="weather" ></button>
-    <h3 class="app-title">Weather</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="mtg" ></button>
-    <h3 class="app-title">MTG</h3>
-  </div>
-  {% if user.is_staff %}
-  <div class="app-claim">
-    <button class="app-button" id="schedule" ></button>
-    <h3 class="app-title">Schedule</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="allergies" ></button>
-    <h3 class="app-title">Allergies</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="webgl" ></button>
-    <h3 class="app-title">WebGL</h3>
-  </div>
-  <div class="app-claim">
-    <button class="app-button" id="cookbook" ></button>
-    <h3 class="app-title">Cookbook</h3>
-  </div>
-  {% endif %}
-</div>
-<div class="site-space">
-  <div class="site-claim">
-    <div class="site-div" id="apollosarcade" ></div>
-    <h3 class="site-title">Apollo's Arcade</h3>
-  </div>
-  <div class="site-claim">
-    <div class="site-div" id="wedding" ></div>
-    <h3 class="site-title">Wedding</h3>
-  </div>
+<div class="laydo-title">
+  <div class="title-dark">Crafting</div>
+  <div class="title-name title-dark">Digital<br />Experiences</div>
 </div>
 {% endblock %} {% block page_scripts %}
 <script type="text/javascript" src="{% static '/dist/home.bundle.js' %}"></script>
