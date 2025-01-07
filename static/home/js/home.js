@@ -1,4 +1,5 @@
 import { Clock } from '../../schedule/js/Clock';
+import { main } from '../../webgl/js/webbers';
 let clock;
 let arrowElement = document.querySelector('.laydo-bottom');
 init()
@@ -8,6 +9,10 @@ function init() {
     if (element) {
         clock = new Clock(element);
         setInterval(updateTime, 1000);
+    }
+    let webgl = document.getElementById('webgl');
+    if (webgl) {
+        main(webgl);
     }
     window.addEventListener('scroll', handleScroll);
     localStorage.setItem('arrowHidden', 'false');

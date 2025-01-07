@@ -2,8 +2,8 @@ import { WebGL } from './WebGL';
 import { initBuffers } from './init-buffers';
 import { drawScene } from './draw-scene';
 
-function main() {
-    let parent = document.getElementById('webGL');
+function main(parent) {
+    // let parent = document.getElementById('webGL');
     let webGL = new WebGL(parent);
     let gl = webGL.getGL();
     let cubeRotation = 0.0;
@@ -14,7 +14,22 @@ function main() {
         return;
     }
 
-    gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
+    const parentStyles = getComputedStyle(parent);
+    const bgColor = parentStyles.backgroundColor;
+    console.log(bgColor);
+    const rgba = bgColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+),?\s*([\d.]*)\)/);
+    if (rgba) {
+        const r = parseInt(rgba[1], 10) / 255;
+        const g = parseInt(rgba[2], 10) / 255;
+        const b = parseInt(rgba[3], 10) / 255;
+        const a = rgba[4] ? parseFloat(rgba[4]) : 1.0;
+        console.log(r, g, b, a);
+        gl.clearColor(r, g, b, a);
+    } else {
+        gl.clearColor(0.0, 0.0, 0.0, 1.0); // Fallback to black
+    }
+
+    // gl.clearColor(0.0, 0.0, 0.0, 1.0); // Clear to black, fully opaque
     gl.clear(gl.COLOR_BUFFER_BIT); // Clear everything
 
     const vsSource = `
@@ -81,6 +96,8 @@ function initShaderProgram(gl, vsSource, fsSource) {
     gl.attachShader(shaderProgram, vertexShader); // Attach vertex shader
     gl.attachShader(shaderProgram, fragmentShader); // Attach fragment shader
     gl.linkProgram(shaderProgram); // Link program
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     // Check if linking failed
     if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
@@ -107,4 +124,6 @@ function loadShader(gl, type, source) {
     return shader;
 }
 
-main();
+// main();
+
+export { main };
