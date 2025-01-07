@@ -243,12 +243,12 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 # Session settings
-if DEBUG:
-    SESSION_COOKIE_DOMAIN = ".localhost"
-    CSRF_COOKIE_DOMAIN = ".localhost"
-else:
-    SESSION_COOKIE_DOMAIN = ".laydo.net"
-    CSRF_COOKIE_DOMAIN = ".laydo.net"
-SESSION_COOKIE_SAMESITE = "Lax"
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+# if DEBUG:
+#     SESSION_COOKIE_DOMAIN = ".localhost"
+#     CSRF_COOKIE_DOMAIN = ".localhost"
+# else:
+#     SESSION_COOKIE_DOMAIN = ".laydo.net"
+#     CSRF_COOKIE_DOMAIN = ".laydo.net"
+# SESSION_COOKIE_SAMESITE = "Lax"
+# SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
