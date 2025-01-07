@@ -5,7 +5,7 @@ module.exports = {
     entry: {
         app: ['./static/base/js/base.js', './static/base/js/Utils.ts'],
         base: ['./static/base/js/base.js'],
-        home: ['./static/home/js/home.js', './static/schedule/js/Clock.ts'],
+        home: ['./static/webgl/js/WebGL.ts', './static/webgl/js/webbers.js', './static/webgl/js/init-buffers.js', './static/webgl/js/draw-scene.js','./static/home/js/home.js', './static/schedule/js/Clock.ts',],
         resume: ['./static/resume/js/resume.ts'],
         allergies: ['./static/allergies/js/allergies.js'],
         blog: ['./static/blog/js/blog.js'],
@@ -37,7 +37,7 @@ module.exports = {
         wedding: ['./static/wedding/js/wedding_home.js'],
         wedding_base: ['./static/wedding/js/wedding_base.js'],
         our_story: ['./static/wedding/js/ourstory.js'],
-        webgl: ['./static/webgl/js/WebGL.ts', './static/webgl/js/webbers.js', './static/webgl/js/init-buffers.js', './static/webgl/js/draw-scene.js'],
+        webgl: ['./static/webgl/js/webgl-tutorial.js','./static/webgl/js/WebGL.ts', './static/webgl/js/webbers.js', './static/webgl/js/init-buffers.js', './static/webgl/js/draw-scene.js'],
         ai: ['./static/ai/js/chat_main.ts','./static/ai/js/Chat.ts', './static/ai/js/Conversation.ts', './static/ai/js/ChatUI.ts'],
         cookbook: ['./static/cookbook/js/cooky.ts', './static/cookbook/js/cookbook.ts', './static/cookbook/js/Recipe.ts'],
         sports: [
