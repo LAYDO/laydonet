@@ -109,12 +109,12 @@ export class TeamWidget extends SportsWidget {
         }).then(data => {
             let utcDate = new Date(data['nextEvent']['date']);
             let localDate = utcDate.toLocaleString('en-US', options);
-            this.teamName = data['name'];
-            this.teamLogo = data['logo'];
-            this.teamColor = data['color'];
-            this.teamAltColor = data['alternateColor'];
-            this.teamRecord = data['record'];
-            this.teamStanding = data['standing'];
+            this.teamName = data['team']['name'];
+            this.teamLogo = data['team']['logo'];
+            this.teamColor = data['team']['color'];
+            this.teamAltColor = data['team']['alternateColor'];
+            this.teamRecord = data['team']['record'];
+            this.teamStanding = data['team']['standing'];
             if (data['nextEvent']['event'] === "Off Season") {
                 this.teamNextEvent = "Off Season";
                 this.teamNextEventDate = "";

@@ -39,11 +39,11 @@ export class TeamHeader {
     }
 
     populateHeader(data: any) {
-        this.headerElement.style.background = `linear-gradient(#${data.color} 70%, var(--color-primary) 100%)`;
-        this.logoElement.src = data.logo;
+        this.headerElement.style.background = `linear-gradient(#${data.team.color} 70%, var(--color-primary) 100%)`;
+        this.logoElement.src = data.team.logo;
         this.headerElement.prepend(this.logoElement);
-        this.teamNameElement.textContent = `${data.seasonYear} ${data.name}`;
-        this.recordElement.textContent = data.record;
-        this.standingElement.textContent = data.standing;
+        this.teamNameElement.textContent = `${data.league.season.year} ${data.team.name}`;
+        this.recordElement.textContent = data.team.record;
+        this.standingElement.textContent = data.team.standing;
     }
 }

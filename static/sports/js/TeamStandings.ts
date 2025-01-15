@@ -32,8 +32,8 @@ export class TeamStandings {
     populateStandings(data: any) {
         this.standingsTitle.textContent = data.standingHeader;
         this.standingsElement.innerHTML = '';
-        this.buildStandingsHeader(data.league);
-        this.buildStandings(data.league, data);
+        this.buildStandingsHeader(data.league.name);
+        this.buildStandings(data.league.name, data);
     }
 
     buildStandingsHeader(league: string) {
@@ -64,15 +64,15 @@ export class TeamStandings {
                 pctHeader.textContent = 'PCT';
                 this.standingsHeader.appendChild(pctHeader);
 
-                let paHeader = document.createElement('div');
-                paHeader.classList.add('team-standing-pa');
-                paHeader.textContent = 'PA';
-                this.standingsHeader.appendChild(paHeader);
-
                 let pfHeader = document.createElement('div');
                 pfHeader.classList.add('team-standing-pf');
                 pfHeader.textContent = 'PF';
                 this.standingsHeader.appendChild(pfHeader);
+
+                let paHeader = document.createElement('div');
+                paHeader.classList.add('team-standing-pa');
+                paHeader.textContent = 'PA';
+                this.standingsHeader.appendChild(paHeader);
                 break;
             case 'ncaaf':
                 let confHeader = document.createElement('div');
@@ -133,15 +133,15 @@ export class TeamStandings {
                     pctElement.textContent = standing.pct;
                     standingElement.appendChild(pctElement);
 
-                    let paElement = document.createElement('div');
-                    paElement.classList.add('team-standing-pa');
-                    paElement.textContent = standing.pa;
-                    standingElement.appendChild(paElement);
-
                     let pfElement = document.createElement('div');
                     pfElement.classList.add('team-standing-pf');
                     pfElement.textContent = standing.pf;
                     standingElement.appendChild(pfElement);
+
+                    let paElement = document.createElement('div');
+                    paElement.classList.add('team-standing-pa');
+                    paElement.textContent = standing.pa;
+                    standingElement.appendChild(paElement);
                     break;
                 case 'ncaaf':
                     let confElement = document.createElement('div');

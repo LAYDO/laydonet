@@ -28,7 +28,7 @@ export class TeamSchedule {
 
     populateSchedule(data: any) {
         this.scheduleElement.innerHTML = '';
-        data.forEach((event: any) => {
+        data.events.forEach((event: any) => {
             const eventElement = document.createElement('div');
             eventElement.classList.add('team-schedule-event');
             this.scheduleElement.appendChild(eventElement);

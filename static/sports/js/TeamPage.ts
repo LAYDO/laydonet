@@ -8,14 +8,15 @@ export class TeamPage {
     headerElement: TeamHeader;
     bodyElement: TeamBody;
 
-    constructor(container: HTMLElement, data: HTMLElement) {
+    constructor(container: HTMLElement) {
         this.container = container;
         this.headerElement = new TeamHeader(container);
         this.bodyElement = new TeamBody(container);
-        this.populatePage(data);
+        this.populatePage();
     }
-    populatePage(data: HTMLElement) {
-        let url = `/sports/${data.dataset.league}/${data.dataset.teamId}`;
+    populatePage() {
+        let urlBits = window.location.pathname.split('/');
+        let url = `/sports/${urlBits[2]}/${urlBits[4]}`;
         this.container.classList.add('team-container-loading');
         fetch(url).then(response => {
             if (!response.ok) {
@@ -23,7 +24,7 @@ export class TeamPage {
             }
             return response.json();
         }).then(data => {
-            this.container.style.border = `0.125rem solid #${data.alternateColor}`;
+            this.container.style.border = `0.125rem solid #${data.team.alternateColor}`;
             this.headerElement.populateHeader(data);
             this.bodyElement.populateBody(data);
             this.container.classList.remove('team-container-loading');
