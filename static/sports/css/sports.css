@@ -316,6 +316,7 @@
     background-color: var(--glass-backdrop);
     min-width: 100%;
     min-height: 7rem;
+    margin-bottom: 1rem;
 }
 
 .event-predictor-container,
@@ -327,35 +328,29 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: var(--glass-backdrop);
 }
 .event-predictor-container {
     min-height: 10rem;
-    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-odds-container {
     min-height: 10rem;
-    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-team-stats-container {
     min-height: 10rem;
-    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-season-leaders-container {
     min-height: 10rem;
-    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
 .event-last-five-container {
     min-height: 15rem;
-    /* border: 0.0625rem solid var(--font-color); */
     width: 100%;
 }
 
@@ -437,6 +432,16 @@
     .event-last-five-container {
         width: 100%;
     }
+}
+
+.event-predictor-title {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
 }
 
 @keyframes loadingShimmer {
