@@ -118,9 +118,9 @@ export class EventPredictor {
         const circumference = 2 * Math.PI * 40;
         // Calculate precise offsets
         const homeOffset = circumference * (1 - homePercentage / 100);
-        const awayOffset = circumference * (1 - awayPercentage / 100);
+        const awayOffset = (circumference * (1 + awayPercentage / 100));
         // Set offsets
         this.graphicHomeElement.setAttribute('stroke-dashoffset', (homeOffset).toString());
-        this.graphicAwayElement.setAttribute('stroke-dashoffset', (-awayOffset).toString());
+        this.graphicAwayElement.setAttribute('stroke-dashoffset', (awayOffset).toString());
     }
 }
