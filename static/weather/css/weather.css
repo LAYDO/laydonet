@@ -18,6 +18,10 @@ body {
   height: 2rem;
 }
 
+#Weather {
+  width: 100%;
+}
+
 .current-weather {
   width: 96%;
   height: 33%;
@@ -259,7 +263,6 @@ body {
   flex-direction: row;
   /* justify-content: safe center;  save for future*/
   overflow: auto;
-  overflow-y: hidden;
 }
 
 .hourly-container {

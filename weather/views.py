@@ -64,11 +64,10 @@ def getWeatherF(request):
             revGeoURL += 'lon=' + str(request.GET[parm]) + '&'
     metricURL = currURL + "exclude=minutely,alerts&units=metric&appid=" + STLNKEY
     currURL += "exclude=minutely,alerts&units=imperial&appid=" + STLNKEY
-    aqiURL += "distance=15&API_KEY=" + STLNKEY
+    aqiURL += "distance=15&API_KEY=" + AQIKEY
     foreURL += 'cnt=10&units=imperial&appid=' + STLNKEY
     revGeoURL += "limit=1&appid=" + STLNKEY
     weatherGURL = weatherGovURL + lat + ',' + lon
-    print(weatherGURL)
     if (weatherGovFlag):
         w = requests.get(weatherGURL).json()
         print(w['properties']['relativeLocation']['properties']['city'])
@@ -112,14 +111,12 @@ def getWeatherF(request):
         sunrise = todaySR
     sunset = todaySS
 
-    if (len(a) > 1):
-        aqi = a[1]
+    if (len(a) > 0):
+        aqi = a[0]
     else:
         aqi = {}
-    # print(c['daily'])
     rain_amount = 0
     if (c['daily'][0]['pop'] > 0):
-        print(f'{c["daily"][0]}')
         rain_amount = c['daily'][0][f'{c["daily"][0]["weather"][0]["main"].lower()}']
     current.update({
         'name': l[0]['name'],
