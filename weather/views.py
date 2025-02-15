@@ -40,7 +40,8 @@ def getWeatherF(request):
         if (parm == 'q'):
             city = str(request.GET[parm])
             foreURL += 'q=' + city + '&'
-            location = requests.get(geoURL + 'q=' + city + '&limit=1&appid=' + APIKEY).json() # geolocater.geocode(city)
+            location = requests.get(
+                geoURL + "q=" + city + "&limit=1&appid=" + STLNKEY).json()  # geolocater.geocode(city)
             if location[0]['lat']:
                 currURL += 'lat=' + str(location[0]['lat']) + '&'
                 aqiURL += "latitude=" + str(location[0]["lat"]) + "&"
@@ -61,11 +62,11 @@ def getWeatherF(request):
             aqiURL += "longitude=" + str(request.GET[parm]) + "&"
             foreURL += 'lon=' + str(request.GET[parm]) + '&'
             revGeoURL += 'lon=' + str(request.GET[parm]) + '&'
-    metricURL = currURL + 'exclude=minutely,alerts&units=metric&appid=' + APIKEY
-    currURL += 'exclude=minutely,alerts&units=imperial&appid=' + APIKEY
-    aqiURL += "distance=15&API_KEY=" + AQIKEY
+    metricURL = currURL + "exclude=minutely,alerts&units=metric&appid=" + STLNKEY
+    currURL += "exclude=minutely,alerts&units=imperial&appid=" + STLNKEY
+    aqiURL += "distance=15&API_KEY=" + STLNKEY
     foreURL += 'cnt=10&units=imperial&appid=' + STLNKEY
-    revGeoURL += 'limit=1&appid=' + APIKEY
+    revGeoURL += "limit=1&appid=" + STLNKEY
     weatherGURL = weatherGovURL + lat + ',' + lon
     print(weatherGURL)
     if (weatherGovFlag):
@@ -118,7 +119,8 @@ def getWeatherF(request):
     # print(c['daily'])
     rain_amount = 0
     if (c['daily'][0]['pop'] > 0):
-        rain_amount = c['daily'][0]['rain']
+        print(f'{c["daily"][0]}')
+        rain_amount = c['daily'][0][f'{c["daily"][0]["weather"][0]["main"].lower()}']
     current.update({
         'name': l[0]['name'],
         'latitude': c['lat'],
