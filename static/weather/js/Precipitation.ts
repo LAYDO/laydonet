@@ -55,6 +55,7 @@ export class Precipitation extends ElementTile {
 
             const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
             clipPath.setAttribute('id', 'precipClip');
+            clipPath.setAttribute('clipPathUnits', 'objectBoundingBox'); // ADD THIS LINE
             const clipPathRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             clipPathRect.setAttribute('x', '0');
             clipPathRect.setAttribute('y', '0');
