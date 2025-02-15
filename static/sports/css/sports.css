@@ -1,0 +1,455 @@
+/* Sports Widget Classes */
+.sports-widget {
+    background-color: var(--glass-backdrop);
+    padding: 10px;
+    margin: 1rem;
+    border-radius: 1rem;
+    justify-content: space-between;
+    border: 0.125rem solid var(--font-color);
+    color: #fff8ed;
+    cursor: pointer;
+    min-height: 6.25rem;
+}
+
+.sports-widget-loading {
+    min-width: 20rem;
+    min-height: 6.25rem;
+    position: relative;
+    overflow: hidden;
+    background-color: var(--glass-backdrop);
+    animation: loadingShimmer 1s linear infinite alternate;
+}
+
+.sport-logo {
+    width: 100px;
+    height: 100px;
+    border-radius: 1rem;
+    margin-right: 1.5rem;
+    display: block;
+}
+
+.sports-record-standing {
+    display: flex;
+    flex-direction: column;
+}
+
+.sports-record {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.sports-standing {
+    text-align: center;
+    font-size: 0.75rem;
+}
+.sports-next-event-date {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.sports-next-event-opponent {
+    text-align: center;
+    font-size: 1rem;
+}
+
+.sports-next-event-broadcast {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+/* Team Page Classes */
+.team-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #fff8ed;
+}
+
+.team-logo {
+    width: 200px;
+    height: 200px;
+    border-radius: 1rem;
+    margin-right: 1.5rem;
+    display: block;
+}
+
+.team-name {
+    text-align: center;
+    font-size: 2em;
+}
+
+.team-header-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+
+.team-record {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-right: 1rem;
+}
+
+.team-header-standing {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.team-record-standing {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+}
+
+.team-body {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    width: 96%;
+    background-color: var(--color-primary);
+    margin-bottom: 1rem;
+}
+
+.team-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 96%;
+    border-radius: 1rem;
+}
+
+.team-container-loading {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--glass-backdrop);
+    animation: loadingShimmer 1s linear infinite alternate;
+}
+
+.team-next-event-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 50%;
+    margin-bottom: 1rem;
+}
+
+.team-next-event {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.team-next-event-date {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.team-next-event-opponent {
+    text-align: center;
+    font-size: 1.25rem;
+}
+
+.team-next-event-broadcast {
+    text-align: center;
+    font-size: 0.75rem;
+}
+
+.team-season-results-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 50%;
+    margin-bottom: 1rem;
+}
+
+.team-standings-container,
+.team-schedule-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--glass-backdrop);
+    width: 96%;
+    margin-bottom: 1rem;
+}
+
+.team-schedule {
+    width: 100%;
+}
+
+.team-schedule-event,
+.team-standing-record {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    border-bottom: 0.125rem solid var(--font-faded);
+}
+
+.team-schedule-header {
+    margin-bottom: 1rem;
+}
+
+.team-schedule-date {
+    width: 25%;
+    font-size: 0.75rem;
+}
+.team-schedule-vs,
+.team-schedule-outcome {
+    width: 10%;
+}
+.team-schedule-opponent,
+.team-schedule-score {
+    width: 22.5%;
+    display: flex;
+    align-items: center;
+}
+
+.team-schedule-logo {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.5rem;
+}
+
+.team-standing-team {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 40%;
+    text-align: center;
+    align-items: center;
+}
+.team-standing-cf-team {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    width: 50%;
+    text-align: center;
+    align-items: center;
+}
+
+.team-standing-cf-conf,
+.team-standing-cf-overall {
+    width: 25%;
+    text-align: center;
+}
+
+.team-standing-team-center {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 40%;
+    text-align: center;
+}
+
+.team-standing-wins,
+.team-standing-losses,
+.team-standing-ties,
+.team-standing-pct,
+.team-standing-pa,
+.team-standing-pf {
+    width: 10%;
+    text-align: center;
+}
+
+.team-standing {
+    width: 100%;
+}
+
+.team-standing-title {
+    margin-bottom: 1rem;
+}
+
+.team-standing-record-bold {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    border-bottom: 0.125rem solid var(--font-faded);
+    background-color: var(--glass-backdrop);
+}
+
+.team-next-event-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.team-next-event-futures {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.team-next-event-past {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.team-next-event-futures,
+.team-next-event-past {
+    width: 100%;
+}
+
+.event-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: var(--glass-backdrop);
+    min-width: 100%;
+    min-height: 7rem;
+    margin-bottom: 1rem;
+}
+
+.event-predictor-container,
+.event-odds-container,
+.event-team-stats-container,
+.event-season-leaders-container,
+.event-last-five-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.event-predictor-container {
+    min-height: 10rem;
+    width: 100%;
+}
+
+.event-odds-container {
+    min-height: 10rem;
+    width: 100%;
+}
+
+.event-team-stats-container {
+    min-height: 10rem;
+    width: 100%;
+}
+
+.event-season-leaders-container {
+    min-height: 10rem;
+    width: 100%;
+}
+
+.event-last-five-container {
+    min-height: 15rem;
+    width: 100%;
+}
+
+.event-header-home,
+.event-header-away {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+.event-header-home-team,
+.event-header-away-team {
+    margin: 0 0.5rem;
+}
+.event-header-home-record,
+.event-header-away-record {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    font-size: 0.75rem;
+}
+
+.event-header-away-logo,
+.event-header-home-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 1rem;
+    margin-right: 1.5rem;
+    display: block;
+    margin: 0 0.5rem;
+}
+
+.event-header-middle-date {
+    font-size: 0.75rem;
+}
+
+@media only screen and (max-width: 48rem) {
+    .sports-widget,
+    .sports-widget-loading {
+        width: 80%;
+    }
+
+    .team-next-event-container,
+    .team-season-results-container,
+    .team-standings-container,
+    .team-schedule-container {
+        width: 100%;
+    }
+    .team-body {
+        flex-direction: column;
+    }
+    .team-logo {
+        width: 100px;
+        height: 100px;
+    }
+    .team-name {
+        font-size: 1.25em;
+    }
+
+    .event-header-home-name,
+    .event-header-away-name,
+    .event-header-home-record,
+    .event-header-away-record {
+        font-size: 0.75rem;
+    }
+
+    .team-next-event-body {
+        flex-direction: column;
+    }
+
+    .team-next-event-futures,
+    .team-next-event-past,
+    .event-predictor-container,
+    .event-odds-container,
+    .event-team-stats-container,
+    .event-season-leaders-container,
+    .event-last-five-container {
+        width: 100%;
+    }
+}
+
+.event-predictor-title {
+    margin-bottom: 1rem;
+    margin-left: 1rem;
+    font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+@keyframes loadingShimmer {
+    0% {
+        background-color: var(--glass-backdrop);
+    }
+
+    100% {
+        background-color: hsla(204, 20%, 95%, 0.689);
+    }
+}

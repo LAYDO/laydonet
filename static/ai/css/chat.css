@@ -37,17 +37,27 @@ header, footer {
     --glass-backdrop: rgba(255, 255, 255, 0.15);
 }
 
+.chat-ui-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+}
+
 .laydo-header {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    padding: 1.5rem 1.5rem;
+    padding: 1.5rem 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 95%;
 }
 .laydo-main {
-    display: grid;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    padding: 0 1.5rem;
-    flex-grow: 1;
     overflow: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }
 
 .laydo-logo {
@@ -59,36 +69,27 @@ header, footer {
 }
 
 .laydo-header-options {
-    grid-column-start: 2;
-    grid-column-end: 6;
     display: flex;
+    flex-direction: row;
     justify-content: flex-end;
 }
 
 .laydo-options select {
     font-size: 1rem;
     cursor: pointer;
-    background-color: var(--color-primary);
+    background-color: var(--glass-backdrop);
     color: var(--font-color);
-    border: none;
+    border: 0.0625rem solid var(--font-faded);
+    border-radius: 0.25rem;
 }
 
 .laydo-options select:focus {
     outline: none;
 }
 
-.laydo-option {
-    margin: 0;
-}
-
 .laydo-chat-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
+    width: 90%;
     height: 100%;
-    grid-column-start: 2;
-    grid-column-end: 6;
     overflow: auto;
 }
 
@@ -120,7 +121,6 @@ header, footer {
     backdrop-filter: blur(5px);
     border-radius: 1rem;
     width: 100%;
-    margin: 1rem auto;
     /* overflow-y: auto; */
     flex-grow: 1;
 }
@@ -158,6 +158,9 @@ header, footer {
     flex-direction: column;
     justify-content: space-around;
     align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 1rem;
 }
 
 .laydo-loading-container {
@@ -170,16 +173,82 @@ header, footer {
     margin-bottom: 2rem;
 }
 
+.user-text-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    background-color: var(--glass-backdrop);
+    border-radius: 1rem;
+}
+
 .laydo-user-title {
     font-weight: 700;
     font-size: 1.25rem;
     margin: 0.5rem;
 }
 
+.button-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    width: auto;
+}
+
+.copy-button {
+    background-color: transparent;
+    color: var(--font-color);
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    width: auto;
+    padding: 0.5rem;
+    margin-right: 1rem;
+}
+
+.codehilite {
+    background: none;
+    padding: 0;
+    width: 100%;
+}
+
 .laydo-text {
     font-size: 1rem;
     margin: 0.5rem;
     text-align: start;
+    line-height: 1.5;
+}
+
+.laydo-ai-text {
+    font-size: 0.8rem;
+    width: 100%;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.laydo-text code {
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
+}
+
+.laydo-text pre {
+    background: var(--glass-backdrop);
+    padding: 1em;
+    border-radius: 5px;
+    overflow-x: auto;
+    max-width: 100%;
+    white-space: pre;
+}
+
+.laydo-text blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    margin-left: 0;
 }
 
 .laydo-loading {
@@ -200,7 +269,7 @@ header, footer {
     cursor: pointer;
     width: auto;
     padding: 0;
-    margin: 0;
+    margin-right: 1rem;
 }
 
 @keyframes spin {
@@ -290,6 +359,26 @@ header, footer {
 .h6 {
     left: 0;
     animation: load6 7.2s ease 3s infinite;
+}
+
+.laydo-step-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.laydo-step-title {
+    font-weight: 700;
+    font-size: 1.25rem;
+    margin: 0.5rem;
+}
+
+.laydo-step-text {
+    font-size: 1rem;
+    margin: 0.5rem;
+    text-align: start;
 }
 
 @keyframes load1 {

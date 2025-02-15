@@ -3,6 +3,9 @@
 <html lang="en" class="theme-light">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Web design & development for small businesses, weddings, and portfolios." />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <meta name="author" content="Landen Robinson" />
+  <meta name="keywords" content="web design, web development, small business, wedding, portfolio" />
   <head>
     <title>LaydoNet</title>
     <link rel="stylesheet" href="{% static 'base/css/base.css' %}" />
@@ -24,7 +27,10 @@
         <a class="nav-link"  id="blog">Blog</a>
         <a class="nav-link"  id="resume">Resume</a>
         {% if user.is_authenticated %}
-          <a class="nav-link" id="logout" href="{% url 'logout' %}">Logout</a>
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="nav-link" id="logout">Logout</button>
+        </form>
         {% else %}
           <a class="nav-link" id="login" href="{% url 'login' %}">Login</a>
         {% endif %}

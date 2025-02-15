@@ -10,8 +10,10 @@
 
 .container div {
   position: absolute;
-  width: 5.625rem;
-  height: 3.1875rem;
+  width: 4.5rem;
+  height: 2.55rem;
+  /* width: 5.625rem;
+  height: 3.1875rem; */
 }
 
 .container div:nth-of-type(2) {
@@ -229,6 +231,13 @@
   background-image: url('/static/home/img/jest.png');
 }
 
+.app-site-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .apps-space {
   display: flex;
   flex-direction: row;
@@ -301,13 +310,41 @@
   background-image: url('/static/mtg/img/mtgIcon.svg');
 }
 
+#sports {
+  background-image: url('/static/sports/img/football.svg');
+}
+
+#cookbook {
+  background-image: url('/static/cookbook/img/chef_hat.png');
+}
+
+@media only screen and (max-width: 37.5rem) {
+  .app-site-container {
+    flex-direction: column;
+  }
+}
 @media only screen and (min-width: 37.5rem) {
+
   .app-button {
     min-height: 10rem;
     min-width: 10rem;
   }
 
   .app-title {
+    font-size: 2rem;
+  }
+
+  .container div {
+    position: absolute;
+    width: 7.5rem;
+    height: 4.25rem;
+  }
+  .site-div {
+    min-height: 20rem;
+    min-width: 15rem;
+  }
+
+  .site-title {
     font-size: 2rem;
   }
 }
@@ -352,19 +389,14 @@
   background-image: url('/static/home/img/apollo.png');
 }
 
-@media only screen and (min-width: 37.5rem) {
-  .site-div {
-    min-height: 20rem;
-    min-width: 15rem;
-  }
-
-  .site-title {
-    font-size: 2rem;
-  }
-}
-
 .sites-title,
 .apps-title {
   width: 100%;
   font-size: 2rem;
+}
+
+.fade-out-bottom {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+  pointer-events: none;
 }

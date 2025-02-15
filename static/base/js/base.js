@@ -1,3 +1,5 @@
+let homeLinks = ['laydoNavTitle', ''];
+let subdomainLinks = ['ai'];
 let overlay = document.getElementById('laydoOverlay');
 
 let prevScrollPos = window.scrollY;
@@ -25,11 +27,12 @@ function redirect(evt) {
     for (var i = 0; i < y.length; i++) {
         y[i].className = '';
     }
-    if (evt.currentTarget.id == 'laydoNavTitle' || evt.currentTarget.id == '') {
-        window.location.pathname = '';
+    if (homeLinks && homeLinks.includes(evt.currentTarget.id)) {
+        redirectToSubdomain();
+    } else if (subdomainLinks && subdomainLinks.includes(evt.currentTarget.id)) {
+        redirectToSubdomain(evt.currentTarget.id);
     } else {
         window.location.pathname = evt.currentTarget.id.toLowerCase();
-        // document.getElementById(window.location.pathname).className = 'active';
     }
 }
 
@@ -125,20 +128,19 @@ for (let socialIcon of socialIcons) {
     socialIcon.addEventListener('click', openSocial);
 }
 
-function stripSubdomain(url) {
-    const currentUrl = new URL(url);
-    const domainParts = currentUrl.hostname.split('.');
-    console.log(domainParts);
-    if (domainParts.length <= 2) {
-        const mainDomain = domainParts.pop();
-        currentUrl.hostname = mainDomain;
-        currentUrl.pathname = '';
-    } else {
-        const mainDomain = domainParts.at(-2).join('.');
-        currentUrl.hostname = mainDomain;
-        currentUrl.pathname = '';
+function redirectToSubdomain(sub = '') {
+    let newUrl = '';
+    const hostname = window.location.hostname;
+    const port = window.location.port;
+    const protocol = window.location.protocol;
 
+    // Handle localhost separately
+    const baseHostname = hostname.includes('localhost') ? 'localhost' : hostname.split('.').slice(-2).join('.');
+    if (sub === '') {
+        newUrl = `${protocol}//${baseHostname}${port ? ':' + port : ''}`;
+    } else {
+        newUrl = `${protocol}//${sub}.${baseHostname}${port ? ':' + port : ''}`;
     }
-    console.log(currentUrl);
-    return currentUrl.href;
+
+    window.location.href = newUrl;
 }

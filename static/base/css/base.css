@@ -31,7 +31,7 @@ body {
 .laydo-flex-home {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
+  align-items: center;
   width: 100%;
   z-index: 10;
   text-align: center;
@@ -71,9 +71,12 @@ body {
   flex-direction: column;
   justify-content: center;
   display: none;
+  align-items: center;
 }
 
-.laydo-overlay a {
+.laydo-overlay a,
+.laydo-overlay form,
+.laydo-overlay button {
   padding: 1rem;
   text-decoration: none;
   font-size: 1.5rem;
@@ -81,6 +84,9 @@ body {
   display: block;
   cursor: pointer;
   letter-spacing: 0.0625rem;
+  background-color: transparent;
+  border: none;
+  font-family: "Montserrat", sans-serif;
 }
 
 .laydo-overlay .nav-link:hover {
@@ -155,7 +161,6 @@ body {
   align-items: center;
   justify-content: flex-end;
   bottom: 0;
-  height: 25%;
 }
 
 .title-name {
@@ -350,6 +355,13 @@ body {
   padding: 1rem 0;
 }
 
+.laydo-row-around {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .laydo-row-wrap {
   display: flex;
   flex-direction: row;
@@ -393,4 +405,94 @@ body {
   .laydo-app {
     margin-top: 1rem;
   }
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  top: 10%;
+  animation: slideDown 0.5s ease-out forwards;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #888;
+  width: 100%;
+  pointer-events: all;
+  border-radius: 0.25rem;
+}
+
+.close {
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0.25rem;
+  border: 0.124rem solid #31708f;
+  margin: 0.5rem;
+  width: 25%;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.alert {
+  font-size: 1rem;
+  padding: 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alert-info {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+
+.alert-warning {
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+  color: #8a6d3b;
+}
+
+.alert-error {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+.modal-hide {
+  animation: slideUp 0.5s ease-out forwards;
 }

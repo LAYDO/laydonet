@@ -1,3 +1,11 @@
+const options: Intl.DateTimeFormatOptions = {
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: true,
+};
+
 class Utils {
     static svgns: "http://www.w3.org/2000/svg";
 
@@ -60,6 +68,7 @@ function postFetch(url: string, _body: Object = {}) {
         return data;
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
+        return error;
     })
 }
 
@@ -84,4 +93,53 @@ function metricPost(url: string, action: string, target: string) {
     }).catch(error => {
         console.error('There has been a problem with your fetch operation: ', error);
     })
+}
+
+export function convertToLocalDatetime(utcDateStr: string) {
+    const localDate = new Date(utcDateStr);
+    return localDate.toLocaleString('en-US', options);
+}
+
+export function localMessage(message: string, type: string) {
+    if (type in ['error', 'warning']) {
+        console.log(`${type}: ${message}`);
+    }
+    let modal = document.getElementById("messageModal");
+    let container = document.getElementById("modalContainer");
+    let content = document.getElementById("messageContent");
+    let closeButton = document.getElementById("message_close");
+    if (modal && content && container && closeButton != null) {
+        content.textContent = message;
+        container.classList.add(`alert-${type}`);
+        modal.style.display = 'block';
+        modal.style.left = `${(window.innerWidth - modal.offsetWidth) / 2}px`;
+        modal.style.top = `${modal.offsetHeight}px`;
+        if (type == 'info') {
+            closeButton.style.display = 'none';
+        }
+        // Auto-hde after 3 seconds
+        setTimeout(() => {
+            modal?.classList.add('modal-hide');
+            setTimeout(() => {
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.classList.remove('modal-hide');
+                    container?.classList.remove(`alert-${type}`);
+                    modal.style.left = '0';
+                    modal.style.top = '0';
+                }
+            }, 500);
+        }, 3000);
+        // Close button
+        closeButton.addEventListener('click', () => {
+            modal?.classList.add('modal-hide');
+            setTimeout(() => {
+                if (modal) {
+                    modal.style.display = 'none';
+                    modal.classList.remove('modal-hide');
+                    container?.classList.remove(`alert-${type}`);
+                }
+            }, 500);
+        });
+    }
 }

@@ -16,6 +16,12 @@
     {% block page_head %}{% endblock %}
   </head>
   <body>
+    <div id="messageModal" class="modal">
+      <div id="modalContainer" class="modal-content">
+        <div id="messageContent" class="alert"></div>
+        <div class="close" id="message_close">OK</div>
+      </div>
+    </div>
     <div class="laydo-overlay" id="laydoOverlay">
       <!-- Overlay content -->
       <div class="laydo-overlay-content">
@@ -24,7 +30,10 @@
         <a class="nav-link"  id="blog">Blog</a>
         <a class="nav-link"  id="resume">Resume</a>
         {% if user.is_authenticated %}
-        <a class="nav-link" id="logout" href="{% url 'logout' %}">Logout</a>
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="nav-link" id="logout">Logout</button>
+        </form>
         {% else %}
         <a class="nav-link" id="login" href="{% url 'login' %}">Login</a>
         {% endif %}
