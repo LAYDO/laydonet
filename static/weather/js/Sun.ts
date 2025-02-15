@@ -1,6 +1,6 @@
-import { ElementTile } from "./ElementTile";
+import { CelestialTile } from "./CelestialTile";
 
-export class Sun extends ElementTile {
+export class Sun extends CelestialTile {
     private riseUnix: number;
     private setUnix: number;
     private colorSunrise: string = '#FFE600';
@@ -9,17 +9,20 @@ export class Sun extends ElementTile {
     public animSunId: number;
     private baseW: number;
     private radius: number;
-    private sunGraphic: HTMLElement;
+    // private sunGraphic: HTMLElement;
+    private sunSVG: SVGElement;
 
-    constructor() {
-        super('Sun', 'sun', ['sunData', 'sunGraphic2'], 'celestialRow', ['sunRemain']);
+    constructor(_row: HTMLElement) {
+        super('Sun', 'sun', ['sunData', 'sunGraphic2'], _row, ['sunRemain']);
         this.riseUnix = 0;
         this.setUnix = 0;
         this.remainInterval = 0;
         this.animSunId = 0;
         this.baseW = 0;
         this.radius = 0;
-        this.sunGraphic = document.getElementById('sunGraphic2')!;
+        this.sunSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        this.sunSVG.id = 'sunSVG';
+        this.element.classList.add('celestial-tile');
     }
 
     populate(todaily: any, data: any, place: number) {
@@ -40,15 +43,10 @@ export class Sun extends ElementTile {
         let sunrise = this.convertToAdjustedRadians(this.riseUnix);
         let sunset = this.convertToAdjustedRadians(this.setUnix);
 
-        this.baseW = this.sunGraphic?.clientWidth * 0.9;
+        this.baseW = this.minis[1]?.clientWidth * 0.9;
         this.radius = this.baseW / 2;
 
-        this.sunGraphic.innerHTML = '';
-
-        let svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        svg.setAttribute('width', this.baseW.toFixed(0));
-        svg.setAttribute('height', this.baseW.toFixed(0));
-        svg.id = 'sunSVG';
+        this.minis[1].innerHTML = '';
 
         // Black background
         let background = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -69,13 +67,14 @@ export class Sun extends ElementTile {
         // Night time area, using 0.81 on radius to get rid of slight yellow outline
         let darkness = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         darkness.setAttribute('d', `
-            M ${(this.baseW / 2) + ((this.radius * 0.81) * Math.cos(sunset))} ${(this.baseW / 2) + ((this.radius * 0.81) * Math.sin(sunset))}
-            A ${(this.radius * 0.81)} ${(this.radius * 0.81)}, 0, 1, 1, ${(this.baseW / 2) + ((this.radius * 0.81) * Math.cos(sunrise))} ${(this.baseW / 2) + ((this.radius * 0.81) * Math.sin(sunrise))}
-            L ${(this.baseW / 2)} ${(this.baseW / 2)} Z
+            M ${((this.baseW / 2) + ((this.radius * 0.8) * Math.cos(sunset))).toFixed(0)},${((this.baseW / 2) + ((this.radius * 0.8) * Math.sin(sunset))).toFixed(0)}
+            A ${(this.radius * 0.8).toFixed(0)} ${(this.radius * 0.8).toFixed(0)} 0 1 1 ${((this.baseW / 2) + ((this.radius * 0.8) * Math.cos(sunrise))).toFixed(0)},${((this.baseW / 2) + ((this.radius * 0.8) * Math.sin(sunrise))).toFixed(0)}
+            L ${(this.baseW / 2).toFixed(0)} ${(this.baseW / 2).toFixed(0)} Z
         `);
         darkness.setAttribute('fill', 'rgb(0, 0, 133)');
         darkness.setAttribute('stroke', 'none');
-        console.log('DARKNESS D: ', darkness.getAttribute('d'));
+        darkness.setAttribute('id', 'darkness');
+        // console.log('DARKNESS D: ', darkness.getAttribute('d'));
         // "M" for midnight
         let midnight = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         midnight.setAttribute('x', (this.baseW / 2).toFixed(0));
@@ -127,18 +126,21 @@ export class Sun extends ElementTile {
         miniSet.setAttribute('r', ((this.radius * 0.8) * 0.1).toFixed(0));
         miniSet.setAttribute('stroke', 'none');
         miniSet.setAttribute('fill', this.colorSunset);
+        // console.log(`SUNSET D: `, miniSet.getAttribute('d'));
 
-        svg.append(background);
-        svg.append(daylightFill);
-        svg.append(darkness);
-        svg.append(miniRise);
-        svg.append(miniSet);
-        svg.append(midnight);
-        svg.append(noon);
-        svg.append(dayText);
-        svg.append(dayHours);
+        this.sunSVG.append(background);
+        this.sunSVG.append(daylightFill);
+        this.sunSVG.append(darkness);
+        this.sunSVG.append(miniRise);
+        this.sunSVG.append(miniSet);
+        this.sunSVG.append(midnight);
+        this.sunSVG.append(noon);
+        this.sunSVG.append(dayText);
+        this.sunSVG.append(dayHours);
+        this.sunSVG.setAttribute('width', this.baseW.toFixed(0));
+        this.sunSVG.setAttribute('height', this.baseW.toFixed(0));
 
-        this.sunGraphic.append(svg);
+        this.minis[1].append(this.sunSVG);
 
         this.animateCurrentTime(place, todaily, data);
     }
@@ -176,37 +178,50 @@ export class Sun extends ElementTile {
         let sunset = new Date(data['sunset'] * 1000);
         let s = document.getElementById('sunRemain')!;
 
+        if (!s) {
+            return;
+        }
+
         if (sunrise > sunset) {
             if (n < sunset) {
                 let diff = Math.abs(sunset.valueOf() - n.valueOf());
-                document.getElementById('sunTitle')!.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunset`;
-                document.getElementById('sunTitle')!.style.color = this.colorSunset;
-                document.getElementById('sunData')!.innerText = sunset.toLocaleTimeString('en-US', {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                });
+                this.title.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunset`;
+                this.title.style.color = this.colorSunset;
+                let d = document.getElementById('sunData');
+                if (d) {
+                    d.innerText = sunset.toLocaleTimeString('en-US', {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    });
+                }
                 this.plugDiff(diff, s, 'Sunset');
             } else {
                 let diff = Math.abs(sunrise.valueOf() - n.valueOf());
-                document.getElementById('sunTitle')!.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
-                document.getElementById('sunTitle')!.style.color = this.colorSunrise;
-                document.getElementById('sunData')!.innerText = sunrise.toLocaleTimeString('en-US', {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    hour12: true,
-                });
+                this.title.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
+                this.title.style.color = this.colorSunrise;
+                let d = document.getElementById('sunData');
+                if (d) {
+                    d.innerText = sunrise.toLocaleTimeString('en-US', {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                    });
+                }
                 this.plugDiff(diff, s, 'Sunrise');
             }
         } else {
             let diff = Math.abs(sunrise.valueOf() - n.valueOf());
-            document.getElementById('sunTitle')!.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
-            document.getElementById('sunTitle')!.style.color = this.colorSunrise;
-            document.getElementById('sunData')!.innerText = sunrise.toLocaleTimeString('en-US', {
-                hour: "2-digit",
-                minute: "2-digit",
-                hour12: true,
-            });
+            this.title.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
+            this.title.style.color = this.colorSunrise;
+            let d = document.getElementById('sunData');
+            if (d) {
+                d.innerText = sunrise.toLocaleTimeString('en-US', {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                });
+            }
             this.plugDiff(diff, s, 'Sunrise');
         }
     }
@@ -238,7 +253,7 @@ export class Sun extends ElementTile {
         line.setAttribute('style', 'stroke:var(--font-color); stroke-width: 2;');
         line.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.baseW / 2}, ${this.baseW / 2})`);
 
-        document.getElementById('sunSVG')!.append(line);
+        this.sunSVG.append(line);
     }
 
     drawMini(place: number) {
@@ -255,6 +270,6 @@ export class Sun extends ElementTile {
         mini.setAttribute('fill', 'white');
         mini.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.baseW / 2}, ${this.baseW / 2})`);
 
-        document.getElementById('sunSVG')!.append(mini);
+        this.sunSVG.append(mini);
     }
 }

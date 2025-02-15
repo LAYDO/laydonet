@@ -6,10 +6,12 @@ import requests, os
 
 APIKEY = os.getenv('OPEN_WEATHER_APP_ID')
 STLNKEY = os.getenv('OPEN_WEATHER_API_KEY')
+AQIKEY = os.getenv("AQI_API_KEY")
 baseURL = 'https://api.openweathermap.org/data/2.5/'
 geoURL = 'https://api.openweathermap.org/geo/1.0/direct?'
 seaCoords = (47.602270, -122.320390)
-# geolocater = Nominatim(user_agent="laydo")
+weatherGovURL = "https://api.weather.gov/points/" # {latitude},{longitude}"
+weatherGovFlag = False
 
 
 # Create your views here.
@@ -29,37 +31,54 @@ def getWeatherF(request):
     city = ''
     current = {}
     currURL = baseURL + 'onecall?'
-    aqiURL = baseURL + 'air_pollution?'
+    aqiURL = "https://www.airnowapi.org/aq/observation/latLong/current/?format=application/json&"
     foreURL = baseURL + 'forecast/daily?'
     revGeoURL = 'https://api.openweathermap.org/geo/1.0/reverse?'
+    lat = ''
+    lon = ''
     for parm in request.GET:
         if (parm == 'q'):
             city = str(request.GET[parm])
             foreURL += 'q=' + city + '&'
-            location = requests.get(geoURL + 'q=' + city + '&limit=1&appid=' + APIKEY).json() # geolocater.geocode(city)
+            location = requests.get(
+                geoURL + "q=" + city + "&limit=1&appid=" + STLNKEY).json()  # geolocater.geocode(city)
             if location[0]['lat']:
                 currURL += 'lat=' + str(location[0]['lat']) + '&'
-                aqiURL += 'lat=' + str(location[0]['lat']) + '&'
+                aqiURL += "latitude=" + str(location[0]["lat"]) + "&"
                 revGeoURL += 'lat=' + str(location[0]['lat']) + '&'
             if location[0]['lon']:
                 currURL += 'lon=' + str(location[0]['lon']) + '&'
-                aqiURL += 'lon=' + str(location[0]['lon']) + '&'
+                aqiURL += "longitude=" + str(location[0]["lon"]) + "&"
                 revGeoURL += 'lon=' + str(location[0]['lon']) + '&'
         elif (parm == 'lat'):
+            lat = str(request.GET[parm])
             currURL += 'lat=' + str(request.GET[parm]) + '&'
-            aqiURL += 'lat=' + str(request.GET[parm]) + '&'
+            aqiURL += "latitude=" + str(request.GET[parm]) + "&"
             foreURL += 'lat=' + str(request.GET[parm]) + '&'
             revGeoURL += 'lat=' + str(request.GET[parm]) + '&'
         elif (parm == 'lon'):
+            lon = str(request.GET[parm])
             currURL += 'lon=' + str(request.GET[parm]) + '&'
-            aqiURL += 'lon=' + str(request.GET[parm]) + '&'
+            aqiURL += "longitude=" + str(request.GET[parm]) + "&"
             foreURL += 'lon=' + str(request.GET[parm]) + '&'
             revGeoURL += 'lon=' + str(request.GET[parm]) + '&'
-    metricURL = currURL + 'exclude=minutely,alerts&units=metric&appid=' + APIKEY
-    currURL += 'exclude=minutely,alerts&units=imperial&appid=' + APIKEY
-    aqiURL += 'appid=' + APIKEY
+    metricURL = currURL + "exclude=minutely,alerts&units=metric&appid=" + STLNKEY
+    currURL += "exclude=minutely,alerts&units=imperial&appid=" + STLNKEY
+    aqiURL += "distance=15&API_KEY=" + AQIKEY
     foreURL += 'cnt=10&units=imperial&appid=' + STLNKEY
-    revGeoURL += 'limit=1&appid=' + APIKEY
+    revGeoURL += "limit=1&appid=" + STLNKEY
+    weatherGURL = weatherGovURL + lat + ',' + lon
+    if (weatherGovFlag):
+        w = requests.get(weatherGURL).json()
+        print(w['properties']['relativeLocation']['properties']['city'])
+        print(w['properties']['relativeLocation']['properties']['state'])
+        forecastURL = w['properties']['forecast']
+        print(forecastURL)
+        hourlyURL = w['properties']['forecastHourly']
+        print(hourlyURL)
+        stationsURL = w["properties"]["observationStations"]
+        print(stationsURL)
+        forecastData = requests.get(forecastURL).json()
     m = requests.get(metricURL).json()
     c = requests.get(currURL).json()
     a = requests.get(aqiURL).json()
@@ -92,11 +111,13 @@ def getWeatherF(request):
         sunrise = todaySR
     sunset = todaySS
 
-    if (len(a['list']) > 0):
-        aqi = a['list'][0]
+    if (len(a) > 0):
+        aqi = a[0]
     else:
         aqi = {}
-    # print(a)
+    rain_amount = 0
+    if (c['daily'][0]['pop'] > 0):
+        rain_amount = c['daily'][0][f'{c["daily"][0]["weather"][0]["main"].lower()}']
     current.update({
         'name': l[0]['name'],
         'latitude': c['lat'],
@@ -118,7 +139,7 @@ def getWeatherF(request):
         'clouds': c['current']['clouds'],
         'uvi': c['current']['uvi'],
         'visibility': c['current']['visibility'],
-        'rain_next': c['hourly'][0]['pop'],
+        'rain_amount': rain_amount,
         'rain_today': c['daily'][0]['pop'],
         'tomorrow': c['daily'][1],
         'todaily': c['daily'][0],

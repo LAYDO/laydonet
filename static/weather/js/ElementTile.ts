@@ -1,47 +1,59 @@
-export class ElementTile {
+export abstract class ElementTile {
     public container: HTMLElement;
     public element: HTMLElement;
-    public title: HTMLElement;
+    protected graphic: SVGElement;
+    protected graphicDrawGroup: SVGElement;
+    protected graphicDrawing: SVGElement;
+    protected graphicText: SVGElement;
+    protected subText: HTMLElement;
 
-    constructor(element: string, icon: string, mini: Array<string>, container: string, sub?: Array<string>) {
-        this.element = document.createElement('div');
-        this.element.id = `${element.toLowerCase()}`;
-        this.element.className = 'element-tile';
+    constructor(element: string, container: HTMLElement) {
+        
+        if (element && container) {
+            this.container = container;
 
-        this.title = document.createElement('div');
-        this.title.id = `${element.toLowerCase()}Title`;
-        this.title.className = 'container-title';
-        let span = document.createElement('span');
-        span.className = `fas fa-${icon.toLowerCase()} pad-right`;
-        this.title.append(span);
-        this.title.append(`${element}`);
-        this.element.append(this.title);
-
-        mini.forEach(m => {
-            let miniData = document.createElement('div');
-            miniData.id = `${m}`;
-            miniData.className = 'mini-data';
-            this.element.append(miniData);
-        })
-
-        sub?.forEach(s => {
-            let subData = document.createElement('div');
-            subData.className = 'sub-data';
-            if (sub) {
-                subData.id = `${s}`;
-            }
-            this.element.append(subData);
-        })
-
-        this.container = document.getElementById(`${container}`)!;
-        this.container.append(this.element);
+            const lowerElement = element.toLowerCase();
+            this.element = document.createElement('div');
+            this.element.id = `${lowerElement}Element`;
+            this.element.className = 'element-tile';
+    
+            this.graphic = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            this.graphic.id = `${lowerElement}Graphic`;
+    
+            this.graphicDrawGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            this.graphicDrawGroup.id = `${lowerElement}DrawGroup`;
+    
+            this.graphicDrawing = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            this.graphicDrawing.id = `${lowerElement}Drawing`;
+    
+            this.graphicDrawGroup.append(this.graphicDrawing);
+    
+            this.graphicText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            this.graphicText.id = `${lowerElement}MainText`;
+    
+            this.graphic.append(this.graphicDrawGroup);
+            this.graphic.append(this.graphicText);
+    
+            this.subText = document.createElement('div');
+            this.subText.classList.add('element-sub-text');
+            this.subText.id = `${lowerElement}SubText`;
+    
+            this.element.append(this.graphic);
+            this.element.append(this.subText);
+    
+            this.container.append(this.element);
+        } else {
+            throw new Error('Element and contianer parameters are required and cannot be null or undefined.');
+        }
     }
 
-    toggle(loaded: Boolean) {
+    toggle(loaded: boolean) {
         if (loaded) {
             this.element.style.display = 'flex';
         } else {
             this.element.style.display = 'none';
         }
     }
+
+    public abstract update(data: any): void;
 }
