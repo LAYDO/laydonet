@@ -43,6 +43,10 @@ export class Precipitation extends ElementTile {
             gradient.setAttribute('x2', '0%');
             gradient.setAttribute('y2', `${100 - percentage}%`);
 
+            this.graphic.setAttribute('viewBox', `0 0 ${elementWidth} ${elementHeight}`); // ADD THIS LINE
+            this.graphic.setAttribute('width', '100%'); // ADD THIS LINE
+            this.graphic.setAttribute('height', '100%'); // ADD THIS LINE
+
             const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
             stop1.setAttribute('offset', '100%');
             stop1.setAttribute('stop-color', 'rgba(135, 206, 235, 0.5)');
@@ -55,7 +59,6 @@ export class Precipitation extends ElementTile {
 
             const clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'clipPath');
             clipPath.setAttribute('id', 'precipClip');
-            clipPath.setAttribute('clipPathUnits', 'objectBoundingBox'); // ADD THIS LINE
             const clipPathRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             clipPathRect.setAttribute('x', '0');
             clipPathRect.setAttribute('y', '0');
