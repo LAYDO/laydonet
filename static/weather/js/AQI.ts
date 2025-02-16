@@ -44,6 +44,10 @@ export class AQI extends ElementTile {
             tspan.setAttribute('font-size', '1rem');
             tspan.textContent = data.desc;
 
+            this.graphic.setAttribute('viewBox', `0 0 ${baseW} ${baseH}`); // ADD THIS LINE
+            this.graphic.setAttribute('width', '100%'); // ADD THIS LINE
+            this.graphic.setAttribute('height', '100%'); // ADD THIS LINE
+
             this.graphicText.innerHTML = '';
             this.graphicText.append(document.createTextNode(data.category.toFixed(0)));
             this.graphicText.append(tspan);

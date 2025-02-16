@@ -93,6 +93,10 @@ export class Wind extends ElementTile {
                     this.graphicDrawGroup.append(g);
                 }
             }
+
+            this.graphic.setAttribute('viewBox', `0 0 ${baseW} ${baseH}`); // ADD THIS LINE
+            this.graphic.setAttribute('width', '100%'); // ADD THIS LINE
+            this.graphic.setAttribute('height', '100%'); // ADD THIS LINE
     
             this.graphicText.setAttribute('x', (baseW * 0.5).toFixed(0));
             this.graphicText.setAttribute('y', (baseH * 0.4).toFixed(0));
