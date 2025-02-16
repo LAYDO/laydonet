@@ -26,7 +26,7 @@ export abstract class ElementTile {
             this.graphicDrawing = document.createElementNS('http://www.w3.org/2000/svg', 'path');
             this.graphicDrawing.id = `${lowerElement}Drawing`;
     
-            this.graphicDrawGroup.append(this.graphicDrawing);
+            // this.graphicDrawGroup.append(this.graphicDrawing);
     
             this.graphicText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             this.graphicText.id = `${lowerElement}MainText`;

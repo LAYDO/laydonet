@@ -81,6 +81,7 @@ def getWeatherF(request):
         forecastData = requests.get(forecastURL).json()
     m = requests.get(metricURL).json()
     c = requests.get(currURL).json()
+    # print(f"CURRENT: {c['current']}")
     a = requests.get(aqiURL).json()
     f = requests.get(foreURL).json()
     l = requests.get(revGeoURL).json()
@@ -138,7 +139,7 @@ def getWeatherF(request):
         'forecast': f['list'],
         'clouds': c['current']['clouds'],
         'uvi': c['current']['uvi'],
-        'visibility': c['current']['visibility'],
+        'visibility': c['current']['visibility'] if 'visibility' in c['current'] else 'Unlimited',
         'rain_amount': rain_amount,
         'rain_today': c['daily'][0]['pop'],
         'tomorrow': c['daily'][1],
