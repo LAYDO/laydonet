@@ -47,6 +47,10 @@ export class Barometer extends ElementTile {
             rotation *= 10;
             line.setAttribute('transform', `rotate(${rotation.toFixed(1)}, ${(this.baseW / 2).toFixed(0)}, ${(this.baseH / 1.75).toFixed(0)})`);
 
+            this.graphic.setAttribute('viewBox', `0 0 ${this.baseW} ${this.baseH}`); // ADD THIS LINE
+            this.graphic.setAttribute('width', '100%'); // ADD THIS LINE
+            this.graphic.setAttribute('height', '100%'); // ADD THIS LINE
+
             this.graphicText.setAttribute('x', '50%');
             this.graphicText.setAttribute('y', '60%');
             this.graphicText.setAttribute('text-anchor', 'middle');
