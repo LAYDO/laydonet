@@ -21,6 +21,10 @@ export class AQI extends ElementTile {
         if (this.element && this.graphic && this.graphicDrawGroup && this.graphicDrawing && this.graphicText) {
             let baseW = this.element.getBoundingClientRect().width;
             let baseH = this.element.getBoundingClientRect().height;
+            this.graphic.setAttribute('viewBox', `0 0 ${baseW} ${baseH}`); // ADD THIS LINE
+            this.graphic.setAttribute('width', '100%'); // ADD THIS LINE
+            this.graphic.setAttribute('height', '100%'); // ADD THIS LINE
+            
             let gW = this.graphic.getBoundingClientRect().width;
             let gH = this.graphic.getBoundingClientRect().height;
 
@@ -44,9 +48,7 @@ export class AQI extends ElementTile {
             tspan.setAttribute('font-size', '1rem');
             tspan.textContent = data.desc;
 
-            this.graphic.setAttribute('viewBox', `0 0 ${baseW} ${baseH}`); // ADD THIS LINE
-            this.graphic.setAttribute('width', '100%'); // ADD THIS LINE
-            this.graphic.setAttribute('height', '100%'); // ADD THIS LINE
+            
 
             this.graphicText.innerHTML = '';
             this.graphicText.append(document.createTextNode(data.category.toFixed(0)));
