@@ -7,7 +7,6 @@ export class Sun extends CelestialTile {
     private colorSunset: string = '#FF8700';
     private remainInterval: any;
     public animSunId: number;
-    private baseW: number;
     private radius: number;
     // private sunGraphic: HTMLElement;
     private sunSVG: SVGElement;
@@ -18,7 +17,6 @@ export class Sun extends CelestialTile {
         this.setUnix = 0;
         this.remainInterval = 0;
         this.animSunId = 0;
-        this.baseW = 0;
         this.radius = 0;
         this.sunSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.sunSVG.id = 'sunSVG';
@@ -43,23 +41,24 @@ export class Sun extends CelestialTile {
         let sunrise = this.convertToAdjustedRadians(this.riseUnix);
         let sunset = this.convertToAdjustedRadians(this.setUnix);
 
-        this.baseW = this.minis[1]?.clientWidth * 0.9;
-        this.radius = this.baseW / 2;
+        this.bW = this.baseW * 0.9;
+        this.radius = this.bW / 2;
 
         this.minis[1].innerHTML = '';
+        this.sunSVG.innerHTML = '';
 
         // Black background
         let background = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        background.setAttribute('cx', (this.baseW / 2).toFixed(0));
-        background.setAttribute('cy', (this.baseW / 2).toFixed(0));
+        background.setAttribute('cx', (this.bW / 2).toFixed(0));
+        background.setAttribute('cy', (this.bW / 2).toFixed(0));
         background.setAttribute('r', this.radius.toFixed(0));
         background.setAttribute('stroke', 'none');
         background.setAttribute('fill', 'black');
 
         // Daylight area
         let daylightFill = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        daylightFill.setAttribute('cx', (this.baseW / 2).toFixed(0));
-        daylightFill.setAttribute('cy', (this.baseW / 2).toFixed(0));
+        daylightFill.setAttribute('cx', (this.bW / 2).toFixed(0));
+        daylightFill.setAttribute('cy', (this.bW / 2).toFixed(0));
         daylightFill.setAttribute('r', (this.radius * 0.8).toFixed(0));
         daylightFill.setAttribute('stroke', 'none');
         daylightFill.setAttribute('fill', 'rgb(245, 238, 139)');
@@ -67,9 +66,9 @@ export class Sun extends CelestialTile {
         // Night time area, using 0.81 on radius to get rid of slight yellow outline
         let darkness = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         darkness.setAttribute('d', `
-            M ${((this.baseW / 2) + ((this.radius * 0.8) * Math.cos(sunset))).toFixed(0)},${((this.baseW / 2) + ((this.radius * 0.8) * Math.sin(sunset))).toFixed(0)}
-            A ${(this.radius * 0.8).toFixed(0)} ${(this.radius * 0.8).toFixed(0)} 0 1 1 ${((this.baseW / 2) + ((this.radius * 0.8) * Math.cos(sunrise))).toFixed(0)},${((this.baseW / 2) + ((this.radius * 0.8) * Math.sin(sunrise))).toFixed(0)}
-            L ${(this.baseW / 2).toFixed(0)} ${(this.baseW / 2).toFixed(0)} Z
+            M ${((this.bW / 2) + ((this.radius * 0.8) * Math.cos(sunset))).toFixed(0)},${((this.bW / 2) + ((this.radius * 0.8) * Math.sin(sunset))).toFixed(0)}
+            A ${(this.radius * 0.8).toFixed(0)} ${(this.radius * 0.8).toFixed(0)} 0 1 1 ${((this.bW / 2) + ((this.radius * 0.8) * Math.cos(sunrise))).toFixed(0)},${((this.bW / 2) + ((this.radius * 0.8) * Math.sin(sunrise))).toFixed(0)}
+            L ${(this.bW / 2).toFixed(0)} ${(this.bW / 2).toFixed(0)} Z
         `);
         darkness.setAttribute('fill', 'rgb(0, 0, 133)');
         darkness.setAttribute('stroke', 'none');
@@ -77,7 +76,7 @@ export class Sun extends CelestialTile {
         // console.log('DARKNESS D: ', darkness.getAttribute('d'));
         // "M" for midnight
         let midnight = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        midnight.setAttribute('x', (this.baseW / 2).toFixed(0));
+        midnight.setAttribute('x', (this.bW / 2).toFixed(0));
         midnight.setAttribute('y', (this.radius * 0.15).toFixed(0));
         midnight.setAttribute('text-anchor', 'middle');
         midnight.setAttribute('fill', 'var(--font-faded)');
@@ -86,7 +85,7 @@ export class Sun extends CelestialTile {
 
         // "N" for noon
         let noon = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        noon.setAttribute('x', (this.baseW / 2).toFixed(0));
+        noon.setAttribute('x', (this.bW / 2).toFixed(0));
         noon.setAttribute('y', (this.radius * 1.95).toFixed(0));
         noon.setAttribute('text-anchor', 'middle');
         noon.setAttribute('fill', 'var(--font-faded)');
@@ -95,7 +94,7 @@ export class Sun extends CelestialTile {
 
         // Daylight Text
         let dayText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        dayText.setAttribute('x', (this.baseW / 2).toFixed(0));
+        dayText.setAttribute('x', (this.bW / 2).toFixed(0));
         dayText.setAttribute('y', (this.radius * 1.3).toFixed(0));
         dayText.setAttribute('text-anchor', 'middle');
         dayText.setAttribute('fill', 'rgb(0, 0, 133)');
@@ -104,7 +103,7 @@ export class Sun extends CelestialTile {
 
         // Daylight Hours
         let dayHours = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        dayHours.setAttribute('x', (this.baseW / 2).toFixed(0));
+        dayHours.setAttribute('x', (this.bW / 2).toFixed(0));
         dayHours.setAttribute('y', (this.radius * 1.5).toFixed(0));
         dayHours.setAttribute('text-anchor', 'middle');
         dayHours.setAttribute('fill', 'rgb(0, 0, 133)');
@@ -113,16 +112,16 @@ export class Sun extends CelestialTile {
 
         // Mini Sunrise
         let miniRise = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        miniRise.setAttribute('cx', ((this.baseW / 2) + ((this.radius * 0.81) * Math.cos(sunrise))).toFixed(0));
-        miniRise.setAttribute('cy', ((this.baseW / 2) + ((this.radius * 0.81) * Math.sin(sunrise))).toFixed(0));
+        miniRise.setAttribute('cx', ((this.bW / 2) + ((this.radius * 0.81) * Math.cos(sunrise))).toFixed(0));
+        miniRise.setAttribute('cy', ((this.bW / 2) + ((this.radius * 0.81) * Math.sin(sunrise))).toFixed(0));
         miniRise.setAttribute('r', ((this.radius * 0.8) * 0.1).toFixed(0));
         miniRise.setAttribute('stroke', 'none');
         miniRise.setAttribute('fill', this.colorSunrise);
 
         // Mini Sunset
         let miniSet = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        miniSet.setAttribute('cx', ((this.baseW / 2) + ((this.radius * 0.81) * Math.cos(sunset))).toFixed(0));
-        miniSet.setAttribute('cy', ((this.baseW / 2) + ((this.radius * 0.81) * Math.sin(sunset))).toFixed(0));
+        miniSet.setAttribute('cx', ((this.bW / 2) + ((this.radius * 0.81) * Math.cos(sunset))).toFixed(0));
+        miniSet.setAttribute('cy', ((this.bW / 2) + ((this.radius * 0.81) * Math.sin(sunset))).toFixed(0));
         miniSet.setAttribute('r', ((this.radius * 0.8) * 0.1).toFixed(0));
         miniSet.setAttribute('stroke', 'none');
         miniSet.setAttribute('fill', this.colorSunset);
@@ -137,8 +136,9 @@ export class Sun extends CelestialTile {
         this.sunSVG.append(noon);
         this.sunSVG.append(dayText);
         this.sunSVG.append(dayHours);
-        this.sunSVG.setAttribute('width', this.baseW.toFixed(0));
-        this.sunSVG.setAttribute('height', this.baseW.toFixed(0));
+        this.sunSVG.setAttribute('viewBox', `0 0 ${this.baseW} ${this.baseW}`); // ADD THIS LINE
+        this.sunSVG.setAttribute('width', "100%");  // this.baseW.toFixed(0));
+        this.sunSVG.setAttribute('height', "100%");  // this.baseW.toFixed(0));
 
         this.minis[1].append(this.sunSVG);
 
@@ -246,12 +246,12 @@ export class Sun extends CelestialTile {
         }
         let line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.id = 'todHand';
-        line.setAttribute('x1', (this.baseW / 2).toFixed(0));
+        line.setAttribute('x1', (this.bW / 2).toFixed(0));
         line.setAttribute('y1', this.radius.toFixed(0));
-        line.setAttribute('x2', (this.baseW / 2).toFixed(0));
+        line.setAttribute('x2', (this.bW / 2).toFixed(0));
         line.setAttribute('y2', (this.radius * 0.15).toFixed(0));
         line.setAttribute('style', 'stroke:var(--font-color); stroke-width: 2;');
-        line.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.baseW / 2}, ${this.baseW / 2})`);
+        line.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.bW / 2}, ${this.bW / 2})`);
 
         this.sunSVG.append(line);
     }
@@ -263,12 +263,12 @@ export class Sun extends CelestialTile {
         }
         let mini = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         mini.id = 'mini';
-        mini.setAttribute('cx', (this.baseW / 2).toFixed(0));
+        mini.setAttribute('cx', (this.bW / 2).toFixed(0));
         mini.setAttribute('cy', (this.radius * 0.15).toFixed(0));
         mini.setAttribute('r', ((this.radius * 0.8) * 0.1).toFixed(0));
         mini.setAttribute('stroke', 'none');
         mini.setAttribute('fill', 'white');
-        mini.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.baseW / 2}, ${this.baseW / 2})`);
+        mini.setAttribute('transform', `rotate(${((place * 180) / Math.PI).toFixed(2)}, ${this.bW / 2}, ${this.bW / 2})`);
 
         this.sunSVG.append(mini);
     }

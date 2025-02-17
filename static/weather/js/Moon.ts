@@ -3,7 +3,6 @@ import { CelestialTile } from "./CelestialTile";
 export class Moon extends CelestialTile {
     private remainInterval: any;
     public animMoonId: number;
-    private baseW: number;
     private radius: number;
     private moon_phase: number;
     private phaseText: string;
@@ -13,7 +12,6 @@ export class Moon extends CelestialTile {
         super('Moon', 'moon', ['moonData', 'moonGraphic2'], _row, ['moonRemain']);
         this.remainInterval = 0;
         this.animMoonId = 0;
-        this.baseW = 0;
         this.radius = 0;
         this.moon_phase = 0;
         this.phaseText = '';
@@ -26,23 +24,23 @@ export class Moon extends CelestialTile {
         clearInterval(this.remainInterval);
         this.remainInterval = setInterval(this.moonRemaining.bind(this, data));
 
-        this.baseW = this.minis[1]?.clientWidth * 0.9;
-        this.radius = this.baseW / 2;
+        this.bW = this.baseW * 0.9;
+        this.radius = this.bW / 2;
 
         this.moon_phase = data.moon_phase;
         this.minis[1].innerHTML = '';
 
         // Black background
         let background = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        background.setAttribute('cx', (this.baseW / 2).toFixed(0));
-        background.setAttribute('cy', (this.baseW / 2).toFixed(0));
+        background.setAttribute('cx', (this.bW / 2).toFixed(0));
+        background.setAttribute('cy', (this.bW / 2).toFixed(0));
         background.setAttribute('r', this.radius.toFixed(0));
         background.setAttribute('stroke', 'none');
         background.setAttribute('fill', 'black');
 
         // Phase text
         let phase = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        phase.setAttribute('x', (this.baseW / 2).toFixed(0));
+        phase.setAttribute('x', (this.bW / 2).toFixed(0));
         phase.setAttribute('y', (this.radius * 1.7).toFixed(0));
         phase.setAttribute('text-anchor', 'middle');
         phase.setAttribute('fill', '#fff8ed');
@@ -63,18 +61,18 @@ export class Moon extends CelestialTile {
         if (this.moon_phase == 0.25 || this.moon_phase == 0.75) {
             shadow = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
             shadow.setAttribute('y', '0');
-            shadow.setAttribute('height', (this.baseW).toFixed(0));
-            shadow.setAttribute('width', (this.baseW / 2).toFixed(0));
+            shadow.setAttribute('height', (this.bW).toFixed(0));
+            shadow.setAttribute('width', (this.bW / 2).toFixed(0));
         } else {
             shadow = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            shadow.setAttribute('cy', (this.baseW / 2.5).toFixed(0));
+            shadow.setAttribute('cy', (this.bW / 2.5).toFixed(0));
             shadow.setAttribute('r', (this.radius * 0.51).toFixed(0));
         }
         
         // Moon
         let moon = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        moon.setAttribute('cx', (this.baseW / 2).toFixed(0));
-        moon.setAttribute('cy', (this.baseW / 2.5).toFixed(0));
+        moon.setAttribute('cx', (this.bW / 2).toFixed(0));
+        moon.setAttribute('cy', (this.bW / 2.5).toFixed(0));
         moon.setAttribute('r', (this.radius * 0.5).toFixed(0));
         moon.setAttribute('stroke', 'none');
         if ((this.moon_phase > 0.25 && this.moon_phase < 0.5) || (this.moon_phase > 0.5 && this.moon_phase < 0.75)) {
@@ -88,27 +86,27 @@ export class Moon extends CelestialTile {
         moon.setAttribute('mask', 'url(#moonShadow)');
 
         if (this.moon_phase == 0 || this.moon_phase == 1) {
-            shadow.setAttribute('cx', ((this.baseW / 2)).toFixed(0));
+            shadow.setAttribute('cx', ((this.bW / 2)).toFixed(0));
             this.phaseText = 'New Moon';
         } else if (this.moon_phase > 0 && this.moon_phase < 0.25) {
-            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * this.moon_phase)).toFixed(0));
+            shadow.setAttribute('cx', ((this.bW / 2) - (this.radius * this.moon_phase)).toFixed(0));
             this.phaseText = 'Waxing Crescent';
         } else if (this.moon_phase == 0.25) {
             shadow.setAttribute('x', '0');
             this.phaseText = 'First Quarter Moon';
         } else if (this.moon_phase > 0.25 && this.moon_phase < 0.5) {
-            shadow.setAttribute('cx', ((this.baseW / 2) + (this.radius * (0.5 - this.moon_phase))).toFixed(0));
+            shadow.setAttribute('cx', ((this.bW / 2) + (this.radius * (0.5 - this.moon_phase))).toFixed(0));
             this.phaseText = 'Waxing Gibbous';
         } else if (this.moon_phase == 0.5) {
             this.phaseText = 'Full Moon';
         } else if (this.moon_phase > 0.5 && this.moon_phase < 0.75) {
-            shadow.setAttribute('cx', ((this.baseW / 2) - (this.radius * (this.moon_phase - 0.5))).toFixed(0));
+            shadow.setAttribute('cx', ((this.bW / 2) - (this.radius * (this.moon_phase - 0.5))).toFixed(0));
             this.phaseText = 'Waning Gibbous';
         } else if (this.moon_phase == 0.75) {
-            shadow.setAttribute('x', (this.baseW / 2).toFixed(0));
+            shadow.setAttribute('x', (this.bW / 2).toFixed(0));
             this.phaseText = 'Last Quarter Moon';
         } else if (this.moon_phase > 0.75 && this.moon_phase < 1) {
-            shadow.setAttribute('cx', ((this.baseW / 2) + (this.radius * (1 - this.moon_phase))).toFixed(0));
+            shadow.setAttribute('cx', ((this.bW / 2) + (this.radius * (1 - this.moon_phase))).toFixed(0));
             this.phaseText = 'Waning Crescent';
         }
 
@@ -122,8 +120,9 @@ export class Moon extends CelestialTile {
         this.moonSVG.append(background);
         this.moonSVG.append(moon);
         this.moonSVG.append(phase);
-        this.moonSVG.setAttribute('width', this.baseW.toFixed(0));
-        this.moonSVG.setAttribute('height', this.baseW.toFixed(0));
+        this.moonSVG.setAttribute('viewBox', `0 0 ${this.baseW} ${this.baseW}`);
+        this.moonSVG.setAttribute('width', "100%");
+        this.moonSVG.setAttribute('height', "100%");
 
         this.minis[1].append(this.moonSVG);
     }

@@ -1,4 +1,8 @@
 export class CelestialTile {
+    protected baseW: number = 128;
+    protected baseH: number = 128;
+    protected bW: number = 128;
+    protected bH: number = 128;
     public container: HTMLElement;
     public element: HTMLElement;
     public title: HTMLElement;
