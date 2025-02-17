@@ -43,7 +43,7 @@ export class Celestial {
     }
 
     populate(data: any) {
-        this.Sun.populate(this.Sun, data.todaily, data, this.place);
+        this.Sun.populate(data.todaily, data, this.place);
         document.addEventListener('scroll', this.celestialTriggers.bind(this, data));
         this.Sun.animSunId = window.requestAnimationFrame(this.Sun.populate.bind(this.Sun, data.todaily, data, this.place));
         this.animMoonId = window.requestAnimationFrame(this.Moon.populate.bind(this.Moon, data));
