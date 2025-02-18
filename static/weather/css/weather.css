@@ -259,7 +259,46 @@ body {
   margin-bottom: 1rem;
 }
 
+.top-container,
+.bottom-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.right-container,
+.left-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left-container {
+  width: 55%;
+}
+
+.right-container {
+  width: 45%;
+}
+
+.event-data {
+  height: 100%;
+}
+
+.event-time {
+  font-size: 2rem;
+  margin: 1rem;
+}
+
+.event-graphic {
+  max-width: 9rem;
+}
+
 .container-title {
+  display: flex;
+  flex-direction: row;
   text-align: left;
   padding-left: 1rem;
   padding-top: 0.5rem;

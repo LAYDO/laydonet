@@ -12,7 +12,7 @@ export class Sun extends CelestialTile {
     private sunSVG: SVGElement;
 
     constructor(_row: HTMLElement) {
-        super('Sun', 'sun', ['sunData', 'sunGraphic2'], _row, ['sunRemain']);
+        super(_row, 'Sun');
         this.riseUnix = 0;
         this.setUnix = 0;
         this.remainInterval = 0;
@@ -20,7 +20,6 @@ export class Sun extends CelestialTile {
         this.radius = 0;
         this.sunSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         this.sunSVG.id = 'sunSVG';
-        this.element.classList.add('celestial-tile');
     }
 
     populate(todaily: any, data: any, place: number) {
@@ -37,14 +36,16 @@ export class Sun extends CelestialTile {
         let hours = (diff % 24).toFixed(0);
         hours = ('0' + hours).slice(-2);
 
-        let daylightText = `${hours}hrs ${mins}mins`;
+        let daylightText = `Daylight:\n${hours}hrs ${mins}mins`;
+        this.eventInfo.innerText = daylightText;
+
         let sunrise = this.convertToAdjustedRadians(this.riseUnix);
         let sunset = this.convertToAdjustedRadians(this.setUnix);
 
         this.bW = this.baseW * 0.9;
         this.radius = this.bW / 2;
 
-        this.minis[1].innerHTML = '';
+        // this.minis[1].innerHTML = '';
         this.sunSVG.innerHTML = '';
 
         // Black background
@@ -92,23 +93,23 @@ export class Sun extends CelestialTile {
         noon.setAttribute('font-size', '0.75rem');
         noon.textContent = 'N';
 
-        // Daylight Text
-        let dayText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        dayText.setAttribute('x', (this.bW / 2).toFixed(0));
-        dayText.setAttribute('y', (this.radius * 1.3).toFixed(0));
-        dayText.setAttribute('text-anchor', 'middle');
-        dayText.setAttribute('fill', 'rgb(0, 0, 133)');
-        dayText.setAttribute('font-size', '0.75rem');
-        dayText.textContent = 'Daylight';
+        // // Daylight Text
+        // let dayText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        // dayText.setAttribute('x', (this.bW / 2).toFixed(0));
+        // dayText.setAttribute('y', (this.radius * 1.3).toFixed(0));
+        // dayText.setAttribute('text-anchor', 'middle');
+        // dayText.setAttribute('fill', 'rgb(0, 0, 133)');
+        // dayText.setAttribute('font-size', '0.75rem');
+        // dayText.textContent = 'Daylight';
 
-        // Daylight Hours
-        let dayHours = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        dayHours.setAttribute('x', (this.bW / 2).toFixed(0));
-        dayHours.setAttribute('y', (this.radius * 1.5).toFixed(0));
-        dayHours.setAttribute('text-anchor', 'middle');
-        dayHours.setAttribute('fill', 'rgb(0, 0, 133)');
-        dayHours.setAttribute('font-size', '0.75rem');
-        dayHours.textContent = daylightText;
+        // // Daylight Hours
+        // let dayHours = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        // dayHours.setAttribute('x', (this.bW / 2).toFixed(0));
+        // dayHours.setAttribute('y', (this.radius * 1.5).toFixed(0));
+        // dayHours.setAttribute('text-anchor', 'middle');
+        // dayHours.setAttribute('fill', 'rgb(0, 0, 133)');
+        // dayHours.setAttribute('font-size', '0.75rem');
+        // dayHours.textContent = daylightText;
 
         // Mini Sunrise
         let miniRise = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -134,13 +135,15 @@ export class Sun extends CelestialTile {
         this.sunSVG.append(miniSet);
         this.sunSVG.append(midnight);
         this.sunSVG.append(noon);
-        this.sunSVG.append(dayText);
-        this.sunSVG.append(dayHours);
+        // this.sunSVG.append(dayText);
+        // this.sunSVG.append(dayHours);
         this.sunSVG.setAttribute('viewBox', `0 0 ${this.baseW} ${this.baseW}`); // ADD THIS LINE
         this.sunSVG.setAttribute('width', "100%");  // this.baseW.toFixed(0));
         this.sunSVG.setAttribute('height', "100%");  // this.baseW.toFixed(0));
 
-        this.minis[1].append(this.sunSVG);
+        this.eventGraphic.append(this.sunSVG);
+
+        // this.minis[1].append(this.sunSVG);
 
         this.animateCurrentTime(place, todaily, data);
     }
@@ -176,57 +179,49 @@ export class Sun extends CelestialTile {
         let n = new Date();
         let sunrise = new Date(data['sunrise'] * 1000);
         let sunset = new Date(data['sunset'] * 1000);
-        let s = document.getElementById('sunRemain')!;
-
-        if (!s) {
-            return;
-        }
 
         if (sunrise > sunset) {
             if (n < sunset) {
                 let diff = Math.abs(sunset.valueOf() - n.valueOf());
-                this.title.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunset`;
-                this.title.style.color = this.colorSunset;
-                let d = document.getElementById('sunData');
-                if (d) {
-                    d.innerText = sunset.toLocaleTimeString('en-US', {
+                this.titleText.innerText = `Sunset`;
+                this.titleText.style.color = this.colorSunset;
+                if (this.eventTime) {
+                    this.eventTime.innerText = sunset.toLocaleTimeString('en-US', {
                         hour: "2-digit",
                         minute: "2-digit",
                         hour12: true,
                     });
                 }
-                this.plugDiff(diff, s, 'Sunset');
+                this.plugDiff(diff);
             } else {
                 let diff = Math.abs(sunrise.valueOf() - n.valueOf());
-                this.title.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
-                this.title.style.color = this.colorSunrise;
-                let d = document.getElementById('sunData');
-                if (d) {
-                    d.innerText = sunrise.toLocaleTimeString('en-US', {
+                this.titleText.innerText = `Sunrise`;
+                this.titleText.style.color = this.colorSunrise;
+                if (this.eventTime) {
+                    this.eventTime.innerText = sunrise.toLocaleTimeString('en-US', {
                         hour: "2-digit",
                         minute: "2-digit",
                         hour12: true,
                     });
                 }
-                this.plugDiff(diff, s, 'Sunrise');
+                this.plugDiff(diff);
             }
         } else {
             let diff = Math.abs(sunrise.valueOf() - n.valueOf());
-            this.title.innerHTML = `<span class="fas fa-sun pad-right"></span>Sunrise`;
-            this.title.style.color = this.colorSunrise;
-            let d = document.getElementById('sunData');
-            if (d) {
-                d.innerText = sunrise.toLocaleTimeString('en-US', {
+            this.titleText.innerText = `Sunrise`;
+            this.titleText.style.color = this.colorSunrise;
+            if (this.eventTime) {
+                this.eventTime.innerText = sunrise.toLocaleTimeString('en-US', {
                     hour: "2-digit",
                     minute: "2-digit",
                     hour12: true,
                 });
             }
-            this.plugDiff(diff, s, 'Sunrise');
+            this.plugDiff(diff);
         }
     }
 
-    plugDiff(diff: number, div: HTMLElement, text: string) {
+    plugDiff(diff: number) {
         diff = Math.floor(diff / 1000);
         let secs = (diff % 60).toFixed(0);
         secs = ('0' + secs).slice(-2);
@@ -236,7 +231,7 @@ export class Sun extends CelestialTile {
         diff = Math.floor(diff / 60);
         let hours = (diff % 24).toFixed(0);
         hours = ('0' + hours).slice(-2);
-        div.innerText = `${hours}h ${mins}m ${secs}s until ${text}`;
+        this.countdown.innerText = `${hours}h ${mins}m ${secs}s`;
     }
 
     drawHand(place: number) {

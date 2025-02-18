@@ -41,7 +41,7 @@ export class Precipitation extends ElementTile {
             gradient.setAttribute('x1', '0%');
             gradient.setAttribute('y1', '100%');
             gradient.setAttribute('x2', '0%');
-            gradient.setAttribute('y2', `${100 - percentage}%`);
+            gradient.setAttribute('y2', `${percentage === 0 ? '99' : 100 - percentage}%`);
 
             this.graphic.setAttribute('viewBox', `0 0 ${elementWidth} ${elementHeight}`); // ADD THIS LINE
             this.graphic.setAttribute('width', '100%'); // ADD THIS LINE
