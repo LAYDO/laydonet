@@ -50,8 +50,22 @@ export class Daily {
     toggle(loaded: Boolean) {
         if (loaded) {
             this.dailyElement.style.display = 'inherit';
+            this.dailyElement.classList.remove('weather-loading');
+            // Show the children of the dailyElement
+            for (const child of this.dailyElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'visible';
+                }
+            }
         } else {
-            this.dailyElement.style.display = 'none';
+            // this.dailyElement.style.display = 'none';
+            // Hide the children of the dailyElement
+            for (const child of this.dailyElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'hidden';
+                }
+            }
+            this.dailyElement.classList.add('weather-loading');
         }
     }
 

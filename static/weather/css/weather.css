@@ -31,6 +31,14 @@ body {
   justify-content: center;
 }
 
+.weather-loading {
+  overflow: hidden;
+  background-color: var(--glass-backdrop);
+  animation: loadingShimmer 1s linear infinite alternate;
+  border-radius: 0.5rem;
+  margin: 1rem;
+}
+
 .weather-map {
   width: 100%;
   height: 33%;
@@ -296,15 +304,6 @@ h2 {
 
 #currentWeather {
   flex-direction: column;
-}
-
-#currentWeather,
-#hfc,
-#dailyForecast,
-#map,
-#celestialSection,
-#elementTiles {
-  display: none;
 }
 
 .elements-column {
