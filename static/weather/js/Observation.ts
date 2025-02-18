@@ -22,6 +22,10 @@ export class Observation extends ElementTile {
 
         }
         if (this.subText) {
+            // Clear previous content
+            this.subText.innerHTML = '';
+
+            // Create new elements
             let icon = document.createElement('span');
             icon.id = 'currentIcon';
             icon.className = data.icon;
@@ -32,6 +36,7 @@ export class Observation extends ElementTile {
             description.classList.add('mini-title');
             description.innerText = data.desc;
 
+            // Append new elements to subText
             this.subText.append(icon);
             this.subText.append(description);
         }

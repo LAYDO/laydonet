@@ -46,10 +46,23 @@ export class Current {
 
     toggle(loaded: Boolean) {
         if (loaded) {
+            this.currentElement.classList.remove('weather-loading');
             this.currentElement.style.display = 'flex';
             this.cityName.style.display = 'inherit';
+            // Show the children of the currentElement
+            for (const child of this.currentElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'visible';
+                }
+            }
         } else {
-            this.currentElement.style.display = 'none';
+            // Hide the children of the currentElement
+            for (const child of this.currentElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'hidden';
+                }
+            }
+            this.currentElement.classList.add('weather-loading');
         }
     }
 

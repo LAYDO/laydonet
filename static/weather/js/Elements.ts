@@ -61,8 +61,22 @@ export class Elements {
     toggle(loaded: Boolean) {
         if (loaded) {
             this.eTilesElement.style.display = 'flex';
+            this.eTilesElement.classList.remove('weather-loading');
+            // Show the children of the eTilesElement
+            for (const child of this.eTilesElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'visible';
+                }
+            }
         } else {
-            this.eTilesElement.style.display = 'none';
+            // this.eTilesElement.style.display = 'none';
+            // Hide the children of the eTilesElement
+            for (const child of this.eTilesElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'hidden';
+                }
+            }
+            this.eTilesElement.classList.add('weather-loading');
         }
     }
 

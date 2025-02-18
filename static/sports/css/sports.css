@@ -444,7 +444,7 @@
     width: 100%;
 }
 
-@keyframes loadingShimmer {
+/* @keyframes loadingShimmer {
     0% {
         background-color: var(--glass-backdrop);
     }
@@ -452,4 +452,4 @@
     100% {
         background-color: hsla(204, 20%, 95%, 0.689);
     }
-}
+} */

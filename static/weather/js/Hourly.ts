@@ -24,8 +24,19 @@ export class Hourly {
     toggle(loaded: Boolean) {
         if (loaded) {
             this.hourlyElement.style.display = 'flex';
+            this.hourlyElement.classList.remove('weather-loading');
+            for (const child of this.hourlyElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'visible';
+                }
+            }
         } else {
-            this.hourlyElement.style.display = 'none';
+            for (const child of this.hourlyElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'hidden';
+                }
+            }
+            this.hourlyElement.classList.add('weather-loading');
         }
     }
 

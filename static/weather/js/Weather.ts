@@ -135,7 +135,6 @@ export class Weather {
     }
 
     protected load() {
-
         this.current.toggle(this.loading);
         this.hourly.toggle(this.loading);
         this.daily.toggle(this.loading);
@@ -161,13 +160,13 @@ export class Weather {
             url += `q=${q}`;
         }
         fetch(url).then(response => {
-            this.load();
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             return response.json();
         }).then(data => {
             console.log(data);
+            this.load();
 
             this.current.populate(data);
             this.celestial.populate(data);

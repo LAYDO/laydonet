@@ -37,8 +37,22 @@ export class Celestial {
     toggle(loaded: Boolean) {
         if (loaded) {
             this.celestialElement.style.display = 'inherit';
+            this.celestialElement.classList.remove('weather-loading');
+            // Show the children of the celestialElement
+            for (const child of this.celestialElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'visible';
+                }
+            }
         } else {
-            this.celestialElement.style.display = 'none';
+            // this.celestialElement.style.display = 'none';
+            // Hide the children of the celestialElement
+            for (const child of this.celestialElement.children) {
+                if (child instanceof HTMLElement) {
+                    child.style.visibility = 'hidden';
+                }
+            }
+            this.celestialElement.classList.add('weather-loading');
         }
     }
 
