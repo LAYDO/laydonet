@@ -45,5 +45,12 @@ export class Conversation {
         let content = new User(this.conversationContainer, message);
         this.conversationContainer.appendChild(content.textContainer);
     }
+
+    removeLastMessage() {
+        const lastMessage = this.conversationContainer.lastElementChild;
+        if (lastMessage) {
+            this.conversationContainer.removeChild(lastMessage);
+        }
+    }
     
 }

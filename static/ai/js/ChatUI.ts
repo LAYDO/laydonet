@@ -1,4 +1,5 @@
 import { Conversation } from './Conversation';
+import { localMessage } from '../../base/js/Utils';
 
 export class ChatUI {
     uiContainer: HTMLElement;
@@ -145,7 +146,7 @@ export class ChatUI {
         };
         this.displayLoading();
         window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
-        fetch(`${window.location.href}chat/${this.aiModel}/`, {
+        fetch(`${window.location.href}chat/${encodeURIComponent(this.aiModel)}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -153,7 +154,9 @@ export class ChatUI {
             body: JSON.stringify(conversation)
         }).then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                return response.json().then(data => {
+                    throw new Error(data.error || 'An error occurred while processing your request');
+                });
             }
             return response.json();
         }).then(data => {
@@ -166,11 +169,13 @@ export class ChatUI {
                 if (this.chatContainer.children[0] == this.chatInputContainer) {
                     this.chatContainer.appendChild(this.chatInputContainer);
                 }
-                // window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
             }
         }).catch(error => {
             this.removeLoading();
-            console.error(error);
+            console.error('Error:', error.message);
+            localMessage(error.message, 'error');
+            // Remove the user's last message since it failed
+            // this.conversation.removeLastMessage();
         });
     }
 

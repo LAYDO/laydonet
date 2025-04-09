@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from ai.views import chat, userChat, provideModels
 from home.views import home
 from users.views import register
@@ -20,5 +20,5 @@ urlpatterns = [
     path("accounts/logout/", LogoutView.as_view(), name="logout"),
     # path("admin/", admin.site.urls),
     path("get-models/", provideModels, name="getModels"),
-    path("chat/<ai_id>/", userChat, name="userChat"),
+    re_path(r"^chat/(?P<ai_id>.+)/$", userChat, name="userChat"),
 ]
