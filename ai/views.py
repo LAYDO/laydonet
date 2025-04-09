@@ -27,19 +27,31 @@ def provideModels(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def userChat(request, ai_id: str):
-    # ai_id = int(ai_id)
-    body_unicode = request.body.decode("utf-8")
-    body_data = json.loads(body_unicode)
-
-    conversation_id = body_data.get("conversation_id", "")
-    user_message = body_data.get("message", {"content": ""})
-
     try:
+        body_unicode = request.body.decode("utf-8")
+        body_data = json.loads(body_unicode)
+
+        conversation_id = body_data.get("conversation_id", "")
+        user_message = body_data.get("message", {"content": ""})
+
         conversation = groq(ai_id, conversation_id, user_message)
         response_data = {
             "conversation_id": conversation.id,
             "messages": conversation.messages,
         }
         return JsonResponse(response_data)
+    except requests.exceptions.RequestException as e:
+        return JsonResponse(
+            {"error": "Failed to connect to AI service"}, 
+            status=503
+        )
+    except json.JSONDecodeError:
+        return JsonResponse(
+            {"error": "Invalid request format"}, 
+            status=400
+        )
     except Exception as e:
-        return JsonResponse({"error": str(e)})
+        return JsonResponse(
+            {"error": str(e)}, 
+            status=500
+        )
