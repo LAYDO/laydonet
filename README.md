@@ -9,9 +9,10 @@ Site for website design and development services
 
 ## Technologies Used
 
-- Django Framework 4.0.3
-- Python 3.10
-- Good ole HTML, CSS, JavaScript
+- TypeScript
+- CSS
+- HTML
+- Vite
 
 ## First Steps
 
@@ -19,9 +20,6 @@ Upon cloning repo, run through these commands to start development:
 
 ```
 $ cd laydonet/
-$ python -m venv ./venv
-$ source venv/Scripts/activate
-$ python -m pip install --upgrade pip
-$ pip install -r requirements.txt
-$ python manage.py runserver
+$ npm install
+$ npm run dev
 ```

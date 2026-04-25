@@ -1,0 +1,119 @@
+h3,
+h4 {
+  margin: 1rem;
+  text-align: start;
+}
+
+li {
+  text-align: start;
+}
+
+.resume-page {
+  padding-bottom: 2rem;
+}
+
+.resume {
+  padding-top: 1rem;
+  width: min(96%, 72rem);
+}
+
+.circuit-border,
+.circuit-border-inner {
+  background-color: var(--glass-backdrop);
+  border: 0.125rem solid var(--font-color);
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  width: 96%;
+}
+
+.circuit-border {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 44px, 44px 0);
+}
+
+.circuit-border-inner {
+  margin-bottom: 2rem;
+}
+
+.circuit-border > .resume-content::before {
+  border-left: 0.125rem solid var(--font-color);
+  content: "";
+  height: 64px;
+  left: 0.65625rem;
+  position: absolute;
+  top: 0.8125rem;
+  transform: rotate(45deg);
+  width: 66px;
+  z-index: 1;
+}
+
+.circuit-border::before,
+.circuit-border::after,
+.circuit-border-inner::before,
+.circuit-border-inner::after {
+  content: "";
+  left: -0.25rem;
+  position: absolute;
+  top: -0.25rem;
+}
+
+.circuit-border::before {
+  border-bottom: 0.25rem solid var(--color-primary);
+  height: 0;
+  width: 47px;
+}
+
+.circuit-border::after {
+  border-left: 0.25rem solid var(--color-primary);
+  height: 47px;
+  width: 0;
+}
+
+.resume-content {
+  padding: 1rem;
+  width: 95%;
+}
+
+.resume-personal {
+  line-height: 1.5;
+  text-align: center;
+}
+
+.experience-col {
+  margin-left: 1rem;
+  text-align: start;
+}
+
+.experience-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.location-duration {
+  color: var(--font-faded);
+  margin-left: 1rem;
+}
+
+.summary {
+  font-style: italic;
+  margin: 1rem;
+  padding-left: 1rem;
+  text-align: start;
+}
+
+.tech-used {
+  margin: 1rem 0;
+  padding-left: 2rem;
+  text-align: start;
+}
+
+@media only screen and (max-width: 48rem) {
+  .resume {
+    width: 100%;
+  }
+
+  .resume-content {
+    padding: 0.75rem;
+  }
+}
