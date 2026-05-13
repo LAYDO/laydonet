@@ -44,9 +44,7 @@
 }
 
 .metric-grid article,
-.forecast-grid article,
-#schedule-period-list article,
-#schedule-holiday-list article {
+.forecast-grid article {
   background: var(--glass-backdrop);
   border-radius: 0.75rem;
   padding: 1rem;

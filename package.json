@@ -1,7 +1,8 @@
 {
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "build": "npm run typecheck && vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "devDependencies": {

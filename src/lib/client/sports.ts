@@ -272,9 +272,9 @@ function scoreValue(competitor?: EspnCompetitor) {
     return "";
   }
   if (typeof competitor.score === "string") {
-    return competitor.score === "0" ? "" : competitor.score;
+    return competitor.score;
   }
-  return competitor.score.displayValue ?? "";
+  return competitor.score.displayValue || (competitor.score.value === undefined ? "" : String(competitor.score.value));
 }
 
 function liveScoreValue(competitor?: EspnCompetitor) {
@@ -312,6 +312,12 @@ function eventState(event?: EspnEvent | null) {
 
 function isActiveEvent(event?: EspnEvent | null) {
   return eventState(event) === "in" || eventStatus(event) === "STATUS_IN_PROGRESS";
+}
+
+function isScoredEvent(event?: EspnEvent | null) {
+  const state = eventState(event);
+  const status = eventStatus(event);
+  return state === "in" || state === "post" || status === "STATUS_IN_PROGRESS" || status === "STATUS_FINAL";
 }
 
 function eventStatusText(event?: EspnEvent | null) {
@@ -660,13 +666,25 @@ function displayScore(competitor?: EspnCompetitor) {
   return competitor.score.displayValue ?? String(competitor.score.value ?? "");
 }
 
-function gameOutcome(team: EspnCompetitor | undefined, opponent: EspnCompetitor | undefined) {
+function gameOutcome(event: EspnEvent, team: EspnCompetitor | undefined, opponent: EspnCompetitor | undefined) {
+  if (!isScoredEvent(event)) {
+    return "";
+  }
   const teamScore = scoreValue(team);
   const opponentScore = scoreValue(opponent);
   if (teamScore && opponentScore && teamScore === opponentScore) {
     return "T";
   }
   return team?.winner === true ? "W" : team?.winner === false ? "L" : "";
+}
+
+function scheduleScoreText(event: EspnEvent, team: EspnCompetitor | undefined, opponent: EspnCompetitor | undefined) {
+  if (!isScoredEvent(event)) {
+    return "";
+  }
+  const teamScore = scoreValue(team);
+  const opponentScore = scoreValue(opponent);
+  return teamScore && opponentScore ? `${teamScore}-${opponentScore}` : "";
 }
 
 function statValue(stats: EspnStatistic[] | undefined, ...keys: string[]) {
@@ -1347,9 +1365,8 @@ function renderSchedule(snapshot: TeamSnapshot) {
       const competition = firstCompetition(event);
       const team = findRequestedCompetitor(event, snapshot.config.id);
       const opponent = findOpponent(event, snapshot.config.id);
-      const teamScore = scoreValue(team);
-      const opponentScore = scoreValue(opponent);
-      const outcome = gameOutcome(team, opponent);
+      const scoreText = scheduleScoreText(event, team, opponent);
+      const outcome = gameOutcome(event, team, opponent);
       const isHighlighted = !hasHighlightedScheduleRow && Boolean(event.id) && event.id === highlightEventId;
       if (isHighlighted) {
         hasHighlightedScheduleRow = true;
@@ -1365,7 +1382,7 @@ function renderSchedule(snapshot: TeamSnapshot) {
         </span>
         <span class="sports-schedule-result">
           ${outcome ? `<b class="${outcome === "W" ? "is-win" : outcome === "L" ? "is-loss" : ""}">${outcome}</b>` : ""}
-          <span>${teamScore && opponentScore ? `${teamScore}-${opponentScore}` : broadcastName(competition)}</span>
+          <span>${scoreText || broadcastName(competition)}</span>
         </span>
       `;
       list.appendChild(row);

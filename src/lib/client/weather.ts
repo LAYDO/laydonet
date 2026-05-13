@@ -92,6 +92,7 @@ type WeatherPayload = {
 type WeatherRequest =
   | { kind: "city"; cityName: string }
   | { kind: "coordinates"; latitude: number; longitude: number; label: string; timezone?: string };
+type CoordinatesWeatherRequest = Extract<WeatherRequest, { kind: "coordinates" }>;
 
 type WeatherKind = "clear" | "partly" | "cloud" | "fog" | "rain" | "snow" | "storm";
 type WeatherLight = "day" | "night";
@@ -1014,7 +1015,7 @@ const weatherRequestName = (request: WeatherRequest) => (request.kind === "city"
 
 const browserTimezone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-const currentLocationRequest = (position: GeolocationPosition): WeatherRequest => ({
+const currentLocationRequest = (position: GeolocationPosition): CoordinatesWeatherRequest => ({
   kind: "coordinates",
   label: "Current location",
   latitude: position.coords.latitude,
