@@ -103,11 +103,7 @@ interface EspnEventSummary {
     }>;
   };
   header?: {
-    competitions?: Array<{
-      competitors?: EspnCompetitor[];
-      status?: EspnCompetition["status"];
-      situation?: Record<string, unknown>;
-    }>;
+    competitions?: EspnCompetition[];
   };
   boxscore?: {
     teams?: Array<{ team?: EspnTeamRef; statistics?: EspnStatistic[] }>;
@@ -835,12 +831,78 @@ function gameCenterCompetitors(snapshot: TeamSnapshot) {
   });
 }
 
+type BaseballHalfInning = "pre" | "top" | "middle" | "bottom" | "end" | "post" | "unknown";
+
+function baseballInningState(snapshot: TeamSnapshot) {
+  const status = snapshotStatus(snapshot);
+  const text = gameTimeText(snapshot).toLowerCase();
+  const state = status?.type?.state ?? eventState(snapshotEvent(snapshot));
+  const inning = status?.period ?? Number(text.match(/\d+/)?.[0] ?? 0);
+  let half: BaseballHalfInning = "unknown";
+
+  if (state === "pre") {
+    half = "pre";
+  } else if (state === "post" || text.includes("final")) {
+    half = "post";
+  } else if (/\btop\b/.test(text)) {
+    half = "top";
+  } else if (/\bmid\b|\bmiddle\b/.test(text)) {
+    half = "middle";
+  } else if (/\bbot\b|\bbottom\b/.test(text)) {
+    half = "bottom";
+  } else if (/\bend\b/.test(text)) {
+    half = "end";
+  }
+
+  return { half, inning: Number.isFinite(inning) ? inning : 0 };
+}
+
+function baseballInningHasStarted(snapshot: TeamSnapshot, competitor: EspnCompetitor, inning: number) {
+  if (competitor.linescores?.[inning - 1]) {
+    return true;
+  }
+
+  const { half, inning: currentInning } = baseballInningState(snapshot);
+  if (!currentInning || half === "pre" || half === "post" || half === "unknown") {
+    return false;
+  }
+  if (inning < currentInning) {
+    return true;
+  }
+  if (inning > currentInning) {
+    return false;
+  }
+  if (competitor.homeAway === "away") {
+    return ["top", "middle", "bottom", "end"].includes(half);
+  }
+  if (competitor.homeAway === "home") {
+    return ["bottom", "end"].includes(half);
+  }
+  return ["top", "bottom", "end"].includes(half);
+}
+
+function baseballLinescorePeriods(snapshot: TeamSnapshot, competitors: EspnCompetitor[]) {
+  const linescorePeriods = Math.max(0, ...competitors.map((competitor) => competitor.linescores?.length ?? 0));
+  return Math.max(9, linescorePeriods, baseballInningState(snapshot).inning);
+}
+
+function baseballLinescoreValue(snapshot: TeamSnapshot, competitor: EspnCompetitor, inning: number) {
+  const value = competitor.linescores?.[inning - 1]?.displayValue;
+  if (value !== undefined && value !== null) {
+    return value;
+  }
+  return baseballInningHasStarted(snapshot, competitor, inning) ? "0" : "";
+}
+
 function linescoreSummaryColumns(snapshot: TeamSnapshot, competitor: EspnCompetitor) {
   if (snapshot.config.league === "mlb") {
+    if (!baseballInningHasStarted(snapshot, competitor, 1)) {
+      return ["", "", ""];
+    }
     return [
       statValue(competitor.statistics, "runs", "R") || displayScore(competitor),
-      statValue(competitor.statistics, "hits", "H"),
-      statValue(competitor.statistics, "errors", "E")
+      statValue(competitor.statistics, "hits", "H") || "0",
+      statValue(competitor.statistics, "errors", "E") || "0"
     ];
   }
 
@@ -853,7 +915,7 @@ function renderGameCenter(snapshot: TeamSnapshot) {
   const competition = snapshotCompetition(snapshot);
   const competitors = gameCenterCompetitors(snapshot);
   const status = eventStatusText(event) || eventStatusText({ competitions: competition ? [competition] : [] }) || "Status pending";
-  const state = eventState(event);
+  const state = snapshotStatus(snapshot)?.type?.state ?? eventState(event);
   const venue = competition?.venue?.fullName ?? snapshot.eventSummary?.gameInfo?.venue?.fullName ?? "";
 
   panel.insertAdjacentHTML(
@@ -894,9 +956,15 @@ function renderGameCenter(snapshot: TeamSnapshot) {
     panel.appendChild(predictor);
   }
 
-  const linescoreTeams = competitors.filter((competitor) => competitor.linescores?.length);
+  const hasAnyLinescore = competitors.some((competitor) => competitor.linescores?.length);
+  const shouldShowMlbLinescore = snapshot.config.league === "mlb" && state !== "pre" && (state === "in" || state === "post" || hasAnyLinescore);
+  const linescoreTeams = shouldShowMlbLinescore
+    ? competitors
+    : competitors.filter((competitor) => competitor.linescores?.length);
   if (linescoreTeams.length) {
-    const periods = Math.max(...linescoreTeams.map((competitor) => competitor.linescores?.length ?? 0));
+    const periods = snapshot.config.league === "mlb"
+      ? baseballLinescorePeriods(snapshot, linescoreTeams)
+      : Math.max(...linescoreTeams.map((competitor) => competitor.linescores?.length ?? 0));
     const summaryLabels = snapshot.config.league === "mlb" ? ["R", "H", "E"] : ["Final"];
     const linescore = document.createElement("div");
     linescore.className = snapshot.config.league === "mlb" ? "sports-linescore sports-linescore--mlb" : "sports-linescore";
@@ -915,7 +983,12 @@ function renderGameCenter(snapshot: TeamSnapshot) {
               (competitor) => `
                 <tr>
                   <th scope="row">${competitor.team?.abbreviation ?? "TBD"}</th>
-                  ${Array.from({ length: periods }, (_, index) => `<td>${competitor.linescores?.[index]?.displayValue ?? ""}</td>`).join("")}
+                  ${Array.from({ length: periods }, (_, index) => {
+                    const value = snapshot.config.league === "mlb"
+                      ? baseballLinescoreValue(snapshot, competitor, index + 1)
+                      : (competitor.linescores?.[index]?.displayValue ?? "");
+                    return `<td>${value}</td>`;
+                  }).join("")}
                   ${linescoreSummaryColumns(snapshot, competitor).map((value) => `<td>${value}</td>`).join("")}
                 </tr>
               `

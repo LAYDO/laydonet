@@ -1,0 +1,60 @@
+- generic [active] [ref=e1]:
+  - text: 
+  - navigation "Primary" [ref=e2]:
+    - link "LaydoNet home" [ref=e3] [cursor=pointer]:
+      - img [ref=e4]
+    - button "Open menu" [ref=e10] [cursor=pointer]
+  - main [ref=e14]:
+    - region "Weather search" [ref=e15]:
+      - heading "Weather" [level=1] [ref=e16]
+      - generic [ref=e17]:
+        - textbox "Enter a city" [ref=e18]: Chicago
+        - button "Search weather" [ref=e19] [cursor=pointer]:
+          - generic [ref=e20]: 
+      - group "Weather units" [ref=e21]:
+        - button "F" [pressed] [ref=e22] [cursor=pointer]
+        - button "C" [ref=e23] [cursor=pointer]
+    - paragraph [ref=e24]: Public weather data loads directly in the browser.
+    - status [ref=e25]: Loading imperial weather for Chicago...
+    - region "Weather dashboard" [ref=e26]:
+      - generic [ref=e27]:
+        - region "Current weather" [ref=e28]:
+          - generic [ref=e29]:
+            - generic [ref=e30]:
+              - heading "--" [level=2] [ref=e31]
+              - strong [ref=e32]: "--"
+              - generic [ref=e33]: Feels like --
+              - generic [ref=e34]: "H: -- L: --"
+            - generic "Current weather attributes"
+        - region "Weather details" [ref=e36]:
+          - article [ref=e37]
+          - article [ref=e38]
+          - article [ref=e39]
+          - article [ref=e40]
+        - region "Weather map and astronomy" [ref=e41]:
+          - generic "Sun and moon" [ref=e42]:
+            - article [ref=e43]
+            - article [ref=e44]
+          - article "Weather map" [ref=e45]:
+            - generic [ref=e47]: 
+      - complementary "Weather forecast" [ref=e49]:
+        - generic [ref=e50]:
+          - heading "Hourly Forecast" [level=2] [ref=e51]:
+            - generic [ref=e52]: 
+            - text: Hourly Forecast
+          - generic "Hourly forecast" [ref=e53]
+        - generic [ref=e54]:
+          - heading "10-day Forecast" [level=2] [ref=e55]:
+            - generic [ref=e56]: 
+            - text: 10-day Forecast
+          - generic "10-day forecast"
+    - generic [ref=e57]:
+      - generic [ref=e58]:
+        - text: Weather data provided by
+        - link "Open-Meteo" [ref=e59] [cursor=pointer]:
+          - /url: https://open-meteo.com/
+      - generic [ref=e60]: Development by Landen Robinson
+      - generic [ref=e61]:
+        - generic [ref=e62] [cursor=pointer]: 
+        - generic [ref=e63] [cursor=pointer]: 
+        - generic [ref=e64] [cursor=pointer]: 
