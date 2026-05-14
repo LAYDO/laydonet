@@ -1,0 +1,330 @@
+.home-page {
+  padding-top: 4rem;
+}
+
+.app-site-container {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 4rem);
+  width: 100%;
+}
+
+.apps-space,
+.site-space,
+.tech-plat {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+  width: min(96%, 72rem);
+}
+
+.app-claim,
+.site-claim,
+.tech-plat-item {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.app-button,
+.site-div {
+  background-color: transparent;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border: 0.125rem solid transparent;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 0.0625rem 0.25rem;
+  cursor: pointer;
+  display: block;
+}
+
+.app-button {
+  border-radius: 25%;
+  height: 10rem;
+  padding: 0;
+  width: 10rem;
+}
+
+.site-div {
+  border-radius: 5%;
+  height: 20rem;
+  width: 15rem;
+}
+
+.app-title,
+.site-title {
+  font-size: 2rem;
+  font-weight: 400;
+  margin: 1rem 0 0;
+}
+
+.hex-loader {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-height: 100%;
+  position: relative;
+}
+
+.hex-loader div {
+  height: 4.25rem;
+  position: absolute;
+  width: 7.5rem;
+}
+
+.hex-loader div:nth-of-type(2) {
+  transform: rotate(60deg);
+}
+
+.hex-loader div:nth-of-type(3) {
+  transform: rotate(-60deg);
+}
+
+.hex-loader div div {
+  height: 100%;
+  position: relative;
+  width: 100%;
+}
+
+.hex-loader span {
+  background: var(--font-color);
+  height: 0%;
+  position: absolute;
+  width: 4px;
+  z-index: 2;
+}
+
+.h1 {
+  animation: load1 7.2s ease infinite;
+  left: 0;
+}
+
+.h2 {
+  animation: load2 7.2s ease 0.6s infinite;
+  right: 0;
+}
+
+.h3 {
+  animation: load3 7.2s ease 1.2s infinite;
+  right: 0;
+}
+
+.h4 {
+  animation: load4 7.2s ease 1.8s infinite;
+  right: 0;
+}
+
+.h5 {
+  animation: load5 7.2s ease 2.4s infinite;
+  left: 0;
+}
+
+.h6 {
+  animation: load6 7.2s ease 3s infinite;
+  left: 0;
+}
+
+#trackissTile {
+  background-image: url("/iss/img/iss.png");
+}
+
+#jwstTile {
+  background-image: url("/jwst/img/jwst.svg");
+}
+
+#weatherTile {
+  background-image: url("/weather/img/weatherIcon.svg");
+}
+
+#mtgTile {
+  background-image: url("/mtg/img/mtgIcon.svg");
+}
+
+#sportsTile {
+  background-image: url("/sports/img/football.svg");
+}
+
+#webglTile {
+  background-image: url("/hex.svg");
+}
+
+#weddingTile {
+  background-image: url("/wedding/img/Aieleen-Landen-Engagement-13.jpg");
+}
+
+#apollosarcade {
+  background-image: url("/home/img/apollo.png");
+}
+
+.tech-plat a {
+  background-position: center;
+  background-size: cover;
+  display: block;
+  height: 6rem;
+  width: 6rem;
+}
+
+#typescriptUsed {
+  background-image: url("/home/img/typescript.svg");
+}
+
+#githubUsed {
+  background-image: url("/home/img/github.png");
+}
+
+#doUsed {
+  background-image: url("/home/img/digitalocean.png");
+}
+
+.home-hero-copy {
+  min-height: 100vh;
+  padding-top: 8rem;
+}
+
+#laydoArrowDown {
+  animation: jump 1s infinite;
+  bottom: 5%;
+  color: var(--font-color);
+  font-size: 3rem;
+  font-weight: 400;
+  position: fixed;
+}
+
+.fade-out-bottom {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease-out;
+}
+
+@keyframes jump {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-1rem);
+  }
+}
+
+@keyframes load1 {
+  0% {
+    bottom: 0;
+    height: 0;
+  }
+  7%,
+  50% {
+    bottom: 0;
+    height: 100%;
+  }
+  60% {
+    top: 0;
+    height: 0;
+  }
+}
+
+@keyframes load2 {
+  0% {
+    top: 0;
+    height: 0;
+  }
+  7%,
+  50% {
+    top: 0;
+    height: 100%;
+  }
+  60% {
+    bottom: 0;
+    height: 0;
+  }
+}
+
+@keyframes load3 {
+  0% {
+    top: 0;
+    height: 0;
+  }
+  7%,
+  50% {
+    top: 0;
+    height: 100%;
+  }
+  60% {
+    bottom: 0;
+    height: 0;
+  }
+}
+
+@keyframes load4 {
+  0% {
+    top: 0;
+    height: 0;
+  }
+  7%,
+  50% {
+    top: 0;
+    height: 100%;
+  }
+  60% {
+    bottom: 0;
+    height: 0;
+  }
+}
+
+@keyframes load5 {
+  0% {
+    bottom: 0;
+    height: 0;
+  }
+  7%,
+  50% {
+    bottom: 0;
+    height: 100%;
+  }
+  60% {
+    top: 0;
+    height: 0;
+  }
+}
+
+@keyframes load6 {
+  0% {
+    bottom: 0;
+    height: 0;
+  }
+  7%,
+  50% {
+    bottom: 0;
+    height: 100%;
+  }
+  60% {
+    top: 0;
+    height: 0;
+  }
+}
+
+@media only screen and (max-width: 37.5rem) {
+  .app-button {
+    height: 6rem;
+    width: 6rem;
+  }
+
+  .app-title,
+  .site-title {
+    font-size: 1rem;
+  }
+
+  .hex-loader div {
+    height: 2.55rem;
+    width: 4.5rem;
+  }
+
+  .site-div {
+    height: 15rem;
+    width: 10rem;
+  }
+}

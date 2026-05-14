@@ -1,0 +1,410 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: "Bembo Regular", Georgia, serif;
+}
+
+.apl-flex-home {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100%;
+  z-index: 10;
+}
+
+.apl-overlay {
+  background-color: #000;
+  height: 100%;
+  overflow-x: hidden;
+  position: fixed;
+  right: 0;
+  text-align: center;
+  top: 0;
+  transition: 0.5s;
+  width: 0;
+  z-index: 999;
+}
+
+.apl-overlay a {
+  color: white;
+  cursor: pointer;
+  display: block;
+  font-size: 1.5rem;
+  letter-spacing: 0.0625rem;
+  padding: 1rem;
+  text-decoration: none;
+}
+
+.apl-overlay .nav-link:hover {
+  color: #efd09f;
+}
+
+.apl-background {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+#aplBackground1 {
+  background-image: url("/wedding/img/Aieleen-Landen-Engagement-19.jpg");
+}
+
+#aplBackground2 {
+  background-image: url("/wedding/img/Aieleen-Landen-Engagement-13.jpg");
+  height: 200vh;
+  transform: translateY(100vh);
+}
+
+#aplBackground3 {
+  background-image: url("/wedding/img/apl_s1.jpg");
+}
+
+#aplBackground4 {
+  background-image: url("/wedding/img/fun_8.jpg");
+  transform: translateY(100vh);
+}
+
+#aplBackground7 {
+  background-image: url("/wedding/img/fun_7.jpg");
+  height: 280vh;
+  transform: translateY(100vh);
+}
+
+#aplBackground8 {
+  background-image: url("/wedding/img/Aieleen-Landen-Engagement-75.jpg");
+  transform: translateY(100vh);
+}
+
+#aplHomeOne,
+#aplHomeTwo,
+#aplHomeZero,
+#aplHomeFour {
+  min-height: 100vh;
+}
+
+#aplHomeThree,
+#aplStoryOne {
+  background-color: white;
+}
+
+#aplHomeZero,
+#aplHomeTwo,
+#aplHomeFour {
+  justify-content: center;
+}
+
+.apl-title,
+.apl-bottom {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+}
+
+.apl-title {
+  align-items: center;
+  height: 75%;
+  justify-content: center;
+}
+
+.apl-bottom {
+  align-items: center;
+  bottom: 0;
+  height: 25%;
+  justify-content: flex-end;
+}
+
+.title-name {
+  font-size: clamp(3rem, 10vw, 7rem);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  margin-bottom: 5rem;
+}
+
+.title-dark {
+  color: white;
+}
+
+.apl-navbar {
+  align-items: center;
+  background-color: transparent;
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 1.5rem;
+  justify-content: space-between;
+  left: 0;
+  padding: 1rem;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 998;
+}
+
+.apl-navbar a {
+  background-color: transparent;
+  color: black;
+  cursor: pointer;
+  font-family: "Bembo Regular", Georgia, serif;
+  font-size: 1rem;
+  letter-spacing: 0.125rem;
+  padding: 1rem;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.apl-navbar a:hover,
+.apl-nav-title:hover {
+  color: #efd09f;
+}
+
+.apl-mobile-nav {
+  align-items: center;
+  background-color: transparent;
+  display: none;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  position: absolute;
+  right: 0;
+  top: 0;
+  transition: margin-right 0.5s;
+  width: 100%;
+  z-index: 999;
+}
+
+.apl-nav-menu {
+  cursor: pointer;
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin-right: 1rem;
+  overflow: hidden;
+  padding: 0.5rem;
+}
+
+.apl-nav-title {
+  cursor: pointer;
+  font-weight: 400;
+  letter-spacing: 0.25rem;
+  margin-left: 1rem;
+  padding-left: 2rem;
+}
+
+.apl-story {
+  background-color: white;
+  box-sizing: border-box;
+  font-size: 1.5rem;
+  padding: 0 5%;
+  text-align: center;
+}
+
+.apl-story-frame {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 6rem 0;
+}
+
+.apl-story-title,
+.apl-separator,
+.apl-separator-dark {
+  align-items: center;
+  display: flex;
+  flex-flow: row nowrap;
+  font-weight: 400;
+  justify-content: center;
+  padding: 1rem 0;
+}
+
+.apl-story-title {
+  background-color: white;
+  font-size: 2rem;
+  width: 100%;
+}
+
+.apl-story-title::before,
+.apl-story-title::after,
+.apl-separator::before,
+.apl-separator::after,
+.apl-separator-dark::before,
+.apl-separator-dark::after {
+  content: "";
+  display: block;
+  height: 0.09rem;
+  min-width: 30vw;
+}
+
+.apl-story-title::before,
+.apl-separator::before {
+  background: linear-gradient(to right, rgba(240, 240, 240, 0), #000);
+  margin-right: 1vh;
+}
+
+.apl-story-title::after,
+.apl-separator::after {
+  background: linear-gradient(to left, rgba(240, 240, 240, 0), #000);
+  margin-left: 1vh;
+}
+
+.apl-separator-dark::before {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0), #fff);
+  margin-right: 1vh;
+}
+
+.apl-separator-dark::after {
+  background: linear-gradient(to left, rgba(255, 255, 255, 0), #fff);
+  margin-left: 1vh;
+}
+
+#aplArrowDown {
+  bottom: 5%;
+  color: white;
+  font-size: 3rem;
+  font-weight: 400;
+  position: absolute;
+}
+
+.apl-img-container {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+
+.apl-home-img {
+  padding: 1rem;
+  width: 100%;
+}
+
+.apl-home-img img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+#ringHug {
+  filter: grayscale(100%);
+}
+
+.apl-wedding-colors {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 3rem 0;
+  width: 100%;
+}
+
+.apl-wed-color {
+  border: 0.25rem solid white;
+  border-radius: 50%;
+  height: 2rem;
+  width: 2rem;
+}
+
+#wedGreen {
+  background-color: #939a7e;
+}
+
+#wedWhite {
+  background-color: #fefee3;
+}
+
+#wedPink {
+  background-color: #fad6cb;
+}
+
+#wedPeach {
+  background-color: #ebab7f;
+}
+
+#wedChamp {
+  background-color: #efd09f;
+}
+
+#wedTerra {
+  background-color: #c0871d;
+}
+
+.apl-color-desc {
+  display: none;
+}
+
+.apl-gallery {
+  align-items: center;
+  background-color: white;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
+}
+
+.apl-gallery-credit {
+  background-color: white;
+  padding: 3rem 0;
+  width: 100%;
+}
+
+.apl-pic {
+  max-width: 45%;
+  padding: 1rem 0;
+}
+
+.apl-footer {
+  background-color: #d1d1d1;
+  padding: 3rem 0;
+  position: relative;
+  width: 100%;
+}
+
+.top-back-button {
+  background-color: white;
+  border-radius: 50%;
+  height: 3rem;
+  left: 50vw;
+  margin-left: -1.5rem;
+  position: absolute;
+  top: -1.5rem;
+  width: 3rem;
+}
+
+.top-back-button a {
+  color: black;
+  text-decoration: none;
+}
+
+@media only screen and (max-width: 48rem) {
+  .apl-nav-title {
+    padding-left: 0;
+  }
+
+  .apl-navbar {
+    display: none;
+  }
+
+  .apl-mobile-nav {
+    display: flex;
+  }
+
+  #aplBackground7,
+  #aplBackground8 {
+    height: inherit;
+  }
+
+  .apl-story {
+    font-size: inherit;
+  }
+
+  .apl-story-title {
+    font-size: 1.5rem;
+  }
+}
