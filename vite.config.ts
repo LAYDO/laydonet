@@ -63,6 +63,7 @@ export default defineConfig(({ command }) => ({
         sportsPackers: resolve(__dirname, "sports/nfl/team/9/index.html"),
         sportsCougars: resolve(__dirname, "sports/ncaaf/team/265/index.html"),
         sportsBulls: resolve(__dirname, "sports/nba/team/4/index.html"),
+        sportsPga: resolve(__dirname, "sports/golf/pga/index.html"),
         jwst: page("jwst"),
         mtg: page("mtg"),
         trackiss: page("trackiss"),
