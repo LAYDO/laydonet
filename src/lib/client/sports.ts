@@ -148,6 +148,173 @@ interface TeamSnapshot {
   season: number;
 }
 
+interface EspnRef {
+  $ref?: string;
+}
+
+interface EspnGolfAthlete {
+  id?: string;
+  displayName?: string;
+  shortName?: string;
+  fullName?: string;
+  headshot?: { href?: string; alt?: string };
+  flag?: { href?: string; alt?: string; rel?: string[] };
+}
+
+interface EspnGolfScoreType {
+  name?: string;
+  displayName?: string;
+  displayValue?: string;
+}
+
+interface EspnGolfLineScore {
+  value?: number;
+  displayValue?: string;
+  period?: number;
+  par?: number;
+  scoreType?: EspnGolfScoreType;
+  linescores?: EspnGolfLineScore[];
+  statistics?: {
+    categories?: Array<{
+      stats?: Array<{ value?: number; displayValue?: string }>;
+    }>;
+  };
+}
+
+interface EspnGolfCompetitorStatus {
+  period?: number;
+  displayValue?: string;
+  teeTime?: string;
+  startHole?: number;
+  thru?: number;
+  position?: { id?: string; displayName?: string; isTie?: boolean };
+  type?: { state?: string; description?: string; shortDetail?: string };
+}
+
+interface EspnGolfCompetitor {
+  id?: string;
+  order?: number;
+  type?: string;
+  athlete?: EspnGolfAthlete | EspnRef;
+  status?: EspnGolfCompetitorStatus | EspnRef | null;
+  score?: string | { value?: number; displayValue?: string; completedRoundsValue?: number; completedRoundsDisplayValue?: string } | EspnRef;
+  linescores?: EspnGolfLineScore[] | EspnRef;
+  statistics?: EspnRef | Array<Record<string, unknown>>;
+  winner?: boolean;
+  movement?: number;
+  amateur?: boolean;
+}
+
+interface EspnGolfCompetition {
+  id?: string;
+  date?: string;
+  endDate?: string;
+  competitors?: EspnGolfCompetitor[];
+  status?: EspnCompetition["status"] | EspnRef;
+}
+
+interface EspnGolfEvent {
+  id?: string;
+  name?: string;
+  shortName?: string;
+  date?: string;
+  endDate?: string;
+  status?: EspnCompetition["status"];
+  competitions?: EspnGolfCompetition[];
+  links?: Array<{ href?: string; text?: string; shortText?: string; rel?: string[] }>;
+}
+
+interface EspnGolfCalendarEvent {
+  id?: string;
+  label?: string;
+  startDate?: string;
+  endDate?: string;
+  event?: EspnRef;
+}
+
+interface EspnGolfScoreboard {
+  leagues?: Array<{
+    id?: string;
+    name?: string;
+    abbreviation?: string;
+    slug?: string;
+    season?: {
+      year?: number;
+      startDate?: string;
+      endDate?: string;
+      displayName?: string;
+      type?: { id?: string; name?: string };
+    };
+    logos?: EspnLogo[];
+    calendar?: EspnGolfCalendarEvent[];
+  }>;
+  events?: EspnGolfEvent[];
+}
+
+interface EspnGolfCoreEvent {
+  id?: string;
+  name?: string;
+  shortName?: string;
+  date?: string;
+  endDate?: string;
+  status?: EspnCompetition["status"];
+  venues?: EspnRef[];
+  defendingChampion?: { athlete?: EspnGolfAthlete };
+  winner?: { athlete?: EspnGolfAthlete };
+  purse?: number;
+  tournament?: EspnRef;
+}
+
+interface EspnGolfEventRefs {
+  count?: number;
+  items?: EspnRef[];
+}
+
+interface EspnGolfCourse {
+  id?: string;
+  name?: string;
+  fullName?: string;
+  address?: { city?: string; state?: string; country?: string };
+  totalYards?: number;
+  shotsToPar?: number;
+  holes?: Array<{ number?: number; shotsToPar?: number; totalYards?: number }>;
+}
+
+interface GolfLeaderboardRow {
+  id: string;
+  position: string;
+  player: string;
+  country: string;
+  countryFlag?: string;
+  total: string;
+  today: string;
+  thru: string;
+  round: string;
+  strokes: string;
+  rounds: string[];
+  currentRound?: EspnGolfLineScore;
+}
+
+interface GolfScheduleEvent {
+  id: string;
+  name: string;
+  startDate?: string;
+  endDate?: string;
+  status: "upcoming" | "current" | "completed";
+  detail?: EspnGolfCoreEvent | null;
+  course?: EspnGolfCourse | null;
+}
+
+interface GolfSnapshot {
+  scoreboard: EspnGolfScoreboard;
+  event: EspnGolfEvent | null;
+  detail: EspnGolfCoreEvent | null;
+  course: EspnGolfCourse | null;
+  leader: GolfLeaderboardRow | null;
+  rows: GolfLeaderboardRow[];
+  season: number;
+}
+
 type SeasonPhase = "post" | "regular" | "pre" | "off";
 
 const FEATURED_TEAMS: TeamConfig[] = [
@@ -184,6 +351,10 @@ const EVENT_ENDPOINTS: Record<TeamConfig["league"], string> = {
   mlb: "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/summary?event=",
   nba: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event="
 };
+
+const PGA_ROUTE = "/sports/golf/pga/";
+const PGA_SCOREBOARD_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard";
+const PGA_CORE_BASE = "https://sports.core.api.espn.com/v2/sports/golf/leagues/pga";
 
 const DEFAULT_TEAM_LOGO =
   "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2245%22%20fill%3D%22%23000020%22%20opacity%3D%22.18%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%2262%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2248%22%20font-weight%3D%22700%22%20fill%3D%22%23fff8ed%22%3E%3F%3C%2Ftext%3E%3C%2Fsvg%3E";
@@ -226,6 +397,34 @@ function formatEventDate(date?: string) {
     minute: "2-digit",
     hour12: true
   }).format(new Date(date));
+}
+
+function formatShortDate(date?: string) {
+  if (!date) {
+    return "TBD";
+  }
+  return new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(new Date(date));
+}
+
+function formatDateRange(start?: string, end?: string) {
+  if (!start && !end) {
+    return "Dates TBD";
+  }
+  if (!end || start === end) {
+    return formatShortDate(start);
+  }
+  return `${formatShortDate(start)} - ${formatShortDate(end)}`;
+}
+
+function formatMoney(value?: number) {
+  if (!value || Number.isNaN(value)) {
+    return "-";
+  }
+  if (value >= 1_000_000) {
+    const millions = value / 1_000_000;
+    return `$${millions % 1 === 0 ? millions.toFixed(0) : millions.toFixed(1)}M`;
+  }
+  return new Intl.NumberFormat(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }).format(value);
 }
 
 function pickLogo(logos?: EspnLogo[]) {
@@ -523,6 +722,404 @@ function homeCardGameDetails(snapshot: TeamSnapshot) {
   };
 }
 
+function normalizeEspnRef(ref?: EspnRef | string) {
+  const url = typeof ref === "string" ? ref : ref?.$ref;
+  return url?.replace(/^http:\/\//, "https://").replace("sports.core.api.espn.pvt", "sports.core.api.espn.com") ?? "";
+}
+
+function idFromRef(ref?: EspnRef | string) {
+  const url = normalizeEspnRef(ref);
+  const match = url.match(/\/([^/?]+)(?:\?.*)?$/);
+  return match?.[1] ?? "";
+}
+
+function isEspnRef(value: unknown): value is EspnRef {
+  return Boolean(value && typeof value === "object" && "$ref" in value);
+}
+
+function golfCompetition(event?: EspnGolfEvent | null) {
+  return event?.competitions?.[0];
+}
+
+function golfEventState(event?: EspnGolfEvent | null) {
+  return event?.status?.type?.state ?? "";
+}
+
+function golfEventStatusName(event?: EspnGolfEvent | null) {
+  return event?.status?.type?.name ?? "";
+}
+
+function isGolfActive(event?: EspnGolfEvent | null) {
+  return golfEventState(event) === "in" || golfEventStatusName(event) === "STATUS_IN_PROGRESS";
+}
+
+function golfCalendarEvent(calendarEvent: EspnGolfCalendarEvent, state: "pre" | "in" | "post" = "pre"): EspnGolfEvent {
+  return {
+    id: calendarEvent.id,
+    name: calendarEvent.label,
+    shortName: calendarEvent.label,
+    date: calendarEvent.startDate,
+    endDate: calendarEvent.endDate,
+    status: {
+      type: {
+        name: state === "in" ? "STATUS_IN_PROGRESS" : state === "post" ? "STATUS_FINAL" : "STATUS_SCHEDULED",
+        state,
+        description: state === "in" ? "In Progress" : state === "post" ? "Final" : "Scheduled"
+      }
+    },
+    competitions: [{ id: calendarEvent.id, date: calendarEvent.startDate, endDate: calendarEvent.endDate, competitors: [] }]
+  };
+}
+
+function golfEventWithCalendarDates(event: EspnGolfEvent, scoreboard: EspnGolfScoreboard) {
+  const calendarEvent = (scoreboard.leagues?.[0]?.calendar ?? []).find((item) => item.id === event.id);
+  return calendarEvent
+    ? {
+        ...event,
+        name: event.name ?? calendarEvent.label,
+        shortName: event.shortName ?? calendarEvent.label,
+        date: calendarEvent.startDate ?? event.date,
+        endDate: calendarEvent.endDate ?? event.endDate
+      }
+    : event;
+}
+
+function chooseGolfEvent(scoreboard: EspnGolfScoreboard) {
+  const events = scoreboard.events ?? [];
+  const live = events.find((event) => isGolfActive(event));
+  if (live) {
+    return golfEventWithCalendarDates(live, scoreboard);
+  }
+
+  const scheduled = events
+    .filter((event) => golfEventState(event) === "pre" && (event.date ? new Date(event.date).getTime() >= localDayStart(Date.now()) : true))
+    .sort((a, b) => eventTime(a as EspnEvent) - eventTime(b as EspnEvent))[0];
+  if (scheduled) {
+    return golfEventWithCalendarDates(scheduled, scoreboard);
+  }
+
+  const now = Date.now();
+  const calendar = scoreboard.leagues?.[0]?.calendar ?? [];
+  const current = calendar.find((event) => {
+    const start = event.startDate ? new Date(event.startDate).getTime() : 0;
+    const end = event.endDate ? new Date(event.endDate).getTime() : 0;
+    return start && end && now >= start && now <= end + 24 * 60 * 60 * 1000;
+  });
+  if (current) {
+    return golfCalendarEvent(current, "in");
+  }
+
+  const next = calendar
+    .filter((event) => event.startDate && new Date(event.startDate).getTime() >= localDayStart(now))
+    .sort((a, b) => new Date(a.startDate ?? "").getTime() - new Date(b.startDate ?? "").getTime())[0];
+  return next ? golfCalendarEvent(next) : null;
+}
+
+function golfEventEndpoint(id: string) {
+  return `${PGA_CORE_BASE}/events/${id}?lang=en&region=us`;
+}
+
+async function loadGolfEventDetail(id?: string) {
+  return id ? fetchJson<EspnGolfCoreEvent>(golfEventEndpoint(id)) : null;
+}
+
+async function loadGolfEventRefs(season: number) {
+  return fetchJson<EspnGolfEventRefs>(`${PGA_CORE_BASE}/events?season=${season}&seasontypes=2&limit=1000&lang=en&region=us`);
+}
+
+async function loadGolfCourse(eventId?: string, detail?: EspnGolfCoreEvent | null) {
+  const venueId = idFromRef(detail?.venues?.[0]);
+  if (!eventId || !venueId) {
+    return null;
+  }
+
+  try {
+    return await fetchJson<EspnGolfCourse>(`${PGA_CORE_BASE}/events/${eventId}/courses/${venueId}?lang=en&region=us`);
+  } catch {
+    try {
+      return await fetchJson<EspnGolfCourse>(`${PGA_CORE_BASE}/venues/${venueId}?lang=en&region=us`);
+    } catch {
+      return null;
+    }
+  }
+}
+
+function golfLocation(course?: EspnGolfCourse | null) {
+  const address = course?.address;
+  return [address?.city, address?.state || address?.country].filter(Boolean).join(", ") || "Location TBD";
+}
+
+function golfCourseName(course?: EspnGolfCourse | null) {
+  return course?.name ?? course?.fullName ?? "Course TBD";
+}
+
+function golfAthleteName(athlete?: EspnGolfAthlete | EspnRef) {
+  return athlete && !isEspnRef(athlete) ? athlete.displayName ?? athlete.fullName ?? athlete.shortName ?? "Player TBD" : "Player TBD";
+}
+
+function golfAthleteCountry(athlete?: EspnGolfAthlete | EspnRef) {
+  return athlete && !isEspnRef(athlete) ? athlete.flag?.alt ?? "" : "";
+}
+
+function golfAthleteFlag(athlete?: EspnGolfAthlete | EspnRef) {
+  return athlete && !isEspnRef(athlete) ? athlete.flag?.href ?? "" : "";
+}
+
+function golfScoreDisplay(score?: EspnGolfCompetitor["score"]) {
+  if (!score) {
+    return "-";
+  }
+  if (typeof score === "string") {
+    return score || "-";
+  }
+  if (isEspnRef(score)) {
+    return "-";
+  }
+  return score.displayValue ?? score.completedRoundsDisplayValue ?? (score.value === undefined ? "-" : String(score.value));
+}
+
+function golfLineScores(competitor: EspnGolfCompetitor) {
+  return Array.isArray(competitor.linescores) ? [...competitor.linescores].sort((a, b) => (a.period ?? 0) - (b.period ?? 0)) : [];
+}
+
+function golfRoundDisplay(linescores: EspnGolfLineScore[], round: number) {
+  return linescores.find((line) => line.period === round)?.displayValue ?? "-";
+}
+
+function golfCurrentRound(linescores: EspnGolfLineScore[]) {
+  return linescores[linescores.length - 1];
+}
+
+function formatGolfTeeTime(value?: string) {
+  if (!value) {
+    return "";
+  }
+  const date = new Date(value);
+  if (!Number.isNaN(date.getTime())) {
+    return new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit", hour12: true }).format(date);
+  }
+
+  const match = value.match(/\b(\d{1,2}):(\d{2})(?::\d{2})?\b/);
+  if (!match) {
+    return "";
+  }
+  const hour = Number(match[1]);
+  const suffix = hour >= 12 ? "PM" : "AM";
+  const displayHour = hour % 12 || 12;
+  return `${displayHour}:${match[2]} ${suffix}`;
+}
+
+function golfRoundTeeTime(round?: EspnGolfLineScore, status?: EspnGolfCompetitorStatus | EspnRef | null) {
+  if (status && !isEspnRef(status)) {
+    const statusTime = formatGolfTeeTime(status.teeTime ?? status.displayValue);
+    if (statusTime) {
+      return statusTime;
+    }
+  }
+  return formatGolfTeeTime(round?.statistics?.categories?.[0]?.stats?.[6]?.displayValue);
+}
+
+function golfRoundHasScore(round?: EspnGolfLineScore) {
+  return Boolean(round?.displayValue && round.displayValue !== "-");
+}
+
+function golfCompletedHoles(round?: EspnGolfLineScore) {
+  const holes = round?.linescores?.length ?? 0;
+  if (holes >= 18) {
+    return "F";
+  }
+  if (holes > 0) {
+    return String(holes);
+  }
+  return golfRoundHasScore(round) ? "1" : "";
+}
+
+function golfRoundThru(round?: EspnGolfLineScore, status?: EspnGolfCompetitorStatus | EspnRef | null) {
+  const completedHoles = golfCompletedHoles(round);
+  if (golfRoundHasScore(round) && completedHoles) {
+    return completedHoles;
+  }
+  if (status && !isEspnRef(status) && status.thru !== undefined) {
+    if (status.thru <= 0) {
+      return completedHoles || golfRoundTeeTime(round, status) || "-";
+    }
+    return status.thru >= 18 ? "F" : String(status.thru);
+  }
+  const statValue = round?.statistics?.categories?.[0]?.stats?.[5]?.displayValue;
+  if (statValue === "0") {
+    return completedHoles || golfRoundTeeTime(round, status) || "-";
+  }
+  if (statValue && statValue !== "0") {
+    return statValue === "18" ? "F" : statValue;
+  }
+  if ((round?.linescores?.length ?? 0) >= 18) {
+    return "F";
+  }
+  return statValue ?? "-";
+}
+
+function golfHolePar(course: EspnGolfCourse | null | undefined, holeNumber: number, line?: EspnGolfLineScore) {
+  return line?.par ?? course?.holes?.find((hole) => hole.number === holeNumber)?.shotsToPar;
+}
+
+function golfHoleScore(line?: EspnGolfLineScore) {
+  const value = typeof line?.value === "number" && line.value > 0 ? line.value : Number(line?.displayValue);
+  return Number.isFinite(value) && value > 0 ? value : undefined;
+}
+
+function golfHoleToPar(line?: EspnGolfLineScore, par?: number) {
+  const scoreType = line?.scoreType?.displayValue;
+  if (scoreType === "E") {
+    return 0;
+  }
+  if (scoreType && /^[+-]?\d+$/.test(scoreType)) {
+    return Number(scoreType);
+  }
+  const score = golfHoleScore(line);
+  return score !== undefined && par !== undefined ? score - par : undefined;
+}
+
+function golfHoleScoreClass(toPar?: number) {
+  if (toPar === undefined || toPar === 0) {
+    return "";
+  }
+  if (toPar <= -2) {
+    return "is-eagle";
+  }
+  if (toPar === -1) {
+    return "is-birdie";
+  }
+  if (toPar === 1) {
+    return "is-bogey";
+  }
+  return "is-double-bogey";
+}
+
+function golfTotalStrokes(linescores: EspnGolfLineScore[], score?: EspnGolfCompetitor["score"]) {
+  if (score && typeof score === "object" && !isEspnRef(score) && score.value !== undefined) {
+    return String(score.value);
+  }
+  const total = linescores.reduce((sum, line) => sum + (line.displayValue === "-" ? 0 : line.value ?? 0), 0);
+  return total > 0 ? String(total) : "-";
+}
+
+function buildGolfLeaderboardRows(event?: EspnGolfEvent | null): GolfLeaderboardRow[] {
+  const competitors = golfCompetition(event)?.competitors ?? [];
+  return competitors
+    .filter((competitor) => competitor.id)
+    .sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999))
+    .map((competitor) => {
+      const linescores = golfLineScores(competitor);
+      const currentRound = golfCurrentRound(linescores);
+      const status = competitor.status;
+      const position = status && !isEspnRef(status) ? status.position?.displayName ?? String(competitor.order ?? "-") : String(competitor.order ?? "-");
+      return {
+        id: competitor.id ?? "",
+        position,
+        player: golfAthleteName(competitor.athlete),
+        country: golfAthleteCountry(competitor.athlete),
+        countryFlag: golfAthleteFlag(competitor.athlete),
+        total: golfScoreDisplay(competitor.score),
+        today: currentRound?.displayValue ?? "-",
+        thru: golfRoundThru(currentRound, status),
+        round: currentRound?.period ? `R${currentRound.period}` : "-",
+        strokes: golfTotalStrokes(linescores, competitor.score),
+        rounds: [1, 2, 3, 4].map((round) => golfRoundDisplay(linescores, round)),
+        currentRound
+      };
+    });
+}
+
+async function hydrateGolfTeeTimes(eventId: string | undefined, rows: GolfLeaderboardRow[]) {
+  const pendingRows = rows.filter((row) => row.today === "-" && row.id);
+  if (!eventId || !pendingRows.length) {
+    return;
+  }
+
+  const queue = pendingRows.slice();
+  const worker = async () => {
+    while (queue.length) {
+      const row = queue.shift();
+      if (!row) {
+        return;
+      }
+      try {
+        const status = await fetchJson<EspnGolfCompetitorStatus>(`${PGA_CORE_BASE}/events/${eventId}/competitions/${eventId}/competitors/${row.id}/status?lang=en&region=us`);
+        row.thru = golfRoundThru(row.currentRound, status);
+      } catch {
+        row.thru = row.thru || "-";
+      }
+    }
+  };
+  await Promise.all([worker(), worker(), worker(), worker(), worker(), worker()]);
+}
+
+async function loadGolfSnapshot() {
+  const scoreboard = await fetchJson<EspnGolfScoreboard>(PGA_SCOREBOARD_ENDPOINT);
+  const season = scoreboard.leagues?.[0]?.season?.year ?? new Date().getFullYear();
+  const event = chooseGolfEvent(scoreboard);
+  const [detail, rows] = await Promise.all([
+    loadGolfEventDetail(event?.id),
+    Promise.resolve(buildGolfLeaderboardRows(event))
+  ]);
+  const [course] = await Promise.all([
+    loadGolfCourse(event?.id, detail),
+    hydrateGolfTeeTimes(event?.id, rows)
+  ]);
+  return { scoreboard, event, detail, course, rows, leader: rows[0] ?? null, season };
+}
+
+function renderPgaCard(root: HTMLElement, snapshot?: GolfSnapshot, error?: unknown) {
+  const link = document.createElement("a");
+  link.className = "sports-team-card sports-pga-card";
+  link.href = PGA_ROUTE;
+  link.setAttribute("aria-label", "PGA Tour leaderboard");
+  link.innerHTML = `
+    <div class="sports-team-card__identity">
+      <div class="sports-team-card__logo-frame sports-pga-card__mark" aria-hidden="true">PGA</div>
+      <div>
+        <div class="sports-team-card__league">PGA Tour</div>
+        <h2 data-pga-event>PGA Leaderboard</h2>
+      </div>
+    </div>
+    <div class="sports-team-card__record">
+      <strong data-pga-leader>Loading</strong>
+      <span data-pga-leader-stats>ESPN leaderboard</span>
+    </div>
+    <div class="sports-team-card__next">
+      <span data-pga-course>Loading course</span>
+      <strong data-pga-location>Location pending</strong>
+      <small data-pga-date></small>
+    </div>
+  `;
+  root.appendChild(link);
+
+  if (!snapshot) {
+    link.querySelector("[data-pga-event]")?.replaceChildren(document.createTextNode("PGA Tour"));
+    link.querySelector("[data-pga-leader]")?.replaceChildren(document.createTextNode("Unavailable"));
+    link.querySelector("[data-pga-leader-stats]")?.replaceChildren(document.createTextNode(error instanceof Error ? error.message : "ESPN data failed"));
+    link.querySelector("[data-pga-course]")?.replaceChildren(document.createTextNode("Schedule"));
+    link.querySelector("[data-pga-location]")?.replaceChildren(document.createTextNode("Details unavailable"));
+    return;
+  }
+
+  const leader = snapshot.leader;
+  const isLive = isGolfActive(snapshot.event);
+  const leaderLine =
+    isLive && leader
+      ? leader.today === "-"
+        ? `${leader.position} • ${leader.total} total • ${leader.thru === "-" ? "Not teed off today" : `Tee time ${leader.thru}`}`
+        : `${leader.position} • ${leader.total} total • ${leader.today} today • Thru ${leader.thru}`
+      : "Next tournament";
+  link.querySelector("[data-pga-event]")?.replaceChildren(document.createTextNode(snapshot.event?.name ?? "PGA Tour"));
+  link.querySelector("[data-pga-leader]")?.replaceChildren(document.createTextNode(isLive && leader ? leader.player : "Leaderboard pending"));
+  link.querySelector("[data-pga-leader-stats]")?.replaceChildren(document.createTextNode(leaderLine));
+  link.querySelector("[data-pga-course]")?.replaceChildren(document.createTextNode(golfCourseName(snapshot.course)));
+  link.querySelector("[data-pga-location]")?.replaceChildren(document.createTextNode(golfLocation(snapshot.course)));
+  link.querySelector("[data-pga-date]")?.replaceChildren(document.createTextNode(formatDateRange(snapshot.event?.date, snapshot.event?.endDate ?? snapshot.detail?.endDate)));
+  link.classList.add("is-loaded");
+}
+
 function renderTeamCard(root: HTMLElement, config: TeamConfig, snapshot?: TeamSnapshot, error?: unknown) {
   const link = document.createElement("a");
   link.className = "sports-team-card";
@@ -583,14 +1180,15 @@ function renderTeamCard(root: HTMLElement, config: TeamConfig, snapshot?: TeamSn
 }
 
 async function renderFeaturedTeamCards(root: HTMLElement, status: HTMLElement | null) {
-  status && (status.textContent = "Loading ESPN team cards.");
-  const results = await Promise.allSettled(
-    FEATURED_TEAMS.map((config, index) =>
+  status && (status.textContent = "Loading ESPN sports cards.");
+  const [teamResults, golfResults] = await Promise.all([
+    Promise.allSettled(FEATURED_TEAMS.map((config, index) =>
       loadTeamSnapshot(config, { includeSchedule: true, includeEventSummary: false }).then((snapshot) => ({ config, index, snapshot }))
-    )
-  );
+    )),
+    Promise.allSettled([loadGolfSnapshot()])
+  ]);
 
-  const cards = results.map((result, index) =>
+  const cards = teamResults.map((result, index) =>
     result.status === "fulfilled"
       ? result.value
       : {
@@ -607,7 +1205,9 @@ async function renderFeaturedTeamCards(root: HTMLElement, status: HTMLElement | 
 
   root.replaceChildren();
   cards.forEach((card) => renderTeamCard(root, card.config, card.snapshot ?? undefined, "error" in card ? card.error : undefined));
-  status && (status.textContent = "Live team cards: active score and game time when playing, otherwise next game details from ESPN.");
+  const golfResult = golfResults[0];
+  renderPgaCard(root, golfResult?.status === "fulfilled" ? golfResult.value : undefined, golfResult?.status === "rejected" ? golfResult.reason : undefined);
+  status && (status.textContent = "Live cards use active ESPN scoreboards, otherwise next event details from ESPN.");
 }
 
 export function initSportsLanding(root: HTMLElement | null) {
@@ -638,6 +1238,413 @@ function createPanel(title: string, className = "") {
   heading.textContent = title;
   panel.appendChild(heading);
   return panel;
+}
+
+function renderPgaHero(snapshot: GolfSnapshot) {
+  const hero = document.createElement("section");
+  hero.className = "sports-team-hero sports-pga-hero";
+  hero.dataset.pgaHero = "";
+
+  const mark = document.createElement("div");
+  mark.className = "sports-pga-hero__mark";
+  mark.textContent = "PGA";
+
+  const content = document.createElement("div");
+  content.className = "sports-team-hero__content";
+
+  const league = document.createElement("div");
+  league.className = "sports-team-card__league";
+  league.textContent = `PGA Tour ${snapshot.season}`;
+  const title = document.createElement("h2");
+  title.textContent = snapshot.event?.name ?? "PGA Tour";
+
+  const meta = document.createElement("div");
+  meta.className = "sports-team-hero__meta sports-pga-meta";
+  [
+    ["Dates", formatDateRange(snapshot.event?.date, snapshot.event?.endDate ?? snapshot.detail?.endDate)],
+    ["Course", golfCourseName(snapshot.course)],
+    ["Location", golfLocation(snapshot.course)],
+    ["Purse", formatMoney(snapshot.detail?.purse)],
+    ["Defending Champion", snapshot.detail?.defendingChampion?.athlete?.displayName ?? "-"],
+    ["Par/Yards", snapshot.course?.shotsToPar ? `Par ${snapshot.course.shotsToPar}${snapshot.course.totalYards ? ` • ${snapshot.course.totalYards.toLocaleString()} yards` : ""}` : "-"]
+  ].forEach(([label, value]) => {
+    const item = document.createElement("span");
+    item.innerHTML = `<small></small><strong></strong>`;
+    item.querySelector("small")?.replaceChildren(document.createTextNode(label));
+    item.querySelector("strong")?.replaceChildren(document.createTextNode(value));
+    meta.appendChild(item);
+  });
+
+  content.append(league, title, meta);
+  hero.append(mark, content);
+  return hero;
+}
+
+function renderPgaScorecard(row: GolfLeaderboardRow, course?: EspnGolfCourse | null) {
+  const scorecard = document.createElement("div");
+  scorecard.className = "sports-pga-scorecard";
+  const holes = row.currentRound?.linescores?.slice().sort((a, b) => (a.period ?? 0) - (b.period ?? 0)) ?? [];
+  if (!holes.length) {
+    scorecard.innerHTML = `<p class="sports-empty-state">Current round scorecard is not available yet.</p>`;
+    return scorecard;
+  }
+
+  const roundLabel = row.currentRound?.period ? `Round ${row.currentRound.period}` : "Current round";
+  const byHole = new Map(holes.map((hole) => [hole.period ?? 0, hole]));
+  const holeNumbers = Array.from({ length: 18 }, (_, index) => index + 1);
+  const front = holeNumbers.slice(0, 9);
+  const back = holeNumbers.slice(9);
+  const columns = [...front, "OUT", ...back, "IN", "TOT"];
+  const parFor = (holeNumber: number) => golfHolePar(course, holeNumber, byHole.get(holeNumber));
+  const scoreFor = (holeNumber: number) => golfHoleScore(byHole.get(holeNumber));
+  const sum = (numbers: number[], getValue: (holeNumber: number) => number | undefined) => {
+    const values = numbers.map(getValue).filter((value): value is number => value !== undefined);
+    return values.length ? String(values.reduce((total, value) => total + value, 0)) : "-";
+  };
+
+  const toolbar = document.createElement("div");
+  toolbar.className = "sports-pga-scorecard__toolbar";
+  const round = document.createElement("span");
+  round.className = "sports-pga-scorecard__round";
+  round.textContent = roundLabel;
+  toolbar.appendChild(round);
+
+  const grid = document.createElement("div");
+  grid.className = "sports-pga-scorecard__grid";
+
+  const addCell = (line: HTMLElement, text: string, className = "") => {
+    const span = document.createElement("span");
+    if (className) {
+      span.className = className;
+    }
+    span.textContent = text;
+    line.appendChild(span);
+    return span;
+  };
+
+  const addLine = (label: string, values: string[], className = "") => {
+    const line = document.createElement("div");
+    line.className = className ? `sports-pga-scorecard__row ${className}` : "sports-pga-scorecard__row";
+    addCell(line, label, "sports-pga-scorecard__label");
+    values.forEach((value) => addCell(line, value));
+    grid.appendChild(line);
+  };
+
+  const holeLabels = columns.map((column) => String(column));
+  const parValues = [
+    ...front.map((holeNumber) => String(parFor(holeNumber) ?? "-")),
+    sum(front, parFor),
+    ...back.map((holeNumber) => String(parFor(holeNumber) ?? "-")),
+    sum(back, parFor),
+    sum(holeNumbers, parFor)
+  ];
+
+  const scoreLine = document.createElement("div");
+  scoreLine.className = "sports-pga-scorecard__row sports-pga-scorecard__row--score";
+  addCell(scoreLine, "Score", "sports-pga-scorecard__label");
+  columns.forEach((column) => {
+    if (typeof column === "string") {
+      const numbers = column === "OUT" ? front : column === "IN" ? back : holeNumbers;
+      addCell(scoreLine, sum(numbers, scoreFor), "sports-pga-scorecard__summary");
+      return;
+    }
+    const hole = byHole.get(column);
+    const score = golfHoleScore(hole);
+    const toPar = golfHoleToPar(hole, parFor(column));
+    const cell = addCell(scoreLine, score === undefined ? "-" : String(score), golfHoleScoreClass(toPar));
+    if (toPar !== undefined) {
+      cell.title = `${toPar === 0 ? "Par" : toPar < 0 ? `${Math.abs(toPar)} under par` : `${toPar} over par`} on hole ${column}`;
+    }
+  });
+
+  addLine("Hole", holeLabels, "sports-pga-scorecard__row--head");
+  addLine("Par", parValues, "sports-pga-scorecard__row--par");
+  grid.appendChild(scoreLine);
+
+  const legend = document.createElement("div");
+  legend.className = "sports-pga-scorecard__legend";
+  [
+    ["is-eagle", "Eagle or better"],
+    ["is-birdie", "Birdie"],
+    ["is-bogey", "Bogey"],
+    ["is-double-bogey", "Double bogey or more"]
+  ].forEach(([className, label]) => {
+    const item = document.createElement("span");
+    const swatch = document.createElement("i");
+    swatch.className = className;
+    item.append(swatch, document.createTextNode(label));
+    legend.appendChild(item);
+  });
+
+  scorecard.append(toolbar, grid, legend);
+
+  return scorecard;
+}
+
+function renderPgaLeaderboard(snapshot: GolfSnapshot) {
+  const panel = createPanel("Leaderboard", "sports-pga-leaderboard-panel");
+  panel.dataset.pgaLeaderboard = "";
+  const rows = snapshot.rows;
+  if (!rows.length) {
+    const empty = document.createElement("p");
+    empty.className = "sports-empty-state";
+    empty.textContent = isGolfActive(snapshot.event) ? "ESPN has not returned leaderboard rows yet." : "Leaderboard will appear when tournament scoring is available.";
+    panel.appendChild(empty);
+    return panel;
+  }
+
+  const expandedPlayers = new Set<string>();
+  let showAll = false;
+  const table = document.createElement("div");
+  table.className = "sports-pga-leaderboard";
+  const toggle = document.createElement("button");
+  toggle.className = "sports-pga-toggle";
+  toggle.type = "button";
+
+  const renderRows = () => {
+    table.replaceChildren();
+    const head = document.createElement("div");
+    head.className = "sports-pga-leaderboard__row sports-pga-leaderboard__row--head";
+    ["Pos", "Player", "Total", "Today", "Thru", "R1", "R2", "R3", "R4", "Strokes"].forEach((label) => {
+      const span = document.createElement("span");
+      span.textContent = label;
+      head.appendChild(span);
+    });
+    table.appendChild(head);
+
+    rows.slice(0, showAll ? rows.length : 10).forEach((row) => {
+      const line = document.createElement("div");
+      line.className = "sports-pga-leaderboard__row";
+      const player = document.createElement("button");
+      player.type = "button";
+      player.className = "sports-pga-player";
+      player.setAttribute("aria-expanded", String(expandedPlayers.has(row.id)));
+      const playerName = document.createElement("span");
+      playerName.textContent = row.player;
+      player.appendChild(playerName);
+      if (row.countryFlag) {
+        const flag = document.createElement("img");
+        flag.src = row.countryFlag;
+        flag.alt = row.country ? `${row.country} flag` : "";
+        flag.loading = "lazy";
+        player.appendChild(flag);
+      }
+      player.addEventListener("click", () => {
+        if (expandedPlayers.has(row.id)) {
+          expandedPlayers.delete(row.id);
+        } else {
+          expandedPlayers.add(row.id);
+        }
+        renderRows();
+      });
+      [row.position, player, row.total, row.today, row.thru, ...row.rounds, row.strokes].forEach((value) => {
+        if (value instanceof HTMLButtonElement) {
+          line.appendChild(value);
+          return;
+        }
+        const span = document.createElement("span");
+        span.textContent = value;
+        line.appendChild(span);
+      });
+      table.appendChild(line);
+      if (expandedPlayers.has(row.id)) {
+        const expanded = document.createElement("div");
+        expanded.className = "sports-pga-leaderboard__expanded";
+        expanded.appendChild(renderPgaScorecard(row, snapshot.course));
+        table.appendChild(expanded);
+      }
+    });
+
+    toggle.textContent = showAll ? "Show top 10" : `Show full leaderboard (${rows.length})`;
+  };
+
+  toggle.addEventListener("click", () => {
+    showAll = !showAll;
+    renderRows();
+  });
+  renderRows();
+  panel.append(table, toggle);
+  return panel;
+}
+
+function golfScheduleStatus(event: EspnGolfCalendarEvent, activeEventId?: string): GolfScheduleEvent["status"] {
+  const now = Date.now();
+  const start = event.startDate ? new Date(event.startDate).getTime() : 0;
+  const end = event.endDate ? new Date(event.endDate).getTime() : start;
+  if (event.id && event.id === activeEventId) {
+    return "current";
+  }
+  if (start && end && now >= start && now <= end + 24 * 60 * 60 * 1000) {
+    return "current";
+  }
+  return end && end < localDayStart(now) ? "completed" : "upcoming";
+}
+
+function golfScheduleEvents(snapshot: GolfSnapshot): GolfScheduleEvent[] {
+  const calendar = snapshot.scoreboard.leagues?.[0]?.calendar ?? [];
+  return calendar
+    .filter((event): event is EspnGolfCalendarEvent & { id: string } => Boolean(event.id))
+    .map((event) => ({
+      id: event.id,
+      name: event.label ?? "PGA event",
+      startDate: event.startDate,
+      endDate: event.endDate,
+      status: golfScheduleStatus(event, snapshot.event?.id)
+    }))
+    .sort((a, b) => {
+      if (a.status === b.status) {
+        const direction = a.status === "completed" ? -1 : 1;
+        return direction * (new Date(a.startDate ?? "").getTime() - new Date(b.startDate ?? "").getTime());
+      }
+      const order: Record<GolfScheduleEvent["status"], number> = { current: 0, upcoming: 1, completed: 2 };
+      return order[a.status] - order[b.status];
+    });
+}
+
+function renderPgaScheduleRow(event: GolfScheduleEvent) {
+  const row = document.createElement("article");
+  row.className = event.status === "current" ? "sports-pga-schedule-row is-current" : "sports-pga-schedule-row";
+  row.dataset.pgaScheduleId = event.id;
+
+  const date = document.createElement("time");
+  date.dateTime = event.startDate ?? "";
+  date.textContent = formatDateRange(event.startDate, event.endDate);
+  const title = document.createElement("strong");
+  title.textContent = event.name;
+  const location = document.createElement("span");
+  location.dataset.pgaScheduleLocation = "";
+  location.textContent = "Location pending";
+  const result = document.createElement("span");
+  result.dataset.pgaScheduleResult = "";
+  result.textContent = event.status === "completed" ? "Winner pending" : "Purse pending";
+  row.append(date, title, location, result);
+  return row;
+}
+
+function updatePgaScheduleRow(root: HTMLElement, event: GolfScheduleEvent) {
+  const row = root.querySelector<HTMLElement>(`[data-pga-schedule-id="${event.id}"]`);
+  if (!row) {
+    return;
+  }
+  row.querySelector("[data-pga-schedule-location]")?.replaceChildren(document.createTextNode(event.course ? `${golfCourseName(event.course)} • ${golfLocation(event.course)}` : "Location TBD"));
+  const winner = event.detail?.winner?.athlete?.displayName;
+  const purse = formatMoney(event.detail?.purse);
+  const result = event.status === "completed" ? `Winner: ${winner ?? "-"} • Purse: ${purse}` : `Purse: ${purse}`;
+  row.querySelector("[data-pga-schedule-result]")?.replaceChildren(document.createTextNode(result));
+}
+
+function renderPgaSchedule(snapshot: GolfSnapshot) {
+  const panel = createPanel("PGA Schedule", "sports-pga-schedule-panel");
+  panel.dataset.pgaSchedule = "";
+  const list = document.createElement("div");
+  list.className = "sports-pga-schedule-list";
+  const events = golfScheduleEvents(snapshot);
+  if (!events.length) {
+    list.innerHTML = `<p class="sports-empty-state">ESPN has not returned the PGA schedule yet.</p>`;
+    panel.appendChild(list);
+    return panel;
+  }
+
+  let lastGroup = "";
+  events.forEach((event) => {
+    const group = event.status === "completed" ? "Completed" : "Upcoming";
+    if (group !== lastGroup) {
+      const heading = document.createElement("div");
+      heading.className = "sports-schedule-section";
+      heading.textContent = group;
+      list.appendChild(heading);
+      lastGroup = group;
+    }
+    list.appendChild(renderPgaScheduleRow(event));
+  });
+  panel.appendChild(list);
+  void hydratePgaSchedule(panel, events);
+  return panel;
+}
+
+async function hydratePgaSchedule(root: HTMLElement, events: GolfScheduleEvent[]) {
+  const byId = new Map(events.map((event) => [event.id, event]));
+  try {
+    const refs = await loadGolfEventRefs(new Date().getFullYear());
+    refs.items?.forEach((ref) => {
+      const id = idFromRef(ref);
+      if (id && !byId.has(id)) {
+        byId.set(id, { id, name: `PGA event ${id}`, status: "upcoming" });
+      }
+    });
+  } catch {
+    // The scoreboard calendar is the primary schedule source; Core refs only add coverage.
+  }
+
+  const queue = events.slice();
+  const worker = async () => {
+    while (queue.length) {
+      const event = queue.shift();
+      if (!event) {
+        return;
+      }
+      try {
+        event.detail = await loadGolfEventDetail(event.id);
+        event.course = await loadGolfCourse(event.id, event.detail);
+        updatePgaScheduleRow(root, event);
+      } catch {
+        updatePgaScheduleRow(root, event);
+      }
+    }
+  };
+  await Promise.all([worker(), worker(), worker(), worker()]);
+}
+
+function renderPgaSnapshot(root: HTMLElement, snapshot: GolfSnapshot, includeSchedule: boolean) {
+  const hero = renderPgaHero(snapshot);
+  const leaderboard = renderPgaLeaderboard(snapshot);
+  if (includeSchedule || !root.querySelector("[data-pga-schedule]")) {
+    root.replaceChildren(hero, leaderboard, renderPgaSchedule(snapshot));
+    return;
+  }
+  root.querySelector("[data-pga-hero]")?.replaceWith(hero);
+  root.querySelector("[data-pga-leaderboard]")?.replaceWith(leaderboard);
+}
+
+export async function initPgaLeaderboardPage(root: HTMLElement | null) {
+  if (!root) {
+    return;
+  }
+
+  const status = document.querySelector<HTMLElement>("[data-sports-status]");
+  status && (status.textContent = "Loading PGA Tour leaderboard...");
+  root.className = "sports-team-detail sports-pga-detail is-loading";
+  root.replaceChildren();
+
+  const refresh = async (initial = false) => {
+    if (initial) {
+      root.classList.add("is-loading");
+    }
+    try {
+      const snapshot = await loadGolfSnapshot();
+      root.classList.remove("is-loading");
+      renderPgaSnapshot(root, snapshot, initial);
+      status && (status.textContent = "PGA Tour data loaded from ESPN public JSON endpoints.");
+      if (isGolfActive(snapshot.event)) {
+        if (!root.dataset.refreshIntervalId) {
+          root.dataset.refreshIntervalId = String(window.setInterval(() => {
+            void refresh();
+          }, 60000));
+        }
+      } else if (root.dataset.refreshIntervalId) {
+        window.clearInterval(Number(root.dataset.refreshIntervalId));
+        delete root.dataset.refreshIntervalId;
+      }
+    } catch (error) {
+      root.classList.remove("is-loading");
+      if (initial) {
+        root.innerHTML = `<p class="sports-empty-state">${error instanceof Error ? error.message : "Failed to load PGA Tour details."}</p>`;
+      }
+      status && (status.textContent = "PGA Tour details failed to load.");
+    }
+  };
+
+  void refresh(true);
 }
 
 function snapshotEvent(snapshot: TeamSnapshot) {

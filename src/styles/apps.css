@@ -1221,6 +1221,26 @@
   line-height: 1.2;
 }
 
+.sports-pga-card {
+  --team-primary: #0d3f32;
+  --team-secondary: #9fcf6d;
+  --team-ink: #fff8ed;
+}
+
+.sports-pga-card__mark,
+.sports-pga-hero__mark {
+  align-items: center;
+  aspect-ratio: 1;
+  background: color-mix(in srgb, var(--team-secondary) 22%, transparent);
+  border: 1px solid color-mix(in srgb, var(--team-secondary) 70%, transparent);
+  border-radius: 50%;
+  display: flex;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  justify-content: center;
+}
+
 .sports-team-detail {
   display: grid;
   gap: 1rem;
@@ -1288,6 +1308,28 @@
 .sports-team-hero__meta strong {
   font-size: 1.25rem;
   font-weight: 400;
+}
+
+.sports-pga-hero {
+  --team-primary: #0d3f32;
+  --team-secondary: #9fcf6d;
+  --team-ink: #fff8ed;
+}
+
+.sports-pga-hero__mark {
+  height: 9rem;
+  width: 9rem;
+}
+
+.sports-pga-meta span {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.sports-pga-meta small {
+  color: color-mix(in srgb, var(--team-ink) 72%, transparent);
+  font-size: 0.72rem;
+  text-transform: uppercase;
 }
 
 .sports-detail-grid {
@@ -1829,6 +1871,228 @@
   width: 1.75rem;
 }
 
+.sports-pga-leaderboard-panel,
+.sports-pga-schedule-panel {
+  overflow-x: auto;
+}
+
+.sports-pga-leaderboard,
+.sports-pga-schedule-list {
+  display: grid;
+  min-width: 48rem;
+}
+
+.sports-pga-leaderboard__row {
+  align-items: center;
+  border-bottom: 1px solid var(--font-faded50);
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 3rem minmax(11rem, 1.5fr) repeat(8, minmax(3.4rem, 0.5fr));
+  min-height: 2.7rem;
+  text-align: center;
+}
+
+.sports-pga-leaderboard__row--head {
+  color: var(--font-faded);
+  font-size: 0.72rem;
+  min-height: 2rem;
+  text-transform: uppercase;
+}
+
+.sports-pga-leaderboard__row span:first-child,
+.sports-pga-leaderboard__row .sports-pga-player {
+  text-align: left;
+}
+
+.sports-pga-player,
+.sports-pga-toggle {
+  background: transparent;
+  border: 0;
+  color: var(--font-color);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.sports-pga-player {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.sports-pga-player span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sports-pga-player img {
+  border-radius: 50%;
+  flex: 0 0 auto;
+  height: 1rem;
+  object-fit: cover;
+  width: 1rem;
+}
+
+.sports-pga-player[aria-expanded="true"] {
+  color: #2fbf71;
+}
+
+.sports-pga-leaderboard__expanded {
+  border-bottom: 1px solid var(--font-faded50);
+  padding: 0.85rem 0 1.1rem;
+}
+
+.sports-pga-scorecard {
+  display: grid;
+  gap: 0.75rem;
+  min-width: 58rem;
+}
+
+.sports-pga-scorecard__toolbar {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.sports-pga-scorecard__round {
+  border: 1px solid var(--font-faded50);
+  border-radius: 999px;
+  color: var(--font-color);
+  display: inline-flex;
+  font-size: 0.82rem;
+  line-height: 1;
+  padding: 0.55rem 0.85rem;
+}
+
+.sports-pga-scorecard__grid {
+  display: grid;
+  overflow: hidden;
+}
+
+.sports-pga-scorecard__row {
+  display: grid;
+  grid-template-columns: 3.25rem repeat(21, minmax(2.35rem, 1fr));
+  min-height: 2.1rem;
+  text-align: center;
+}
+
+.sports-pga-scorecard__row span {
+  align-items: center;
+  border-bottom: 1px solid color-mix(in srgb, var(--font-faded50) 64%, transparent);
+  display: inline-flex;
+  justify-content: center;
+  min-width: 0;
+  padding: 0.35rem 0.2rem;
+}
+
+.sports-pga-scorecard__row--head {
+  color: var(--font-faded);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.sports-pga-scorecard__row--head span {
+  border-top: 1px solid var(--font-faded50);
+}
+
+.sports-pga-scorecard__label {
+  color: var(--font-faded);
+  justify-content: flex-start !important;
+  text-align: left;
+}
+
+.sports-pga-scorecard__summary {
+  background: color-mix(in srgb, var(--glass-strong) 56%, transparent);
+}
+
+.sports-pga-scorecard__row--score span:not(.sports-pga-scorecard__label) {
+  font-weight: 500;
+}
+
+.sports-pga-scorecard__row--score .is-eagle,
+.sports-pga-scorecard__legend .is-eagle {
+  background: #f4bf2a;
+  color: #000020;
+}
+
+.sports-pga-scorecard__row--score .is-birdie,
+.sports-pga-scorecard__legend .is-birdie {
+  background: #64c18b;
+  color: #000020;
+}
+
+.sports-pga-scorecard__row--score .is-bogey,
+.sports-pga-scorecard__legend .is-bogey {
+  background: #e87c8b;
+  color: #000020;
+}
+
+.sports-pga-scorecard__row--score .is-double-bogey,
+.sports-pga-scorecard__legend .is-double-bogey {
+  background: #7aa8d8;
+  color: #000020;
+}
+
+.sports-pga-scorecard__legend {
+  align-items: center;
+  color: var(--font-faded);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  gap: 0.7rem;
+  text-transform: uppercase;
+}
+
+.sports-pga-scorecard__legend span {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.3rem;
+}
+
+.sports-pga-scorecard__legend i {
+  border-radius: 0.18rem;
+  display: inline-block;
+  height: 0.65rem;
+  width: 0.65rem;
+}
+
+.sports-pga-toggle {
+  border: 1px solid var(--font-faded50);
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.65rem 0.85rem;
+}
+
+.sports-pga-schedule-row {
+  align-items: center;
+  border-bottom: 1px solid var(--font-faded50);
+  display: grid;
+  gap: 0.6rem;
+  grid-template-columns: minmax(8rem, 0.75fr) minmax(14rem, 1.25fr) minmax(14rem, 1.15fr) minmax(12rem, 1fr);
+  min-height: 3.2rem;
+  padding: 0.2rem 0;
+}
+
+.sports-pga-schedule-row.is-current {
+  background: var(--glass-strong);
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+.sports-pga-schedule-row time,
+.sports-pga-schedule-row span {
+  color: var(--font-faded);
+  font-size: 0.82rem;
+}
+
+.sports-pga-schedule-row strong {
+  font-size: 0.92rem;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+}
+
 .list-panel {
   list-style: none;
   margin: 0;
@@ -1968,12 +2232,22 @@
     width: 7rem;
   }
 
+  .sports-pga-hero__mark {
+    height: 7rem;
+    width: 7rem;
+  }
+
   .sports-team-hero__meta {
     justify-content: center;
   }
 
   .sports-schedule-row {
     grid-template-columns: minmax(5.5rem, 0.7fr) minmax(8rem, 1.2fr) minmax(5rem, 0.7fr);
+  }
+
+  .sports-pga-leaderboard,
+  .sports-pga-schedule-list {
+    min-width: 44rem;
   }
 
   .sports-standings-table > div {
@@ -2044,6 +2318,28 @@
   .sports-schedule-row img {
     height: 1.45rem;
     width: 1.45rem;
+  }
+
+  .sports-pga-meta {
+    justify-content: stretch;
+  }
+
+  .sports-pga-meta span {
+    text-align: center;
+  }
+
+  .sports-pga-leaderboard,
+  .sports-pga-schedule-list {
+    min-width: 40rem;
+  }
+
+  .sports-pga-leaderboard__row {
+    gap: 0.35rem;
+    grid-template-columns: 2.5rem minmax(9rem, 1.5fr) repeat(8, minmax(3rem, 0.5fr));
+  }
+
+  .sports-pga-leaderboard__expanded {
+    padding-left: 0;
   }
 
   .sports-standings-table > div {
