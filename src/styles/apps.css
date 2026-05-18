@@ -1892,6 +1892,28 @@
   text-align: center;
 }
 
+.sports-pga-leaderboard__row[role="button"] {
+  cursor: pointer;
+}
+
+.sports-pga-leaderboard__row[role="button"]:hover,
+.sports-pga-leaderboard__row[role="button"]:focus-visible {
+  background: color-mix(in srgb, var(--glass-strong) 55%, transparent);
+}
+
+.sports-pga-leaderboard__row[role="button"]:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--font-color) 72%, transparent);
+  outline-offset: -2px;
+}
+
+.sports-pga-leaderboard--tee-sheet {
+  min-width: 36rem;
+}
+
+.sports-pga-leaderboard--tee-sheet .sports-pga-leaderboard__row {
+  grid-template-columns: 3rem minmax(13rem, 1.5fr) minmax(7rem, 0.7fr) minmax(5rem, 0.5fr) minmax(7rem, 0.7fr);
+}
+
 .sports-pga-leaderboard__row--head {
   color: var(--font-faded);
   font-size: 0.72rem;
@@ -1904,7 +1926,6 @@
   text-align: left;
 }
 
-.sports-pga-player,
 .sports-pga-toggle {
   background: transparent;
   border: 0;
@@ -1917,9 +1938,11 @@
 
 .sports-pga-player {
   align-items: center;
+  color: var(--font-color);
   display: inline-flex;
   gap: 0.4rem;
   min-width: 0;
+  text-align: left;
 }
 
 .sports-pga-player span {
@@ -1935,7 +1958,7 @@
   width: 1rem;
 }
 
-.sports-pga-player[aria-expanded="true"] {
+.sports-pga-leaderboard__row[aria-expanded="true"] .sports-pga-player {
   color: #2fbf71;
 }
 
