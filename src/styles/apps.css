@@ -838,31 +838,14 @@
   stroke-width: 3;
 }
 
-.weather-moon-art__surface {
-  filter: drop-shadow(0 0.2rem 0.45rem rgba(0, 0, 0, 0.35));
-}
-
 .weather-moon-art__rim {
   fill: transparent;
   stroke: rgba(255, 255, 255, 0.36);
   stroke-width: 1;
 }
 
-.weather-moon-art__shade {
+.weather-moon-art__shadow {
   fill: var(--weather-moon-dim);
-  stroke: none;
-}
-
-.weather-moon-art__shade--left {
-  fill: url(#weatherMoonTerminatorLeft);
-}
-
-.weather-moon-art__shade--right {
-  fill: url(#weatherMoonTerminatorRight);
-}
-
-.weather-moon-art__terminator {
-  fill: color-mix(in srgb, var(--weather-moon-dim) 72%, transparent);
   stroke: none;
 }
 

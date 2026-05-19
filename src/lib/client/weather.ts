@@ -515,38 +515,48 @@ const sunSvg = (event: CelestialEvent | undefined, now: Date) => {
   `;
 };
 
+const moonShadowPath = (phase: number) => {
+  const normalizedPhase = ((phase % 1) + 1) % 1;
+  const center = 60;
+  const radius = 33;
+  const left = center - radius;
+  const right = center + radius;
+  const top = center - radius;
+  const bottom = center + radius;
+  const curve = radius * 0.5522847498;
+  const leftCircle = `C ${(center - curve).toFixed(2)} ${bottom} ${left} ${(center + curve).toFixed(2)} ${left} ${center} C ${left} ${(center - curve).toFixed(2)} ${(center - curve).toFixed(2)} ${top} ${center} ${top}`;
+  const rightCircle = `C ${(center + curve).toFixed(2)} ${top} ${right} ${(center - curve).toFixed(2)} ${right} ${center} C ${right} ${(center + curve).toFixed(2)} ${(center + curve).toFixed(2)} ${bottom} ${center} ${bottom}`;
+
+  if (Math.abs(normalizedPhase - 0.5) < 0.0125) return "";
+
+  if (normalizedPhase < 0.5) {
+    const terminatorX = right - (normalizedPhase / 0.5) * radius * 2;
+    const x = terminatorX.toFixed(2);
+    return `M ${center} ${top} C ${x} ${top} ${x} ${bottom} ${center} ${bottom} ${leftCircle} Z`;
+  }
+
+  const terminatorX = right - ((normalizedPhase - 0.5) / 0.5) * radius * 2;
+  const x = terminatorX.toFixed(2);
+  return `M ${center} ${top} ${rightCircle} C ${x} ${bottom} ${x} ${top} ${center} ${top} Z`;
+};
+
 const moonSvg = (phase: number, event: CelestialEvent | undefined, now: Date) => {
-  const waxing = phase < 0.5;
   const distanceFromFull = Math.abs(phase - 0.5) * 2;
-  const shadowWidth = 74 * distanceFromFull;
-  const terminatorX = waxing ? 60 + shadowWidth / 2 : 60 - shadowWidth / 2;
-  const shadeOpacity = Math.max(0.16, Math.min(0.74, distanceFromFull + 0.08));
+  const shadowPath = moonShadowPath(phase);
+  const shadowOpacity = shadowPath ? Math.min(0.92, 0.54 + distanceFromFull * 0.32) : 0;
   const orbitOffset = 78 - eventProgress(event, now) * 100;
-  const shadeX = waxing ? 27 : terminatorX;
-  const shadeWidth = waxing ? Math.max(0, terminatorX - 27) : Math.max(0, 93 - terminatorX);
   return `
     <svg class="weather-moon-art" viewBox="0 0 120 120" aria-hidden="true" style="--moon-orbit-offset:${orbitOffset.toFixed(2)}">
       <defs>
         <clipPath id="weatherMoonClip">
           <circle cx="60" cy="60" r="33" />
         </clipPath>
-        <linearGradient id="weatherMoonTerminatorLeft" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="var(--weather-moon-dim)" stop-opacity="${shadeOpacity}" />
-          <stop offset="72%" stop-color="var(--weather-moon-dim)" stop-opacity="${shadeOpacity * 0.86}" />
-          <stop offset="100%" stop-color="var(--weather-moon-dim)" stop-opacity="0" />
-        </linearGradient>
-        <linearGradient id="weatherMoonTerminatorRight" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stop-color="var(--weather-moon-dim)" stop-opacity="0" />
-          <stop offset="28%" stop-color="var(--weather-moon-dim)" stop-opacity="${shadeOpacity * 0.86}" />
-          <stop offset="100%" stop-color="var(--weather-moon-dim)" stop-opacity="${shadeOpacity}" />
-        </linearGradient>
       </defs>
       <circle class="weather-moon-art__orbit weather-moon-art__orbit--base" cx="60" cy="60" r="43" />
       <circle class="weather-moon-art__orbit weather-moon-art__orbit--accent" cx="60" cy="60" r="43" pathLength="100" />
       <g clip-path="url(#weatherMoonClip)">
-        <image class="weather-moon-art__surface" href="/weather/img/moon-surface.png" x="27" y="27" width="66" height="66" preserveAspectRatio="xMidYMid slice" />
-        <rect class="weather-moon-art__shade weather-moon-art__shade--${waxing ? "left" : "right"}" x="${shadeX.toFixed(2)}" y="27" width="${shadeWidth.toFixed(2)}" height="66" />
-        <ellipse class="weather-moon-art__terminator" cx="${terminatorX.toFixed(2)}" cy="60" rx="${Math.max(8, 15 - distanceFromFull * 6).toFixed(2)}" ry="34" opacity="${shadeOpacity}" />
+        <image class="weather-moon-art__surface" href="/weather/img/moon-surface.svg" x="27" y="27" width="66" height="66" preserveAspectRatio="xMidYMid slice" />
+        ${shadowPath ? `<path class="weather-moon-art__shadow" d="${shadowPath}" opacity="${shadowOpacity.toFixed(2)}" />` : ""}
       </g>
       <circle class="weather-moon-art__rim" cx="60" cy="60" r="33" />
     </svg>
