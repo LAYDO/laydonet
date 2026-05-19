@@ -82,6 +82,19 @@ type AirQualityData = {
   };
 };
 
+type RainViewerFrame = {
+  time: number;
+  path: string;
+};
+
+type RainViewerWeatherMaps = {
+  host?: string;
+  radar?: {
+    past?: RainViewerFrame[];
+    nowcast?: RainViewerFrame[];
+  };
+};
+
 type WeatherPayload = {
   aqi: AirQualityData;
   city: GeocodingResult;
@@ -106,6 +119,8 @@ type CelestialEvent = {
 
 const unitStorageKey = "laydonet-weather-unit";
 const hourMs = 60 * 60 * 1000;
+const rainViewerMapsUrl = "https://api.rainviewer.com/public/weather-maps.json";
+const rainViewerRefreshMs = 10 * 60 * 1000;
 
 const weatherCodes: Record<number, { kind: WeatherKind; label: string }> = {
   0: { kind: "clear", label: "Clear sky" },
@@ -282,12 +297,49 @@ const fetchJson = async <T,>(url: string, signal?: AbortSignal) => {
 
 let map: L.Map | null = null;
 let marker: L.CircleMarker | null = null;
+let radarLayer: L.TileLayer | null = null;
+let radarLayerLoadedAt = 0;
+let radarLayerRequest: Promise<void> | null = null;
 let activeRequest = 0;
 let activeController: AbortController | null = null;
 let celestialTimer: number | undefined;
 let lastCity = "Chicago";
 let lastRequest: WeatherRequest = { kind: "city", cityName: lastCity };
 let currentUnit: UnitSystem = "imperial";
+
+const latestRainViewerFrame = (metadata: RainViewerWeatherMaps) => {
+  const frames = [...(metadata.radar?.past ?? []), ...(metadata.radar?.nowcast ?? [])];
+  return frames.sort((a, b) => a.time - b.time).at(-1);
+};
+
+const refreshRadarLayer = () => {
+  if (!map || radarLayerRequest || (radarLayer && Date.now() - radarLayerLoadedAt < rainViewerRefreshMs)) return;
+
+  radarLayerRequest = (async () => {
+    const metadata = await fetchJson<RainViewerWeatherMaps>(rainViewerMapsUrl);
+    const frame = latestRainViewerFrame(metadata);
+    if (!map || !metadata.host || !frame?.path) return;
+
+    const nextLayer = L.tileLayer(`${metadata.host}${frame.path}/256/{z}/{x}/{y}/2/1_1.png`, {
+      attribution: '<a href="https://www.rainviewer.com/" rel="noopener">RainViewer</a>',
+      className: "weather-radar-tile",
+      maxNativeZoom: 7,
+      opacity: 0.72,
+      tileSize: 256
+    });
+
+    radarLayer?.remove();
+    radarLayer = nextLayer;
+    radarLayer.addTo(map);
+    radarLayerLoadedAt = Date.now();
+  })()
+    .catch(() => {
+      // Radar is supplementary; keep the map usable if the public tile feed is unavailable.
+    })
+    .finally(() => {
+      radarLayerRequest = null;
+    });
+};
 
 const renderMap = (latitude: number, longitude: number, label: string) => {
   const mapElement = document.getElementById("weather-map");
@@ -299,9 +351,12 @@ const renderMap = (latitude: number, longitude: number, label: string) => {
       zoomControl: true
     });
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors"
+      attribution: "&copy; OpenStreetMap contributors",
+      className: "weather-base-tile"
     }).addTo(map);
   }
+
+  refreshRadarLayer();
 
   marker?.remove();
   marker = L.circleMarker([latitude, longitude], {
