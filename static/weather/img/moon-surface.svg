@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Full moon surface">
+  <defs>
+    <clipPath id="moonDisc">
+      <circle cx="48" cy="48" r="46" />
+    </clipPath>
+    <radialGradient id="moonBase" cx="34%" cy="30%" r="68%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="36%" stop-color="#eef3f7" />
+      <stop offset="70%" stop-color="#bfc8d0" />
+      <stop offset="100%" stop-color="#7e8891" />
+    </radialGradient>
+    <radialGradient id="moonCrater" cx="42%" cy="38%" r="64%">
+      <stop offset="0%" stop-color="#5b626a" stop-opacity="0.42" />
+      <stop offset="58%" stop-color="#737b83" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+    <radialGradient id="moonHighlight" cx="31%" cy="24%" r="72%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.62" />
+      <stop offset="64%" stop-color="#ffffff" stop-opacity="0.1" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <g clip-path="url(#moonDisc)">
+    <circle cx="48" cy="48" r="46" fill="url(#moonBase)" />
+    <path fill="#626b73" fill-opacity="0.18" d="M23 29c7-10 18-15 31-14 11 1 22 7 29 16-8-3-16-5-24-3-12 3-20 12-32 10-5-1-8-4-4-9Z" />
+    <path fill="#5f6870" fill-opacity="0.2" d="M18 62c10 5 21 5 32 1 9-3 16-2 25 3-8 10-20 16-34 15-11-1-20-7-23-19Z" />
+    <path fill="#f6f8fa" fill-opacity="0.16" d="M28 18c15-9 36-7 50 8-10-6-23-7-36-3-10 3-18 4-14-5Z" />
+    <circle cx="30" cy="34" r="7.5" fill="url(#moonCrater)" />
+    <circle cx="54" cy="27" r="5.8" fill="url(#moonCrater)" />
+    <circle cx="67" cy="46" r="8.5" fill="url(#moonCrater)" />
+    <circle cx="42" cy="57" r="6.4" fill="url(#moonCrater)" />
+    <circle cx="27" cy="67" r="4.8" fill="url(#moonCrater)" />
+    <circle cx="58" cy="70" r="5.5" fill="url(#moonCrater)" />
+    <circle cx="75" cy="31" r="3.7" fill="url(#moonCrater)" />
+    <circle cx="37" cy="22" r="2.9" fill="#58616a" fill-opacity="0.18" />
+    <circle cx="51" cy="43" r="2.4" fill="#58616a" fill-opacity="0.16" />
+    <circle cx="34" cy="49" r="2.1" fill="#ffffff" fill-opacity="0.16" />
+    <circle cx="70" cy="62" r="2.9" fill="#ffffff" fill-opacity="0.13" />
+    <circle cx="48" cy="48" r="46" fill="url(#moonHighlight)" />
+  </g>
+</svg>
