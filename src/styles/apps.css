@@ -878,8 +878,12 @@
   min-height: 19rem;
 }
 
-.weather-map .leaflet-tile {
+.weather-map .weather-base-tile .leaflet-tile {
   filter: var(--weather-map-filter);
+}
+
+.weather-map .weather-radar-tile .leaflet-tile {
+  filter: none;
 }
 
 .weather-map .leaflet-control-container {
