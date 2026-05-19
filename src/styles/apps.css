@@ -2363,6 +2363,12 @@
     padding-right: 0.35rem;
   }
 
+  .weather-toolbar,
+  .weather-dashboard,
+  .weather-location-notice {
+    width: 100%;
+  }
+
   .weather-toolbar {
     gap: 0.5rem;
     grid-template-columns: 1fr;
@@ -2383,11 +2389,25 @@
   }
 
   .weather-insight-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .weather-insight + .weather-insight {
+    border-left: 1px solid var(--weather-line);
+    border-top: 0;
+  }
+
+  .weather-insight {
+    min-height: 9.5rem;
+    padding: 0.85rem 0.5rem;
+  }
+
+  .weather-insight:nth-child(3) {
     border-left: 0;
+    border-top: 1px solid var(--weather-line);
+  }
+
+  .weather-insight:nth-child(4) {
     border-top: 1px solid var(--weather-line);
   }
 
