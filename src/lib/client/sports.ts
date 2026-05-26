@@ -346,6 +346,187 @@ interface GolfSnapshot {
   nextEvent?: EspnGolfCalendarEvent;
 }
 
+interface EspnF1CalendarEvent {
+  label?: string;
+  startDate?: string;
+  endDate?: string;
+  event?: EspnRef;
+}
+
+interface EspnF1Athlete {
+  id?: string;
+  displayName?: string;
+  shortName?: string;
+  fullName?: string;
+  abbreviation?: string;
+  flag?: { href?: string; alt?: string; rel?: string[] };
+  headshot?: { href?: string; alt?: string };
+}
+
+interface EspnF1Competitor {
+  id?: string;
+  uid?: string;
+  type?: string;
+  order?: number | null;
+  winner?: boolean;
+  athlete?: EspnF1Athlete | EspnRef;
+  vehicle?: { number?: string; manufacturer?: string; teamColor?: string };
+  statistics?: EspnRef | EspnStatistic[];
+  status?: EspnRef | EspnCompetition["status"];
+  score?: string | number | null;
+}
+
+interface EspnF1Competition {
+  id?: string;
+  type?: { id?: string; text?: string; abbreviation?: string };
+  date?: string;
+  endDate?: string;
+  status?: EspnCompetition["status"] | EspnRef;
+  competitors?: EspnF1Competitor[];
+}
+
+interface EspnF1Event {
+  id?: string;
+  name?: string;
+  shortName?: string;
+  date?: string;
+  endDate?: string;
+  status?: EspnCompetition["status"];
+  competitions?: EspnF1Competition[];
+  links?: Array<{ href?: string; text?: string; shortText?: string; rel?: string[] }>;
+}
+
+interface EspnF1Scoreboard {
+  leagues?: Array<{
+    id?: string;
+    name?: string;
+    abbreviation?: string;
+    season?: {
+      year?: number;
+      startDate?: string;
+      endDate?: string;
+      displayName?: string;
+      type?: { id?: string; name?: string };
+    };
+    calendar?: EspnF1CalendarEvent[];
+  }>;
+  events?: EspnF1Event[];
+}
+
+interface EspnF1StandingEntry {
+  athlete?: EspnF1Athlete;
+  team?: {
+    id?: string;
+    name?: string;
+    displayName?: string;
+    abbreviation?: string;
+    shortDisplayName?: string;
+    color?: string;
+  };
+  stats?: EspnStatistic[];
+}
+
+interface EspnF1StandingsGroup {
+  name?: string;
+  abbreviation?: string;
+  standings?: { entries?: EspnF1StandingEntry[] };
+}
+
+interface EspnF1Standings {
+  name?: string;
+  abbreviation?: string;
+  children?: EspnF1StandingsGroup[];
+}
+
+interface EspnF1Teams {
+  sports?: Array<{
+    leagues?: Array<{
+      teams?: Array<{
+        team?: {
+          id?: string;
+          displayName?: string;
+          abbreviation?: string;
+          color?: string;
+          slug?: string;
+          links?: Array<{ href?: string; rel?: string[]; text?: string; shortText?: string }>;
+        };
+      }>;
+    }>;
+  }>;
+}
+
+interface EspnF1CoreEvent {
+  id?: string;
+  name?: string;
+  shortName?: string;
+  date?: string;
+  endDate?: string;
+  circuit?: EspnRef | null;
+}
+
+interface EspnF1Circuit {
+  id?: string;
+  fullName?: string;
+  name?: string;
+  displayName?: string;
+  type?: string;
+  address?: { city?: string; state?: string; country?: string };
+}
+
+interface EspnF1News {
+  articles?: Array<{
+    headline?: string;
+    description?: string;
+    published?: string;
+    links?: { web?: { href?: string } };
+    images?: Array<{ url?: string; name?: string; width?: number; height?: number }>;
+  }>;
+}
+
+interface F1SessionRow {
+  id: string;
+  label: string;
+  date?: string;
+  state: string;
+  status: string;
+  competitors: EspnF1Competitor[];
+}
+
+interface F1CalendarRow {
+  id: string;
+  name: string;
+  startDate?: string;
+  endDate?: string;
+  status: "current" | "upcoming" | "completed";
+}
+
+interface F1StandingRow {
+  id: string;
+  rank: string;
+  name: string;
+  points: string;
+  color?: string;
+  flag?: string;
+  country?: string;
+}
+
+interface F1Snapshot {
+  scoreboard: EspnF1Scoreboard;
+  standings: EspnF1Standings;
+  teams: EspnF1Teams;
+  news: EspnF1News | null;
+  event: EspnF1Event | null;
+  detail: EspnF1CoreEvent | null;
+  circuit: EspnF1Circuit | null;
+  session: F1SessionRow | null;
+  sessions: F1SessionRow[];
+  calendar: F1CalendarRow[];
+  driverStandings: F1StandingRow[];
+  constructorStandings: F1StandingRow[];
+  season: number;
+  nextEvent?: F1CalendarRow;
+}
+
 type SeasonPhase = "post" | "regular" | "pre" | "off";
 
 const FEATURED_TEAMS: TeamConfig[] = [
@@ -386,6 +567,11 @@ const EVENT_ENDPOINTS: Record<TeamConfig["league"], string> = {
 const PGA_ROUTE = "/sports/golf/pga/";
 const PGA_SCOREBOARD_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard";
 const PGA_CORE_BASE = "https://sports.core.api.espn.com/v2/sports/golf/leagues/pga";
+const F1_ROUTE = "/sports/racing/f1/";
+const F1_SCOREBOARD_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/scoreboard";
+const F1_TEAMS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/teams";
+const F1_NEWS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/news?limit=3";
+const F1_CORE_BASE = "https://sports.core.api.espn.com/v2/sports/racing/leagues/f1";
 
 const DEFAULT_TEAM_LOGO =
   "data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20100%20100%22%3E%3Ccircle%20cx%3D%2250%22%20cy%3D%2250%22%20r%3D%2245%22%20fill%3D%22%23000020%22%20opacity%3D%22.18%22%2F%3E%3Ctext%20x%3D%2250%22%20y%3D%2262%22%20text-anchor%3D%22middle%22%20font-family%3D%22Arial%2Csans-serif%22%20font-size%3D%2248%22%20font-weight%3D%22700%22%20fill%3D%22%23fff8ed%22%3E%3F%3C%2Ftext%3E%3C%2Fsvg%3E";
@@ -1321,6 +1507,311 @@ async function loadGolfSnapshot() {
   return { scoreboard, event, detail, course, rows, leader: rows[0] ?? null, season, mode: selection.mode, nextEvent: selection.nextEvent };
 }
 
+function f1StandingsEndpoint(season: number) {
+  return `https://site.web.api.espn.com/apis/v2/sports/racing/f1/standings?region=us&lang=en&contentorigin=espn&season=${season}`;
+}
+
+function f1EventEndpoint(id: string) {
+  return `${F1_CORE_BASE}/events/${id}?lang=en&region=us`;
+}
+
+function f1EventId(event?: EspnF1CalendarEvent | F1CalendarRow | EspnF1Event | null) {
+  if (!event) {
+    return "";
+  }
+  if ("id" in event && event.id) {
+    return event.id;
+  }
+  if ("event" in event) {
+    return idFromRef(event.event);
+  }
+  return "";
+}
+
+function f1Calendar(scoreboard: EspnF1Scoreboard): F1CalendarRow[] {
+  const activeEventId = scoreboard.events?.[0]?.id;
+  return (scoreboard.leagues?.[0]?.calendar ?? [])
+    .map((event) => {
+      const id = f1EventId(event);
+      return {
+        id,
+        name: event.label ?? "Formula 1 Grand Prix",
+        startDate: event.startDate,
+        endDate: event.endDate,
+        status: f1CalendarStatus(event, activeEventId)
+      };
+    })
+    .filter((event) => event.id);
+}
+
+function f1CalendarStatus(event: EspnF1CalendarEvent, activeEventId?: string): F1CalendarRow["status"] {
+  const now = Date.now();
+  const id = f1EventId(event);
+  const start = event.startDate ? new Date(event.startDate).getTime() : 0;
+  const end = event.endDate ? new Date(event.endDate).getTime() : start;
+  if (id && activeEventId && id === activeEventId) {
+    return "current";
+  }
+  if (start && end && now >= localDayStart(start) && now <= localDayEnd(end)) {
+    return "current";
+  }
+  return end && end < localDayStart(now) ? "completed" : "upcoming";
+}
+
+function f1NextCalendarEvent(calendar: F1CalendarRow[], now = Date.now()) {
+  return calendar
+    .filter((event) => event.status === "current" || (event.startDate && new Date(event.startDate).getTime() >= localDayStart(now)))
+    .sort((a, b) => new Date(a.startDate ?? "").getTime() - new Date(b.startDate ?? "").getTime())[0];
+}
+
+function f1EventFromCalendar(event?: F1CalendarRow): EspnF1Event | null {
+  if (!event) {
+    return null;
+  }
+  return {
+    id: event.id,
+    name: event.name,
+    shortName: event.name,
+    date: event.startDate,
+    endDate: event.endDate,
+    status: {
+      type: {
+        name: event.status === "completed" ? "STATUS_FINAL" : "STATUS_SCHEDULED",
+        state: event.status === "completed" ? "post" : "pre",
+        description: event.status === "completed" ? "Final" : "Scheduled"
+      }
+    },
+    competitions: []
+  };
+}
+
+function chooseF1Event(scoreboard: EspnF1Scoreboard, calendar: F1CalendarRow[]) {
+  const live = (scoreboard.events ?? []).find((event) => f1Sessions(event).some((session) => session.state === "in"));
+  if (live) {
+    return live;
+  }
+  const current = scoreboard.events?.[0];
+  if (current) {
+    return current;
+  }
+  return f1EventFromCalendar(f1NextCalendarEvent(calendar));
+}
+
+function f1CompetitionState(competition?: EspnF1Competition) {
+  return competition?.status && !isEspnRef(competition.status) ? competition.status.type?.state ?? "" : "";
+}
+
+function f1CompetitionStatus(competition?: EspnF1Competition) {
+  return competition?.status && !isEspnRef(competition.status)
+    ? competition.status.type?.shortDetail ?? competition.status.type?.detail ?? competition.status.type?.description ?? ""
+    : "";
+}
+
+function f1SessionLabel(competition: EspnF1Competition) {
+  const abbreviation = competition.type?.abbreviation ?? "";
+  return (
+    {
+      FP1: "Practice 1",
+      FP2: "Practice 2",
+      FP3: "Practice 3",
+      SS: "Sprint Shootout",
+      SR: "Sprint Race",
+      Qual: "Qualifying",
+      Race: "Race"
+    }[abbreviation] ??
+    competition.type?.text ??
+    abbreviation ??
+    "Session"
+  );
+}
+
+function f1Sessions(event?: EspnF1Event | null): F1SessionRow[] {
+  return [...(event?.competitions ?? [])]
+    .sort((a, b) => new Date(a.date ?? "").getTime() - new Date(b.date ?? "").getTime())
+    .map((competition) => ({
+      id: competition.id ?? `${competition.type?.abbreviation ?? "session"}-${competition.date ?? ""}`,
+      label: f1SessionLabel(competition),
+      date: competition.date,
+      state: f1CompetitionState(competition),
+      status: f1CompetitionStatus(competition),
+      competitors: [...(competition.competitors ?? [])].sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999))
+    }));
+}
+
+function chooseF1Session(sessions: F1SessionRow[], now = Date.now()) {
+  return (
+    sessions.find((session) => session.state === "in") ??
+    sessions.find((session) => session.state === "pre" && (session.date ? new Date(session.date).getTime() >= now - 30 * 60 * 1000 : true)) ??
+    sessions
+      .filter((session) => session.state === "post")
+      .sort((a, b) => new Date(b.date ?? "").getTime() - new Date(a.date ?? "").getTime())[0] ??
+    sessions[0] ??
+    null
+  );
+}
+
+function f1StandingGroup(standings: EspnF1Standings, name: string) {
+  return standings.children?.find((group) => group.name?.toLowerCase().includes(name) || group.abbreviation?.toLowerCase().includes(name));
+}
+
+function f1StandingStat(entry: EspnF1StandingEntry, ...names: string[]) {
+  const normalized = names.map((name) => name.toLowerCase());
+  return (
+    entry.stats?.find((stat) =>
+      normalized.some((name) => [stat.name, stat.abbreviation, stat.displayName, stat.label].some((value) => value?.toLowerCase() === name))
+    )?.displayValue ?? ""
+  );
+}
+
+function f1TeamColorMap(teams: EspnF1Teams) {
+  const map = new Map<string, string>();
+  teams.sports?.[0]?.leagues?.[0]?.teams?.forEach((entry) => {
+    const team = entry.team;
+    if (!team?.color) {
+      return;
+    }
+    [team.id, team.displayName, team.abbreviation, team.slug].forEach((key) => {
+      if (key) {
+        map.set(key.toLowerCase(), team.color ?? "");
+      }
+    });
+  });
+  return map;
+}
+
+function f1DriverRows(standings: EspnF1Standings): F1StandingRow[] {
+  const group = f1StandingGroup(standings, "driver");
+  return (group?.standings?.entries ?? []).map((entry, index) => ({
+    id: entry.athlete?.id ?? String(index + 1),
+    rank: f1StandingStat(entry, "rank", "rk") || String(index + 1),
+    name: entry.athlete?.displayName ?? entry.athlete?.fullName ?? "Driver TBD",
+    points: f1StandingStat(entry, "championshipPts", "points", "pts") || "0",
+    flag: entry.athlete?.flag?.href,
+    country: entry.athlete?.flag?.alt
+  }));
+}
+
+function f1ConstructorRows(standings: EspnF1Standings, teams: EspnF1Teams): F1StandingRow[] {
+  const group = f1StandingGroup(standings, "constructor");
+  const colors = f1TeamColorMap(teams);
+  return (group?.standings?.entries ?? []).map((entry, index) => {
+    const team = entry.team;
+    const color = team?.color ?? colors.get((team?.displayName ?? "").toLowerCase()) ?? colors.get((team?.name ?? "").toLowerCase());
+    return {
+      id: team?.id ?? String(index + 1),
+      rank: f1StandingStat(entry, "rank", "rk") || String(index + 1),
+      name: team?.displayName ?? team?.name ?? "Constructor TBD",
+      points: f1StandingStat(entry, "points", "pts") || "0",
+      color
+    };
+  });
+}
+
+function f1CircuitName(circuit?: EspnF1Circuit | null) {
+  return circuit?.fullName ?? circuit?.displayName ?? circuit?.name ?? "Circuit TBD";
+}
+
+function f1CircuitLocation(circuit?: EspnF1Circuit | null) {
+  const address = circuit?.address;
+  return [address?.city, address?.state || address?.country].filter(Boolean).join(", ") || "Location TBD";
+}
+
+async function loadF1EventDetail(id?: string) {
+  return id ? fetchJson<EspnF1CoreEvent>(f1EventEndpoint(id)) : null;
+}
+
+async function loadF1Circuit(detail?: EspnF1CoreEvent | null) {
+  return detail?.circuit ? fetchEspnRef<EspnF1Circuit>(detail.circuit) : null;
+}
+
+async function loadF1Snapshot() {
+  const scoreboard = await fetchJson<EspnF1Scoreboard>(F1_SCOREBOARD_ENDPOINT);
+  const season = scoreboard.leagues?.[0]?.season?.year ?? new Date().getFullYear();
+  const [standings, teams, news] = await Promise.all([
+    fetchJson<EspnF1Standings>(f1StandingsEndpoint(season)).catch(() => ({})),
+    fetchJson<EspnF1Teams>(F1_TEAMS_ENDPOINT).catch(() => ({})),
+    fetchJson<EspnF1News>(F1_NEWS_ENDPOINT).catch(() => null)
+  ]);
+  const calendar = f1Calendar(scoreboard);
+  const event = chooseF1Event(scoreboard, calendar);
+  const sessions = f1Sessions(event);
+  const detail = await loadF1EventDetail(event?.id).catch(() => null);
+  const circuit = await loadF1Circuit(detail).catch(() => null);
+  return {
+    scoreboard,
+    standings,
+    teams,
+    news,
+    event,
+    detail,
+    circuit,
+    session: chooseF1Session(sessions),
+    sessions,
+    calendar,
+    driverStandings: f1DriverRows(standings),
+    constructorStandings: f1ConstructorRows(standings, teams),
+    season,
+    nextEvent: f1NextCalendarEvent(calendar)
+  };
+}
+
+function renderF1Card(root: HTMLElement, snapshot?: F1Snapshot, error?: unknown) {
+  const link = document.createElement("a");
+  link.className = "sports-team-card sports-f1-card";
+  link.href = F1_ROUTE;
+  link.setAttribute("aria-label", "Formula 1 season hub");
+  link.innerHTML = `
+    <div class="sports-team-card__identity">
+      <div class="sports-team-card__logo-frame sports-f1-card__mark" aria-hidden="true">F1</div>
+      <div>
+        <div class="sports-team-card__league">Formula 1</div>
+        <h2 data-f1-event>F1 Season</h2>
+      </div>
+    </div>
+    <div class="sports-team-card__record">
+      <strong data-f1-primary>Loading</strong>
+      <span data-f1-secondary>ESPN racing data</span>
+    </div>
+    <div class="sports-team-card__next">
+      <span data-f1-context>Loading weekend</span>
+      <strong data-f1-location>Location pending</strong>
+      <small data-f1-date></small>
+    </div>
+  `;
+  root.appendChild(link);
+
+  if (!snapshot) {
+    link.querySelector("[data-f1-event]")?.replaceChildren(document.createTextNode("Formula 1"));
+    link.querySelector("[data-f1-primary]")?.replaceChildren(document.createTextNode("Unavailable"));
+    link.querySelector("[data-f1-secondary]")?.replaceChildren(document.createTextNode(error instanceof Error ? error.message : "ESPN data failed"));
+    link.querySelector("[data-f1-context]")?.replaceChildren(document.createTextNode("Schedule"));
+    link.querySelector("[data-f1-location]")?.replaceChildren(document.createTextNode("Details unavailable"));
+    return;
+  }
+
+  const leader = snapshot.driverStandings[0];
+  const constructor = snapshot.constructorStandings[0];
+  const session = snapshot.session;
+  const event = snapshot.event;
+  const sessionLine =
+    session?.state === "in"
+      ? `${session.label} live • ${session.status || "In progress"}`
+      : session?.state === "pre"
+        ? `${session.label} • ${formatEventDate(session.date)}`
+        : session
+          ? `${session.label} • ${session.status || "Complete"}`
+          : leader
+            ? `${leader.points} pts • ${constructor?.name ?? "Constructor standings pending"}`
+            : "Season standings pending";
+  link.querySelector("[data-f1-event]")?.replaceChildren(document.createTextNode(event?.shortName ?? snapshot.nextEvent?.name ?? "Formula 1"));
+  link.querySelector("[data-f1-primary]")?.replaceChildren(document.createTextNode(leader ? leader.name : "Standings pending"));
+  link.querySelector("[data-f1-secondary]")?.replaceChildren(document.createTextNode(sessionLine));
+  link.querySelector("[data-f1-context]")?.replaceChildren(document.createTextNode(f1CircuitName(snapshot.circuit)));
+  link.querySelector("[data-f1-location]")?.replaceChildren(document.createTextNode(f1CircuitLocation(snapshot.circuit)));
+  link.querySelector("[data-f1-date]")?.replaceChildren(document.createTextNode(formatDateRange(event?.date ?? snapshot.nextEvent?.startDate, event?.endDate ?? snapshot.nextEvent?.endDate)));
+  link.classList.add("is-loaded");
+}
+
 function renderPgaCard(root: HTMLElement, snapshot?: GolfSnapshot, error?: unknown) {
   const link = document.createElement("a");
   link.className = "sports-team-card sports-pga-card";
@@ -1440,11 +1931,12 @@ function renderTeamCard(root: HTMLElement, config: TeamConfig, snapshot?: TeamSn
 
 async function renderFeaturedTeamCards(root: HTMLElement, status: HTMLElement | null) {
   status && (status.textContent = "Loading ESPN sports cards.");
-  const [teamResults, golfResults] = await Promise.all([
+  const [teamResults, golfResults, f1Results] = await Promise.all([
     Promise.allSettled(FEATURED_TEAMS.map((config, index) =>
       loadTeamSnapshot(config, { includeSchedule: true, includeEventSummary: false }).then((snapshot) => ({ config, index, snapshot }))
     )),
-    Promise.allSettled([loadGolfSnapshot()])
+    Promise.allSettled([loadGolfSnapshot()]),
+    Promise.allSettled([loadF1Snapshot()])
   ]);
 
   const cards = teamResults.map((result, index) =>
@@ -1466,7 +1958,9 @@ async function renderFeaturedTeamCards(root: HTMLElement, status: HTMLElement | 
   cards.forEach((card) => renderTeamCard(root, card.config, card.snapshot ?? undefined, "error" in card ? card.error : undefined));
   const golfResult = golfResults[0];
   renderPgaCard(root, golfResult?.status === "fulfilled" ? golfResult.value : undefined, golfResult?.status === "rejected" ? golfResult.reason : undefined);
-  status && (status.textContent = "Live cards use active ESPN scoreboards, otherwise next event details from ESPN.");
+  const f1Result = f1Results[0];
+  renderF1Card(root, f1Result?.status === "fulfilled" ? f1Result.value : undefined, f1Result?.status === "rejected" ? f1Result.reason : undefined);
+  status && (status.textContent = "Live cards use active ESPN scoreboards, standings, and event calendars.");
 }
 
 export function initSportsLanding(root: HTMLElement | null) {
@@ -1948,6 +2442,291 @@ export async function initPgaLeaderboardPage(root: HTMLElement | null) {
         root.innerHTML = `<p class="sports-empty-state">${error instanceof Error ? error.message : "Failed to load PGA Tour details."}</p>`;
       }
       status && (status.textContent = "PGA Tour details failed to load.");
+    }
+  };
+
+  void refresh(true);
+}
+
+function renderF1Hero(snapshot: F1Snapshot) {
+  const hero = document.createElement("section");
+  hero.className = "sports-team-hero sports-f1-hero";
+  hero.dataset.f1Hero = "";
+
+  const mark = document.createElement("div");
+  mark.className = "sports-f1-hero__mark";
+  mark.textContent = "F1";
+
+  const content = document.createElement("div");
+  content.className = "sports-team-hero__content";
+
+  const league = document.createElement("div");
+  league.className = "sports-team-card__league";
+  league.textContent = `Formula 1 ${snapshot.season}`;
+
+  const title = document.createElement("h2");
+  title.textContent = snapshot.event?.name ?? snapshot.nextEvent?.name ?? "Formula 1";
+
+  const meta = document.createElement("div");
+  meta.className = "sports-team-hero__meta sports-f1-meta";
+  [
+    ["Dates", formatDateRange(snapshot.event?.date ?? snapshot.nextEvent?.startDate, snapshot.event?.endDate ?? snapshot.nextEvent?.endDate)],
+    ["Session", snapshot.session ? `${snapshot.session.label}${snapshot.session.status ? ` • ${snapshot.session.status}` : ""}` : "Session TBD"],
+    ["Circuit", f1CircuitName(snapshot.circuit)],
+    ["Location", f1CircuitLocation(snapshot.circuit)],
+    ["Driver Leader", snapshot.driverStandings[0] ? `${snapshot.driverStandings[0].name} • ${snapshot.driverStandings[0].points} pts` : "-"],
+    ["Constructor", snapshot.constructorStandings[0] ? `${snapshot.constructorStandings[0].name} • ${snapshot.constructorStandings[0].points} pts` : "-"]
+  ].forEach(([label, value]) => {
+    const item = document.createElement("span");
+    item.innerHTML = `<small></small><strong></strong>`;
+    item.querySelector("small")?.replaceChildren(document.createTextNode(label));
+    item.querySelector("strong")?.replaceChildren(document.createTextNode(value));
+    meta.appendChild(item);
+  });
+
+  content.append(league, title, meta);
+  hero.append(mark, content);
+  return hero;
+}
+
+function f1DriverName(competitor: EspnF1Competitor) {
+  const athlete = competitor.athlete && !isEspnRef(competitor.athlete) ? competitor.athlete : null;
+  return athlete?.displayName ?? athlete?.fullName ?? athlete?.shortName ?? `Driver ${competitor.id ?? ""}`.trim();
+}
+
+function f1DriverFlag(competitor: EspnF1Competitor) {
+  return competitor.athlete && !isEspnRef(competitor.athlete) ? competitor.athlete.flag : undefined;
+}
+
+function renderF1DriverCell(name: string, flag?: { href?: string; alt?: string }) {
+  const cell = document.createElement("span");
+  cell.className = "sports-f1-driver";
+  const text = document.createElement("span");
+  text.textContent = name;
+  cell.appendChild(text);
+  if (flag?.href) {
+    const img = document.createElement("img");
+    img.src = flag.href;
+    img.alt = flag.alt ? `${flag.alt} flag` : "";
+    img.loading = "lazy";
+    cell.appendChild(img);
+  }
+  return cell;
+}
+
+function renderF1Sessions(snapshot: F1Snapshot) {
+  const panel = createPanel("Race Weekend", "sports-f1-sessions-panel");
+  panel.dataset.f1Sessions = "";
+  const list = document.createElement("div");
+  list.className = "sports-f1-session-list";
+  if (!snapshot.sessions.length) {
+    list.innerHTML = `<p class="sports-empty-state">ESPN has not returned this race weekend's sessions yet.</p>`;
+    panel.appendChild(list);
+    return panel;
+  }
+
+  snapshot.sessions.forEach((session) => {
+    const row = document.createElement("article");
+    row.className = session.id === snapshot.session?.id ? "sports-f1-session-row is-current" : "sports-f1-session-row";
+    const time = document.createElement("time");
+    time.dateTime = session.date ?? "";
+    time.textContent = formatEventDate(session.date);
+    const title = document.createElement("strong");
+    title.textContent = session.label;
+    const status = document.createElement("span");
+    status.textContent = session.status || (session.state === "pre" ? "Scheduled" : session.state === "post" ? "Final" : "Status pending");
+    const leaders = document.createElement("div");
+    leaders.className = "sports-f1-session-row__leaders";
+    const top = session.competitors.slice(0, 5);
+    if (top.length) {
+      top.forEach((competitor, index) => {
+        const item = document.createElement("span");
+        const position = competitor.order ?? index + 1;
+        item.append(document.createTextNode(`${position}. `), renderF1DriverCell(f1DriverName(competitor), f1DriverFlag(competitor)));
+        leaders.appendChild(item);
+      });
+    } else {
+      leaders.textContent = "Results pending";
+    }
+    row.append(time, title, status, leaders);
+    list.appendChild(row);
+  });
+
+  panel.appendChild(list);
+  return panel;
+}
+
+function renderF1StandingsTable(title: string, rows: F1StandingRow[], className: string) {
+  const panel = createPanel(title, `sports-f1-standings-panel ${className}`);
+  panel.dataset.f1Standings = title;
+  const table = document.createElement("div");
+  table.className = "sports-f1-standings";
+  let showAll = false;
+  const toggle = document.createElement("button");
+  toggle.className = "sports-pga-toggle sports-f1-toggle";
+  toggle.type = "button";
+
+  const renderRows = () => {
+    table.replaceChildren();
+    const head = document.createElement("div");
+    head.className = "sports-f1-standings__row sports-f1-standings__row--head";
+    ["Rank", title.includes("Constructor") ? "Constructor" : "Driver", "Points"].forEach((label) => {
+      const span = document.createElement("span");
+      span.textContent = label;
+      head.appendChild(span);
+    });
+    table.appendChild(head);
+    rows.slice(0, showAll ? rows.length : 10).forEach((row) => {
+      const line = document.createElement("div");
+      line.className = "sports-f1-standings__row";
+      if (row.color) {
+        line.style.setProperty("--f1-row-color", `#${row.color}`);
+      }
+      const rank = document.createElement("span");
+      rank.textContent = row.rank;
+      const name = row.flag ? renderF1DriverCell(row.name, { href: row.flag, alt: row.country }) : document.createElement("span");
+      if (!row.flag) {
+        name.textContent = row.name;
+      }
+      const points = document.createElement("span");
+      points.textContent = row.points;
+      line.append(rank, name, points);
+      table.appendChild(line);
+    });
+    toggle.textContent = showAll ? "Show top 10" : `Show all ${rows.length}`;
+  };
+
+  if (!rows.length) {
+    panel.insertAdjacentHTML("beforeend", `<p class="sports-empty-state">ESPN standings are unavailable right now.</p>`);
+    return panel;
+  }
+
+  toggle.addEventListener("click", () => {
+    showAll = !showAll;
+    renderRows();
+  });
+  renderRows();
+  panel.append(table, toggle);
+  return panel;
+}
+
+function renderF1Calendar(snapshot: F1Snapshot) {
+  const panel = createPanel("Season Calendar", "sports-f1-calendar-panel");
+  panel.dataset.f1Calendar = "";
+  const list = document.createElement("div");
+  list.className = "sports-f1-calendar-list";
+  if (!snapshot.calendar.length) {
+    list.innerHTML = `<p class="sports-empty-state">ESPN has not returned the Formula 1 calendar yet.</p>`;
+    panel.appendChild(list);
+    return panel;
+  }
+
+  snapshot.calendar.forEach((event) => {
+    const row = document.createElement("article");
+    row.className = event.status === "current" ? "sports-f1-calendar-row is-current" : "sports-f1-calendar-row";
+    const date = document.createElement("time");
+    date.dateTime = event.startDate ?? "";
+    date.textContent = formatDateRange(event.startDate, event.endDate);
+    const title = document.createElement("strong");
+    title.textContent = event.name;
+    const status = document.createElement("span");
+    status.textContent = event.status === "current" ? "Current weekend" : event.status === "completed" ? "Completed" : "Upcoming";
+    row.append(date, title, status);
+    list.appendChild(row);
+  });
+  panel.appendChild(list);
+  return panel;
+}
+
+function renderF1News(snapshot: F1Snapshot) {
+  const panel = createPanel("F1 News", "sports-f1-news-panel");
+  const articles = snapshot.news?.articles ?? [];
+  if (!articles.length) {
+    panel.insertAdjacentHTML("beforeend", `<p class="sports-empty-state">ESPN news is unavailable right now.</p>`);
+    return panel;
+  }
+
+  const list = document.createElement("div");
+  list.className = "sports-f1-news-list";
+  articles.slice(0, 3).forEach((article) => {
+    const link = document.createElement("a");
+    link.className = "sports-f1-news-card";
+    link.href = article.links?.web?.href ?? "https://www.espn.com/f1/";
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    const image = article.images?.[0]?.url;
+    if (image) {
+      const img = document.createElement("img");
+      img.src = image;
+      img.alt = article.images?.[0]?.name ?? "";
+      img.loading = "lazy";
+      link.appendChild(img);
+    }
+    const body = document.createElement("span");
+    body.innerHTML = `<strong></strong><small></small>`;
+    body.querySelector("strong")?.replaceChildren(document.createTextNode(article.headline ?? "ESPN F1 story"));
+    body.querySelector("small")?.replaceChildren(document.createTextNode(article.published ? formatShortDate(article.published) : "ESPN"));
+    link.appendChild(body);
+    list.appendChild(link);
+  });
+  panel.appendChild(list);
+  return panel;
+}
+
+function renderF1Snapshot(root: HTMLElement, snapshot: F1Snapshot) {
+  const hero = renderF1Hero(snapshot);
+  const sessions = renderF1Sessions(snapshot);
+  const driverStandings = renderF1StandingsTable("Driver Standings", snapshot.driverStandings, "sports-f1-driver-standings-panel");
+  const constructorStandings = renderF1StandingsTable("Constructor Standings", snapshot.constructorStandings, "sports-f1-constructor-standings-panel");
+  const calendar = renderF1Calendar(snapshot);
+  const news = renderF1News(snapshot);
+  const grid = document.createElement("div");
+  grid.className = "sports-detail-grid sports-f1-detail-grid";
+  grid.append(sessions, driverStandings, constructorStandings, calendar, news);
+  root.replaceChildren(hero, grid);
+}
+
+export async function initF1Page(root: HTMLElement | null) {
+  if (!root) {
+    return;
+  }
+
+  const status = document.querySelector<HTMLElement>("[data-sports-status]");
+  status && (status.textContent = "Loading Formula 1 data...");
+  root.className = "sports-team-detail sports-f1-detail is-loading";
+  root.replaceChildren();
+
+  const refresh = async (initial = false) => {
+    if (initial) {
+      root.classList.add("is-loading");
+    }
+    try {
+      const snapshot = await loadF1Snapshot();
+      root.classList.remove("is-loading");
+      renderF1Snapshot(root, snapshot);
+      status && (status.textContent = "Formula 1 data loaded from ESPN public JSON endpoints.");
+      const refreshMs = snapshot.session?.state === "in" ? 60000 : snapshot.session?.state === "pre" ? 300000 : 0;
+      if (root.dataset.refreshIntervalId && root.dataset.refreshMs !== String(refreshMs)) {
+        window.clearInterval(Number(root.dataset.refreshIntervalId));
+        delete root.dataset.refreshIntervalId;
+        delete root.dataset.refreshMs;
+      }
+      if (refreshMs && !root.dataset.refreshIntervalId) {
+        root.dataset.refreshIntervalId = String(window.setInterval(() => {
+          void refresh();
+        }, refreshMs));
+        root.dataset.refreshMs = String(refreshMs);
+      } else if (!refreshMs && root.dataset.refreshIntervalId) {
+        window.clearInterval(Number(root.dataset.refreshIntervalId));
+        delete root.dataset.refreshIntervalId;
+        delete root.dataset.refreshMs;
+      }
+    } catch (error) {
+      root.classList.remove("is-loading");
+      if (initial) {
+        root.innerHTML = `<p class="sports-empty-state">${error instanceof Error ? error.message : "Failed to load Formula 1 details."}</p>`;
+      }
+      status && (status.textContent = "Formula 1 details failed to load.");
     }
   };
 
