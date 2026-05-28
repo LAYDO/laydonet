@@ -1236,6 +1236,66 @@
   justify-content: center;
 }
 
+.sports-f1-circuit-map {
+  color: var(--f1-circuit-accent, #e10600);
+  display: block;
+  height: auto;
+  max-width: 100%;
+  overflow: visible;
+}
+
+.sports-f1-circuit-map--hero {
+  width: min(13rem, 100%);
+}
+
+.sports-f1-circuit-map--card {
+  width: min(8.5rem, 100%);
+}
+
+.sports-f1-circuit-map--mini {
+  width: 2.7rem;
+}
+
+.sports-f1-circuit-map__base,
+.sports-f1-circuit-map__ribbon {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sports-f1-circuit-map__shape {
+  fill: currentColor;
+}
+
+.sports-f1-circuit-map__shape--stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.sports-f1-circuit-map__base {
+  stroke: color-mix(in srgb, currentColor 18%, #050505);
+  stroke-width: 10;
+}
+
+.sports-f1-circuit-map__ribbon {
+  stroke: currentColor;
+  stroke-width: 5.5;
+}
+
+.sports-f1-circuit-map__start line {
+  stroke: var(--team-ink, #fff8ed);
+  stroke-linecap: round;
+  stroke-width: 2.4;
+}
+
+.sports-f1-circuit-map__start circle {
+  fill: var(--team-ink, #fff8ed);
+  stroke: currentColor;
+  stroke-width: 1.3;
+}
+
 .sports-team-detail {
   display: grid;
   gap: 1rem;
@@ -1325,6 +1385,15 @@
 .sports-f1-hero__mark {
   height: 9rem;
   width: 9rem;
+}
+
+.sports-f1-hero__map {
+  align-items: center;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+  width: min(13rem, 32vw);
 }
 
 .sports-pga-meta span,
@@ -2140,14 +2209,16 @@
 
 .sports-f1-sessions-panel,
 .sports-f1-calendar-panel,
-.sports-f1-news-panel {
+.sports-f1-news-panel,
+.sports-f1-circuit-panel {
   grid-column: 1 / -1;
 }
 
 .sports-f1-session-list,
 .sports-f1-calendar-list,
 .sports-f1-standings,
-.sports-f1-news-list {
+.sports-f1-news-list,
+.sports-f1-circuit-grid {
   display: grid;
 }
 
@@ -2172,6 +2243,10 @@
 
 .sports-f1-calendar-row {
   grid-template-columns: minmax(9rem, 0.8fr) minmax(18rem, 1.7fr) minmax(8rem, 0.6fr);
+}
+
+.sports-f1-calendar-row.has-map {
+  grid-template-columns: 3.5rem minmax(9rem, 0.8fr) minmax(18rem, 1.7fr) minmax(8rem, 0.6fr);
 }
 
 .sports-f1-session-row.is-current,
@@ -2221,6 +2296,76 @@
 .sports-f1-driver span {
   min-width: 0;
   overflow-wrap: anywhere;
+}
+
+.sports-f1-circuit-grid {
+  gap: 0.75rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.sports-f1-circuit-card {
+  border: 1px solid var(--font-faded50);
+  border-radius: 0.5rem;
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: minmax(4.8rem, 0.55fr) minmax(0, 1fr);
+  min-width: 0;
+  padding: 0.8rem;
+}
+
+.sports-f1-circuit-card__map {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.sports-f1-circuit-card__body {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.sports-f1-circuit-card__body > span {
+  color: color-mix(in srgb, var(--f1-circuit-accent, #e10600) 72%, var(--font-color));
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.sports-f1-circuit-card__body strong {
+  font-size: 0.94rem;
+  font-weight: 400;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.sports-f1-circuit-card__body small {
+  color: var(--font-faded);
+  font-size: 0.75rem;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.sports-f1-circuit-card__source {
+  color: var(--font-faded);
+  font-size: 0.68rem;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.sports-f1-circuit-card__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  padding-top: 0.25rem;
+}
+
+.sports-f1-circuit-card__facts span {
+  border: 1px solid color-mix(in srgb, var(--f1-circuit-accent, #e10600) 48%, transparent);
+  border-radius: 999rem;
+  color: var(--font-color);
+  font-size: 0.7rem;
+  padding: 0.18rem 0.45rem;
 }
 
 .sports-f1-driver img {
@@ -2464,6 +2609,10 @@
     width: 7rem;
   }
 
+  .sports-f1-hero__map {
+    width: 9rem;
+  }
+
   .sports-team-hero__meta {
     justify-content: center;
   }
@@ -2481,6 +2630,10 @@
 
   .sports-f1-news-list {
     grid-template-columns: 1fr;
+  }
+
+  .sports-f1-circuit-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .sports-standings-table > div {
@@ -2557,6 +2710,10 @@
     overflow: hidden;
   }
 
+  .sports-f1-hero__map {
+    width: min(11rem, 100%);
+  }
+
   .sports-f1-hero h2 {
     font-size: clamp(1.45rem, 7.4vw, 1.85rem);
     line-height: 1.12;
@@ -2595,6 +2752,14 @@
   .sports-f1-session-list,
   .sports-f1-calendar-list {
     min-width: 40rem;
+  }
+
+  .sports-f1-circuit-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sports-f1-circuit-card {
+    grid-template-columns: minmax(4.5rem, 0.45fr) minmax(0, 1fr);
   }
 
   .sports-pga-leaderboard__row {
