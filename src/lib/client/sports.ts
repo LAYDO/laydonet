@@ -1468,8 +1468,51 @@ function golfRoundDisplay(linescores: EspnGolfLineScore[], round: number) {
   return linescores.find((line) => line.period === round)?.displayValue ?? "-";
 }
 
-function golfCurrentRound(linescores: EspnGolfLineScore[]) {
+function golfLineHasScoringData(line?: EspnGolfLineScore) {
+  return Boolean(line?.displayValue || line?.value !== undefined || (line?.linescores?.length ?? 0) > 0);
+}
+
+function golfCurrentRound(linescores: EspnGolfLineScore[], preferredPeriod?: number) {
+  if (preferredPeriod !== undefined) {
+    return linescores.find((line) => line.period === preferredPeriod);
+  }
+  for (let index = linescores.length - 1; index >= 0; index -= 1) {
+    if (golfLineHasScoringData(linescores[index])) {
+      return linescores[index];
+    }
+  }
   return linescores[linescores.length - 1];
+}
+
+function utcDayStart(timestamp: number) {
+  const date = new Date(timestamp);
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+}
+
+function golfEventRoundPeriod(event?: EspnGolfEvent | null) {
+  if (!event?.date) {
+    return undefined;
+  }
+  const start = new Date(event.date).getTime();
+  if (!Number.isFinite(start)) {
+    return undefined;
+  }
+  const day = Math.floor((utcDayStart(Date.now()) - utcDayStart(start)) / (24 * 60 * 60 * 1000)) + 1;
+  return Math.min(4, Math.max(1, day));
+}
+
+function golfCurrentLeaderboardPeriod(competitors: EspnGolfCompetitor[], event?: EspnGolfEvent | null) {
+  const latestScoredPeriod = competitors.reduce<number | undefined>((current, competitor) => {
+    const latestScoredPeriod = golfLineScores(competitor)
+      .filter((line) => line.period !== undefined && golfLineHasScoringData(line))
+      .reduce<number | undefined>((latest, line) => (latest === undefined || (line.period ?? 0) > latest ? line.period : latest), undefined);
+    return latestScoredPeriod !== undefined && (current === undefined || latestScoredPeriod > current) ? latestScoredPeriod : current;
+  }, undefined);
+  const eventPeriod = golfEventRoundPeriod(event);
+  if (eventPeriod === undefined || latestScoredPeriod === undefined) {
+    return eventPeriod ?? latestScoredPeriod;
+  }
+  return Math.max(eventPeriod, latestScoredPeriod);
 }
 
 async function resolveGolfAthlete(athlete?: EspnGolfAthlete | EspnRef) {
@@ -1702,7 +1745,7 @@ async function loadGolfCoreRows(eventId: string | undefined, detail: EspnGolfCor
           mode === "teeSheet" ? Promise.resolve(competitor.score) : resolveGolfScore(competitor.score),
           mode === "teeSheet" ? Promise.resolve([]) : resolveGolfLineScores(competitor.linescores)
         ]);
-        const currentRound = golfCurrentRound(linescores);
+        const currentRound = golfCurrentRound(linescores, status?.period);
         rows.push({
           id: competitor.id,
           position: mode === "teeSheet" ? String(competitor.order ?? rows.length + 1) : status?.position?.displayName ?? String(competitor.order ?? "-"),
@@ -1755,12 +1798,13 @@ function golfTotalStrokes(linescores: EspnGolfLineScore[], score?: EspnGolfCompe
 
 function buildGolfLeaderboardRows(event?: EspnGolfEvent | null): GolfLeaderboardRow[] {
   const competitors = golfCompetition(event)?.competitors ?? [];
+  const activePeriod = golfCurrentLeaderboardPeriod(competitors, event);
   return competitors
     .filter((competitor) => competitor.id)
     .sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999))
     .map((competitor) => {
       const linescores = golfLineScores(competitor);
-      const currentRound = golfCurrentRound(linescores);
+      const currentRound = golfCurrentRound(linescores, activePeriod);
       const status = competitor.status;
       const position = status && !isEspnRef(status) ? status.position?.displayName ?? String(competitor.order ?? "-") : String(competitor.order ?? "-");
       return {
