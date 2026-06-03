@@ -3,6 +3,25 @@ interface EspnLogo {
   rel?: string[];
 }
 
+interface EspnNewsCategory {
+  type?: string;
+  description?: string;
+  team?: { id?: string | number; description?: string };
+}
+
+interface EspnNewsArticle {
+  headline?: string;
+  description?: string;
+  published?: string;
+  links?: { web?: { href?: string } };
+  images?: Array<{ url?: string; name?: string; width?: number; height?: number }>;
+  categories?: EspnNewsCategory[];
+}
+
+interface EspnNews {
+  articles?: EspnNewsArticle[];
+}
+
 interface EspnTeamSummary {
   team?: {
     id?: string;
@@ -145,6 +164,7 @@ interface TeamSnapshot {
   scoreboardEvent: EspnEvent | null;
   nextEvent: EspnEvent | null;
   eventSummary: EspnEventSummary | null;
+  news: EspnNewsArticle[];
   season: number;
 }
 
@@ -341,6 +361,7 @@ interface GolfSnapshot {
   course: EspnGolfCourse | null;
   leader: GolfLeaderboardRow | null;
   rows: GolfLeaderboardRow[];
+  news: EspnNewsArticle[];
   season: number;
   mode: "live" | "post" | "teeSheet";
   nextEvent?: EspnGolfCalendarEvent;
@@ -481,16 +502,6 @@ interface EspnF1Circuit {
   fastestLapYear?: number;
 }
 
-interface EspnF1News {
-  articles?: Array<{
-    headline?: string;
-    description?: string;
-    published?: string;
-    links?: { web?: { href?: string } };
-    images?: Array<{ url?: string; name?: string; width?: number; height?: number }>;
-  }>;
-}
-
 interface F1SessionRow {
   id: string;
   label: string;
@@ -506,7 +517,14 @@ interface F1CalendarRow {
   startDate?: string;
   endDate?: string;
   circuitId?: string;
+  resultLabel?: string;
+  winnerName?: string;
   status: "current" | "upcoming" | "completed";
+}
+
+interface F1CalendarResult {
+  resultLabel?: string;
+  winnerName?: string;
 }
 
 interface F1StandingRow {
@@ -523,7 +541,7 @@ interface F1Snapshot {
   scoreboard: EspnF1Scoreboard;
   standings: EspnF1Standings;
   teams: EspnF1Teams;
-  news: EspnF1News | null;
+  news: EspnNews | null;
   event: EspnF1Event | null;
   detail: EspnF1CoreEvent | null;
   circuit: EspnF1Circuit | null;
@@ -589,14 +607,24 @@ const EVENT_ENDPOINTS: Record<TeamConfig["league"], string> = {
   nba: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event="
 };
 
+const TEAM_NEWS_ENDPOINTS: Record<TeamConfig["league"], string> = {
+  nfl: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/news",
+  ncaaf: "https://site.api.espn.com/apis/site/v2/sports/football/college-football/news",
+  mlb: "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/news",
+  nba: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/news"
+};
+
 const PGA_ROUTE = "/sports/golf/pga/";
 const PGA_SCOREBOARD_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard";
+const PGA_NEWS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/news?limit=3";
 const PGA_CORE_BASE = "https://sports.core.api.espn.com/v2/sports/golf/leagues/pga";
 const F1_ROUTE = "/sports/racing/f1/";
 const F1_SCOREBOARD_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/scoreboard";
 const F1_TEAMS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/teams";
 const F1_NEWS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/news?limit=3";
 const F1_CORE_BASE = "https://sports.core.api.espn.com/v2/sports/racing/leagues/f1";
+const NEWS_CACHE_TTL_MS = 5 * 60 * 1000;
+const NEWS_CACHE = new Map<string, { expires: number; value: EspnNews }>();
 
 const F1_CIRCUIT_MAPS: F1CircuitMap[] = [
   {
@@ -923,6 +951,30 @@ function buildEventUrl(league: TeamConfig["league"], id: string) {
   return `${EVENT_ENDPOINTS[league]}${id}`;
 }
 
+function buildTeamNewsUrl(config: TeamConfig) {
+  return `${TEAM_NEWS_ENDPOINTS[config.league]}?limit=50`;
+}
+
+async function loadNews(endpoint: string) {
+  const cached = NEWS_CACHE.get(endpoint);
+  const now = Date.now();
+  if (cached && cached.expires > now) {
+    return cached.value;
+  }
+  const news = await fetchJson<EspnNews>(endpoint);
+  NEWS_CACHE.set(endpoint, { expires: now + NEWS_CACHE_TTL_MS, value: news });
+  return news;
+}
+
+function isTeamNewsArticle(article: EspnNewsArticle, config: TeamConfig) {
+  return (article.categories ?? []).some((category) => category.type === "team" && String(category.team?.id ?? "") === config.id);
+}
+
+async function loadTeamNews(config: TeamConfig) {
+  const news = await loadNews(buildTeamNewsUrl(config));
+  return (news.articles ?? []).filter((article) => isTeamNewsArticle(article, config)).slice(0, 3);
+}
+
 function formatEventDate(date?: string) {
   if (!date) {
     return "TBD";
@@ -1209,11 +1261,12 @@ function findSummaryEvent(scoreboardEvent: EspnEvent | null, nextEvent: EspnEven
     .sort((a, b) => eventTime(b) - eventTime(a))[0] ?? null;
 }
 
-async function loadTeamSnapshot(config: TeamConfig, options: { includeSchedule?: boolean; includeEventSummary?: boolean } = {}) {
-  const { includeSchedule = true, includeEventSummary = true } = options;
-  const [teamResponse, scoreboard] = await Promise.all([
+async function loadTeamSnapshot(config: TeamConfig, options: { includeSchedule?: boolean; includeEventSummary?: boolean; includeNews?: boolean } = {}) {
+  const { includeSchedule = true, includeEventSummary = true, includeNews = includeEventSummary } = options;
+  const [teamResponse, scoreboard, news] = await Promise.all([
     fetchJson<EspnTeamSummary>(`${TEAM_ENDPOINTS[config.league]}/${config.id}`),
-    fetchJson<EspnScoreboard>(SCOREBOARD_ENDPOINTS[config.league])
+    fetchJson<EspnScoreboard>(SCOREBOARD_ENDPOINTS[config.league]),
+    includeNews ? loadTeamNews(config).catch(() => []) : Promise.resolve([])
   ]);
   const team = teamResponse.team ?? {};
   const season = scoreboard.leagues?.[0]?.season?.year ?? new Date().getFullYear();
@@ -1223,7 +1276,7 @@ async function loadTeamSnapshot(config: TeamConfig, options: { includeSchedule?:
   const summaryEvent = includeEventSummary ? findSummaryEvent(scoreboardEvent, nextEvent, schedule, config.id) : null;
   const eventSummary = summaryEvent?.id ? await fetchJson<EspnEventSummary>(buildEventUrl(config.league, summaryEvent.id)) : null;
 
-  return { config, team, scoreboard, schedule, scoreboardEvent, nextEvent, eventSummary, season };
+  return { config, team, scoreboard, schedule, scoreboardEvent, nextEvent, eventSummary, news, season };
 }
 
 function applyTeamTheme(element: HTMLElement, team: NonNullable<EspnTeamSummary["team"]>) {
@@ -1850,8 +1903,10 @@ async function hydrateGolfTeeTimes(eventId: string | undefined, rows: GolfLeader
   await Promise.all([worker(), worker(), worker(), worker(), worker(), worker()]);
 }
 
-async function loadGolfSnapshot() {
+async function loadGolfSnapshot(options: { includeNews?: boolean } = {}) {
+  const { includeNews = true } = options;
   const scoreboard = await fetchJson<EspnGolfScoreboard>(PGA_SCOREBOARD_ENDPOINT);
+  const newsPromise = includeNews ? loadNews(PGA_NEWS_ENDPOINT).catch(() => ({ articles: [] })) : Promise.resolve({ articles: [] });
   const season = scoreboard.leagues?.[0]?.season?.year ?? new Date().getFullYear();
   const selection = chooseGolfDisplay(scoreboard);
   const event = selection.event;
@@ -1869,7 +1924,8 @@ async function loadGolfSnapshot() {
     loadGolfCourse(event?.id, detail),
     selection.mode === "live" ? hydrateGolfTeeTimes(event?.id, rows) : Promise.resolve()
   ]);
-  return { scoreboard, event, detail, course, rows, leader: rows[0] ?? null, season, mode: selection.mode, nextEvent: selection.nextEvent };
+  const news = (await newsPromise).articles ?? [];
+  return { scoreboard, event, detail, course, rows, leader: rows[0] ?? null, news, season, mode: selection.mode, nextEvent: selection.nextEvent };
 }
 
 function f1StandingsEndpoint(season: number) {
@@ -1882,6 +1938,13 @@ function f1EventEndpoint(id: string) {
 
 function f1CircuitEndpoint(id: string) {
   return `${F1_CORE_BASE}/circuits/${id}?lang=en&region=us`;
+}
+
+function f1ScoreboardEndpointForEvent(event: F1CalendarRow) {
+  const formatDate = (value?: string) => (value ? new Date(value).toISOString().slice(0, 10).replace(/-/g, "") : "");
+  const start = formatDate(event.startDate);
+  const end = formatDate(event.endDate ?? event.startDate);
+  return start ? `${F1_SCOREBOARD_ENDPOINT}?dates=${start}${end && end !== start ? `-${end}` : ""}` : "";
 }
 
 function f1EventId(event?: EspnF1CalendarEvent | F1CalendarRow | EspnF1Event | null) {
@@ -1944,6 +2007,21 @@ function f1NextCalendarEvent(calendar: F1CalendarRow[], now = Date.now()) {
   return calendar
     .filter((event) => event.status === "current" || (event.startDate && new Date(event.startDate).getTime() >= localDayStart(now)))
     .sort((a, b) => new Date(a.startDate ?? "").getTime() - new Date(b.startDate ?? "").getTime())[0];
+}
+
+function f1UpcomingCountdown(event: F1CalendarRow, now = Date.now()) {
+  if (!event.startDate) {
+    return "Upcoming";
+  }
+  const weeks = Math.max(1, Math.ceil((localDayStart(new Date(event.startDate).getTime()) - localDayStart(now)) / (7 * 24 * 60 * 60 * 1000)));
+  return `${weeks} ${weeks === 1 ? "week" : "weeks"}`;
+}
+
+function f1CalendarStatusLabel(event: F1CalendarRow) {
+  if (event.status === "completed") {
+    return event.winnerName ?? event.resultLabel ?? "Winner TBD";
+  }
+  return event.status === "current" ? "Current weekend" : f1UpcomingCountdown(event);
 }
 
 function f1EventFromCalendar(event?: F1CalendarRow): EspnF1Event | null {
@@ -2116,6 +2194,31 @@ async function loadF1CalendarCircuitIds(calendar: F1CalendarRow[]) {
   return new Map(entries.filter((entry): entry is [string, string] => Boolean(entry[1])));
 }
 
+async function loadF1CalendarWinners(calendar: F1CalendarRow[]) {
+  const completed = calendar.filter((event) => event.status === "completed" && event.startDate);
+  const entries = await Promise.all(
+    completed.map(async (event) => {
+      const endpoint = f1ScoreboardEndpointForEvent(event);
+      if (!endpoint) {
+        return [event.id, {} as F1CalendarResult] as const;
+      }
+      const scoreboard = await fetchJson<EspnF1Scoreboard>(endpoint).catch(() => null);
+      const scoreboardEvent = scoreboard?.events?.find((candidate) => candidate.id === event.id) ?? scoreboard?.events?.[0];
+      const state = scoreboardEvent?.status?.type;
+      if (state?.name === "STATUS_CANCELED" || state?.description === "Canceled") {
+        return [event.id, { resultLabel: "Canceled" } satisfies F1CalendarResult] as const;
+      }
+      const race =
+        scoreboardEvent?.competitions?.find((competition) => competition.type?.abbreviation === "Race") ??
+        scoreboardEvent?.competitions?.find((competition) => competition.type?.id === "3");
+      const competitors = [...(race?.competitors ?? [])].sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
+      const winner = competitors.find((competitor) => competitor.winner) ?? competitors[0];
+      return [event.id, winner ? ({ winnerName: f1DriverName(winner) } satisfies F1CalendarResult) : ({} as F1CalendarResult)] as const;
+    })
+  );
+  return new Map(entries.filter((entry): entry is [string, F1CalendarResult] => Boolean(entry[1].winnerName || entry[1].resultLabel)));
+}
+
 async function loadF1CuratedCircuits() {
   const entries = await Promise.all(
     F1_CIRCUIT_MAPS.map(async (map) => {
@@ -2132,18 +2235,19 @@ async function loadF1Snapshot() {
   const [standings, teams, news] = await Promise.all([
     fetchJson<EspnF1Standings>(f1StandingsEndpoint(season)).catch(() => ({})),
     fetchJson<EspnF1Teams>(F1_TEAMS_ENDPOINT).catch(() => ({})),
-    fetchJson<EspnF1News>(F1_NEWS_ENDPOINT).catch(() => null)
+    loadNews(F1_NEWS_ENDPOINT).catch(() => null)
   ]);
   const calendar = f1Calendar(scoreboard);
   const event = chooseF1Event(scoreboard, calendar);
   const sessions = f1Sessions(event);
-  const [detail, calendarCircuitIds, curatedCircuits] = await Promise.all([
+  const [detail, calendarCircuitIds, calendarWinners, curatedCircuits] = await Promise.all([
     loadF1EventDetail(event?.id).catch(() => null),
     loadF1CalendarCircuitIds(calendar).catch(() => new Map<string, string>()),
+    loadF1CalendarWinners(calendar).catch(() => new Map<string, F1CalendarResult>()),
     loadF1CuratedCircuits().catch(() => new Map<string, EspnF1Circuit>())
   ]);
   const circuit = await loadF1Circuit(detail).catch(() => null);
-  const enrichedCalendar = calendar.map((row) => ({ ...row, circuitId: calendarCircuitIds.get(row.id) }));
+  const enrichedCalendar = calendar.map((row) => ({ ...row, circuitId: calendarCircuitIds.get(row.id), ...(calendarWinners.get(row.id) ?? {}) }));
   return {
     scoreboard,
     standings,
@@ -2170,7 +2274,7 @@ function renderF1Card(root: HTMLElement, snapshot?: F1Snapshot, error?: unknown)
   link.setAttribute("aria-label", "Formula 1 season hub");
   link.innerHTML = `
     <div class="sports-team-card__identity">
-      <div class="sports-team-card__logo-frame sports-f1-card__mark" aria-hidden="true">F1</div>
+      <div class="sports-team-card__logo-frame sports-f1-card__mark" data-f1-logo aria-hidden="true">F1</div>
       <div>
         <div class="sports-team-card__league">Formula 1</div>
         <h2 data-f1-event>F1 Season</h2>
@@ -2201,6 +2305,7 @@ function renderF1Card(root: HTMLElement, snapshot?: F1Snapshot, error?: unknown)
   const constructor = snapshot.constructorStandings[0];
   const session = snapshot.session;
   const event = snapshot.event;
+  const circuitMap = getF1CircuitMap(f1SnapshotCircuitId(snapshot));
   const sessionLine =
     session?.state === "in"
       ? `${session.label} live • ${session.status || "In progress"}`
@@ -2211,6 +2316,13 @@ function renderF1Card(root: HTMLElement, snapshot?: F1Snapshot, error?: unknown)
           : leader
             ? `${leader.points} pts • ${constructor?.name ?? "Constructor standings pending"}`
             : "Season standings pending";
+  if (circuitMap) {
+    const logo = link.querySelector("[data-f1-logo]");
+    logo?.replaceChildren(renderF1CircuitMap(circuitMap, "mini"));
+    if (logo instanceof HTMLElement) {
+      logo.style.setProperty("--f1-circuit-accent", circuitMap.accent);
+    }
+  }
   link.querySelector("[data-f1-event]")?.replaceChildren(document.createTextNode(event?.shortName ?? snapshot.nextEvent?.name ?? "Formula 1"));
   link.querySelector("[data-f1-primary]")?.replaceChildren(document.createTextNode(leader ? leader.name : "Standings pending"));
   link.querySelector("[data-f1-secondary]")?.replaceChildren(document.createTextNode(sessionLine));
@@ -2227,7 +2339,7 @@ function renderPgaCard(root: HTMLElement, snapshot?: GolfSnapshot, error?: unkno
   link.setAttribute("aria-label", "PGA Tour leaderboard");
   link.innerHTML = `
     <div class="sports-team-card__identity">
-      <div class="sports-team-card__logo-frame sports-pga-card__mark" aria-hidden="true">PGA</div>
+      <div class="sports-team-card__logo-frame sports-pga-card__mark" data-pga-logo aria-hidden="true">PGA</div>
       <div>
         <div class="sports-team-card__league">PGA Tour</div>
         <h2 data-pga-event>PGA Leaderboard</h2>
@@ -2257,6 +2369,7 @@ function renderPgaCard(root: HTMLElement, snapshot?: GolfSnapshot, error?: unkno
   const leader = snapshot.leader;
   const isLive = isGolfActive(snapshot.event);
   const isTeeSheet = snapshot.mode === "teeSheet";
+  const logoUrl = pickLogo(snapshot.scoreboard.leagues?.[0]?.logos);
   const leaderLine =
     isTeeSheet
       ? leader
@@ -2269,6 +2382,13 @@ function renderPgaCard(root: HTMLElement, snapshot?: GolfSnapshot, error?: unkno
       : leader
         ? `${leader.position} • ${leader.total} final • Earnings ${leader.earnings ?? "-"}`
         : "Final results";
+  if (logoUrl) {
+    const img = document.createElement("img");
+    img.src = logoUrl;
+    img.alt = "";
+    img.loading = "lazy";
+    link.querySelector("[data-pga-logo]")?.replaceChildren(img);
+  }
   link.querySelector("[data-pga-event]")?.replaceChildren(document.createTextNode(snapshot.event?.name ?? "PGA Tour"));
   link.querySelector("[data-pga-leader]")?.replaceChildren(document.createTextNode(leader ? leader.player : isTeeSheet ? "Tee sheet pending" : "Leaderboard pending"));
   link.querySelector("[data-pga-leader-stats]")?.replaceChildren(document.createTextNode(leaderLine));
@@ -2343,7 +2463,7 @@ async function renderFeaturedTeamCards(root: HTMLElement, status: HTMLElement | 
     Promise.allSettled(FEATURED_TEAMS.map((config, index) =>
       loadTeamSnapshot(config, { includeSchedule: true, includeEventSummary: false }).then((snapshot) => ({ config, index, snapshot }))
     )),
-    Promise.allSettled([loadGolfSnapshot()]),
+    Promise.allSettled([loadGolfSnapshot({ includeNews: false })]),
     Promise.allSettled([loadF1Snapshot()])
   ]);
 
@@ -2398,6 +2518,45 @@ function createPanel(title: string, className = "") {
   const heading = document.createElement("h2");
   heading.textContent = title;
   panel.appendChild(heading);
+  return panel;
+}
+
+function renderNewsPanel(title: string, articles: EspnNewsArticle[], className = "", options: { emptyText?: string; fallbackUrl?: string; fallbackHeadline?: string } = {}) {
+  const panel = createPanel(title, `sports-news-panel ${className}`.trim());
+  if (!articles.length) {
+    const empty = document.createElement("p");
+    empty.className = "sports-empty-state";
+    empty.textContent = options.emptyText ?? "ESPN news is unavailable right now.";
+    panel.appendChild(empty);
+    return panel;
+  }
+
+  const list = document.createElement("div");
+  list.className = "sports-news-list";
+  articles.slice(0, 3).forEach((article) => {
+    const link = document.createElement("a");
+    link.className = "sports-news-card";
+    link.href = article.links?.web?.href ?? options.fallbackUrl ?? "https://www.espn.com/";
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    const image = article.images?.[0]?.url;
+    if (image) {
+      const img = document.createElement("img");
+      img.src = image;
+      img.alt = article.images?.[0]?.name ?? "";
+      img.loading = "lazy";
+      link.appendChild(img);
+    }
+    const body = document.createElement("span");
+    const headline = document.createElement("strong");
+    headline.textContent = article.headline ?? options.fallbackHeadline ?? "ESPN story";
+    const published = document.createElement("small");
+    published.textContent = article.published ? formatShortDate(article.published) : "ESPN";
+    body.append(headline, published);
+    link.appendChild(body);
+    list.appendChild(link);
+  });
+  panel.appendChild(list);
   return panel;
 }
 
@@ -2755,6 +2914,15 @@ function renderPgaSchedule(snapshot: GolfSnapshot) {
   return panel;
 }
 
+function renderPgaNews(snapshot: GolfSnapshot) {
+  const panel = renderNewsPanel("PGA News", snapshot.news, "sports-pga-news-panel", {
+    fallbackUrl: "https://www.espn.com/golf/",
+    fallbackHeadline: "ESPN golf story"
+  });
+  panel.dataset.pgaNews = "";
+  return panel;
+}
+
 async function hydratePgaSchedule(root: HTMLElement, events: GolfScheduleEvent[]) {
   const byId = new Map(events.map((event) => [event.id, event]));
   try {
@@ -2799,12 +2967,19 @@ async function hydratePgaSchedule(root: HTMLElement, events: GolfScheduleEvent[]
 function renderPgaSnapshot(root: HTMLElement, snapshot: GolfSnapshot, includeSchedule: boolean) {
   const hero = renderPgaHero(snapshot);
   const leaderboard = renderPgaLeaderboard(snapshot);
+  const news = renderPgaNews(snapshot);
   if (includeSchedule || !root.querySelector("[data-pga-schedule]")) {
-    root.replaceChildren(hero, leaderboard, renderPgaSchedule(snapshot));
+    root.replaceChildren(hero, leaderboard, renderPgaSchedule(snapshot), news);
     return;
   }
   root.querySelector("[data-pga-hero]")?.replaceWith(hero);
   root.querySelector("[data-pga-leaderboard]")?.replaceWith(leaderboard);
+  const existingNews = root.querySelector("[data-pga-news]");
+  if (existingNews) {
+    existingNews.replaceWith(news);
+  } else {
+    root.appendChild(news);
+  }
 }
 
 export async function initPgaLeaderboardPage(root: HTMLElement | null) {
@@ -3015,7 +3190,6 @@ function renderF1Hero(snapshot: F1Snapshot) {
   meta.className = "sports-team-hero__meta sports-f1-meta";
   [
     ["Dates", formatDateRange(snapshot.event?.date ?? snapshot.nextEvent?.startDate, snapshot.event?.endDate ?? snapshot.nextEvent?.endDate)],
-    ["Session", snapshot.session ? `${snapshot.session.label}${snapshot.session.status ? ` • ${snapshot.session.status}` : ""}` : "Session TBD"],
     ["Circuit", f1CircuitName(snapshot.circuit)],
     ["Location", f1CircuitLocation(snapshot.circuit)],
     ["Driver Leader", snapshot.driverStandings[0] ? `${snapshot.driverStandings[0].name} • ${snapshot.driverStandings[0].points} pts` : "-"],
@@ -3077,11 +3251,9 @@ function renderF1Sessions(snapshot: F1Snapshot) {
     time.textContent = formatEventDate(session.date);
     const title = document.createElement("strong");
     title.textContent = session.label;
-    const status = document.createElement("span");
-    status.textContent = session.status || (session.state === "pre" ? "Scheduled" : session.state === "post" ? "Final" : "Status pending");
     const leaders = document.createElement("div");
     leaders.className = "sports-f1-session-row__leaders";
-    const top = session.competitors.slice(0, 5);
+    const top = session.competitors.slice(0, 3);
     if (top.length) {
       top.forEach((competitor, index) => {
         const item = document.createElement("span");
@@ -3092,7 +3264,7 @@ function renderF1Sessions(snapshot: F1Snapshot) {
     } else {
       leaders.textContent = "Results pending";
     }
-    row.append(time, title, status, leaders);
+    row.append(time, title, leaders);
     list.appendChild(row);
   });
 
@@ -3154,19 +3326,6 @@ function renderF1StandingsTable(title: string, rows: F1StandingRow[], className:
   return panel;
 }
 
-function renderF1FeaturedCircuits(snapshot: F1Snapshot) {
-  const panel = createPanel("Season Circuits", "sports-f1-circuit-panel");
-  const list = document.createElement("div");
-  list.className = "sports-f1-circuit-grid";
-  F1_CIRCUIT_MAPS.forEach((map) => {
-    const circuit = snapshot.curatedCircuits.get(map.id) ?? (snapshot.circuit?.id === map.id ? snapshot.circuit : null);
-    const event = snapshot.calendar.find((row) => row.circuitId === map.id);
-    list.appendChild(renderF1CircuitCard(map, circuit, event));
-  });
-  panel.appendChild(list);
-  return panel;
-}
-
 function renderF1Calendar(snapshot: F1Snapshot) {
   const panel = createPanel("Season Calendar", "sports-f1-calendar-panel");
   panel.dataset.f1Calendar = "";
@@ -3179,78 +3338,61 @@ function renderF1Calendar(snapshot: F1Snapshot) {
   }
 
   snapshot.calendar.forEach((event) => {
-    const row = document.createElement("article");
+    const details = document.createElement("details");
     const map = getF1CircuitMap(event.circuitId);
-    row.className = [
+    details.className = [
       "sports-f1-calendar-row",
       event.status === "current" ? "is-current" : "",
       map ? "has-map" : ""
     ]
       .filter(Boolean)
       .join(" ");
+    if (map) {
+      details.style.setProperty("--f1-circuit-accent", map.accent);
+    }
+    const row = document.createElement("summary");
+    row.className = "sports-f1-calendar-row__summary";
     const date = document.createElement("time");
     date.dateTime = event.startDate ?? "";
     date.textContent = formatDateRange(event.startDate, event.endDate);
     const title = document.createElement("strong");
     title.textContent = event.name;
     const status = document.createElement("span");
-    status.textContent = event.status === "current" ? "Current weekend" : event.status === "completed" ? "Completed" : "Upcoming";
+    status.textContent = f1CalendarStatusLabel(event);
     if (map) {
       row.append(renderF1CircuitMap(map, "mini"));
     }
     row.append(date, title, status);
-    list.appendChild(row);
+    details.appendChild(row);
+    if (map) {
+      const circuit = snapshot.curatedCircuits.get(map.id) ?? (snapshot.circuit?.id === map.id ? snapshot.circuit : null);
+      const detail = renderF1CircuitCard(map, circuit, event);
+      detail.classList.add("sports-f1-circuit-card--calendar");
+      details.appendChild(detail);
+    }
+    list.appendChild(details);
   });
   panel.appendChild(list);
   return panel;
 }
 
 function renderF1News(snapshot: F1Snapshot) {
-  const panel = createPanel("F1 News", "sports-f1-news-panel");
-  const articles = snapshot.news?.articles ?? [];
-  if (!articles.length) {
-    panel.insertAdjacentHTML("beforeend", `<p class="sports-empty-state">ESPN news is unavailable right now.</p>`);
-    return panel;
-  }
-
-  const list = document.createElement("div");
-  list.className = "sports-f1-news-list";
-  articles.slice(0, 3).forEach((article) => {
-    const link = document.createElement("a");
-    link.className = "sports-f1-news-card";
-    link.href = article.links?.web?.href ?? "https://www.espn.com/f1/";
-    link.target = "_blank";
-    link.rel = "noreferrer";
-    const image = article.images?.[0]?.url;
-    if (image) {
-      const img = document.createElement("img");
-      img.src = image;
-      img.alt = article.images?.[0]?.name ?? "";
-      img.loading = "lazy";
-      link.appendChild(img);
-    }
-    const body = document.createElement("span");
-    body.innerHTML = `<strong></strong><small></small>`;
-    body.querySelector("strong")?.replaceChildren(document.createTextNode(article.headline ?? "ESPN F1 story"));
-    body.querySelector("small")?.replaceChildren(document.createTextNode(article.published ? formatShortDate(article.published) : "ESPN"));
-    link.appendChild(body);
-    list.appendChild(link);
+  return renderNewsPanel("F1 News", snapshot.news?.articles ?? [], "sports-f1-news-panel", {
+    fallbackUrl: "https://www.espn.com/f1/",
+    fallbackHeadline: "ESPN F1 story"
   });
-  panel.appendChild(list);
-  return panel;
 }
 
 function renderF1Snapshot(root: HTMLElement, snapshot: F1Snapshot) {
   const hero = renderF1Hero(snapshot);
   const sessions = renderF1Sessions(snapshot);
-  const featuredCircuits = renderF1FeaturedCircuits(snapshot);
   const driverStandings = renderF1StandingsTable("Driver Standings", snapshot.driverStandings, "sports-f1-driver-standings-panel");
   const constructorStandings = renderF1StandingsTable("Constructor Standings", snapshot.constructorStandings, "sports-f1-constructor-standings-panel");
   const calendar = renderF1Calendar(snapshot);
   const news = renderF1News(snapshot);
   const grid = document.createElement("div");
   grid.className = "sports-detail-grid sports-f1-detail-grid";
-  grid.append(sessions, featuredCircuits, driverStandings, constructorStandings, calendar, news);
+  grid.append(sessions, driverStandings, constructorStandings, calendar, news);
   root.replaceChildren(hero, grid);
 }
 
@@ -4058,6 +4200,17 @@ function renderSchedule(snapshot: TeamSnapshot) {
   return panel;
 }
 
+function renderTeamNews(snapshot: TeamSnapshot) {
+  if (!snapshot.news.length) {
+    return null;
+  }
+  const teamName = snapshot.team.shortDisplayName ?? snapshot.team.displayName ?? snapshot.config.label;
+  return renderNewsPanel(`${teamName} News`, snapshot.news, "sports-team-news-panel", {
+    fallbackUrl: teamRoute(snapshot.config),
+    fallbackHeadline: `${teamName} story`
+  });
+}
+
 export async function initSportsTeamPage(root: HTMLElement | null) {
   if (!root) {
     return;
@@ -4087,6 +4240,10 @@ export async function initSportsTeamPage(root: HTMLElement | null) {
       layout.append(renderSportPulse(snapshot));
     }
     layout.append(renderStandings(snapshot), renderSchedule(snapshot));
+    const news = renderTeamNews(snapshot);
+    if (news) {
+      layout.appendChild(news);
+    }
     root.appendChild(layout);
   };
 
