@@ -2199,6 +2199,26 @@
   font-size: 0.82rem;
 }
 
+.sports-pga-schedule-stack {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.sports-pga-schedule-stack__line {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.sports-pga-schedule-stack__line small {
+  color: var(--font-faded);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.sports-pga-schedule-stack__line strong {
+  color: var(--font-color);
+}
+
 .sports-pga-schedule-row strong {
   font-size: 0.92rem;
   font-weight: 400;
