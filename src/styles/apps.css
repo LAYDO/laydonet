@@ -1236,6 +1236,13 @@
   justify-content: center;
 }
 
+.sports-pga-card__mark,
+.sports-f1-card__mark {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
 .sports-f1-circuit-map {
   color: var(--f1-circuit-accent, #e10600);
   display: block;
@@ -1400,6 +1407,11 @@
 .sports-f1-meta span {
   display: grid;
   gap: 0.15rem;
+}
+
+.sports-f1-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, max-content));
 }
 
 .sports-pga-meta small,
@@ -2209,16 +2221,14 @@
 
 .sports-f1-sessions-panel,
 .sports-f1-calendar-panel,
-.sports-f1-news-panel,
-.sports-f1-circuit-panel {
+.sports-f1-news-panel {
   grid-column: 1 / -1;
 }
 
 .sports-f1-session-list,
 .sports-f1-calendar-list,
 .sports-f1-standings,
-.sports-f1-news-list,
-.sports-f1-circuit-grid {
+.sports-f1-news-list {
   display: grid;
 }
 
@@ -2228,9 +2238,8 @@
 }
 
 .sports-f1-session-row,
-.sports-f1-calendar-row {
+.sports-f1-calendar-row__summary {
   align-items: center;
-  border-bottom: 1px solid var(--font-faded50);
   display: grid;
   gap: 0.6rem;
   min-height: 3.2rem;
@@ -2238,15 +2247,27 @@
 }
 
 .sports-f1-session-row {
-  grid-template-columns: minmax(8rem, 0.7fr) minmax(10rem, 0.8fr) minmax(8rem, 0.7fr) minmax(20rem, 1.8fr);
+  border-bottom: 1px solid var(--font-faded50);
+  grid-template-columns: minmax(8rem, 0.7fr) minmax(10rem, 0.8fr) minmax(20rem, 1.8fr);
 }
 
 .sports-f1-calendar-row {
-  grid-template-columns: minmax(9rem, 0.8fr) minmax(18rem, 1.7fr) minmax(8rem, 0.6fr);
+  border-bottom: 1px solid var(--font-faded50);
+  min-width: 0;
 }
 
-.sports-f1-calendar-row.has-map {
-  grid-template-columns: 3.5rem minmax(9rem, 0.8fr) minmax(18rem, 1.7fr) minmax(8rem, 0.6fr);
+.sports-f1-calendar-row__summary {
+  cursor: pointer;
+  grid-template-columns: minmax(9rem, 0.8fr) minmax(18rem, 1.7fr) minmax(8rem, 0.6fr) 1.25rem;
+  list-style: none;
+}
+
+.sports-f1-calendar-row__summary::-webkit-details-marker {
+  display: none;
+}
+
+.sports-f1-calendar-row.has-map .sports-f1-calendar-row__summary {
+  grid-template-columns: 3.5rem minmax(9rem, 0.8fr) minmax(18rem, 1.7fr) minmax(8rem, 0.6fr) 1.25rem;
 }
 
 .sports-f1-session-row.is-current,
@@ -2258,17 +2279,33 @@
 
 .sports-f1-session-row time,
 .sports-f1-session-row span,
-.sports-f1-calendar-row time,
-.sports-f1-calendar-row span {
+.sports-f1-calendar-row__summary time,
+.sports-f1-calendar-row__summary span {
   color: var(--font-faded);
   font-size: 0.82rem;
 }
 
 .sports-f1-session-row strong,
-.sports-f1-calendar-row strong {
+.sports-f1-calendar-row__summary strong {
   font-size: 0.92rem;
   font-weight: 400;
   overflow-wrap: anywhere;
+}
+
+.sports-f1-calendar-row__summary:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--f1-circuit-accent, #e10600) 72%, var(--font-color));
+  outline-offset: 0.2rem;
+}
+
+.sports-f1-calendar-row__summary::after {
+  color: var(--font-faded);
+  content: "+";
+  font-size: 1rem;
+  justify-self: end;
+}
+
+.sports-f1-calendar-row[open] .sports-f1-calendar-row__summary::after {
+  content: "-";
 }
 
 .sports-f1-session-row__leaders {
@@ -2298,11 +2335,6 @@
   overflow-wrap: anywhere;
 }
 
-.sports-f1-circuit-grid {
-  gap: 0.75rem;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-}
-
 .sports-f1-circuit-card {
   border: 1px solid var(--font-faded50);
   border-radius: 0.5rem;
@@ -2311,6 +2343,11 @@
   grid-template-columns: minmax(4.8rem, 0.55fr) minmax(0, 1fr);
   min-width: 0;
   padding: 0.8rem;
+}
+
+.sports-f1-circuit-card--calendar {
+  background: color-mix(in srgb, var(--f1-circuit-accent, #e10600) 7%, transparent);
+  margin: 0 0 0.75rem;
 }
 
 .sports-f1-circuit-card__map {
@@ -2366,6 +2403,10 @@
   color: var(--font-color);
   font-size: 0.7rem;
   padding: 0.18rem 0.45rem;
+}
+
+.sports-f1-card__mark .sports-f1-circuit-map--mini {
+  width: min(4rem, 84%);
 }
 
 .sports-f1-driver img {
@@ -2632,10 +2673,6 @@
     grid-template-columns: 1fr;
   }
 
-  .sports-f1-circuit-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .sports-standings-table > div {
     grid-template-columns: minmax(8rem, 1.5fr) repeat(5, minmax(2.5rem, 0.5fr));
   }
@@ -2752,10 +2789,6 @@
   .sports-f1-session-list,
   .sports-f1-calendar-list {
     min-width: 40rem;
-  }
-
-  .sports-f1-circuit-grid {
-    grid-template-columns: 1fr;
   }
 
   .sports-f1-circuit-card {
