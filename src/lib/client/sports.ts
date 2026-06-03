@@ -3,6 +3,25 @@ interface EspnLogo {
   rel?: string[];
 }
 
+interface EspnNewsCategory {
+  type?: string;
+  description?: string;
+  team?: { id?: string | number; description?: string };
+}
+
+interface EspnNewsArticle {
+  headline?: string;
+  description?: string;
+  published?: string;
+  links?: { web?: { href?: string } };
+  images?: Array<{ url?: string; name?: string; width?: number; height?: number }>;
+  categories?: EspnNewsCategory[];
+}
+
+interface EspnNews {
+  articles?: EspnNewsArticle[];
+}
+
 interface EspnTeamSummary {
   team?: {
     id?: string;
@@ -145,6 +164,7 @@ interface TeamSnapshot {
   scoreboardEvent: EspnEvent | null;
   nextEvent: EspnEvent | null;
   eventSummary: EspnEventSummary | null;
+  news: EspnNewsArticle[];
   season: number;
 }
 
@@ -341,6 +361,7 @@ interface GolfSnapshot {
   course: EspnGolfCourse | null;
   leader: GolfLeaderboardRow | null;
   rows: GolfLeaderboardRow[];
+  news: EspnNewsArticle[];
   season: number;
   mode: "live" | "post" | "teeSheet";
   nextEvent?: EspnGolfCalendarEvent;
@@ -481,16 +502,6 @@ interface EspnF1Circuit {
   fastestLapYear?: number;
 }
 
-interface EspnF1News {
-  articles?: Array<{
-    headline?: string;
-    description?: string;
-    published?: string;
-    links?: { web?: { href?: string } };
-    images?: Array<{ url?: string; name?: string; width?: number; height?: number }>;
-  }>;
-}
-
 interface F1SessionRow {
   id: string;
   label: string;
@@ -530,7 +541,7 @@ interface F1Snapshot {
   scoreboard: EspnF1Scoreboard;
   standings: EspnF1Standings;
   teams: EspnF1Teams;
-  news: EspnF1News | null;
+  news: EspnNews | null;
   event: EspnF1Event | null;
   detail: EspnF1CoreEvent | null;
   circuit: EspnF1Circuit | null;
@@ -596,14 +607,24 @@ const EVENT_ENDPOINTS: Record<TeamConfig["league"], string> = {
   nba: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/summary?event="
 };
 
+const TEAM_NEWS_ENDPOINTS: Record<TeamConfig["league"], string> = {
+  nfl: "https://site.api.espn.com/apis/site/v2/sports/football/nfl/news",
+  ncaaf: "https://site.api.espn.com/apis/site/v2/sports/football/college-football/news",
+  mlb: "https://site.api.espn.com/apis/site/v2/sports/baseball/mlb/news",
+  nba: "https://site.api.espn.com/apis/site/v2/sports/basketball/nba/news"
+};
+
 const PGA_ROUTE = "/sports/golf/pga/";
 const PGA_SCOREBOARD_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/scoreboard";
+const PGA_NEWS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/golf/pga/news?limit=3";
 const PGA_CORE_BASE = "https://sports.core.api.espn.com/v2/sports/golf/leagues/pga";
 const F1_ROUTE = "/sports/racing/f1/";
 const F1_SCOREBOARD_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/scoreboard";
 const F1_TEAMS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/teams";
 const F1_NEWS_ENDPOINT = "https://site.api.espn.com/apis/site/v2/sports/racing/f1/news?limit=3";
 const F1_CORE_BASE = "https://sports.core.api.espn.com/v2/sports/racing/leagues/f1";
+const NEWS_CACHE_TTL_MS = 5 * 60 * 1000;
+const NEWS_CACHE = new Map<string, { expires: number; value: EspnNews }>();
 
 const F1_CIRCUIT_MAPS: F1CircuitMap[] = [
   {
@@ -930,6 +951,30 @@ function buildEventUrl(league: TeamConfig["league"], id: string) {
   return `${EVENT_ENDPOINTS[league]}${id}`;
 }
 
+function buildTeamNewsUrl(config: TeamConfig) {
+  return `${TEAM_NEWS_ENDPOINTS[config.league]}?limit=50`;
+}
+
+async function loadNews(endpoint: string) {
+  const cached = NEWS_CACHE.get(endpoint);
+  const now = Date.now();
+  if (cached && cached.expires > now) {
+    return cached.value;
+  }
+  const news = await fetchJson<EspnNews>(endpoint);
+  NEWS_CACHE.set(endpoint, { expires: now + NEWS_CACHE_TTL_MS, value: news });
+  return news;
+}
+
+function isTeamNewsArticle(article: EspnNewsArticle, config: TeamConfig) {
+  return (article.categories ?? []).some((category) => category.type === "team" && String(category.team?.id ?? "") === config.id);
+}
+
+async function loadTeamNews(config: TeamConfig) {
+  const news = await loadNews(buildTeamNewsUrl(config));
+  return (news.articles ?? []).filter((article) => isTeamNewsArticle(article, config)).slice(0, 3);
+}
+
 function formatEventDate(date?: string) {
   if (!date) {
     return "TBD";
@@ -1216,11 +1261,12 @@ function findSummaryEvent(scoreboardEvent: EspnEvent | null, nextEvent: EspnEven
     .sort((a, b) => eventTime(b) - eventTime(a))[0] ?? null;
 }
 
-async function loadTeamSnapshot(config: TeamConfig, options: { includeSchedule?: boolean; includeEventSummary?: boolean } = {}) {
-  const { includeSchedule = true, includeEventSummary = true } = options;
-  const [teamResponse, scoreboard] = await Promise.all([
+async function loadTeamSnapshot(config: TeamConfig, options: { includeSchedule?: boolean; includeEventSummary?: boolean; includeNews?: boolean } = {}) {
+  const { includeSchedule = true, includeEventSummary = true, includeNews = includeEventSummary } = options;
+  const [teamResponse, scoreboard, news] = await Promise.all([
     fetchJson<EspnTeamSummary>(`${TEAM_ENDPOINTS[config.league]}/${config.id}`),
-    fetchJson<EspnScoreboard>(SCOREBOARD_ENDPOINTS[config.league])
+    fetchJson<EspnScoreboard>(SCOREBOARD_ENDPOINTS[config.league]),
+    includeNews ? loadTeamNews(config).catch(() => []) : Promise.resolve([])
   ]);
   const team = teamResponse.team ?? {};
   const season = scoreboard.leagues?.[0]?.season?.year ?? new Date().getFullYear();
@@ -1230,7 +1276,7 @@ async function loadTeamSnapshot(config: TeamConfig, options: { includeSchedule?:
   const summaryEvent = includeEventSummary ? findSummaryEvent(scoreboardEvent, nextEvent, schedule, config.id) : null;
   const eventSummary = summaryEvent?.id ? await fetchJson<EspnEventSummary>(buildEventUrl(config.league, summaryEvent.id)) : null;
 
-  return { config, team, scoreboard, schedule, scoreboardEvent, nextEvent, eventSummary, season };
+  return { config, team, scoreboard, schedule, scoreboardEvent, nextEvent, eventSummary, news, season };
 }
 
 function applyTeamTheme(element: HTMLElement, team: NonNullable<EspnTeamSummary["team"]>) {
@@ -1857,8 +1903,10 @@ async function hydrateGolfTeeTimes(eventId: string | undefined, rows: GolfLeader
   await Promise.all([worker(), worker(), worker(), worker(), worker(), worker()]);
 }
 
-async function loadGolfSnapshot() {
+async function loadGolfSnapshot(options: { includeNews?: boolean } = {}) {
+  const { includeNews = true } = options;
   const scoreboard = await fetchJson<EspnGolfScoreboard>(PGA_SCOREBOARD_ENDPOINT);
+  const newsPromise = includeNews ? loadNews(PGA_NEWS_ENDPOINT).catch(() => ({ articles: [] })) : Promise.resolve({ articles: [] });
   const season = scoreboard.leagues?.[0]?.season?.year ?? new Date().getFullYear();
   const selection = chooseGolfDisplay(scoreboard);
   const event = selection.event;
@@ -1876,7 +1924,8 @@ async function loadGolfSnapshot() {
     loadGolfCourse(event?.id, detail),
     selection.mode === "live" ? hydrateGolfTeeTimes(event?.id, rows) : Promise.resolve()
   ]);
-  return { scoreboard, event, detail, course, rows, leader: rows[0] ?? null, season, mode: selection.mode, nextEvent: selection.nextEvent };
+  const news = (await newsPromise).articles ?? [];
+  return { scoreboard, event, detail, course, rows, leader: rows[0] ?? null, news, season, mode: selection.mode, nextEvent: selection.nextEvent };
 }
 
 function f1StandingsEndpoint(season: number) {
@@ -2186,7 +2235,7 @@ async function loadF1Snapshot() {
   const [standings, teams, news] = await Promise.all([
     fetchJson<EspnF1Standings>(f1StandingsEndpoint(season)).catch(() => ({})),
     fetchJson<EspnF1Teams>(F1_TEAMS_ENDPOINT).catch(() => ({})),
-    fetchJson<EspnF1News>(F1_NEWS_ENDPOINT).catch(() => null)
+    loadNews(F1_NEWS_ENDPOINT).catch(() => null)
   ]);
   const calendar = f1Calendar(scoreboard);
   const event = chooseF1Event(scoreboard, calendar);
@@ -2414,7 +2463,7 @@ async function renderFeaturedTeamCards(root: HTMLElement, status: HTMLElement | 
     Promise.allSettled(FEATURED_TEAMS.map((config, index) =>
       loadTeamSnapshot(config, { includeSchedule: true, includeEventSummary: false }).then((snapshot) => ({ config, index, snapshot }))
     )),
-    Promise.allSettled([loadGolfSnapshot()]),
+    Promise.allSettled([loadGolfSnapshot({ includeNews: false })]),
     Promise.allSettled([loadF1Snapshot()])
   ]);
 
@@ -2469,6 +2518,45 @@ function createPanel(title: string, className = "") {
   const heading = document.createElement("h2");
   heading.textContent = title;
   panel.appendChild(heading);
+  return panel;
+}
+
+function renderNewsPanel(title: string, articles: EspnNewsArticle[], className = "", options: { emptyText?: string; fallbackUrl?: string; fallbackHeadline?: string } = {}) {
+  const panel = createPanel(title, `sports-news-panel ${className}`.trim());
+  if (!articles.length) {
+    const empty = document.createElement("p");
+    empty.className = "sports-empty-state";
+    empty.textContent = options.emptyText ?? "ESPN news is unavailable right now.";
+    panel.appendChild(empty);
+    return panel;
+  }
+
+  const list = document.createElement("div");
+  list.className = "sports-news-list";
+  articles.slice(0, 3).forEach((article) => {
+    const link = document.createElement("a");
+    link.className = "sports-news-card";
+    link.href = article.links?.web?.href ?? options.fallbackUrl ?? "https://www.espn.com/";
+    link.target = "_blank";
+    link.rel = "noreferrer";
+    const image = article.images?.[0]?.url;
+    if (image) {
+      const img = document.createElement("img");
+      img.src = image;
+      img.alt = article.images?.[0]?.name ?? "";
+      img.loading = "lazy";
+      link.appendChild(img);
+    }
+    const body = document.createElement("span");
+    const headline = document.createElement("strong");
+    headline.textContent = article.headline ?? options.fallbackHeadline ?? "ESPN story";
+    const published = document.createElement("small");
+    published.textContent = article.published ? formatShortDate(article.published) : "ESPN";
+    body.append(headline, published);
+    link.appendChild(body);
+    list.appendChild(link);
+  });
+  panel.appendChild(list);
   return panel;
 }
 
@@ -2826,6 +2914,15 @@ function renderPgaSchedule(snapshot: GolfSnapshot) {
   return panel;
 }
 
+function renderPgaNews(snapshot: GolfSnapshot) {
+  const panel = renderNewsPanel("PGA News", snapshot.news, "sports-pga-news-panel", {
+    fallbackUrl: "https://www.espn.com/golf/",
+    fallbackHeadline: "ESPN golf story"
+  });
+  panel.dataset.pgaNews = "";
+  return panel;
+}
+
 async function hydratePgaSchedule(root: HTMLElement, events: GolfScheduleEvent[]) {
   const byId = new Map(events.map((event) => [event.id, event]));
   try {
@@ -2870,12 +2967,19 @@ async function hydratePgaSchedule(root: HTMLElement, events: GolfScheduleEvent[]
 function renderPgaSnapshot(root: HTMLElement, snapshot: GolfSnapshot, includeSchedule: boolean) {
   const hero = renderPgaHero(snapshot);
   const leaderboard = renderPgaLeaderboard(snapshot);
+  const news = renderPgaNews(snapshot);
   if (includeSchedule || !root.querySelector("[data-pga-schedule]")) {
-    root.replaceChildren(hero, leaderboard, renderPgaSchedule(snapshot));
+    root.replaceChildren(hero, leaderboard, renderPgaSchedule(snapshot), news);
     return;
   }
   root.querySelector("[data-pga-hero]")?.replaceWith(hero);
   root.querySelector("[data-pga-leaderboard]")?.replaceWith(leaderboard);
+  const existingNews = root.querySelector("[data-pga-news]");
+  if (existingNews) {
+    existingNews.replaceWith(news);
+  } else {
+    root.appendChild(news);
+  }
 }
 
 export async function initPgaLeaderboardPage(root: HTMLElement | null) {
@@ -3273,38 +3377,10 @@ function renderF1Calendar(snapshot: F1Snapshot) {
 }
 
 function renderF1News(snapshot: F1Snapshot) {
-  const panel = createPanel("F1 News", "sports-f1-news-panel");
-  const articles = snapshot.news?.articles ?? [];
-  if (!articles.length) {
-    panel.insertAdjacentHTML("beforeend", `<p class="sports-empty-state">ESPN news is unavailable right now.</p>`);
-    return panel;
-  }
-
-  const list = document.createElement("div");
-  list.className = "sports-f1-news-list";
-  articles.slice(0, 3).forEach((article) => {
-    const link = document.createElement("a");
-    link.className = "sports-f1-news-card";
-    link.href = article.links?.web?.href ?? "https://www.espn.com/f1/";
-    link.target = "_blank";
-    link.rel = "noreferrer";
-    const image = article.images?.[0]?.url;
-    if (image) {
-      const img = document.createElement("img");
-      img.src = image;
-      img.alt = article.images?.[0]?.name ?? "";
-      img.loading = "lazy";
-      link.appendChild(img);
-    }
-    const body = document.createElement("span");
-    body.innerHTML = `<strong></strong><small></small>`;
-    body.querySelector("strong")?.replaceChildren(document.createTextNode(article.headline ?? "ESPN F1 story"));
-    body.querySelector("small")?.replaceChildren(document.createTextNode(article.published ? formatShortDate(article.published) : "ESPN"));
-    link.appendChild(body);
-    list.appendChild(link);
+  return renderNewsPanel("F1 News", snapshot.news?.articles ?? [], "sports-f1-news-panel", {
+    fallbackUrl: "https://www.espn.com/f1/",
+    fallbackHeadline: "ESPN F1 story"
   });
-  panel.appendChild(list);
-  return panel;
 }
 
 function renderF1Snapshot(root: HTMLElement, snapshot: F1Snapshot) {
@@ -4124,6 +4200,17 @@ function renderSchedule(snapshot: TeamSnapshot) {
   return panel;
 }
 
+function renderTeamNews(snapshot: TeamSnapshot) {
+  if (!snapshot.news.length) {
+    return null;
+  }
+  const teamName = snapshot.team.shortDisplayName ?? snapshot.team.displayName ?? snapshot.config.label;
+  return renderNewsPanel(`${teamName} News`, snapshot.news, "sports-team-news-panel", {
+    fallbackUrl: teamRoute(snapshot.config),
+    fallbackHeadline: `${teamName} story`
+  });
+}
+
 export async function initSportsTeamPage(root: HTMLElement | null) {
   if (!root) {
     return;
@@ -4153,6 +4240,10 @@ export async function initSportsTeamPage(root: HTMLElement | null) {
       layout.append(renderSportPulse(snapshot));
     }
     layout.append(renderStandings(snapshot), renderSchedule(snapshot));
+    const news = renderTeamNews(snapshot);
+    if (news) {
+      layout.appendChild(news);
+    }
     root.appendChild(layout);
   };
 

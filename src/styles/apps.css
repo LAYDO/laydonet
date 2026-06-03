@@ -2221,14 +2221,14 @@
 
 .sports-f1-sessions-panel,
 .sports-f1-calendar-panel,
-.sports-f1-news-panel {
+.sports-news-panel {
   grid-column: 1 / -1;
 }
 
 .sports-f1-session-list,
 .sports-f1-calendar-list,
 .sports-f1-standings,
-.sports-f1-news-list {
+.sports-news-list {
   display: grid;
 }
 
@@ -2460,12 +2460,12 @@
   margin-top: 1rem;
 }
 
-.sports-f1-news-list {
+.sports-news-list {
   gap: 0.75rem;
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.sports-f1-news-card {
+.sports-news-card {
   border: 1px solid var(--font-faded50);
   border-radius: 0.5rem;
   color: var(--font-color);
@@ -2475,31 +2475,31 @@
   text-decoration: none;
 }
 
-.sports-f1-news-card:hover,
-.sports-f1-news-card:focus-visible {
+.sports-news-card:hover,
+.sports-news-card:focus-visible {
   background: var(--glass-strong);
 }
 
-.sports-f1-news-card img {
+.sports-news-card img {
   aspect-ratio: 16 / 9;
   height: auto;
   object-fit: cover;
   width: 100%;
 }
 
-.sports-f1-news-card > span {
+.sports-news-card > span {
   display: grid;
   gap: 0.4rem;
   padding: 0 0.8rem 0.8rem;
 }
 
-.sports-f1-news-card strong {
+.sports-news-card strong {
   font-size: 0.94rem;
   font-weight: 400;
   line-height: 1.35;
 }
 
-.sports-f1-news-card small {
+.sports-news-card small {
   color: var(--font-faded);
   font-size: 0.75rem;
   text-transform: uppercase;
@@ -2669,7 +2669,7 @@
     min-width: 44rem;
   }
 
-  .sports-f1-news-list {
+  .sports-news-list {
     grid-template-columns: 1fr;
   }
 
