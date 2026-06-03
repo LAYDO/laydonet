@@ -65,10 +65,12 @@ interface EspnTeamRef {
 }
 
 interface EspnStatistic {
+  id?: string;
   name?: string;
   abbreviation?: string;
   displayName?: string;
   label?: string;
+  value?: number;
   displayValue?: string;
 }
 
@@ -2167,6 +2169,93 @@ function f1ConstructorRows(standings: EspnF1Standings, teams: EspnF1Teams): F1St
   });
 }
 
+function f1StandingNumericStat(entry: EspnF1StandingEntry, ...names: string[]) {
+  const normalized = names.map((name) => name.toLowerCase());
+  const stat = entry.stats?.find((candidate) =>
+    normalized.some((name) => [candidate.name, candidate.abbreviation, candidate.displayName, candidate.label].some((value) => value?.toLowerCase() === name))
+  );
+  return Number(stat?.value ?? stat?.displayValue ?? 0) || 0;
+}
+
+function f1RacePointStats(entry: EspnF1StandingEntry) {
+  const ignored = new Set(["rank", "championshipPts", "points"]);
+  const entries: Array<[string, number]> = [];
+  (entry.stats ?? []).forEach((stat) => {
+    if (!stat.name || ignored.has(stat.name)) {
+      return;
+    }
+    const key = stat.id ?? stat.name;
+    entries.push([key, Number(stat.value ?? stat.displayValue ?? 0) || 0]);
+  });
+  return new Map(entries);
+}
+
+function f1RacePointSum(rows: Array<{ stats: Map<string, number> }>, key: string) {
+  return rows.reduce((sum, row) => sum + (row.stats.get(key) ?? 0), 0);
+}
+
+function f1DriverColorMapFromStandings(standings: EspnF1Standings, teams: EspnF1Teams) {
+  const driverEntries = f1StandingGroup(standings, "driver")?.standings?.entries ?? [];
+  const constructorEntries = f1StandingGroup(standings, "constructor")?.standings?.entries ?? [];
+  const teamColors = f1TeamColorMap(teams);
+  const drivers = driverEntries
+    .map((entry, index) => ({
+      id: entry.athlete?.id ?? String(index + 1),
+      points: f1StandingNumericStat(entry, "championshipPts", "points", "pts"),
+      stats: f1RacePointStats(entry)
+    }))
+    .sort((a, b) => b.points - a.points);
+  const constructors = constructorEntries
+    .map((entry) => ({
+      color: entry.team?.color ?? teamColors.get((entry.team?.displayName ?? "").toLowerCase()) ?? teamColors.get((entry.team?.name ?? "").toLowerCase()),
+      points: f1StandingNumericStat(entry, "points", "pts"),
+      stats: f1RacePointStats(entry)
+    }))
+    .sort((a, b) => b.points - a.points);
+  const raceKeys = [...new Set(constructors.flatMap((constructor) => [...constructor.stats.keys()]))];
+  const unassigned = new Map(drivers.map((driver) => [driver.id, driver]));
+  const driverColors = new Map<string, string>();
+
+  const exactMatch = (constructor: (typeof constructors)[number], candidates: typeof drivers) =>
+    candidates.reduce((sum, driver) => sum + driver.points, 0) === constructor.points &&
+    raceKeys.every((key) => f1RacePointSum(candidates, key) === (constructor.stats.get(key) ?? 0));
+  const findSubset = (constructor: (typeof constructors)[number], candidates: typeof drivers, start = 0, chosen: typeof drivers = [], remaining = constructor.points): typeof drivers | null => {
+    if (remaining === 0) {
+      return exactMatch(constructor, chosen) ? chosen : null;
+    }
+    if (remaining < 0) {
+      return null;
+    }
+    for (let index = start; index < candidates.length; index += 1) {
+      const driver = candidates[index];
+      if (driver.points > remaining) {
+        continue;
+      }
+      const next = [...chosen, driver];
+      if (raceKeys.some((key) => f1RacePointSum(next, key) > (constructor.stats.get(key) ?? 0))) {
+        continue;
+      }
+      const result = findSubset(constructor, candidates, index + 1, next, remaining - driver.points);
+      if (result) {
+        return result;
+      }
+    }
+    return null;
+  };
+
+  constructors.forEach((constructor) => {
+    if (!constructor.color || constructor.points <= 0) {
+      return;
+    }
+    const matchedDrivers = findSubset(constructor, [...unassigned.values()]);
+    matchedDrivers?.forEach((driver) => {
+      driverColors.set(driver.id, constructor.color ?? "");
+      unassigned.delete(driver.id);
+    });
+  });
+  return driverColors;
+}
+
 function f1CircuitName(circuit?: EspnF1Circuit | null) {
   return circuit?.fullName ?? circuit?.displayName ?? circuit?.name ?? "Circuit TBD";
 }
@@ -2248,6 +2337,8 @@ async function loadF1Snapshot() {
   ]);
   const circuit = await loadF1Circuit(detail).catch(() => null);
   const enrichedCalendar = calendar.map((row) => ({ ...row, circuitId: calendarCircuitIds.get(row.id), ...(calendarWinners.get(row.id) ?? {}) }));
+  const driverStandings = f1DriverRows(standings);
+  const driverColors = f1DriverColorMapFromStandings(standings, teams);
   return {
     scoreboard,
     standings,
@@ -2260,7 +2351,7 @@ async function loadF1Snapshot() {
     sessions,
     calendar: enrichedCalendar,
     curatedCircuits,
-    driverStandings: f1DriverRows(standings),
+    driverStandings: driverStandings.map((row) => ({ ...row, color: driverColors.get(row.id) })),
     constructorStandings: f1ConstructorRows(standings, teams),
     season,
     nextEvent: f1NextCalendarEvent(enrichedCalendar)
@@ -2369,7 +2460,7 @@ function renderPgaCard(root: HTMLElement, snapshot?: GolfSnapshot, error?: unkno
   const leader = snapshot.leader;
   const isLive = isGolfActive(snapshot.event);
   const isTeeSheet = snapshot.mode === "teeSheet";
-  const logoUrl = pickLogo(snapshot.scoreboard.leagues?.[0]?.logos);
+  const logoUrl = pgaLogoUrl(snapshot);
   const leaderLine =
     isTeeSheet
       ? leader
@@ -2396,6 +2487,10 @@ function renderPgaCard(root: HTMLElement, snapshot?: GolfSnapshot, error?: unkno
   link.querySelector("[data-pga-location]")?.replaceChildren(document.createTextNode(golfLocation(snapshot.course)));
   link.querySelector("[data-pga-date]")?.replaceChildren(document.createTextNode(formatDateRange(snapshot.event?.date, snapshot.event?.endDate ?? snapshot.detail?.endDate)));
   link.classList.add("is-loaded");
+}
+
+function pgaLogoUrl(snapshot: GolfSnapshot) {
+  return pickLogo(snapshot.scoreboard.leagues?.[0]?.logos);
 }
 
 function renderTeamCard(root: HTMLElement, config: TeamConfig, snapshot?: TeamSnapshot, error?: unknown) {
@@ -2565,9 +2660,20 @@ function renderPgaHero(snapshot: GolfSnapshot) {
   hero.className = "sports-team-hero sports-pga-hero";
   hero.dataset.pgaHero = "";
 
-  const mark = document.createElement("div");
-  mark.className = "sports-pga-hero__mark";
-  mark.textContent = "PGA";
+  const logoUrl = pgaLogoUrl(snapshot);
+  let mark: HTMLElement;
+  if (logoUrl) {
+    const img = document.createElement("img");
+    img.className = "sports-pga-hero__logo";
+    img.src = logoUrl;
+    img.alt = "PGA Tour";
+    img.loading = "lazy";
+    mark = img;
+  } else {
+    mark = document.createElement("div");
+    mark.className = "sports-pga-hero__mark";
+    mark.textContent = "PGA";
+  }
 
   const content = document.createElement("div");
   content.className = "sports-team-hero__content";
@@ -2864,13 +2970,40 @@ function renderPgaScheduleRow(event: GolfScheduleEvent) {
   const title = document.createElement("strong");
   title.textContent = event.name;
   const location = document.createElement("span");
+  location.className = "sports-pga-schedule-stack";
   location.dataset.pgaScheduleLocation = "";
-  location.textContent = "Location pending";
+  replacePgaScheduleStack(location, [
+    ["Course", "Pending"],
+    ["Location", "TBD"]
+  ]);
   const result = document.createElement("span");
+  result.className = "sports-pga-schedule-stack";
   result.dataset.pgaScheduleResult = "";
-  result.textContent = event.status === "completed" ? "Winner pending" : "Purse pending";
+  replacePgaScheduleStack(
+    result,
+    event.status === "completed"
+      ? [
+          ["Winner", "Pending"],
+          ["Earnings", "-"]
+        ]
+      : [["Purse", "Pending"]]
+  );
   row.append(date, title, location, result);
   return row;
+}
+
+function replacePgaScheduleStack(target: Element, rows: Array<[string, string]>) {
+  const items = rows.map(([label, value]) => {
+    const item = document.createElement("span");
+    item.className = "sports-pga-schedule-stack__line";
+    const labelNode = document.createElement("small");
+    labelNode.textContent = label;
+    const valueNode = document.createElement("strong");
+    valueNode.textContent = value;
+    item.append(labelNode, valueNode);
+    return item;
+  });
+  target.replaceChildren(...items);
 }
 
 function updatePgaScheduleRow(root: HTMLElement, event: GolfScheduleEvent) {
@@ -2878,11 +3011,35 @@ function updatePgaScheduleRow(root: HTMLElement, event: GolfScheduleEvent) {
   if (!row) {
     return;
   }
-  row.querySelector("[data-pga-schedule-location]")?.replaceChildren(document.createTextNode(event.course ? `${golfCourseName(event.course)} • ${golfLocation(event.course)}` : "Location TBD"));
+  const location = row.querySelector("[data-pga-schedule-location]");
+  if (location) {
+    replacePgaScheduleStack(
+      location,
+      event.course
+        ? [
+            ["Course", golfCourseName(event.course)],
+            ["Location", golfLocation(event.course)]
+          ]
+        : [
+            ["Course", "Pending"],
+            ["Location", "TBD"]
+          ]
+    );
+  }
   const winner = event.winnerName ?? (event.detail?.winner?.athlete ? golfAthleteName(event.detail.winner.athlete) : "-");
   const purse = formatMoney(event.detail?.purse);
-  const result = event.status === "completed" ? `Winner: ${winner} • Earnings: ${event.winnerEarnings ?? "-"}` : `Purse: ${purse}`;
-  row.querySelector("[data-pga-schedule-result]")?.replaceChildren(document.createTextNode(result));
+  const result = row.querySelector("[data-pga-schedule-result]");
+  if (result) {
+    replacePgaScheduleStack(
+      result,
+      event.status === "completed"
+        ? [
+            ["Winner", winner],
+            ["Earnings", event.winnerEarnings ?? "-"]
+          ]
+        : [["Purse", purse]]
+    );
+  }
 }
 
 function renderPgaSchedule(snapshot: GolfSnapshot) {
