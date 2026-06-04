@@ -2039,6 +2039,11 @@
   text-align: left;
 }
 
+.sports-pga-leaderboard__row > span:nth-child(2) {
+  justify-self: stretch;
+  text-align: left;
+}
+
 .sports-pga-toggle {
   background: transparent;
   border: 0;
