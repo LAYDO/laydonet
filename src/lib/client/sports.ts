@@ -369,6 +369,11 @@ interface GolfSnapshot {
   nextEvent?: EspnGolfCalendarEvent;
 }
 
+interface PgaLeaderboardState {
+  expandedPlayerIds: Set<string>;
+  showAll: boolean;
+}
+
 interface EspnF1CalendarEvent {
   label?: string;
   startDate?: string;
@@ -2616,6 +2621,28 @@ function createPanel(title: string, className = "") {
   return panel;
 }
 
+function flashUpdatedElement(element: Element | null | undefined) {
+  if (!(element instanceof HTMLElement)) {
+    return;
+  }
+  element.classList.remove("sports-data-updated");
+  void element.offsetWidth;
+  element.classList.add("sports-data-updated");
+  window.setTimeout(() => {
+    element.classList.remove("sports-data-updated");
+  }, 950);
+}
+
+function replaceTextWithFlash(target: Element | null | undefined, value: string, flashTarget: Element | null | undefined, shouldFlash: boolean) {
+  if (!target || target.textContent === value) {
+    return;
+  }
+  target.replaceChildren(document.createTextNode(value));
+  if (shouldFlash) {
+    flashUpdatedElement(flashTarget ?? target);
+  }
+}
+
 function renderNewsPanel(title: string, articles: EspnNewsArticle[], className = "", options: { emptyText?: string; fallbackUrl?: string; fallbackHeadline?: string } = {}) {
   const panel = createPanel(title, `sports-news-panel ${className}`.trim());
   if (!articles.length) {
@@ -2655,11 +2682,7 @@ function renderNewsPanel(title: string, articles: EspnNewsArticle[], className =
   return panel;
 }
 
-function renderPgaHero(snapshot: GolfSnapshot) {
-  const hero = document.createElement("section");
-  hero.className = "sports-team-hero sports-pga-hero";
-  hero.dataset.pgaHero = "";
-
+function renderPgaHeroMark(snapshot: GolfSnapshot) {
   const logoUrl = pgaLogoUrl(snapshot);
   let mark: HTMLElement;
   if (logoUrl) {
@@ -2674,27 +2697,48 @@ function renderPgaHero(snapshot: GolfSnapshot) {
     mark.className = "sports-pga-hero__mark";
     mark.textContent = "PGA";
   }
+  mark.dataset.pgaHeroMark = "";
+  return mark;
+}
+
+function pgaHeroMetaValues(snapshot: GolfSnapshot) {
+  return [
+    { key: "dates", label: "Dates", value: formatDateRange(snapshot.event?.date, snapshot.event?.endDate ?? snapshot.detail?.endDate) },
+    { key: "course", label: "Course", value: golfCourseName(snapshot.course) },
+    { key: "location", label: "Location", value: golfLocation(snapshot.course) },
+    { key: "purse", label: "Purse", value: formatMoney(snapshot.detail?.purse) },
+    { key: "defending-champion", label: "Defending Champion", value: snapshot.detail?.defendingChampion?.athlete?.displayName ?? "-" },
+    {
+      key: "par-yards",
+      label: "Par/Yards",
+      value: snapshot.course?.shotsToPar ? `Par ${snapshot.course.shotsToPar}${snapshot.course.totalYards ? ` • ${snapshot.course.totalYards.toLocaleString()} yards` : ""}` : "-"
+    }
+  ];
+}
+
+function renderPgaHero(snapshot: GolfSnapshot) {
+  const hero = document.createElement("section");
+  hero.className = "sports-team-hero sports-pga-hero";
+  hero.dataset.pgaHero = "";
+
+  const mark = renderPgaHeroMark(snapshot);
 
   const content = document.createElement("div");
   content.className = "sports-team-hero__content";
 
   const league = document.createElement("div");
   league.className = "sports-team-card__league";
+  league.dataset.pgaHeroLeague = "";
   league.textContent = `PGA Tour ${snapshot.season}`;
   const title = document.createElement("h2");
+  title.dataset.pgaHeroTitle = "";
   title.textContent = snapshot.event?.name ?? "PGA Tour";
 
   const meta = document.createElement("div");
   meta.className = "sports-team-hero__meta sports-pga-meta";
-  [
-    ["Dates", formatDateRange(snapshot.event?.date, snapshot.event?.endDate ?? snapshot.detail?.endDate)],
-    ["Course", golfCourseName(snapshot.course)],
-    ["Location", golfLocation(snapshot.course)],
-    ["Purse", formatMoney(snapshot.detail?.purse)],
-    ["Defending Champion", snapshot.detail?.defendingChampion?.athlete?.displayName ?? "-"],
-    ["Par/Yards", snapshot.course?.shotsToPar ? `Par ${snapshot.course.shotsToPar}${snapshot.course.totalYards ? ` • ${snapshot.course.totalYards.toLocaleString()} yards` : ""}` : "-"]
-  ].forEach(([label, value]) => {
+  pgaHeroMetaValues(snapshot).forEach(({ key, label, value }) => {
     const item = document.createElement("span");
+    item.dataset.pgaHeroMeta = key;
     item.innerHTML = `<small></small><strong></strong>`;
     item.querySelector("small")?.replaceChildren(document.createTextNode(label));
     item.querySelector("strong")?.replaceChildren(document.createTextNode(value));
@@ -2704,6 +2748,35 @@ function renderPgaHero(snapshot: GolfSnapshot) {
   content.append(league, title, meta);
   hero.append(mark, content);
   return hero;
+}
+
+function updatePgaHero(hero: HTMLElement | null, snapshot: GolfSnapshot, shouldFlash: boolean) {
+  if (!hero) {
+    return false;
+  }
+  const existingMark = hero.querySelector<HTMLElement>("[data-pga-hero-mark]");
+  const league = hero.querySelector("[data-pga-hero-league]");
+  const title = hero.querySelector("[data-pga-hero-title]");
+  if (!existingMark || !league || !title) {
+    return false;
+  }
+
+  const nextMark = renderPgaHeroMark(snapshot);
+  const existingMarkValue = existingMark instanceof HTMLImageElement ? existingMark.currentSrc || existingMark.src : existingMark.textContent ?? "";
+  const nextMarkValue = nextMark instanceof HTMLImageElement ? nextMark.src : nextMark.textContent ?? "";
+  if (existingMark.tagName !== nextMark.tagName || existingMarkValue !== nextMarkValue) {
+    existingMark.replaceWith(nextMark);
+    if (shouldFlash) {
+      flashUpdatedElement(nextMark);
+    }
+  }
+  replaceTextWithFlash(league, `PGA Tour ${snapshot.season}`, league, shouldFlash);
+  replaceTextWithFlash(title, snapshot.event?.name ?? "PGA Tour", title, shouldFlash);
+  pgaHeroMetaValues(snapshot).forEach(({ key, value }) => {
+    const item = hero.querySelector(`[data-pga-hero-meta="${key}"]`);
+    replaceTextWithFlash(item?.querySelector("strong"), value, item, shouldFlash);
+  });
+  return true;
 }
 
 function renderPgaScorecard(row: GolfLeaderboardRow, course?: EspnGolfCourse | null) {
@@ -2807,121 +2880,198 @@ function renderPgaScorecard(row: GolfLeaderboardRow, course?: EspnGolfCourse | n
   return scorecard;
 }
 
-function renderPgaLeaderboard(snapshot: GolfSnapshot) {
-  const panel = createPanel(snapshot.mode === "teeSheet" ? "Tee Times" : "Leaderboard", "sports-pga-leaderboard-panel");
-  panel.dataset.pgaLeaderboard = "";
-  const rows = snapshot.rows;
-  if (!rows.length) {
-    const empty = document.createElement("p");
-    empty.className = "sports-empty-state";
-    empty.textContent =
-      snapshot.mode === "teeSheet"
-        ? "Participants and tee times will appear when ESPN publishes the tee sheet."
-        : isGolfActive(snapshot.event)
-          ? "ESPN has not returned leaderboard rows yet."
-          : "Leaderboard will appear when tournament scoring is available.";
-    panel.appendChild(empty);
-    return panel;
+function createPgaPlayerCell(row: GolfLeaderboardRow) {
+  const player = document.createElement("span");
+  player.className = "sports-pga-player";
+  const playerName = document.createElement("span");
+  playerName.textContent = row.player;
+  player.appendChild(playerName);
+  if (row.countryFlag) {
+    const flag = document.createElement("img");
+    flag.src = row.countryFlag;
+    flag.alt = row.country ? `${row.country} flag` : "";
+    flag.loading = "lazy";
+    player.appendChild(flag);
+  }
+  return player;
+}
+
+function pgaLeaderboardHeaders(mode: GolfSnapshot["mode"]) {
+  return mode === "teeSheet"
+    ? ["#", "Player", "Tee Time", "Start", "Status"]
+    : mode === "post"
+      ? ["Pos", "Player", "Total", "R1", "R2", "R3", "R4", "Strokes", "Earnings", "FedEx"]
+      : ["Pos", "Player", "Total", "Today", "Thru", "R1", "R2", "R3", "R4", "Strokes"];
+}
+
+function pgaLeaderboardCells(snapshot: GolfSnapshot, row: GolfLeaderboardRow): Array<{ field: string; value: string | HTMLElement; compareValue: string }> {
+  if (snapshot.mode === "teeSheet") {
+    return [
+      { field: "position", value: row.position, compareValue: row.position },
+      { field: "player", value: createPgaPlayerCell(row), compareValue: `${row.player}|${row.countryFlag ?? ""}|${row.country}` },
+      { field: "thru", value: row.thru, compareValue: row.thru },
+      { field: "startHole", value: row.startHole ?? "-", compareValue: row.startHole ?? "-" },
+      { field: "status", value: row.status ?? "Scheduled", compareValue: row.status ?? "Scheduled" }
+    ];
+  }
+  if (snapshot.mode === "post") {
+    return [
+      { field: "position", value: row.position, compareValue: row.position },
+      { field: "player", value: createPgaPlayerCell(row), compareValue: `${row.player}|${row.countryFlag ?? ""}|${row.country}` },
+      { field: "total", value: row.total, compareValue: row.total },
+      ...row.rounds.map((round, index) => ({ field: `r${index + 1}`, value: round, compareValue: round })),
+      { field: "strokes", value: row.strokes, compareValue: row.strokes },
+      { field: "earnings", value: row.earnings ?? "-", compareValue: row.earnings ?? "-" },
+      { field: "fedExPoints", value: row.fedExPoints ?? "-", compareValue: row.fedExPoints ?? "-" }
+    ];
+  }
+  return [
+    { field: "position", value: row.position, compareValue: row.position },
+    { field: "player", value: createPgaPlayerCell(row), compareValue: `${row.player}|${row.countryFlag ?? ""}|${row.country}` },
+    { field: "total", value: row.total, compareValue: row.total },
+    { field: "today", value: row.today, compareValue: row.today },
+    { field: "thru", value: row.thru, compareValue: row.thru },
+    ...row.rounds.map((round, index) => ({ field: `r${index + 1}`, value: round, compareValue: round })),
+    { field: "strokes", value: row.strokes, compareValue: row.strokes }
+  ];
+}
+
+function pgaVisibleLeaderboardRows(rows: GolfLeaderboardRow[], state: PgaLeaderboardState) {
+  return rows.filter((row, index) => state.showAll || index < 10 || state.expandedPlayerIds.has(row.id));
+}
+
+function pgaLeaderboardEmptyText(snapshot: GolfSnapshot) {
+  return snapshot.mode === "teeSheet"
+    ? "Participants and tee times will appear when ESPN publishes the tee sheet."
+    : isGolfActive(snapshot.event)
+      ? "ESPN has not returned leaderboard rows yet."
+      : "Leaderboard will appear when tournament scoring is available.";
+}
+
+function updatePgaLeaderboardPanel(panel: HTMLElement | null, snapshot: GolfSnapshot, state: PgaLeaderboardState, shouldFlash: boolean) {
+  if (!panel) {
+    return false;
   }
 
-  const expandedPlayers = new Set<string>();
-  let showAll = false;
+  panel.dataset.pgaLeaderboard = "";
+  panel.dataset.pgaLeaderboardMode = snapshot.mode;
+  const heading = panel.querySelector("h2");
+  if (!heading) {
+    return false;
+  }
+  replaceTextWithFlash(heading, snapshot.mode === "teeSheet" ? "Tee Times" : "Leaderboard", heading, shouldFlash);
+
+  const rowIds = new Set(snapshot.rows.map((row) => row.id));
+  [...state.expandedPlayerIds].forEach((id) => {
+    if (!rowIds.has(id)) {
+      state.expandedPlayerIds.delete(id);
+    }
+  });
+
+  const previousValues = new Map<string, string>();
+  panel.querySelectorAll<HTMLElement>("[data-pga-player-id] [data-pga-leaderboard-field]").forEach((cell) => {
+    const row = cell.closest<HTMLElement>("[data-pga-player-id]");
+    const id = row?.dataset.pgaPlayerId;
+    const field = cell.dataset.pgaLeaderboardField;
+    if (id && field) {
+      previousValues.set(`${id}:${field}`, cell.dataset.pgaCellValue ?? cell.textContent ?? "");
+    }
+  });
+  const previousExpanded = new Map<string, string>();
+  panel.querySelectorAll<HTMLElement>("[data-pga-expanded-player-id]").forEach((expanded) => {
+    const id = expanded.dataset.pgaExpandedPlayerId;
+    if (id) {
+      previousExpanded.set(id, expanded.textContent ?? "");
+    }
+  });
+
+  if (!snapshot.rows.length) {
+    const empty = document.createElement("p");
+    empty.className = "sports-empty-state";
+    empty.textContent = pgaLeaderboardEmptyText(snapshot);
+    panel.replaceChildren(heading, empty);
+    return true;
+  }
+
   const table = document.createElement("div");
   table.className = snapshot.mode === "teeSheet" ? "sports-pga-leaderboard sports-pga-leaderboard--tee-sheet" : "sports-pga-leaderboard";
+  const head = document.createElement("div");
+  head.className = "sports-pga-leaderboard__row sports-pga-leaderboard__row--head";
+  pgaLeaderboardHeaders(snapshot.mode).forEach((label) => {
+    const span = document.createElement("span");
+    span.textContent = label;
+    head.appendChild(span);
+  });
+  table.appendChild(head);
+
+  pgaVisibleLeaderboardRows(snapshot.rows, state).forEach((row) => {
+    const line = document.createElement("div");
+    line.className = "sports-pga-leaderboard__row";
+    line.dataset.pgaPlayerId = row.id;
+    line.setAttribute("role", "button");
+    line.setAttribute("tabindex", "0");
+    line.setAttribute("aria-expanded", String(state.expandedPlayerIds.has(row.id)));
+    line.setAttribute("aria-label", `${state.expandedPlayerIds.has(row.id) ? "Collapse" : "Expand"} ${row.player} scorecard`);
+    const togglePlayer = () => {
+      if (state.expandedPlayerIds.has(row.id)) {
+        state.expandedPlayerIds.delete(row.id);
+      } else {
+        state.expandedPlayerIds.add(row.id);
+      }
+      updatePgaLeaderboardPanel(panel, snapshot, state, false);
+    };
+    line.addEventListener("click", togglePlayer);
+    line.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        togglePlayer();
+      }
+    });
+    pgaLeaderboardCells(snapshot, row).forEach(({ field, value, compareValue }) => {
+      const cell = document.createElement("span");
+      cell.dataset.pgaLeaderboardField = field;
+      cell.dataset.pgaCellValue = compareValue;
+      if (value instanceof HTMLElement) {
+        cell.appendChild(value);
+      } else {
+        cell.textContent = value;
+      }
+      const previous = previousValues.get(`${row.id}:${field}`);
+      if (shouldFlash && previous !== undefined && previous !== compareValue) {
+        flashUpdatedElement(cell);
+      }
+      line.appendChild(cell);
+    });
+    table.appendChild(line);
+    if (state.expandedPlayerIds.has(row.id)) {
+      const expanded = document.createElement("div");
+      expanded.className = "sports-pga-leaderboard__expanded";
+      expanded.dataset.pgaExpandedPlayerId = row.id;
+      expanded.appendChild(renderPgaScorecard(row, snapshot.course));
+      const previous = previousExpanded.get(row.id);
+      if (shouldFlash && previous !== undefined && previous !== (expanded.textContent ?? "")) {
+        flashUpdatedElement(expanded);
+      }
+      table.appendChild(expanded);
+    }
+  });
+
   const toggle = document.createElement("button");
   toggle.className = "sports-pga-toggle";
   toggle.type = "button";
-
-  const headers =
-    snapshot.mode === "teeSheet"
-      ? ["#", "Player", "Tee Time", "Start", "Status"]
-      : snapshot.mode === "post"
-        ? ["Pos", "Player", "Total", "R1", "R2", "R3", "R4", "Strokes", "Earnings", "FedEx"]
-        : ["Pos", "Player", "Total", "Today", "Thru", "R1", "R2", "R3", "R4", "Strokes"];
-  const rowValues = (row: GolfLeaderboardRow): Array<string | HTMLElement> =>
-    snapshot.mode === "teeSheet"
-      ? [row.position, createPgaPlayerCell(row), row.thru, row.startHole ?? "-", row.status ?? "Scheduled"]
-      : snapshot.mode === "post"
-        ? [row.position, createPgaPlayerCell(row), row.total, ...row.rounds, row.strokes, row.earnings ?? "-", row.fedExPoints ?? "-"]
-        : [row.position, createPgaPlayerCell(row), row.total, row.today, row.thru, ...row.rounds, row.strokes];
-
-  const togglePlayer = (row: GolfLeaderboardRow) => {
-    if (expandedPlayers.has(row.id)) {
-      expandedPlayers.delete(row.id);
-    } else {
-      expandedPlayers.add(row.id);
-    }
-    renderRows();
-  };
-
-  const createPgaPlayerCell = (row: GolfLeaderboardRow) => {
-    const player = document.createElement("span");
-    player.className = "sports-pga-player";
-    const playerName = document.createElement("span");
-    playerName.textContent = row.player;
-    player.appendChild(playerName);
-    if (row.countryFlag) {
-      const flag = document.createElement("img");
-      flag.src = row.countryFlag;
-      flag.alt = row.country ? `${row.country} flag` : "";
-      flag.loading = "lazy";
-      player.appendChild(flag);
-    }
-    return player;
-  };
-
-  const renderRows = () => {
-    table.replaceChildren();
-    const head = document.createElement("div");
-    head.className = "sports-pga-leaderboard__row sports-pga-leaderboard__row--head";
-    headers.forEach((label) => {
-      const span = document.createElement("span");
-      span.textContent = label;
-      head.appendChild(span);
-    });
-    table.appendChild(head);
-
-    rows.slice(0, showAll ? rows.length : 10).forEach((row) => {
-      const line = document.createElement("div");
-      line.className = "sports-pga-leaderboard__row";
-      line.setAttribute("role", "button");
-      line.setAttribute("tabindex", "0");
-      line.setAttribute("aria-expanded", String(expandedPlayers.has(row.id)));
-      line.setAttribute("aria-label", `${expandedPlayers.has(row.id) ? "Collapse" : "Expand"} ${row.player} scorecard`);
-      line.addEventListener("click", () => togglePlayer(row));
-      line.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
-          togglePlayer(row);
-        }
-      });
-      rowValues(row).forEach((value) => {
-        if (value instanceof HTMLElement) {
-          line.appendChild(value);
-          return;
-        }
-        const span = document.createElement("span");
-        span.textContent = value;
-        line.appendChild(span);
-      });
-      table.appendChild(line);
-      if (expandedPlayers.has(row.id)) {
-        const expanded = document.createElement("div");
-        expanded.className = "sports-pga-leaderboard__expanded";
-        expanded.appendChild(renderPgaScorecard(row, snapshot.course));
-        table.appendChild(expanded);
-      }
-    });
-
-    toggle.textContent = showAll ? "Show top 10" : `Show full leaderboard (${rows.length})`;
-  };
-
+  toggle.textContent = state.showAll ? "Show top 10" : `Show full leaderboard (${snapshot.rows.length})`;
   toggle.addEventListener("click", () => {
-    showAll = !showAll;
-    renderRows();
+    state.showAll = !state.showAll;
+    updatePgaLeaderboardPanel(panel, snapshot, state, false);
   });
-  renderRows();
-  panel.append(table, toggle);
+
+  panel.replaceChildren(heading, table, toggle);
+  return true;
+}
+
+function renderPgaLeaderboard(snapshot: GolfSnapshot, state: PgaLeaderboardState) {
+  const panel = createPanel(snapshot.mode === "teeSheet" ? "Tee Times" : "Leaderboard", "sports-pga-leaderboard-panel");
+  updatePgaLeaderboardPanel(panel, snapshot, state, false);
   return panel;
 }
 
@@ -3121,16 +3271,30 @@ async function hydratePgaSchedule(root: HTMLElement, events: GolfScheduleEvent[]
   await Promise.all([worker(), worker(), worker(), worker()]);
 }
 
-function renderPgaSnapshot(root: HTMLElement, snapshot: GolfSnapshot, includeSchedule: boolean) {
+function renderPgaSnapshot(root: HTMLElement, snapshot: GolfSnapshot, includeSchedule: boolean, leaderboardState: PgaLeaderboardState) {
   const hero = renderPgaHero(snapshot);
-  const leaderboard = renderPgaLeaderboard(snapshot);
+  const leaderboard = renderPgaLeaderboard(snapshot, leaderboardState);
   const news = renderPgaNews(snapshot);
   if (includeSchedule || !root.querySelector("[data-pga-schedule]")) {
     root.replaceChildren(hero, leaderboard, renderPgaSchedule(snapshot), news);
     return;
   }
-  root.querySelector("[data-pga-hero]")?.replaceWith(hero);
-  root.querySelector("[data-pga-leaderboard]")?.replaceWith(leaderboard);
+  const existingHero = root.querySelector<HTMLElement>("[data-pga-hero]");
+  if (!updatePgaHero(existingHero, snapshot, true)) {
+    if (existingHero) {
+      existingHero.replaceWith(hero);
+    } else {
+      root.prepend(hero);
+    }
+  }
+  const existingLeaderboard = root.querySelector<HTMLElement>("[data-pga-leaderboard]");
+  if (!updatePgaLeaderboardPanel(existingLeaderboard, snapshot, leaderboardState, true)) {
+    if (existingLeaderboard) {
+      existingLeaderboard.replaceWith(leaderboard);
+    } else {
+      root.querySelector("[data-pga-hero]")?.after(leaderboard);
+    }
+  }
   const existingNews = root.querySelector("[data-pga-news]");
   if (existingNews) {
     existingNews.replaceWith(news);
@@ -3148,6 +3312,7 @@ export async function initPgaLeaderboardPage(root: HTMLElement | null) {
   status && (status.textContent = "Loading PGA Tour leaderboard...");
   root.className = "sports-team-detail sports-pga-detail is-loading";
   root.replaceChildren();
+  const leaderboardState: PgaLeaderboardState = { expandedPlayerIds: new Set<string>(), showAll: false };
 
   const refresh = async (initial = false) => {
     if (initial) {
@@ -3156,7 +3321,7 @@ export async function initPgaLeaderboardPage(root: HTMLElement | null) {
     try {
       const snapshot = await loadGolfSnapshot();
       root.classList.remove("is-loading");
-      renderPgaSnapshot(root, snapshot, initial);
+      renderPgaSnapshot(root, snapshot, initial, leaderboardState);
       status && (status.textContent = "PGA Tour data loaded from ESPN public JSON endpoints.");
       const refreshMs = isGolfActive(snapshot.event) ? 60000 : snapshot.mode === "teeSheet" ? 300000 : 0;
       if (root.dataset.refreshIntervalId && root.dataset.refreshMs !== String(refreshMs)) {
@@ -3184,6 +3349,10 @@ export async function initPgaLeaderboardPage(root: HTMLElement | null) {
       status && (status.textContent = "PGA Tour details failed to load.");
     }
   };
+
+  root.addEventListener("sports:pga-refresh", () => {
+    void refresh();
+  });
 
   void refresh(true);
 }

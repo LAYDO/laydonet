@@ -1971,6 +1971,30 @@
   min-width: 48rem;
 }
 
+.sports-data-updated {
+  animation: sports-data-flash 900ms ease-out;
+  border-radius: 0.35rem;
+}
+
+@keyframes sports-data-flash {
+  0% {
+    background: color-mix(in srgb, var(--team-secondary, var(--font-color)) 38%, transparent);
+    box-shadow: 0 0 0 0.18rem color-mix(in srgb, var(--team-secondary, var(--font-color)) 25%, transparent);
+  }
+
+  100% {
+    background: transparent;
+    box-shadow: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sports-data-updated {
+    animation: none;
+    background: color-mix(in srgb, var(--team-secondary, var(--font-color)) 28%, transparent);
+  }
+}
+
 .sports-pga-leaderboard__row {
   align-items: center;
   border-bottom: 1px solid var(--font-faded50);
