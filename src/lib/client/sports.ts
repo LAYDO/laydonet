@@ -210,7 +210,7 @@ interface EspnGolfCompetitorStatus {
   startHole?: number;
   thru?: number;
   position?: { id?: string; displayName?: string; isTie?: boolean };
-  type?: { state?: string; description?: string; shortDetail?: string };
+  type?: { id?: string; name?: string; state?: string; description?: string; detail?: string; shortDetail?: string };
 }
 
 interface EspnGolfCompetitor {
@@ -1640,6 +1640,14 @@ function golfRoundHasScore(round?: EspnGolfLineScore) {
   return Boolean(round?.displayValue && round.displayValue !== "-");
 }
 
+function golfStatusIsCut(status?: EspnGolfCompetitorStatus | EspnRef | null) {
+  if (!status || isEspnRef(status)) {
+    return false;
+  }
+  const statusValues = [status.displayValue, status.type?.name, status.type?.description, status.type?.detail, status.type?.shortDetail];
+  return statusValues.some((value) => typeof value === "string" && /\b(cut|missed cut)\b/i.test(value));
+}
+
 function golfCompletedHoles(round?: EspnGolfLineScore) {
   const holes = round?.linescores?.length ?? 0;
   if (holes >= 18) {
@@ -1652,6 +1660,9 @@ function golfCompletedHoles(round?: EspnGolfLineScore) {
 }
 
 function golfRoundThru(round?: EspnGolfLineScore, status?: EspnGolfCompetitorStatus | EspnRef | null) {
+  if (golfStatusIsCut(status)) {
+    return "CUT";
+  }
   const completedHoles = golfCompletedHoles(round);
   if (golfRoundHasScore(round) && completedHoles) {
     return completedHoles;
